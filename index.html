@@ -2020,139 +2020,693 @@ translateY(-20vh);
 
 <script>
 (function(){
-  // ----- Nav scroll state -----
-  const nav = document.getElementById('siteNav');
-  const onScroll = () => { nav.classList.toggle('scrolled', window.scrollY > 20); };
-  document.addEventListener('scroll', onScroll, { passive:true });
-  onScroll();
 
-  // ----- Mobile menu -----
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+"use strict";
 
-  // ----- Reveal on scroll -----
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold:0.15 });
-  revealEls.forEach(el => io.observe(el));
 
-  // ----- Animated stat counters -----
-  const counters = document.querySelectorAll('.stat-num');
-  const countIO = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const target = parseInt(el.getAttribute('data-count'), 10);
-      const suffix = el.getAttribute('data-suffix') || '';
-      const unitEl = el.querySelector('.unit');
-      const unitHTML = unitEl ? unitEl.outerHTML : '';
-      let cur = 0;
-      const dur = 900;
-      const start = performance.now();
-      function tick(now){
-        const p = Math.min(1, (now - start) / dur);
-        cur = Math.floor(p * target);
-        el.textContent = (p < 1) ? cur : (target + suffix);
-        if (p < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-      countIO.unobserve(el);
+// =========================
+// NAV SCROLL STATE
+// =========================
+
+const nav = document.getElementById("siteNav");
+
+function handleNav(){
+
+    if(nav){
+        nav.classList.toggle(
+            "scrolled",
+            window.scrollY > 20
+        );
+    }
+
+}
+
+document.addEventListener(
+    "scroll",
+    handleNav,
+    {passive:true}
+);
+
+handleNav();
+
+
+
+
+// =========================
+// MOBILE MENU
+// =========================
+
+const hamburger =
+document.getElementById("hamburgerBtn");
+
+const mobileMenu =
+document.getElementById("mobileMenu");
+
+
+if(hamburger && mobileMenu){
+
+    hamburger.addEventListener(
+        "click",
+        ()=>{
+
+            const opened =
+            mobileMenu.classList.toggle("open");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                opened
+            );
+
+        }
+    );
+
+
+    mobileMenu
+    .querySelectorAll("a")
+    .forEach(link=>{
+
+        link.addEventListener(
+            "click",
+            ()=>{
+
+                mobileMenu.classList.remove("open");
+
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    false
+                );
+
+            }
+        );
+
     });
-  }, { threshold:0.6 });
-  counters.forEach(c => countIO.observe(c));
 
-  // ----- Rate ticker content -----
-  const pairs = [
-    ['TZS → KES','1 = 0.0179'], ['KES → NGN','1 = 25.4'], ['RWF → TZS','1 = 1.98'],
-    ['NGN → RWF','1 = 0.86'], ['TZS → ZNZ','par'], ['KES → RWF','1 = 9.3'],
-    ['NGN → KES','1 = 0.0394'], ['ZNZ → NGN','1 = 61.2']
-  ];
-  const track = document.getElementById('rateTrack');
-  const build = () => pairs.map(([p, r]) => `<span class="rate-item">${p} <b>${r}</b> <span class="rate-up">▲</span></span>`).join('');
-  track.innerHTML = build() + build();
+}
 
-  // ----- Network diagram build -----
-  const countries = [
-    { name:'Tanzania', code:'TZS', color:'#1F8A6B' },
-    { name:'Kenya', code:'KES', color:'#C1443B' },
-    { name:'Rwanda', code:'RWF', color:'#2F6FB0' },
-    { name:'Zanzibar', code:'TZS', color:'#D98A2B' },
-    { name:'Nigeria', code:'NGN', color:'#2E7D32' }
-  ];
-  const cx = 300, cy = 300, R = 216;
-  const spokesG = document.getElementById('spokes');
-  const nodesG = document.getElementById('nodes');
-  const svgNS = 'http://www.w3.org/2000/svg';
 
-  countries.forEach((c, i) => {
-    const angle = (-90 + i * (360/countries.length)) * Math.PI/180;
-    const x = cx + R * Math.cos(angle);
-    const y = cy + R * Math.sin(angle);
 
-    const spoke = document.createElementNS(svgNS, 'path');
-    spoke.setAttribute('d', `M${cx},${cy} L${x},${y}`);
-    spoke.setAttribute('class', 'spoke');
-    spokesG.appendChild(spoke);
 
-    const dash = document.createElementNS(svgNS, 'path');
-    dash.setAttribute('d', `M${cx},${cy} L${x},${y}`);
-    dash.setAttribute('class', 'spoke-dash');
-    dash.style.animationDelay = (i * 0.35) + 's';
-    spokesG.appendChild(dash);
 
-    const g = document.createElementNS(svgNS, 'g');
-    g.setAttribute('class', 'node-group');
-    g.setAttribute('transform', `translate(${x},${y})`);
+// =========================
+// SCROLL REVEAL
+// =========================
 
-    const circle = document.createElementNS(svgNS, 'circle');
-    circle.setAttribute('class', 'node-circle');
-    circle.setAttribute('r', '38');
-    g.appendChild(circle);
 
-    const bar = document.createElementNS(svgNS, 'circle');
-    bar.setAttribute('r', '3.2');
-    bar.setAttribute('fill', c.color);
-    bar.setAttribute('cy', '-14');
-    g.appendChild(bar);
+const revealElements =
+document.querySelectorAll(".reveal");
 
-    const label = document.createElementNS(svgNS, 'text');
-    label.setAttribute('class', 'node-label');
-    label.setAttribute('text-anchor', 'middle');
-    label.setAttribute('y', '4');
-    label.textContent = c.code;
-    g.appendChild(label);
 
-    const sub = document.createElementNS(svgNS, 'text');
-    sub.setAttribute('class', 'node-sub');
-    sub.setAttribute('text-anchor', 'middle');
-    sub.setAttribute('y', '18');
-    sub.textContent = c.name;
-    g.appendChild(sub);
+if("IntersectionObserver" in window){
 
-    const pulse = document.createElementNS(svgNS, 'circle');
-    pulse.setAttribute('class', 'pulse');
-    pulse.setAttribute('r', '3.2');
-    pulse.setAttribute('fill', c.color);
-    pulse.setAttribute('cx', '0');
-    pulse.setAttribute('cy', '-52');
-    pulse.style.animationDelay = (i * 0.3) + 's';
-    g.appendChild(pulse);
 
-    nodesG.appendChild(g);
-  });
+const revealObserver =
+new IntersectionObserver(
+(entries)=>{
 
-  // ----- Investor form (front-end only demo) -----
-  const form = document.getElementById('investorForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    document.getElementById('formState').style.display = 'none';
-    document.getElementById('successMsg').classList.add('show');
-  });
-})();
-</script>
+entries.forEach(entry=>{
+
+    if(entry.isIntersecting){
+
+        entry.target.classList.add("in");
+
+        revealObserver.unobserve(
+            entry.target
+        );
+
+    }
+
+});
+
+
+},
+{
+threshold:0.15
+});
+
+
+revealElements.forEach(
+el=>revealObserver.observe(el)
+);
+
+
+}
+
+
+
+
+
+// =========================
+// STAT COUNTERS
+// =========================
+
+
+const counters =
+document.querySelectorAll(".stat-num");
+
+
+if(counters.length){
+
+
+const counterObserver =
+new IntersectionObserver(
+(entries)=>{
+
+
+entries.forEach(entry=>{
+
+
+if(!entry.isIntersecting)
+return;
+
+
+const el =
+entry.target;
+
+
+const target =
+parseInt(
+el.dataset.count,
+10
+);
+
+
+const suffix =
+el.dataset.suffix || "";
+
+
+let current = 0;
+
+
+const duration = 900;
+
+const start =
+performance.now();
+
+
+
+function animate(now){
+
+
+const progress =
+Math.min(
+1,
+(now-start)/duration
+);
+
+
+current =
+Math.floor(
+progress * target
+);
+
+
+
+el.innerHTML =
+progress < 1
+?
+current
+:
+target + suffix;
+
+
+
+if(progress < 1){
+
+requestAnimationFrame(
+animate
+);
+
+}
+
+
+}
+
+
+
+requestAnimationFrame(
+animate
+);
+
+
+counterObserver.unobserve(el);
+
+
+});
+
+
+},
+{
+threshold:0.6
+});
+
+
+counters.forEach(
+counter=>
+counterObserver.observe(counter)
+);
+
+
+}
+
+
+
+
+
+// =========================
+// RATE TICKER
+// =========================
+
+
+const rateTrack =
+document.getElementById("rateTrack");
+
+
+if(rateTrack){
+
+
+const pairs = [
+
+["TZS → KES","1 = 0.0179"],
+["KES → NGN","1 = 25.4"],
+["RWF → TZS","1 = 1.98"],
+["NGN → RWF","1 = 0.86"],
+["TZS → ZNZ","par"],
+["KES → RWF","1 = 9.3"],
+["NGN → KES","1 = 0.0394"],
+["ZNZ → NGN","1 = 61.2"]
+
+];
+
+
+
+function createRates(){
+
+
+return pairs
+.map(
+([pair,rate])=>`
+
+<span class="rate-item">
+
+${pair}
+
+<b>${rate}</b>
+
+<span class="rate-up">
+▲
+</span>
+
+</span>
+
+`
+)
+.join("");
+
+}
+
+
+
+rateTrack.innerHTML =
+createRates() +
+createRates();
+
+
+}
+
+
+
+
+// =========================
+// NETWORK SVG BUILDER
+// =========================
+
+
+const svg =
+document.querySelector(".network-svg");
+
+
+if(svg){
+
+
+const countries = [
+
+{
+name:"Tanzania",
+code:"TZS",
+color:"#1F8A6B"
+},
+
+{
+name:"Kenya",
+code:"KES",
+color:"#C1443B"
+},
+
+{
+name:"Rwanda",
+code:"RWF",
+color:"#2F6FB0"
+},
+
+{
+name:"Zanzibar",
+code:"TZS",
+color:"#D98A2B"
+},
+
+{
+name:"Nigeria",
+code:"NGN",
+color:"#2E7D32"
+}
+
+];
+
+
+
+const spokes =
+document.getElementById("spokes");
+
+
+const nodes =
+document.getElementById("nodes");
+
+
+const svgNS =
+"http://www.w3.org/2000/svg";
+
+
+
+const cx = 300;
+const cy = 300;
+const radius = 216;
+
+
+
+countries.forEach(
+(country,index)=>{
+
+
+const angle =
+(
+-90 +
+index *
+(360/countries.length)
+
+)
+*
+Math.PI/180;
+
+
+
+const x =
+cx +
+radius *
+Math.cos(angle);
+
+
+const y =
+cy +
+radius *
+Math.sin(angle);
+
+
+
+
+// line
+
+const line =
+document.createElementNS(
+svgNS,
+"path"
+);
+
+
+line.setAttribute(
+"d",
+`M${cx},${cy} L${x},${y}`
+);
+
+
+line.setAttribute(
+"class",
+"spoke"
+);
+
+
+spokes.appendChild(line);
+
+
+
+
+
+// animated line
+
+const dash =
+document.createElementNS(
+svgNS,
+"path"
+);
+
+
+dash.setAttribute(
+"d",
+`M${cx},${cy} L${x},${y}`
+);
+
+
+dash.setAttribute(
+"class",
+"spoke-dash"
+);
+
+
+dash.style.animationDelay =
+(index * .35)+"s";
+
+
+spokes.appendChild(dash);
+
+
+
+
+
+
+// node group
+
+const group =
+document.createElementNS(
+svgNS,
+"g"
+);
+
+
+group.setAttribute(
+"class",
+"node-group"
+);
+
+
+group.setAttribute(
+"transform",
+`translate(${x},${y})`
+);
+
+
+
+
+
+const circle =
+document.createElementNS(
+svgNS,
+"circle"
+);
+
+
+circle.setAttribute(
+"class",
+"node-circle"
+);
+
+
+circle.setAttribute(
+"r",
+38
+);
+
+
+group.appendChild(circle);
+
+
+
+
+
+const dot =
+document.createElementNS(
+svgNS,
+"circle"
+);
+
+
+dot.setAttribute(
+"r",
+3.2
+);
+
+
+dot.setAttribute(
+"cy",
+-14
+);
+
+
+dot.setAttribute(
+"fill",
+country.color
+);
+
+
+group.appendChild(dot);
+
+
+
+
+
+const label =
+document.createElementNS(
+svgNS,
+"text"
+);
+
+
+label.setAttribute(
+"class",
+"node-label"
+);
+
+
+label.setAttribute(
+"text-anchor",
+"middle"
+);
+
+
+label.setAttribute(
+"y",
+4
+);
+
+
+label.textContent =
+country.code;
+
+
+group.appendChild(label);
+
+
+
+
+
+const name =
+document.createElementNS(
+svgNS,
+"text"
+);
+
+
+name.setAttribute(
+"class",
+"node-sub"
+);
+
+
+name.setAttribute(
+"text-anchor",
+"middle"
+);
+
+
+name.setAttribute(
+"y",
+18
+);
+
+
+name.textContent =
+country.name;
+
+
+group.appendChild(name);
+
+
+
+
+
+nodes.appendChild(group);
+
+
+
+});
+
+
+}
+
+
+
+
+// =========================
+// INVESTOR FORM
+// =========================
+
+
+const form =
+document.getElementById(
+"investorForm"
+);
+
+
+if(form){
+
+
+form.addEventListener(
+"submit",
+(e)=>{
+
+
+e.preventDefault();
+
+
+const state =
+document.getElementById(
+"formState"
+);
+
+
+const success =
+document.getElementById(
+"successMsg"
+);
+
+
+
+if(state)
+state.style.display="none";
+
+
+if(success)
+success.classList.add("show");
+
+
+
+}
+);
+
+
+}
+
+
+
+})();</script>
 <script>
   window.addEventListener("load",()=>{
 
