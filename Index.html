@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wakala — Pay in your own currency, anywhere</title>
+<meta name="description" content="Wakala lets people across Tanzania, Rwanda, Kenya, Zanzibar and Nigeria pay and get paid in their own local currency, without the USD detour. App with built-in eSIM coming soon." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1420;
+    --ink-2:#121B2E;
+    --ink-3:#1A2540;
+    --paper:#FBF7EF;
+    --paper-2:#F2EBDA;
+    --gold:#E4A445;
+    --gold-dark:#C6842A;
+    --teal:#229175;
+    --teal-dark:#166B54;
+    --text-light:#F5F1E7;
+    --muted-on-dark:#93A0B8;
+    --muted-on-paper:#726A58;
+    --line-on-dark:rgba(245,241,231,0.14);
+    --line-on-paper:rgba(13,20,32,0.12);
+    --tz:#1F8A6B;
+    --ke:#C1443B;
+    --rw:#2F6FB0;
+    --zz:#D98A2B;
+    --ng:#2E7D32;
+    --shadow-lg: 0 30px 70px -25px rgba(13,20,32,0.45);
+    --ease: cubic-bezier(.22,.68,0,1);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  p{ margin:0; }
+  a{ color:inherit; text-decoration:none; }
+  img,svg{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  ::selection{ background:var(--gold); color:var(--ink); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  .wrap{ max-width:1220px; margin:0 auto; padding:0 32px; }
+  @media (max-width:720px){ .wrap{ padding:0 20px; } }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold);
+  }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--gold); }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:22px 0;
+    transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  header.nav.scrolled{
+    padding:14px 0;
+    background:rgba(13,20,32,0.78);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line-on-dark);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces', serif; font-weight:600; font-size:22px;
+    color:var(--text-light);
+  }
+  .logo .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 4px rgba(228,164,69,0.18);
+  }
+  .navlinks{ display:flex; align-items:center; gap:36px; }
+  .navlinks a{
+    color:var(--muted-on-dark); font-size:14.5px; font-weight:500;
+    transition:color .25s;
+    position:relative;
+  }
+  .navlinks a:hover{ color:var(--text-light); }
+  .nav-cta{
+    background:var(--gold); color:var(--ink);
+    padding:11px 20px; border-radius:100px;
+    font-size:14px; font-weight:700;
+    border:1px solid var(--gold);
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 10px 24px -8px rgba(228,164,69,0.55); }
+  .hamburger{ display:none; flex-direction:column; gap:5px; background:none; border:none; padding:6px; }
+  .hamburger span{ width:22px; height:2px; background:var(--text-light); display:block; }
+  .mobile-menu{
+    display:none; position:fixed; inset:0; z-index:99;
+    background:var(--ink); flex-direction:column;
+    padding:100px 32px 40px; gap:26px;
+  }
+  .mobile-menu.open{ display:flex; }
+  .mobile-menu a{ color:var(--text-light); font-size:20px; font-family:'Fraunces',serif; }
+  .mobile-menu .nav-cta{ align-self:flex-start; margin-top:10px; }
+
+  @media (max-width:880px){
+    .navlinks{ display:none; }
+    .hamburger{ display:flex; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:radial-gradient(120% 90% at 78% 0%, #16223c 0%, var(--ink) 55%);
+    color:var(--text-light);
+    padding:168px 0 110px;
+    overflow:hidden;
+  }
+  .hero-grid-bg{
+    position:absolute; inset:0; opacity:0.35; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-on-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-on-dark) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(80% 60% at 60% 20%, #000 10%, transparent 75%);
+  }
+  .hero-inner{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:center;
+  }
+  @media (max-width:980px){ .hero-inner{ grid-template-columns:1fr; } }
+
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 66px);
+    line-height:1.03;
+    margin:20px 0 22px;
+    max-width:12ch;
+  }
+  .hero h1 em{ font-style:italic; color:var(--gold); font-weight:500; }
+  .hero-sub{
+    font-size:18px; line-height:1.6; color:var(--muted-on-dark);
+    max-width:46ch; margin-bottom:34px;
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:56px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:15px 26px; border-radius:100px; font-weight:700; font-size:15px;
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s;
+    border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--gold); color:var(--ink); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(228,164,69,0.55); }
+  .btn-ghost{ border-color:var(--line-on-dark); color:var(--text-light); }
+  .btn-ghost:hover{ border-color:var(--text-light); transform:translateY(-2px); }
+
+  .rate-ticker{
+    border-top:1px solid var(--line-on-dark);
+    border-bottom:1px solid var(--line-on-dark);
+    padding:16px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    position:relative;
+  }
+  .rate-ticker::before, .rate-ticker::after{
+    content:''; position:absolute; top:0; bottom:0; width:60px; z-index:2;
+  }
+  .rate-ticker::before{ left:0; background:linear-gradient(90deg, var(--ink), transparent); }
+  .rate-ticker::after{ right:0; background:linear-gradient(270deg, var(--ink), transparent); }
+  .rate-track{
+    display:inline-flex; gap:44px; animation:ticker 26s linear infinite;
+  }
+  @keyframes ticker{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .rate-item{ display:inline-flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:13.5px; color:var(--muted-on-dark); }
+  .rate-item b{ color:var(--text-light); font-weight:600; }
+  .rate-up{ color:var(--teal); }
+
+  /* network diagram */
+  .network-wrap{ position:relative; z-index:2; }
+  .network-svg{ width:100%; height:auto; }
+  .node-label{ font-family:'IBM Plex Mono',monospace; font-size:12px; fill:var(--text-light); }
+  .node-sub{ font-family:'IBM Plex Mono',monospace; font-size:8.5px; fill:var(--muted-on-dark); }
+  .hub-label{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; fill:var(--ink); }
+  .spoke{ stroke:var(--line-on-dark); stroke-width:1.4; fill:none; }
+  .spoke-dash{ stroke:var(--gold); stroke-width:1.6; fill:none; stroke-dasharray:6 10; animation:dash 2.4s linear infinite; opacity:0.9; }
+  @keyframes dash{ to{ stroke-dashoffset:-160; } }
+  .pulse{ animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ r:3.2; opacity:.9;} 50%{ r:5.4; opacity:0.25; } }
+  .node-circle{ fill:var(--ink-2); stroke:var(--line-on-dark); stroke-width:1.4; transition:transform .3s; }
+  .node-group:hover .node-circle{ stroke:var(--gold); }
+  .hub-circle{ fill:var(--gold); }
+
+  /* ---------- TRUST BAR ---------- */
+  .trustbar{ background:var(--ink-2); border-top:1px solid var(--line-on-dark); padding:26px 0; }
+  .trust-row{ display:flex; flex-wrap:wrap; gap:28px 40px; justify-content:center; }
+  .trust-chip{ display:flex; align-items:center; gap:10px; color:var(--muted-on-dark); font-size:13.5px; font-weight:500; }
+  .trust-chip svg{ width:18px; height:18px; flex:none; }
+  .trust-chip strong{ color:var(--text-light); font-weight:600; }
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{ padding:120px 0; }
+  @media (max-width:720px){ section{ padding:84px 0; } }
+  .section-head{ max-width:640px; margin-bottom:64px; }
+  .section-head .eyebrow{ margin-bottom:18px; }
+  .section-head h2{ font-size:clamp(30px,4vw,44px); line-height:1.12; }
+  .section-head p{ margin-top:18px; font-size:17px; line-height:1.65; color:var(--muted-on-paper); }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- PROBLEM / STATS ---------- */
+  .stat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-on-paper); border:1px solid var(--line-on-paper); border-radius:20px; overflow:hidden; }
+  @media (max-width:820px){ .stat-grid{ grid-template-columns:1fr; } }
+  .stat-card{ background:var(--paper); padding:40px 34px; }
+  .stat-num{ font-family:'Fraunces',serif; font-size:52px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:4px; }
+  .stat-num .unit{ font-size:24px; color:var(--gold-dark); }
+  .stat-label{ margin-top:12px; font-size:15px; color:var(--muted-on-paper); line-height:1.55; }
+  .stat-tag{ display:inline-block; margin-bottom:18px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ke); background:rgba(193,68,59,0.08); padding:5px 10px; border-radius:6px; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  @media (max-width:900px){ .steps{ grid-template-columns:1fr; } }
+  .step{
+    background:var(--ink); color:var(--text-light);
+    border-radius:22px; padding:38px 32px 34px;
+    position:relative; overflow:hidden;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .step:hover{ transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+  .step-num{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--gold); letter-spacing:.1em; }
+  .step h3{ font-size:23px; margin:18px 0 12px; }
+  .step p{ color:var(--muted-on-dark); font-size:15px; line-height:1.6; }
+  .step-glow{ position:absolute; width:180px; height:180px; border-radius:50%; background:var(--gold); opacity:.14; filter:blur(50px); top:-60px; right:-60px; }
+
+  /* ---------- COVERAGE ---------- */
+  .country-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+  @media (max-width:980px){ .country-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .country-grid{ grid-template-columns:1fr; } }
+  .country-card{
+    background:var(--ink); border-radius:18px; padding:26px 22px; position:relative;
+    overflow:hidden; min-height:220px; display:flex; flex-direction:column; justify-content:space-between;
+    transition:transform .35s var(--ease);
+  }
+  .country-card:hover{ transform:translateY(-6px); }
+  .country-bar{ position:absolute; top:0; left:0; right:0; height:5px; }
+  .country-name{ font-family:'Fraunces',serif; color:var(--text-light); font-size:21px; margin-top:10px; }
+  .country-code{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted-on-dark); letter-spacing:.06em; margin-top:4px; }
+  .country-status{
+    align-self:flex-start; margin-top:18px;
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    padding:6px 10px; border-radius:100px; border:1px solid var(--line-on-dark); color:var(--teal);
+  }
+  .country-status.dot::before{ content:'●'; margin-right:6px; font-size:8px; }
+
+  /* ---------- APP / ESIM ---------- */
+  .app-section{ background:var(--ink); color:var(--text-light); border-radius:28px; margin:0 auto; max-width:1220px; overflow:hidden; }
+  .app-inner{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px; padding:80px 64px; }
+  @media (max-width:980px){ .app-inner{ grid-template-columns:1fr; padding:56px 28px; } }
+  .app-inner h2{ font-size:clamp(28px,3.6vw,40px); line-height:1.15; margin-bottom:18px; }
+  .app-inner > div > p{ color:var(--muted-on-dark); font-size:16.5px; line-height:1.65; max-width:46ch; }
+  .feature-list{ list-style:none; margin:28px 0 0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .feature-list li{ display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--text-light); }
+  .feature-list svg{ flex:none; margin-top:2px; width:18px; height:18px; color:var(--teal); }
+  .store-row{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .store-badge{
+    display:flex; align-items:center; gap:10px; border:1px solid var(--line-on-dark);
+    border-radius:12px; padding:10px 18px; font-size:13px; color:var(--muted-on-dark);
+  }
+  .store-badge b{ display:block; color:var(--text-light); font-size:14.5px; font-family:'Fraunces',serif; }
+
+  /* phone mockup */
+  .phone{
+    width:260px; height:530px; margin:0 auto;
+    background:linear-gradient(160deg,#1c2740,#0d1420);
+    border-radius:38px; border:8px solid #232f4a; position:relative;
+    box-shadow:var(--shadow-lg);
+  }
+  .phone::before{ content:''; position:absolute; top:16px; left:50%; transform:translateX(-50%); width:60px; height:6px; border-radius:4px; background:#0a0f1a; }
+  .phone-screen{ position:absolute; inset:36px 16px 20px; border-radius:22px; background:var(--paper); overflow:hidden; padding:20px 16px; }
+  .phone-topline{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted-on-paper); }
+  .phone-balance-label{ margin-top:22px; font-size:11px; color:var(--muted-on-paper); font-family:'IBM Plex Mono',monospace; letter-spacing:.06em; text-transform:uppercase; }
+  .phone-balance{ font-family:'Fraunces',serif; font-size:30px; margin-top:6px; color:var(--ink); }
+  .phone-balance span{ font-size:15px; color:var(--gold-dark); }
+  .phone-row{ display:flex; gap:8px; margin-top:16px; }
+  .phone-pill{ flex:1; text-align:center; padding:10px 4px; border-radius:12px; font-size:10.5px; font-weight:700; }
+  .phone-pill.gold{ background:var(--gold); color:var(--ink); }
+  .phone-pill.line{ border:1px solid var(--line-on-paper); color:var(--ink); }
+  .phone-tx{ margin-top:22px; display:flex; flex-direction:column; gap:12px; }
+  .tx-item{ display:flex; align-items:center; gap:10px; }
+  .tx-dot{ width:30px; height:30px; border-radius:50%; flex:none; }
+  .tx-meta{ flex:1; }
+  .tx-meta b{ display:block; font-size:12px; color:var(--ink); }
+  .tx-meta span{ font-size:10px; color:var(--muted-on-paper); }
+  .tx-amt{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--teal-dark); }
+  .esim-chip{
+    position:absolute; bottom:56px; right:-18px; background:var(--teal); color:#fff;
+    padding:10px 14px; border-radius:12px; font-size:11px; font-weight:700;
+    box-shadow:0 12px 24px -8px rgba(34,145,117,0.6);
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* ---------- INVESTORS ---------- */
+  .investor-section{ background:var(--paper-2); }
+  .investor-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+  @media (max-width:900px){ .investor-grid{ grid-template-columns:1fr; } }
+  .thesis-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:26px; }
+  .thesis-list li{ display:flex; gap:18px; }
+  .thesis-num{ font-family:'IBM Plex Mono',monospace; color:var(--gold-dark); font-size:13px; padding-top:4px; }
+  .thesis-list h4{ font-family:'Fraunces',serif; font-size:19px; margin-bottom:6px; }
+  .thesis-list p{ color:var(--muted-on-paper); font-size:14.5px; line-height:1.6; }
+
+  .investor-card{
+    background:var(--ink); color:var(--text-light); border-radius:22px; padding:40px 36px;
+    box-shadow:var(--shadow-lg);
+  }
+  .investor-card h3{ font-size:24px; margin-bottom:10px; }
+  .investor-card > p{ color:var(--muted-on-dark); font-size:14.5px; line-height:1.6; margin-bottom:26px; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:12.5px; color:var(--muted-on-dark); margin-bottom:7px; font-family:'IBM Plex Mono',monospace; letter-spacing:.04em; }
+  .field input, .field select{
+    width:100%; background:var(--ink-3); border:1px solid var(--line-on-dark); color:var(--text-light);
+    padding:12px 14px; border-radius:10px; font-size:14px; font-family:'Inter',sans-serif;
+    transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--gold); }
+  .investor-card .btn-primary{ width:100%; justify-content:center; margin-top:6px; }
+  .form-note{ font-size:12px; color:var(--muted-on-dark); margin-top:14px; text-align:center; }
+  .success-msg{ display:none; text-align:center; padding:30px 0; }
+  .success-msg.show{ display:block; }
+  .success-msg svg{ margin:0 auto 14px; width:44px; height:44px; color:var(--teal); }
+  .success-msg h4{ font-family:'Fraunces',serif; font-size:20px; margin-bottom:8px; }
+  .success-msg p{ color:var(--muted-on-dark); font-size:14px; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--ink); color:var(--muted-on-dark); padding:70px 0 30px; }
+  .footer-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:40px; padding-bottom:50px; border-bottom:1px solid var(--line-on-dark); }
+  .footer-cols{ display:flex; gap:64px; flex-wrap:wrap; }
+  .footer-col h5{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-light); margin-bottom:16px; }
+  .footer-col a{ display:block; font-size:14px; margin-bottom:12px; transition:color .2s; }
+  .footer-col a:hover{ color:var(--text-light); }
+  .footer-disclaimer{ font-size:12.5px; line-height:1.7; padding-top:26px; max-width:900px; }
+  .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top:22px; font-size:12.5px; }
+
+  .marquee-badge{
+    display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:100px;
+    background:rgba(228,164,69,0.12); color:var(--gold); font-size:11px; font-family:'IBM Plex Mono',monospace;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo"><span class="dot"></span>wakala</a>
+    <nav class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#app">App &amp; eSIM</a>
+      <a href="#investors">Investors</a>
+    </nav>
+    <a href="#investors" class="nav-cta">Request investor deck</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how">How it works</a>
+  <a href="#coverage">Coverage</a>
+  <a href="#app">App &amp; eSIM</a>
+  <a href="#investors">Investors</a>
+  <a href="#investors" class="btn btn-primary nav-cta">Request investor deck</a>
+</div>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">Cross-border payments for East &amp; West Africa</span>
+        <h1>Pay like you're <em>home</em>, wherever you land.</h1>
+        <p class="hero-sub">Wakala lets people move money between Tanzania, Rwanda, Kenya, Zanzibar and Nigeria in their own local currency — no USD detour, no guessing rate, no multi-day wait.</p>
+        <div class="cta-row">
+          <a href="#investors" class="btn btn-primary">Request investor deck</a>
+          <a href="#app" class="btn btn-ghost">Join the waitlist</a>
+        </div>
+      </div>
+
+      <div class="network-wrap">
+        <svg class="network-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of Wakala's payment network connecting five local currencies through one direct rail">
+          <g id="spokes"></g>
+          <g id="nodes"></g>
+          <g transform="translate(300,300)">
+            <circle class="hub-circle" r="52"></circle>
+            <text class="hub-label" text-anchor="middle" y="-4">WAKALA</text>
+            <text class="node-sub" text-anchor="middle" y="14" fill="#0D1420">direct rail</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="rate-ticker">
+      <div class="wrap" style="padding:0;">
+        <div class="rate-track" id="rateTrack"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="trustbar">
+    <div class="wrap trust-row">
+      <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><strong>Bank-grade</strong> encryption in transit &amp; at rest</span></div>
+      <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v4H4z"/><path d="M4 10h16v10H4z"/><path d="M9 14h6"/></svg><span>Built for <strong>local regulator</strong> compliance in every market</span></div>
+      <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg><span><strong>Full KYC / AML</strong> on every account</span></div>
+      <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span>Real-time <strong>settlement</strong> across the network</span></div>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="stat-tag">The problem</span>
+        <h2 class="display">Cross-border payments in Africa still route through someone else's currency.</h2>
+        <p>Every transfer between neighbouring markets is typically priced, held and cleared in US dollars first — adding fees, delay and a rate nobody controls, even when both sides just want their own money to move.</p>
+      </div>
+      <div class="stat-grid reveal">
+        <div class="stat-card">
+          <div class="stat-num" data-count="7" data-suffix="–9%">0<span class="unit">%</span></div>
+          <p class="stat-label">Typical cost to send money within Sub-Saharan Africa today, well above the UN's 3% target.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-count="2" data-suffix="–3 days">0<span class="unit">d</span></div>
+          <p class="stat-label">Common settlement time when a transfer is cleared through an intermediary currency.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-count="5" data-suffix=" markets">0<span class="unit">×</span></div>
+          <p class="stat-label">Local currencies Wakala connects directly on one rail at launch — TZS, RWF, KES, ZNZ, NGN.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" style="background:var(--paper-2);">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow" style="color:var(--gold-dark);">How Wakala works</span>
+        <h2 class="display">One account. Your own currency. Every step in between removed.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-glow"></div>
+          <span class="step-num">01 — Fund</span>
+          <h3>Load your wallet in local currency</h3>
+          <p>Top up in shillings, francs or naira through mobile money, bank transfer or a verified Wakala agent near you — the same way you already pay for everything else.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:.08s;">
+          <div class="step-glow"></div>
+          <span class="step-num">02 — Convert</span>
+          <h3>Cross the border on one direct rail</h3>
+          <p>Wakala prices your transfer straight between the two local currencies, at a rate you see before you confirm — never routed through the dollar.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:.16s;">
+          <div class="step-glow"></div>
+          <span class="step-num">03 — Spend or receive</span>
+          <h3>Money lands ready to use</h3>
+          <p>The recipient gets local currency in their own Wakala wallet, ready to spend, withdraw through an agent, or send onward — usually in minutes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE -->
+  <section id="coverage">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow" style="color:var(--gold-dark);">Where we operate</span>
+        <h2 class="display">Five markets, one network, at launch.</h2>
+        <p>Wakala is building market-by-market, in partnership with licensed local financial institutions and a network of trusted agents — the modern-day <em style="font-style:italic;">wakala</em> the name is borrowed from.</p>
+      </div>
+      <div class="country-grid reveal">
+        <div class="country-card">
+          <div class="country-bar" style="background:var(--tz);"></div>
+          <div><div class="country-name">Tanzania</div><div class="country-code">TZS · Tanzanian Shilling</div></div>
+          <div class="country-status dot">In development</div>
+        </div>
+        <div class="country-card">
+          <div class="country-bar" style="background:var(--ke);"></div>
+          <div><div class="country-name">Kenya</div><div class="country-code">KES · Kenyan Shilling</div></div>
+          <div class="country-status dot">In development</div>
+        </div>
+        <div class="country-card">
+          <div class="country-bar" style="background:var(--rw);"></div>
+          <div><div class="country-name">Rwanda</div><div class="country-code">RWF · Rwandan Franc</div></div>
+          <div class="country-status dot">In development</div>
+        </div>
+        <div class="country-card">
+          <div class="country-bar" style="background:var(--zz);"></div>
+          <div><div class="country-name">Zanzibar</div><div class="country-code">TZS · Zanzibar corridor</div></div>
+          <div class="country-status dot">In development</div>
+        </div>
+        <div class="country-card">
+          <div class="country-bar" style="background:var(--ng);"></div>
+          <div><div class="country-name">Nigeria</div><div class="country-code">NGN · Nigerian Naira</div></div>
+          <div class="country-status dot">In development</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP & ESIM -->
+  <section id="app">
+    <div class="wrap">
+      <div class="app-section reveal">
+        <div class="app-inner">
+          <div>
+            <span class="eyebrow">Coming soon on iOS &amp; Android</span>
+            <h2 class="display">Your wallet, your eSIM, one app.</h2>
+            <p>The Wakala app carries your local-currency wallet across every market we serve — and drops a built-in eSIM straight onto your phone, so you land connected before you've even found a taxi.</p>
+            <ul class="feature-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Hold and switch between TZS, KES, RWF and NGN in one wallet</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Built-in eSIM activates mobile data the moment you cross a border</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Send to a phone number, agent, or Wakala tag — no bank details needed</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Rate shown up front, before you ever confirm a transfer</li>
+            </ul>
+            <div class="store-row">
+              <div class="store-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 12.6c0-2.7 2.2-4 2.3-4.1-1.3-1.9-3.2-2.1-3.9-2.2-1.7-.2-3.2 1-4.1 1-.9 0-2.2-1-3.6-1-1.9 0-3.6 1.1-4.6 2.7-2 3.4-.5 8.5 1.4 11.3.9 1.4 2 2.9 3.5 2.8 1.4-.1 1.9-.9 3.6-.9 1.7 0 2.1.9 3.6.9 1.5 0 2.4-1.4 3.3-2.7.9-1.4 1.3-2.7 1.3-2.8-.1 0-3.2-1.2-3.2-4.9-.1-2.9 2.4-4.4 2.4-4.4M14.4 4.3c.7-.9 1.2-2.1 1.1-3.3-1.1 0-2.4.7-3.1 1.6-.7.8-1.3 2-1.1 3.2 1.2.1 2.4-.6 3.1-1.5"/></svg>
+                <span>Coming soon<br><b>App Store</b></span>
+              </div>
+              <div class="store-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 2.2c-.4.2-.6.6-.6 1.1v17.4c0 .5.2.9.6 1.1l9.9-9.8L3.6 2.2Zm12 9.8 2.7-2.7-11.6-6.6L14.6 12l3-.7ZM6.7 21.6l11.6-6.6-2.7-2.7-3 .7-5.9 8.6ZM19.3 9.3l-2.3 2.3 2.3 2.3 2.8-1.6c.7-.4.7-1.4 0-1.8l-2.8-1.2Z"/></svg>
+                <span>Coming soon<br><b>Google Play</b></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:relative;">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="phone-topline"><span>9:41</span><span>WAKALA</span></div>
+                <div class="phone-balance-label">Wallet balance</div>
+                <div class="phone-balance">124,300<span> TZS</span></div>
+                <div class="phone-row">
+                  <div class="phone-pill gold">Send</div>
+                  <div class="phone-pill line">Convert</div>
+                </div>
+                <div class="phone-tx">
+                  <div class="tx-item"><div class="tx-dot" style="background:var(--ke);"></div><div class="tx-meta"><b>To Amina · Nairobi</b><span>KES · agent cash-out</span></div><div class="tx-amt">−18,400</div></div>
+                  <div class="tx-item"><div class="tx-dot" style="background:var(--ng);"></div><div class="tx-meta"><b>From Chidi · Lagos</b><span>NGN → TZS, direct</span></div><div class="tx-amt" style="color:var(--gold-dark);">+62,000</div></div>
+                  <div class="tx-item"><div class="tx-dot" style="background:var(--rw);"></div><div class="tx-meta"><b>To Eric · Kigali</b><span>RWF · instant</span></div><div class="tx-amt">−9,750</div></div>
+                </div>
+              </div>
+              <div class="esim-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>eSIM active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTORS -->
+  <section id="investors" class="investor-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow" style="color:var(--gold-dark);">For investors</span>
+        <h2 class="display">Building the local-currency rail underneath Africa's fastest-growing corridors.</h2>
+      </div>
+      <div class="investor-grid">
+        <ul class="thesis-list reveal">
+          <li>
+            <span class="thesis-num">01</span>
+            <div><h4>Mobile money is the default, not the alternative</h4><p>Across our five launch markets, mobile money is already the primary way most people move day-to-day money — Wakala meets people on rails they already trust.</p></div>
+          </li>
+          <li>
+            <span class="thesis-num">02</span>
+            <div><h4>Intra-African trade and travel are accelerating</h4><p>The African Continental Free Trade Area is lowering barriers to trade between exactly the markets Wakala connects first — demand for direct local-currency settlement is growing ahead of the infrastructure to support it.</p></div>
+          </li>
+          <li>
+            <span class="thesis-num">03</span>
+            <div><h4>Distribution through people, not just an app</h4><p>Our agent network — the "wakala" the company is named for — gives us cash-in, cash-out and trust in communities a purely digital app can't reach alone.</p></div>
+          </li>
+          <li>
+            <span class="thesis-num">04</span>
+            <div><h4>The app and eSIM extend the same wallet</h4><p>Connectivity is bundled into the same product, deepening daily usage and giving Wakala a second, defensible revenue line beyond FX.</p></div>
+          </li>
+        </ul>
+
+        <div class="investor-card reveal">
+          <div id="formState">
+            <h3>Request the investor deck</h3>
+            <p>Tell us a little about you and we'll share our current deck, market-entry roadmap and licensing plan.</p>
+            <form id="investorForm">
+              <div class="field"><label for="fname">Full name</label><input id="fname" type="text" placeholder="Jane Doe" required></div>
+              <div class="field"><label for="femail">Work email</label><input id="femail" type="email" placeholder="jane@fund.com" required></div>
+              <div class="field"><label for="ffirm">Firm / organisation</label><input id="ffirm" type="text" placeholder="Fund or company name" required></div>
+              <div class="field">
+                <label for="finterest">I'm interested in</label>
+                <select id="finterest">
+                  <option>Investing</option>
+                  <option>Partnership</option>
+                  <option>Press</option>
+                  <option>Joining the team</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Request the deck</button>
+              <p class="form-note">This is a demo form — no data leaves your browser.</p>
+            </form>
+          </div>
+          <div class="success-msg" id="successMsg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg>
+            <h4>Thanks — you're on the list</h4>
+            <p>We'll be in touch by email with the deck and next steps shortly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <a href="#top" class="logo"><span class="dot"></span>wakala</a>
+        <p style="max-width:280px; margin-top:16px; font-size:13.5px; line-height:1.6;">Local currency, everywhere. Building the payment rail for Tanzania, Rwanda, Kenya, Zanzibar and Nigeria.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Product</h5>
+          <a href="#how">How it works</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#app">App &amp; eSIM</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a href="#investors">Investors</a>
+          <a href="#">Careers</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+    <p class="footer-disclaimer">Wakala is currently in development. Wakala is not yet a licensed money services business or payment institution in any market; regulatory approvals and banking partnerships are in progress in each of the countries listed above ahead of public launch. Figures on this site are illustrative of our market thesis, not audited company results.</p>
+    <div class="footer-bottom">
+      <span>© 2026 Wakala. All rights reserved.</span>
+      <span>Dar es Salaam · Nairobi · Kigali · Zanzibar City · Lagos</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ----- Nav scroll state -----
+  const nav = document.getElementById('siteNav');
+  const onScroll = () => { nav.classList.toggle('scrolled', window.scrollY > 20); };
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // ----- Mobile menu -----
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  // ----- Reveal on scroll -----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ----- Animated stat counters -----
+  const counters = document.querySelectorAll('.stat-num');
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.getAttribute('data-count'), 10);
+      const suffix = el.getAttribute('data-suffix') || '';
+      const unitEl = el.querySelector('.unit');
+      const unitHTML = unitEl ? unitEl.outerHTML : '';
+      let cur = 0;
+      const dur = 900;
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min(1, (now - start) / dur);
+        cur = Math.floor(p * target);
+        el.textContent = (p < 1) ? cur : (target + suffix);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    });
+  }, { threshold:0.6 });
+  counters.forEach(c => countIO.observe(c));
+
+  // ----- Rate ticker content -----
+  const pairs = [
+    ['TZS → KES','1 = 0.0179'], ['KES → NGN','1 = 25.4'], ['RWF → TZS','1 = 1.98'],
+    ['NGN → RWF','1 = 0.86'], ['TZS → ZNZ','par'], ['KES → RWF','1 = 9.3'],
+    ['NGN → KES','1 = 0.0394'], ['ZNZ → NGN','1 = 61.2']
+  ];
+  const track = document.getElementById('rateTrack');
+  const build = () => pairs.map(([p, r]) => `<span class="rate-item">${p} <b>${r}</b> <span class="rate-up">▲</span></span>`).join('');
+  track.innerHTML = build() + build();
+
+  // ----- Network diagram build -----
+  const countries = [
+    { name:'Tanzania', code:'TZS', color:'#1F8A6B' },
+    { name:'Kenya', code:'KES', color:'#C1443B' },
+    { name:'Rwanda', code:'RWF', color:'#2F6FB0' },
+    { name:'Zanzibar', code:'TZS', color:'#D98A2B' },
+    { name:'Nigeria', code:'NGN', color:'#2E7D32' }
+  ];
+  const cx = 300, cy = 300, R = 216;
+  const spokesG = document.getElementById('spokes');
+  const nodesG = document.getElementById('nodes');
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  countries.forEach((c, i) => {
+    const angle = (-90 + i * (360/countries.length)) * Math.PI/180;
+    const x = cx + R * Math.cos(angle);
+    const y = cy + R * Math.sin(angle);
+
+    const spoke = document.createElementNS(svgNS, 'path');
+    spoke.setAttribute('d', `M${cx},${cy} L${x},${y}`);
+    spoke.setAttribute('class', 'spoke');
+    spokesG.appendChild(spoke);
+
+    const dash = document.createElementNS(svgNS, 'path');
+    dash.setAttribute('d', `M${cx},${cy} L${x},${y}`);
+    dash.setAttribute('class', 'spoke-dash');
+    dash.style.animationDelay = (i * 0.35) + 's';
+    spokesG.appendChild(dash);
+
+    const g = document.createElementNS(svgNS, 'g');
+    g.setAttribute('class', 'node-group');
+    g.setAttribute('transform', `translate(${x},${y})`);
+
+    const circle = document.createElementNS(svgNS, 'circle');
+    circle.setAttribute('class', 'node-circle');
+    circle.setAttribute('r', '38');
+    g.appendChild(circle);
+
+    const bar = document.createElementNS(svgNS, 'circle');
+    bar.setAttribute('r', '3.2');
+    bar.setAttribute('fill', c.color);
+    bar.setAttribute('cy', '-14');
+    g.appendChild(bar);
+
+    const label = document.createElementNS(svgNS, 'text');
+    label.setAttribute('class', 'node-label');
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('y', '4');
+    label.textContent = c.code;
+    g.appendChild(label);
+
+    const sub = document.createElementNS(svgNS, 'text');
+    sub.setAttribute('class', 'node-sub');
+    sub.setAttribute('text-anchor', 'middle');
+    sub.setAttribute('y', '18');
+    sub.textContent = c.name;
+    g.appendChild(sub);
+
+    const pulse = document.createElementNS(svgNS, 'circle');
+    pulse.setAttribute('class', 'pulse');
+    pulse.setAttribute('r', '3.2');
+    pulse.setAttribute('fill', c.color);
+    pulse.setAttribute('cx', '0');
+    pulse.setAttribute('cy', '-52');
+    pulse.style.animationDelay = (i * 0.3) + 's';
+    g.appendChild(pulse);
+
+    nodesG.appendChild(g);
+  });
+
+  // ----- Investor form (front-end only demo) -----
+  const form = document.getElementById('investorForm');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successMsg').classList.add('show');
+  });
+})();
+</script>
+
+</body>
+</html>
