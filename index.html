@@ -10,6 +10,48 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
+    /* New Shadows */
+
+--shadow-sm:0 8px 20px rgba(0,0,0,.08);
+
+--shadow-md:0 18px 40px rgba(0,0,0,.12);
+
+--shadow-xl:0 45px 90px rgba(0,0,0,.25);
+
+/* Radius */
+
+--radius-xl:28px;
+
+--radius-lg:22px;
+
+--radius-md:18px;
+
+/* Blur */
+
+--glass:rgba(255,255,255,.08);
+
+--glass-border:rgba(255,255,255,.15);
+
+/* Transition */
+
+--transition:.45s cubic-bezier(.22,.61,.36,1);
+
+/* Accent Glow */
+
+--gold-glow:0 0 35px rgba(228,164,69,.35);
+
+--teal-glow:0 0 35px rgba(34,145,117,.25);
+
+/* Grid */
+
+--grid-size:72px;
+
+/* Gradient */
+
+--hero-gradient:
+radial-gradient(circle at 10% 20%,rgba(228,164,69,.15),transparent 30%),
+radial-gradient(circle at 90% 10%,rgba(34,145,117,.15),transparent 35%),
+radial-gradient(circle at 50% 100%,rgba(47,111,176,.12),transparent 35%);
     --ink:#0D1420;
     --ink-2:#121B2E;
     --ink-3:#1A2540;
@@ -36,12 +78,33 @@
   *{ box-sizing:border-box; }
   html{ scroll-behavior:smooth; }
   body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter', sans-serif;
+    
+
+margin:0;
+
+background:var(--paper);
+
+color:var(--ink);
+
+font-family:'Inter',sans-serif;
+
+overflow-x:hidden;
+
+min-height:100vh;
+
+transition:
+
+background .5s,
+
+color .5s;
+
+text-rendering:optimizeLegibility;
+
+font-feature-settings:"liga" 1;
+
+
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+  
   }
   h1,h2,h3,.display{
     font-family:'Fraunces', serif;
@@ -364,20 +427,145 @@
     display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:100px;
     background:rgba(228,164,69,0.12); color:var(--gold); font-size:11px; font-family:'IBM Plex Mono',monospace;
   }
+  #loader{
+
+position:fixed;
+
+inset:0;
+
+background:#09111d;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+z-index:99999;
+
+transition:opacity .7s;
+
+}
+
+.loader-logo{
+
+text-align:center;
+
+color:white;
+
+}
+
+.loader-dot{
+
+width:18px;
+
+height:18px;
+
+margin:auto;
+
+border-radius:50%;
+
+background:var(--gold);
+
+box-shadow:var(--gold-glow);
+
+animation:pulseLoader 1.2s infinite;
+
+}
+
+.loader-logo h2{
+
+margin:20px 0 10px;
+
+font-size:40px;
+
+}
+
+.loader-logo p{
+
+opacity:.7;
+
+margin-bottom:25px;
+
+}
+
+.loader-bar{
+
+width:220px;
+
+height:4px;
+
+background:#203049;
+
+overflow:hidden;
+
+border-radius:20px;
+
+}
+
+.loader-progress{
+
+height:100%;
+
+width:0;
+
+background:var(--gold);
+
+animation:loading 2s forwards;
+
+}
+
+@keyframes loading{
+
+100%{
+
+width:100%;
+
+}
+
+}
+
+@keyframes pulseLoader{
+
+50%{
+
+transform:scale(1.4);
+
+}
+
+}
 </style>
 </head>
 <body>
+<div id="loader">
 
+<div class="loader-logo">
+
+<div class="loader-dot"></div>
+
+<h2>WAKALA</h2>
+
+<p>Building Africa's payment rail...</p>
+
+<div class="loader-bar">
+
+<div class="loader-progress"></div>
+
+</div>
+
+</div>
+
+</div>
 <header class="nav" id="siteNav">
   <div class="wrap nav-inner">
-    <a href="#top" class="logo"><span class="dot"></span>wakala</a>
+    <a href="#top" class="logo"><span class="dot"></span>WAKALA</a>
     <nav class="navlinks">
       <a href="#how">How it works</a>
       <a href="#coverage">Coverage</a>
       <a href="#app">App &amp; eSIM</a>
       <a href="#investors">Investors</a>
     </nav>
-    <a href="#investors" class="nav-cta">Request investor deck</a>
+    <a href="#investors" class="nav-cta">Investments</a>
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -389,7 +577,7 @@
   <a href="#coverage">Coverage</a>
   <a href="#app">App &amp; eSIM</a>
   <a href="#investors">Investors</a>
-  <a href="#investors" class="btn btn-primary nav-cta">Request investor deck</a>
+  <a href="#investors" class="btn btn-primary nav-cta">Investments</a>
 </div>
 
 <main id="top">
