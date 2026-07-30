@@ -1517,46 +1517,7 @@ translateY(-20vh);
 
             <!-- NEW HERO STATS -->
 
-            <div class="hero-stats">
-
-
-                <div class="hero-stat glass">
-
-                    <h3>5</h3>
-
-                    <span>
-                        Launch Markets
-                    </span>
-
-                </div>
-
-
-
-                <div class="hero-stat glass">
-
-                    <h3>&lt;2 min</h3>
-
-                    <span>
-                        Transfer Speed
-                    </span>
-
-                </div>
-
-
-
-
-                <div class="hero-stat glass">
-
-                    <h3>24/7</h3>
-
-                    <span>
-                        Always Available
-                    </span>
-
-                </div>
-
-
-            </div>
+            
 
 
 
@@ -2707,7 +2668,7 @@ success.classList.add("show");
 
 
 })();</script>
-<script><script>
+<script>
 /* ==========================================================
    WAKALA PREMIUM HERO INTERACTIONS (UPGRADED)
    - Preserves all existing functionality
@@ -2720,24 +2681,37 @@ success.classList.add("show");
    LOADER
 ========================================================== */
 
+
 const loader = document.getElementById("loader");
 
 window.addEventListener("load", () => {
 
     if (!loader) return;
 
-    setTimeout(() => {
-
-        loader.style.opacity = "0";
-        loader.style.pointerEvents = "none";
+    // Allow page to finish painting
+    requestAnimationFrame(() => {
 
         setTimeout(() => {
 
-            loader.remove();
+            loader.style.transition =
+                "opacity .8s ease, visibility .8s ease";
 
-        }, 700);
+            loader.style.opacity = "0";
+            loader.style.visibility = "hidden";
+            loader.style.pointerEvents = "none";
 
-    }, 1800);
+            // Completely remove after animation
+            setTimeout(() => {
+
+                if (loader.parentNode) {
+                    loader.parentNode.removeChild(loader);
+                }
+
+            }, 900);
+
+        }, 1800);
+
+    });
 
 });
 
@@ -3189,6 +3163,6 @@ if (hub) {
 
 }
 </script>
-</script>
+
 </body>
 </html>
