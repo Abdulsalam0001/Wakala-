@@ -190,15 +190,80 @@ font-feature-settings:"liga" 1;
     .navlinks{ display:none; }
     .hamburger{ display:flex; }
   }
+.float{
 
+animation:float 5s ease-in-out infinite;
+
+}
+
+@keyframes float{
+
+0%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-10px);
+
+}
+
+100%{
+
+transform:translateY(0);
+
+}
+
+}
+.glass{
+
+background:var(--glass);
+
+backdrop-filter:blur(18px);
+
+border:1px solid var(--glass-border);
+
+box-shadow:var(--shadow-lg);
+
+}
   /* ---------- HERO ---------- */
-  .hero{
+ .hero{
     position:relative;
-    background:radial-gradient(120% 90% at 78% 0%, #16223c 0%, var(--ink) 55%);
+
+    background:
+        var(--hero-gradient),
+        linear-gradient(
+            135deg,
+            #09111d,
+            #13213b,
+            #09111d
+        );
+
+    background-size:250% 250%;
+    animation:heroBG 18s ease infinite;
+
     color:var(--text-light);
     padding:168px 0 110px;
     overflow:hidden;
-  }
+}
+
+@keyframes heroBG{
+
+    0%{
+        background-position:0% 0%;
+    }
+
+    50%{
+        background-position:100% 100%;
+    }
+
+    100%{
+        background-position:0% 0%;
+    }
+
+}
   .hero-grid-bg{
     position:absolute; inset:0; opacity:0.35; pointer-events:none;
     background-image:
@@ -534,6 +599,803 @@ transform:scale(1.4);
 }
 
 }
+#progressBar{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+height:4px;
+
+width:0;
+
+background:linear-gradient(90deg,var(--gold),#ffcb7b);
+
+z-index:9999;
+
+box-shadow:var(--gold-glow);
+
+}
+.cursorGlow{
+
+position:fixed;
+
+width:340px;
+
+height:340px;
+
+border-radius:50%;
+
+pointer-events:none;
+
+background:radial-gradient(circle,
+
+rgba(228,164,69,.10),
+
+transparent 70%);
+
+transform:translate(-50%,-50%);
+
+z-index:0;
+
+transition:
+
+transform .08s linear;
+
+}
+/* ==========================================================
+   WAKALA PREMIUM HERO UPGRADE CSS
+   Add after your existing styles
+========================================================== */
+
+
+/* =========================
+   GLASS SYSTEM
+========================= */
+
+.glass{
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.12),
+        rgba(255,255,255,.04)
+    );
+
+    border:
+    1px solid rgba(255,255,255,.14);
+
+    backdrop-filter:
+    blur(24px)
+    saturate(150%);
+
+    -webkit-backdrop-filter:
+    blur(24px)
+    saturate(150%);
+
+    box-shadow:
+
+    0 25px 70px rgba(0,0,0,.35),
+
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+}
+
+
+/* =========================
+   HERO GLOW LAYERS
+========================= */
+
+
+.hero-blur{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(100px);
+
+    pointer-events:none;
+
+    z-index:0;
+
+}
+
+
+
+.hero-blur-one{
+
+    width:480px;
+
+    height:480px;
+
+    right:-180px;
+
+    top:-140px;
+
+    background:
+    rgba(228,164,69,.18);
+
+}
+
+
+
+.hero-blur-two{
+
+    width:420px;
+
+    height:420px;
+
+    left:-180px;
+
+    bottom:-180px;
+
+    background:
+    rgba(34,145,117,.18);
+
+}
+
+
+
+/* =========================
+   HERO CONTENT
+========================= */
+
+
+.hero-content{
+
+    position:relative;
+
+    z-index:5;
+
+}
+
+
+
+.hero h1{
+
+    transition:
+    transform .4s ease;
+
+}
+
+
+
+.hero:hover h1{
+
+    transform:
+    translateY(-3px);
+
+}
+
+
+
+
+/* =========================
+   HERO QUICK STATS
+========================= */
+
+
+.hero-stats{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    margin-top:45px;
+
+}
+
+
+
+.hero-stat{
+
+    min-width:145px;
+
+    padding:20px 22px;
+
+    border-radius:20px;
+
+    transition:
+    transform .35s ease,
+    box-shadow .35s ease;
+
+}
+
+
+
+.hero-stat:hover{
+
+    transform:
+    translateY(-8px);
+
+    box-shadow:
+
+    0 20px 50px rgba(0,0,0,.35);
+
+}
+
+
+
+.hero-stat h3{
+
+    font-family:
+    'Fraunces',serif;
+
+    color:white;
+
+    font-size:30px;
+
+    margin-bottom:5px;
+
+}
+
+
+
+.hero-stat span{
+
+    font-size:12px;
+
+    color:
+    var(--muted-on-dark);
+
+}
+
+
+
+/* =========================
+   NETWORK PARALLAX
+========================= */
+
+
+.network-wrap{
+
+    position:relative;
+
+    transition:
+    transform .35s ease;
+
+    transform-style:
+    preserve-3d;
+
+}
+
+
+
+/* =========================
+   FLOATING GLASS CARDS
+========================= */
+
+
+.floating-card{
+
+    position:absolute;
+
+    width:200px;
+
+    padding:20px;
+
+    border-radius:22px;
+
+    color:white;
+
+    z-index:20;
+
+    transition:
+    transform .35s ease;
+
+}
+
+
+
+.floating-card:hover{
+
+    transform:
+    translateY(-10px)
+    scale(1.04);
+
+}
+
+
+
+.floating-card small{
+
+    color:
+    rgba(255,255,255,.65);
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.12em;
+
+}
+
+
+
+.floating-card h3{
+
+    color:white;
+
+    font-size:28px;
+
+    margin:
+    12px 0 8px;
+
+}
+
+
+
+.floating-card p{
+
+    color:
+    rgba(255,255,255,.7);
+
+    font-size:13px;
+
+}
+
+
+
+/* CARD LOCATIONS */
+
+
+.card-one{
+
+    top:35px;
+
+    right:-40px;
+
+    animation:
+    floating 6s infinite ease-in-out;
+
+}
+
+
+
+.card-two{
+
+    bottom:70px;
+
+    left:-45px;
+
+    animation:
+    floating 7s infinite ease-in-out;
+
+}
+
+
+
+.card-three{
+
+    top:250px;
+
+    right:30px;
+
+    animation:
+    floating 8s infinite ease-in-out;
+
+}
+
+
+
+
+
+@keyframes floating{
+
+
+0%,100%{
+
+    transform:
+    translateY(0);
+
+}
+
+
+50%{
+
+    transform:
+    translateY(-15px);
+
+}
+
+
+}
+
+
+
+/* =========================
+   LIVE TRANSFER NOTIFICATION
+========================= */
+
+
+.live-notification{
+
+    position:absolute;
+
+    left:80px;
+
+    bottom:-25px;
+
+    padding:18px 24px;
+
+    border-radius:20px;
+
+    color:white;
+
+    z-index:30;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:5px;
+
+    font-size:14px;
+
+    animation:
+    notification 5s infinite;
+
+}
+
+
+
+.live-notification span{
+
+    font-size:12px;
+
+    color:
+    rgba(255,255,255,.65);
+
+}
+
+
+
+@keyframes notification{
+
+
+0%{
+
+opacity:0;
+
+transform:
+translateY(30px);
+
+}
+
+
+15%{
+
+opacity:1;
+
+transform:
+translateY(0);
+
+}
+
+
+80%{
+
+opacity:1;
+
+}
+
+
+100%{
+
+opacity:0;
+
+transform:
+translateY(30px);
+
+}
+
+
+}
+
+
+
+
+
+/* =========================
+   NETWORK NODE ANIMATION
+========================= */
+
+
+.node-group{
+
+    transition:
+    transform .3s ease;
+
+}
+
+
+
+.node-group:hover .node-circle{
+
+    stroke:
+    var(--gold);
+
+    filter:
+    drop-shadow(
+    0 0 12px var(--gold)
+    );
+
+}
+
+
+
+.node-circle{
+
+    transition:
+    .4s;
+
+}
+
+
+
+/* =========================
+   PAYMENT PARTICLES
+========================= */
+
+
+.money-particle{
+
+    fill:
+    var(--gold);
+
+    filter:
+    drop-shadow(
+    0 0 10px var(--gold)
+    );
+
+}
+
+
+
+/* =========================
+   TRANSFER BEAMS
+========================= */
+
+
+.spoke-dash{
+
+    stroke:
+    var(--gold);
+
+    stroke-width:
+    2;
+
+    stroke-linecap:
+    round;
+
+    stroke-dasharray:
+    12 16;
+
+    filter:
+    drop-shadow(
+    0 0 8px var(--gold)
+    );
+
+    animation:
+    beamMove 1.8s linear infinite;
+
+}
+
+
+
+@keyframes beamMove{
+
+
+to{
+
+stroke-dashoffset:
+-250;
+
+}
+
+
+}
+
+
+
+
+
+/* =========================
+   BUTTON PREMIUM EFFECT
+========================= */
+
+
+.btn{
+
+    position:
+    relative;
+
+    overflow:hidden;
+
+}
+
+
+
+.btn::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+    linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.35),
+    transparent
+    );
+
+    transform:
+    translateX(-120%);
+
+}
+
+
+
+.btn:hover::before{
+
+    animation:
+    buttonGlow .8s forwards;
+
+}
+
+
+
+@keyframes buttonGlow{
+
+
+to{
+
+transform:
+translateX(120%);
+
+}
+
+
+}
+
+
+
+
+.btn-primary:hover{
+
+    box-shadow:
+
+    0 20px 45px
+    rgba(228,164,69,.45);
+
+}
+
+
+
+
+/* =========================
+   BACKGROUND PARTICLES
+========================= */
+
+
+#particles{
+
+    position:absolute;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:1;
+
+}
+
+
+
+.bg-particle{
+
+    position:absolute;
+
+    width:4px;
+
+    height:4px;
+
+    border-radius:50%;
+
+    background:white;
+
+    opacity:.18;
+
+    animation:
+    particleMove linear infinite;
+
+}
+
+
+
+@keyframes particleMove{
+
+
+from{
+
+transform:
+translateY(120vh);
+
+}
+
+
+to{
+
+transform:
+translateY(-20vh);
+
+}
+
+
+}
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+@media(max-width:980px){
+
+
+.floating-card{
+
+    display:none;
+
+}
+
+
+
+.live-notification{
+
+    display:none;
+
+}
+
+
+
+.hero-stats{
+
+    justify-content:center;
+
+}
+
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+.hero-stat{
+
+    width:100%;
+
+}
+
+
+
+}
 </style>
 </head>
 <body>
@@ -556,6 +1418,7 @@ transform:scale(1.4);
 </div>
 
 </div>
+<div id="progressBar"></div>
 <header class="nav" id="siteNav">
   <div class="wrap nav-inner">
     <a href="#top" class="logo"><span class="dot"></span>WAKALA</a>
@@ -570,6 +1433,7 @@ transform:scale(1.4);
       <span></span><span></span><span></span>
     </button>
   </div>
+  <div class="cursorGlow"></div>
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
@@ -582,37 +1446,330 @@ transform:scale(1.4);
 
 <main id="top">
   <section class="hero">
-    <div class="hero-grid-bg"></div>
-    <div class="wrap hero-inner">
-      <div>
-        <span class="eyebrow">Cross-border payments for East &amp; West Africa</span>
-        <h1>Pay like you're <em>home</em>, wherever you land.</h1>
-        <p class="hero-sub">Wakala lets people move money between Tanzania, Rwanda, Kenya, Zanzibar and Nigeria in their own local currency — no USD detour, no guessing rate, no multi-day wait.</p>
-        <div class="cta-row">
-          <a href="#investors" class="btn btn-primary">Request investor deck</a>
-          <a href="#app" class="btn btn-ghost">Join the waitlist</a>
-        </div>
-      </div>
 
-      <div class="network-wrap">
-        <svg class="network-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of Wakala's payment network connecting five local currencies through one direct rail">
-          <g id="spokes"></g>
-          <g id="nodes"></g>
-          <g transform="translate(300,300)">
-            <circle class="hub-circle" r="52"></circle>
-            <text class="hub-label" text-anchor="middle" y="-4">WAKALA</text>
-            <text class="node-sub" text-anchor="middle" y="14" fill="#0D1420">direct rail</text>
-          </g>
-        </svg>
-      </div>
+    <!-- Animated background particles -->
+    <div id="particles"></div>
+
+    <!-- Glow effects -->
+    <div class="hero-blur hero-blur-one"></div>
+    <div class="hero-blur hero-blur-two"></div>
+
+
+    <!-- Existing grid background -->
+    <div class="hero-grid-bg"></div>
+
+
+    <div class="wrap hero-inner">
+
+
+        <!-- LEFT CONTENT -->
+
+        <div class="hero-content">
+
+
+            <span class="eyebrow">
+                Cross-border payments for East &amp; West Africa
+            </span>
+
+
+            <h1>
+                Pay like you're
+                <em>home</em>,
+                wherever you land.
+            </h1>
+
+
+            <p class="hero-sub">
+
+                Wakala lets people move money between Tanzania,
+                Rwanda, Kenya, Zanzibar and Nigeria in their own
+                local currency — no USD detour, no guessing rate,
+                no multi-day wait.
+
+            </p>
+
+
+
+            <div class="cta-row">
+
+
+                <a href="#investors"
+                   class="btn btn-primary">
+
+                    Request investor deck
+
+                </a>
+
+
+
+                <a href="#app"
+                   class="btn btn-ghost">
+
+                    Join the waitlist
+
+                </a>
+
+
+            </div>
+
+
+
+
+            <!-- NEW HERO STATS -->
+
+            <div class="hero-stats">
+
+
+                <div class="hero-stat glass">
+
+                    <h3>5</h3>
+
+                    <span>
+                        Launch Markets
+                    </span>
+
+                </div>
+
+
+
+                <div class="hero-stat glass">
+
+                    <h3>&lt;2 min</h3>
+
+                    <span>
+                        Transfer Speed
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="hero-stat glass">
+
+                    <h3>24/7</h3>
+
+                    <span>
+                        Always Available
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+        <!-- RIGHT NETWORK -->
+
+        <div class="network-wrap">
+
+
+
+            <svg 
+            class="network-svg"
+            viewBox="0 0 600 600"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Diagram of Wakala payment network connecting five local currencies through one direct rail">
+
+
+                <g id="spokes"></g>
+
+
+                <g id="nodes"></g>
+
+
+
+                <!-- Central Hub -->
+
+                <g transform="translate(300,300)">
+
+
+                    <circle 
+                    class="hub-circle"
+                    r="52">
+                    </circle>
+
+
+
+                    <text
+                    class="hub-label"
+                    text-anchor="middle"
+                    y="-4">
+
+                        WAKALA
+
+                    </text>
+
+
+
+                    <text
+                    class="node-sub"
+                    text-anchor="middle"
+                    y="14">
+
+                        Direct Rail
+
+                    </text>
+
+
+                </g>
+
+
+            </svg>
+
+
+
+
+
+            <!-- FLOATING CARD 1 -->
+
+            <div class="floating-card glass card-one">
+
+
+                <small>
+                    Today's Transfers
+                </small>
+
+
+                <h3>
+                    24,891
+                </h3>
+
+
+                <p>
+                    ↑ 18% this week
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- FLOATING CARD 2 -->
+
+
+            <div class="floating-card glass card-two">
+
+
+                <small>
+                    Live FX
+                </small>
+
+
+                <h3>
+                    TZS → NGN
+                </h3>
+
+
+                <p>
+                    1 TZS = 0.61 NGN
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- FLOATING CARD 3 -->
+
+
+            <div class="floating-card glass card-three">
+
+
+                <small>
+                    Network Status
+                </small>
+
+
+                <h3>
+                    5 Markets
+                </h3>
+
+
+                <p>
+                    All systems active
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <!-- LIVE TRANSACTION POPUP -->
+
+
+            <div class="live-notification glass">
+
+
+                <strong>
+                    ✓ Transfer Completed
+                </strong>
+
+
+                <span>
+                    Tanzania → Kenya · 42,000 TZS
+                </span>
+
+
+            </div>
+
+
+
+        </div>
+
+
     </div>
+
+
+
+
+
+
+    <!-- EXISTING RATE TICKER -->
 
     <div class="rate-ticker">
-      <div class="wrap" style="padding:0;">
-        <div class="rate-track" id="rateTrack"></div>
-      </div>
+
+
+        <div class="wrap" style="padding:0;">
+
+
+            <div 
+            class="rate-track"
+            id="rateTrack">
+
+            </div>
+
+
+        </div>
+
+
     </div>
-  </section>
+
+
+
+</section>
 
   <div class="trustbar">
     <div class="wrap trust-row">
@@ -996,6 +2153,452 @@ transform:scale(1.4);
   });
 })();
 </script>
+<script>
+  window.addEventListener("load",()=>{
 
+setTimeout(()=>{
+
+loader.style.opacity="0";
+
+loader.style.pointerEvents="none";
+
+},1800);
+
+});
+const progress=document.getElementById("progressBar");
+
+window.addEventListener("scroll",()=>{
+
+const h=document.documentElement;
+
+const sc=(h.scrollTop)/(h.scrollHeight-h.clientHeight);
+
+progress.style.width=sc*100+"%";
+
+},{passive:true});
+const glow=document.querySelector(".cursorGlow");
+
+window.addEventListener("mousemove",(e)=>{
+
+glow.style.left=e.clientX+"px";
+
+glow.style.top=e.clientY+"px";
+
+});
+/* ==========================================================
+   PREMIUM HERO INTERACTIONS
+========================================================== */
+
+
+/* =========================
+   HERO MOUSE PARALLAX
+========================= */
+
+
+const networkWrap = document.querySelector(".network-wrap");
+
+
+if(networkWrap){
+
+document.addEventListener("mousemove",(e)=>{
+
+
+    const x =
+    (e.clientX / window.innerWidth - 0.5) * 18;
+
+
+    const y =
+    (e.clientY / window.innerHeight - 0.5) * 18;
+
+
+
+    networkWrap.style.transform =
+    `
+    perspective(900px)
+    rotateY(${x}deg)
+    rotateX(${-y}deg)
+    `;
+
+
+});
+
+
+}
+
+
+
+
+
+/* =========================
+   BACKGROUND PARTICLES
+========================= */
+
+
+const particleContainer =
+document.getElementById("particles");
+
+
+if(particleContainer){
+
+
+for(let i=0;i<55;i++){
+
+
+    const particle =
+    document.createElement("div");
+
+
+    particle.className =
+    "bg-particle";
+
+
+    particle.style.left =
+    Math.random()*100 + "%";
+
+
+    particle.style.animationDuration =
+    (12 + Math.random()*18) + "s";
+
+
+    particle.style.animationDelay =
+    Math.random()*12 + "s";
+
+
+
+    particleContainer.appendChild(particle);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   MONEY FLOW PARTICLES
+========================= */
+
+
+const svg =
+document.querySelector(".network-svg");
+
+
+const svgNS =
+"http://www.w3.org/2000/svg";
+
+
+
+if(svg){
+
+
+function createMoneyParticle(){
+
+
+const dot =
+document.createElementNS(
+svgNS,
+"circle"
+);
+
+
+
+dot.setAttribute(
+"r",
+"4"
+);
+
+
+
+dot.setAttribute(
+"class",
+"money-particle"
+);
+
+
+
+svg.appendChild(dot);
+
+
+
+const destinations = [
+
+{x:84,y:84},
+
+{x:516,y:84},
+
+{x:84,y:516},
+
+{x:516,y:516},
+
+{x:300,y:84}
+
+];
+
+
+
+const destination =
+destinations[
+Math.floor(
+Math.random()*destinations.length
+)
+];
+
+
+
+dot.animate(
+
+[
+
+{
+
+cx:300,
+cy:300,
+opacity:1
+
+},
+
+{
+
+cx:destination.x,
+cy:destination.y,
+opacity:0
+
+}
+
+],
+
+
+{
+
+
+duration:
+2200 +
+Math.random()*1800,
+
+
+easing:
+"ease-out"
+
+
+}
+
+
+
+);
+
+
+
+setTimeout(()=>{
+
+dot.remove();
+
+},4000);
+
+
+}
+
+
+
+setInterval(
+
+createMoneyParticle,
+
+700
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   LIVE TRANSFER FEED
+========================= */
+
+
+const liveBox =
+document.querySelector(".live-notification");
+
+
+
+const transfers=[
+
+
+"✓ Amina sent 24,000 TZS → Nairobi",
+
+"✓ Chidi received NGN in Lagos",
+
+"✓ Eric converted KES → RWF",
+
+"✓ Fatuma completed cash-out",
+
+"✓ Musa transferred across borders",
+
+"✓ Grace received local currency"
+
+
+];
+
+
+
+let transferIndex=0;
+
+
+
+if(liveBox){
+
+
+setInterval(()=>{
+
+
+transferIndex =
+(transferIndex+1)
+%
+transfers.length;
+
+
+
+liveBox.querySelector("strong")
+.textContent =
+transfers[transferIndex];
+
+
+
+},5000);
+
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   CARD MOUSE TILT
+========================= */
+
+
+document
+.querySelectorAll(".floating-card")
+.forEach(card=>{
+
+
+card.addEventListener(
+"mousemove",
+(e)=>{
+
+
+const rect =
+card.getBoundingClientRect();
+
+
+
+const x =
+(e.clientX-rect.left)
+/ rect.width - .5;
+
+
+
+const y =
+(e.clientY-rect.top)
+/ rect.height - .5;
+
+
+
+card.style.transform =
+`
+
+perspective(500px)
+
+rotateY(${x*12}deg)
+
+rotateX(${-y*12}deg)
+
+translateY(-8px)
+
+`;
+
+
+
+});
+
+
+
+
+
+card.addEventListener(
+"mouseleave",
+()=>{
+
+
+card.style.transform="";
+
+
+});
+
+
+
+});
+
+
+
+
+
+
+
+/* =========================
+   HUB CLICK EFFECT
+========================= */
+
+
+const hub =
+document.querySelector(".hub-circle");
+
+
+
+if(hub){
+
+
+hub.addEventListener(
+"click",
+()=>{
+
+
+hub.style.filter =
+`
+drop-shadow(0 0 30px #E4A445)
+`;
+
+
+
+setTimeout(()=>{
+
+
+hub.style.filter="";
+
+
+},1000);
+
+
+
+});
+
+
+}
+</script>
 </body>
 </html>
