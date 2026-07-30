@@ -2707,452 +2707,488 @@ success.classList.add("show");
 
 
 })();</script>
-<script>
-  window.addEventListener("load",()=>{
-
-setTimeout(()=>{
-
-loader.style.opacity="0";
-
-loader.style.pointerEvents="none";
-
-},1800);
-
-});
-const progress=document.getElementById("progressBar");
-
-window.addEventListener("scroll",()=>{
-
-const h=document.documentElement;
-
-const sc=(h.scrollTop)/(h.scrollHeight-h.clientHeight);
-
-progress.style.width=sc*100+"%";
-
-},{passive:true});
-const glow=document.querySelector(".cursorGlow");
-
-window.addEventListener("mousemove",(e)=>{
-
-glow.style.left=e.clientX+"px";
-
-glow.style.top=e.clientY+"px";
-
-});
+<script><script>
 /* ==========================================================
-   PREMIUM HERO INTERACTIONS
+   WAKALA PREMIUM HERO INTERACTIONS (UPGRADED)
+   - Preserves all existing functionality
+   - Optimized animations
+   - Better performance
+   - Safer DOM handling
 ========================================================== */
 
+/* ==========================================================
+   LOADER
+========================================================== */
 
-/* =========================
-   HERO MOUSE PARALLAX
-========================= */
+const loader = document.getElementById("loader");
 
+window.addEventListener("load", () => {
 
-const networkWrap = document.querySelector(".network-wrap");
+    if (!loader) return;
 
+    setTimeout(() => {
 
-if(networkWrap){
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
 
-document.addEventListener("mousemove",(e)=>{
+        setTimeout(() => {
 
+            loader.remove();
 
-    const x =
-    (e.clientX / window.innerWidth - 0.5) * 18;
+        }, 700);
 
-
-    const y =
-    (e.clientY / window.innerHeight - 0.5) * 18;
-
-
-
-    networkWrap.style.transform =
-    `
-    perspective(900px)
-    rotateY(${x}deg)
-    rotateX(${-y}deg)
-    `;
-
+    }, 1800);
 
 });
 
+
+/* ==========================================================
+   SCROLL PROGRESS BAR
+========================================================== */
+
+const progress = document.getElementById("progressBar");
+
+if (progress) {
+
+    let ticking = false;
+
+    function updateProgress() {
+
+        const doc = document.documentElement;
+
+        const percent =
+            (doc.scrollTop /
+                (doc.scrollHeight - doc.clientHeight)) * 100;
+
+        progress.style.width = `${percent}%`;
+
+        ticking = false;
+    }
+
+    window.addEventListener(
+        "scroll",
+        () => {
+
+            if (!ticking) {
+
+                requestAnimationFrame(updateProgress);
+
+                ticking = true;
+
+            }
+
+        },
+        { passive: true }
+    );
 
 }
 
 
+/* ==========================================================
+   CURSOR GLOW
+========================================================== */
+
+const glow = document.querySelector(".cursorGlow");
+
+if (glow) {
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    let glowX = 0;
+    let glowY = 0;
+
+    window.addEventListener("mousemove", e => {
+
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+    });
+
+    function animateGlow() {
+
+        glowX += (mouseX - glowX) * 0.18;
+        glowY += (mouseY - glowY) * 0.18;
+
+        glow.style.transform =
+            `translate(${glowX}px, ${glowY}px) translate(-50%,-50%)`;
+
+        requestAnimationFrame(animateGlow);
+
+    }
+
+    animateGlow();
+
+}
 
 
+/* ==========================================================
+   HERO PARALLAX
+========================================================== */
 
-/* =========================
+const networkWrap = document.querySelector(".network-wrap");
+
+if (networkWrap) {
+
+    let targetX = 0;
+    let targetY = 0;
+
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener("mousemove", e => {
+
+        targetX =
+            (e.clientX / window.innerWidth - 0.5) * 18;
+
+        targetY =
+            (e.clientY / window.innerHeight - 0.5) * 18;
+
+    });
+
+    function animateParallax() {
+
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+
+        networkWrap.style.transform = `
+            perspective(900px)
+            rotateY(${currentX}deg)
+            rotateX(${-currentY}deg)
+        `;
+
+        requestAnimationFrame(animateParallax);
+
+    }
+
+    animateParallax();
+
+}
+
+
+/* ==========================================================
    BACKGROUND PARTICLES
-========================= */
-
+========================================================== */
 
 const particleContainer =
 document.getElementById("particles");
 
+if (particleContainer) {
 
-if(particleContainer){
+    const particleCount = 55;
 
+    for (let i = 0; i < particleCount; i++) {
 
-for(let i=0;i<55;i++){
+        const particle =
+            document.createElement("div");
 
+        particle.className = "bg-particle";
 
-    const particle =
-    document.createElement("div");
+        particle.style.left =
+            `${Math.random() * 100}%`;
 
+        particle.style.top =
+            `${Math.random() * 100}%`;
 
-    particle.className =
-    "bg-particle";
+        particle.style.opacity =
+            (0.1 + Math.random() * 0.4).toFixed(2);
 
+        particle.style.animationDuration =
+            `${12 + Math.random() * 18}s`;
 
-    particle.style.left =
-    Math.random()*100 + "%";
+        particle.style.animationDelay =
+            `${Math.random() * 12}s`;
 
+        particle.style.transform =
+            `scale(${0.5 + Math.random()})`;
 
-    particle.style.animationDuration =
-    (12 + Math.random()*18) + "s";
+        particleContainer.appendChild(particle);
 
-
-    particle.style.animationDelay =
-    Math.random()*12 + "s";
-
-
-
-    particleContainer.appendChild(particle);
-
+    }
 
 }
 
 
-}
-
-
-
-
-
-
-
-/* =========================
+/* ==========================================================
    MONEY FLOW PARTICLES
-========================= */
+========================================================== */
 
+const svg = document.querySelector(".network-svg");
+const svgNS = "http://www.w3.org/2000/svg";
 
-const svg =
-document.querySelector(".network-svg");
+if (svg) {
 
+    function createMoneyParticle() {
 
-const svgNS =
-"http://www.w3.org/2000/svg";
+        const dot =
+            document.createElementNS(svgNS, "circle");
 
+        dot.setAttribute("r", "4");
+        dot.setAttribute("class", "money-particle");
 
+        svg.appendChild(dot);
 
-if(svg){
+        const destinations = [
 
+            { x: 84, y: 84 },
+            { x: 516, y: 84 },
+            { x: 84, y: 516 },
+            { x: 516, y: 516 },
+            { x: 300, y: 84 }
 
-function createMoneyParticle(){
+        ];
 
+        const destination =
+            destinations[
+            Math.floor(
+                Math.random() * destinations.length
+            )
+            ];
 
-const dot =
-document.createElementNS(
-svgNS,
-"circle"
-);
+        dot.animate(
 
+            [
 
+                {
+                    cx: 300,
+                    cy: 300,
+                    opacity: 1
+                },
 
-dot.setAttribute(
-"r",
-"4"
-);
+                {
+                    cx: destination.x,
+                    cy: destination.y,
+                    opacity: 0
+                }
 
+            ],
 
+            {
 
-dot.setAttribute(
-"class",
-"money-particle"
-);
+                duration:
+                    2200 + Math.random() * 1800,
 
+                easing: "ease-out"
 
+            }
 
-svg.appendChild(dot);
+        );
 
+        setTimeout(() => {
 
+            dot.remove();
 
-const destinations = [
+        }, 4000);
 
-{x:84,y:84},
+    }
 
-{x:516,y:84},
+    let particleTimer;
 
-{x:84,y:516},
+    function startMoneyFlow() {
 
-{x:516,y:516},
+        if (!particleTimer) {
 
-{x:300,y:84}
+            particleTimer =
+                setInterval(createMoneyParticle, 700);
 
-];
+        }
 
+    }
 
+    function stopMoneyFlow() {
 
-const destination =
-destinations[
-Math.floor(
-Math.random()*destinations.length
-)
-];
+        clearInterval(particleTimer);
+        particleTimer = null;
 
+    }
 
+    document.addEventListener(
+        "visibilitychange",
+        () => {
 
-dot.animate(
+            if (document.hidden)
+                stopMoneyFlow();
+            else
+                startMoneyFlow();
 
-[
+        }
+    );
 
-{
-
-cx:300,
-cy:300,
-opacity:1
-
-},
-
-{
-
-cx:destination.x,
-cy:destination.y,
-opacity:0
-
-}
-
-],
-
-
-{
-
-
-duration:
-2200 +
-Math.random()*1800,
-
-
-easing:
-"ease-out"
-
-
-}
-
-
-
-);
-
-
-
-setTimeout(()=>{
-
-dot.remove();
-
-},4000);
-
+    startMoneyFlow();
 
 }
 
 
-
-setInterval(
-
-createMoneyParticle,
-
-700
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-/* =========================
+/* ==========================================================
    LIVE TRANSFER FEED
-========================= */
-
+========================================================== */
 
 const liveBox =
 document.querySelector(".live-notification");
 
+const transfers = [
 
-
-const transfers=[
-
-
-"✓ Amina sent 24,000 TZS → Nairobi",
-
-"✓ Chidi received NGN in Lagos",
-
-"✓ Eric converted KES → RWF",
-
-"✓ Fatuma completed cash-out",
-
-"✓ Musa transferred across borders",
-
-"✓ Grace received local currency"
-
+    "✓ Amina sent 24,000 TZS → Nairobi",
+    "✓ Chidi received NGN in Lagos",
+    "✓ Eric converted KES → RWF",
+    "✓ Fatuma completed cash-out",
+    "✓ Musa transferred across borders",
+    "✓ Grace received local currency"
 
 ];
 
+let transferIndex = 0;
 
+if (liveBox) {
 
-let transferIndex=0;
+    const message =
+        liveBox.querySelector("strong");
 
+    if (message) {
 
+        setInterval(() => {
 
-if(liveBox){
+            transferIndex =
+                (transferIndex + 1) %
+                transfers.length;
 
+            message.animate(
 
-setInterval(()=>{
+                [
 
+                    {
+                        opacity: 0,
+                        transform: "translateY(10px)"
+                    },
 
-transferIndex =
-(transferIndex+1)
-%
-transfers.length;
+                    {
+                        opacity: 1,
+                        transform: "translateY(0)"
+                    }
 
+                ],
 
+                {
 
-liveBox.querySelector("strong")
-.textContent =
-transfers[transferIndex];
+                    duration: 350,
+                    easing: "ease-out"
 
+                }
 
+            );
 
-},5000);
+            message.textContent =
+                transfers[transferIndex];
 
+        }, 5000);
 
+    }
 
 }
 
 
-
-
-
-
-
-/* =========================
-   CARD MOUSE TILT
-========================= */
-
+/* ==========================================================
+   FLOATING CARD TILT
+========================================================== */
 
 document
 .querySelectorAll(".floating-card")
-.forEach(card=>{
+.forEach(card => {
 
+    card.style.transition =
+        "transform .15s ease";
 
-card.addEventListener(
-"mousemove",
-(e)=>{
+    card.addEventListener(
+        "mousemove",
+        e => {
 
+            const rect =
+                card.getBoundingClientRect();
 
-const rect =
-card.getBoundingClientRect();
+            const x =
+                (e.clientX - rect.left)
+                / rect.width - .5;
 
+            const y =
+                (e.clientY - rect.top)
+                / rect.height - .5;
 
+            card.style.transform = `
 
-const x =
-(e.clientX-rect.left)
-/ rect.width - .5;
+                perspective(600px)
 
+                rotateY(${x * 10}deg)
 
+                rotateX(${-y * 10}deg)
 
-const y =
-(e.clientY-rect.top)
-/ rect.height - .5;
+                translateY(-8px)
 
+                scale(1.02)
 
+            `;
 
-card.style.transform =
-`
+        }
+    );
 
-perspective(500px)
+    card.addEventListener(
+        "mouseleave",
+        () => {
 
-rotateY(${x*12}deg)
+            card.style.transform =
+                "perspective(600px) rotateX(0) rotateY(0)";
 
-rotateX(${-y*12}deg)
-
-translateY(-8px)
-
-`;
-
-
-
-});
-
-
-
-
-
-card.addEventListener(
-"mouseleave",
-()=>{
-
-
-card.style.transform="";
-
+        }
+    );
 
 });
 
 
-
-});
-
-
-
-
-
-
-
-/* =========================
+/* ==========================================================
    HUB CLICK EFFECT
-========================= */
-
+========================================================== */
 
 const hub =
 document.querySelector(".hub-circle");
 
+if (hub) {
 
+    hub.addEventListener(
+        "click",
+        () => {
 
-if(hub){
+            hub.style.filter =
+                "drop-shadow(0 0 30px #E4A445)";
 
+            hub.animate(
 
-hub.addEventListener(
-"click",
-()=>{
+                [
 
+                    { transform: "scale(1)" },
+                    { transform: "scale(1.18)" },
+                    { transform: "scale(1)" }
 
-hub.style.filter =
-`
-drop-shadow(0 0 30px #E4A445)
-`;
+                ],
 
+                {
 
+                    duration: 700,
+                    easing: "ease-out"
 
-setTimeout(()=>{
+                }
 
+            );
 
-hub.style.filter="";
+            setTimeout(() => {
 
+                hub.style.filter = "";
 
-},1000);
+            }, 1000);
 
-
-
-});
-
+        }
+    );
 
 }
+</script>
 </script>
 </body>
 </html>
