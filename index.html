@@ -1396,6 +1396,61 @@ translateY(-20vh);
 
 
 }
+
+  /* ---------- AUTH FLOW ---------- */
+  .auth-screen{
+    position:fixed; inset:0; z-index:500;
+    display:grid; place-items:center; padding:32px;
+    background:var(--ink); color:var(--text-light);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .45s ease, visibility .45s ease, background 1.4s var(--ease), color 1.4s var(--ease);
+    overflow:auto;
+  }
+  .auth-screen.open{ opacity:1; visibility:visible; pointer-events:auto; }
+  .auth-screen.login-mode{ background:var(--paper); color:var(--ink); }
+  .auth-shell{ width:min(1080px,100%); display:grid; grid-template-columns:1fr .86fr; min-height:650px; border:1px solid var(--line-on-dark); border-radius:28px; overflow:hidden; box-shadow:var(--shadow-xl); transition:border-color 1.4s var(--ease), box-shadow 1.4s var(--ease); }
+  .login-mode .auth-shell{ border-color:var(--line-on-paper); box-shadow:var(--shadow-lg); }
+  .auth-story{ padding:52px; background:linear-gradient(145deg,#101b2e,#09111d); position:relative; overflow:hidden; }
+  .auth-story::after{ content:''; position:absolute; width:360px; height:360px; border-radius:50%; right:-140px; bottom:-150px; background:rgba(228,164,69,.16); filter:blur(60px); transition:background 1.4s var(--ease); }
+  .login-mode .auth-story{ background:linear-gradient(145deg,#f2ebda,#dceee5); }
+  .login-mode .auth-story::after{ background:rgba(34,145,117,.2); }
+  .auth-story .logo{ position:relative; z-index:1; }
+  .auth-story-content{ position:relative; z-index:1; margin-top:110px; max-width:390px; }
+  .auth-story h2{ font-size:clamp(38px,5vw,64px); line-height:1.02; margin:18px 0; }
+  .auth-story p{ color:var(--muted-on-dark); font-size:16px; line-height:1.7; transition:color 1.4s var(--ease); }
+  .login-mode .auth-story p{ color:var(--muted-on-paper); }
+  .auth-route{ display:flex; gap:12px; align-items:center; margin-top:34px; color:var(--muted-on-dark); font:12px 'IBM Plex Mono',monospace; transition:color 1.4s var(--ease); }
+  .login-mode .auth-route{ color:var(--muted-on-paper); }
+  .auth-route i{ width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 5px rgba(34,145,117,.15); }
+  .auth-panel{ background:rgba(18,27,46,.96); padding:52px 48px; position:relative; transition:background 1.4s var(--ease); }
+  .login-mode .auth-panel{ background:rgba(255,255,255,.78); }
+  .auth-close{ position:absolute; top:22px; right:24px; width:36px; height:36px; border:1px solid var(--line-on-dark); border-radius:50%; background:transparent; color:var(--text-light); font-size:22px; line-height:1; transition:color 1.4s var(--ease), border-color 1.4s var(--ease); }
+  .login-mode .auth-close{ color:var(--ink); border-color:var(--line-on-paper); }
+  .auth-panel h3{ font-size:32px; margin:48px 0 10px; }
+  .auth-panel > p{ color:var(--muted-on-dark); font-size:14px; line-height:1.6; transition:color 1.4s var(--ease); }
+  .login-mode .auth-panel > p{ color:var(--muted-on-paper); }
+  .auth-form{ margin-top:28px; }
+  .auth-field{ margin-bottom:16px; }
+  .auth-field label{ display:block; margin-bottom:7px; color:var(--muted-on-dark); font:11px 'IBM Plex Mono',monospace; letter-spacing:.08em; text-transform:uppercase; transition:color 1.4s var(--ease); }
+  .login-mode .auth-field label{ color:var(--muted-on-paper); }
+  .auth-field input{ width:100%; padding:13px 14px; border:1px solid var(--line-on-dark); border-radius:10px; background:var(--ink-3); color:var(--text-light); font:14px 'Inter',sans-serif; transition:background 1.4s var(--ease), color 1.4s var(--ease), border-color 1.4s var(--ease); }
+  .login-mode .auth-field input{ background:#fff; color:var(--ink); border-color:var(--line-on-paper); }
+  .auth-field input:focus{ outline:none; border-color:var(--gold); }
+  .auth-submit{ width:100%; justify-content:center; margin-top:6px; }
+  .auth-switch{ margin-top:24px; text-align:center; color:var(--muted-on-dark); font-size:13px; transition:color 1.4s var(--ease); }
+  .login-mode .auth-switch{ color:var(--muted-on-paper); }
+  .auth-switch button{ border:0; background:none; color:var(--gold-dark); font-weight:700; font-family:inherit; padding:0 0 0 4px; }
+  .auth-note{ margin-top:20px; color:var(--muted-on-dark); font-size:11px; line-height:1.5; text-align:center; transition:color 1.4s var(--ease); }
+  .login-mode .auth-note{ color:var(--muted-on-paper); }
+  @media(max-width:760px){
+    .auth-screen{ padding:16px; }
+    .auth-shell{ grid-template-columns:1fr; min-height:0; }
+    .auth-story{ padding:32px; min-height:270px; }
+    .auth-story-content{ margin-top:54px; }
+    .auth-story h2{ font-size:42px; }
+    .auth-panel{ padding:28px 26px 34px; }
+    .auth-panel h3{ margin-top:30px; }
+  }
 </style>
 </head>
 <body>
@@ -1426,7 +1481,7 @@ translateY(-20vh);
       <a href="#how">How it works</a>
       <a href="#coverage">Coverage</a>
       <a href="#app">App &amp; eSIM</a>
-      <a href="#investors">Investors</a>
+      <a href="#signup" data-auth="signup">Sign Up</a>
     </nav>
     <a href="#investors" class="nav-cta">Investments</a>
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
@@ -1441,8 +1496,35 @@ translateY(-20vh);
   <a href="#coverage">Coverage</a>
   <a href="#app">App &amp; eSIM</a>
   <a href="#investors">Investors</a>
-  <a href="#investors" class="btn btn-primary nav-cta">Investments</a>
+  <a href="#signup" data-auth="signup" class="btn btn-primary nav-cta">Sign Up</a>
 </div>
+
+<section class="auth-screen" id="authScreen" aria-label="Wakala account access" aria-hidden="true">
+  <div class="auth-shell">
+    <div class="auth-story">
+      <a href="#top" class="logo"><span class="dot"></span>WAKALA</a>
+      <div class="auth-story-content">
+        <span class="eyebrow">A wallet that travels with you</span>
+        <h2>Keep your money close to home.</h2>
+        <p>Join the early Wakala network and move between local currencies with less friction, wherever the road takes you.</p>
+        <div class="auth-route"><i></i><span>TZS</span><span>→</span><span>KES</span><span>→</span><span>RWF</span></div>
+      </div>
+    </div>
+    <div class="auth-panel">
+      <button class="auth-close" type="button" aria-label="Close account access">×</button>
+      <h3 id="authTitle">Create your account</h3>
+      <p id="authIntro">Be first to access the wallet built for movement across Africa.</p>
+      <form class="auth-form" id="authForm">
+        <div class="auth-field auth-name-field"><label for="authName">Full name</label><input id="authName" type="text" autocomplete="name" placeholder="Your name" required></div>
+        <div class="auth-field"><label for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+        <div class="auth-field auth-password-field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required></div>
+        <button class="btn btn-primary auth-submit" type="submit" id="authSubmit">Join the waitlist</button>
+      </form>
+      <p class="auth-switch"><span id="authSwitchPrompt">Already have an account?</span><button type="button" id="authSwitch">Log in</button></p>
+      <p class="auth-note" id="authNote">By continuing, you agree to receive occasional updates from Wakala.</p>
+    </div>
+  </div>
+</section>
 
 <main id="top">
   <section class="hero">
@@ -1502,7 +1584,7 @@ translateY(-20vh);
 
 
 
-                <a href="#app"
+                <a href="#signup" data-auth="signup"
                    class="btn btn-ghost">
 
                     Join the waitlist
@@ -3162,6 +3244,76 @@ if (hub) {
     );
 
 }
+</script>
+
+<script>
+(function(){
+  const authScreen = document.getElementById('authScreen');
+  const authForm = document.getElementById('authForm');
+  const authSwitch = document.getElementById('authSwitch');
+  const authClose = authScreen && authScreen.querySelector('.auth-close');
+  const authTitle = document.getElementById('authTitle');
+  const authIntro = document.getElementById('authIntro');
+  const authSubmit = document.getElementById('authSubmit');
+  const authSwitchPrompt = document.getElementById('authSwitchPrompt');
+  const authNameField = document.querySelector('.auth-name-field');
+  const authPassword = document.getElementById('authPassword');
+
+  if(!authScreen) return;
+
+  function setMode(mode){
+    const login = mode === 'login';
+    authScreen.classList.toggle('login-mode', login);
+    authTitle.textContent = login ? 'Welcome back' : 'Create your account';
+    authIntro.textContent = login ? 'Pick up where you left off with your local-currency wallet.' : 'Be first to access the wallet built for movement across Africa.';
+    authSubmit.textContent = login ? 'Log in to Wakala' : 'Join the waitlist';
+    authSwitchPrompt.textContent = login ? "Don't have an account?" : 'Already have an account?';
+    authSwitch.textContent = login ? 'Sign up' : 'Log in';
+    authNameField.hidden = login;
+    authNameField.querySelector('input').required = !login;
+    authPassword.autocomplete = login ? 'current-password' : 'new-password';
+  }
+
+  function openAuth(mode){
+    setMode(mode || 'signup');
+    authScreen.classList.add('open');
+    authScreen.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(function(){
+      const firstField = authScreen.querySelector('.auth-screen input:not([hidden])');
+      if(firstField) firstField.focus();
+    }, 300);
+  }
+
+  function closeAuth(){
+    authScreen.classList.remove('open');
+    authScreen.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-auth]').forEach(function(trigger){
+    trigger.addEventListener('click', function(event){
+      event.preventDefault();
+      openAuth(trigger.dataset.auth);
+    });
+  });
+
+  authSwitch.addEventListener('click', function(){
+    setMode(authScreen.classList.contains('login-mode') ? 'signup' : 'login');
+  });
+  authClose.addEventListener('click', closeAuth);
+  authScreen.addEventListener('click', function(event){
+    if(event.target === authScreen) closeAuth();
+  });
+  document.addEventListener('keydown', function(event){
+    if(event.key === 'Escape' && authScreen.classList.contains('open')) closeAuth();
+  });
+  authForm.addEventListener('submit', function(event){
+    event.preventDefault();
+    authSubmit.textContent = authScreen.classList.contains('login-mode') ? 'Login demo submitted' : 'You are on the list';
+    authSubmit.disabled = true;
+  });
+})();
 </script>
 
 </body>
