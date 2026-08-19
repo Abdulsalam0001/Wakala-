@@ -61,8 +61,23 @@
 		.row-amount small { display:block; margin-top:3px; color:var(--muted); font-size:10px; font-weight:400; }
 		.positive { color:var(--teal); }
 		.negative { color:var(--red); }
-		@media (max-width:820px) { .app { grid-template-columns:1fr; } .sidebar { padding:18px 20px; } .sidebar-label, .sidebar-bottom, .nav a:not(.active) { display:none; } .nav { display:flex; margin-top:18px; } .nav a { padding:9px 12px; } .nav a:not(.active) { display:flex; } .brand { padding:0; } .content { padding-top:24px; } .topbar { margin-bottom:38px; } }
-		@media (max-width:620px) { .dashboard-grid, .lower-grid { grid-template-columns:1fr; } .balance-card { padding:24px; } .topbar p { display:none; } .content { padding:22px 16px 36px; } h1 { font-size:44px; } }
+		.esim-card { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(180px,.8fr); gap:24px; margin-top:18px; padding:28px; border-radius:14px; background:linear-gradient(125deg,#166B54,#229175 58%,#E4A445); color:#fff; overflow:hidden; }
+		.esim-card h2 { max-width:420px; margin:8px 0 10px; font:600 clamp(28px,4vw,44px)/1.05 Fraunces,serif; }
+		.esim-card p { max-width:470px; margin:0; color:rgba(255,255,255,.78); font-size:13px; line-height:1.65; }
+		.esim-kicker { color:#DDF3E8; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+		.esim-button { display:inline-flex; margin-top:22px; padding:11px 16px; border:0; border-radius:8px; background:#fff; color:var(--ink); font-size:12px; font-weight:700; cursor:pointer; }
+		.esim-preview { display:flex; align-items:center; justify-content:center; min-height:150px; border:1px solid rgba(255,255,255,.32); border-radius:12px; background:rgba(13,20,32,.15); }
+		.sim-shape { position:relative; width:112px; height:142px; padding:18px 14px; border:2px solid rgba(255,255,255,.82); border-radius:12px; transform:rotate(8deg); }
+		.sim-shape::before { content:'WAKALA'; display:block; color:#fff; font:700 10px IBM Plex Mono,monospace; letter-spacing:.1em; }
+		.sim-lines { display:grid; gap:7px; margin-top:24px; }
+		.sim-lines span { display:block; height:2px; background:rgba(255,255,255,.7); }
+		.feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }
+		.feature { padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+		.feature-mark { color:var(--teal); font-size:20px; }
+		.feature strong { display:block; margin-top:14px; font-size:13px; }
+		.feature span { display:block; margin-top:7px; color:var(--muted); font-size:11px; line-height:1.5; }
+		@media (max-width:820px) { .app { grid-template-columns:1fr; } .sidebar { padding:18px 20px; } .sidebar-label, .sidebar-bottom, .nav a:not(.active) { display:none; } .nav { display:flex; margin-top:18px; } .nav a { padding:9px 12px; } .nav a:not(.active) { display:flex; } .brand { padding:0; } .content { padding-top:24px; } .topbar { margin-bottom:38px; } .esim-card { grid-template-columns:1fr; } .esim-preview { min-height:120px; } }
+		@media (max-width:620px) { .dashboard-grid, .lower-grid { grid-template-columns:1fr; } .feature-grid { grid-template-columns:1fr; } .balance-card { padding:24px; } .topbar p { display:none; } .content { padding:22px 16px 36px; } h1 { font-size:44px; } .esim-card { padding:22px; } }
 	</style>
 </head>
 <body>
@@ -74,6 +89,7 @@
 				<a class="active" href="dashboard.html"><span class="nav-icon">◈</span>Overview</a>
 				<a href="#wallet"><span class="nav-icon">◌</span>Wallet</a>
 				<a href="#transfers"><span class="nav-icon">↗</span>Transfers</a>
+				<a href="#esim"><span class="nav-icon">▣</span>Travel eSIM</a>
 				<a href="#activity"><span class="nav-icon">◷</span>Activity</a>
 			</nav>
 			<div class="sidebar-bottom"><p>Wakala is in development. Balances shown here are a product preview.</p><button class="logout" id="logoutButton" type="button">Log out</button></div>
@@ -91,6 +107,11 @@
 				</section>
 				<section class="card quick" id="transfers"><h3>Quick actions</h3><div class="quick-actions"><button class="action"><strong>Send money</strong><span>Move funds across borders</span></button><button class="action"><strong>Convert</strong><span>Switch local currency</span></button><button class="action"><strong>Add funds</strong><span>Top up your wallet</span></button><button class="action"><strong>Get help</strong><span>Talk to Wakala support</span></button></div></section>
 			</div>
+			<section class="esim-card" id="esim" aria-labelledby="esim-title">
+				<div><div class="esim-kicker">Stay connected when you land</div><h2 id="esim-title">Your travel eSIM, ready for the next border.</h2><p>Activate mobile data before you leave, keep your Wakala wallet online, and land connected across the markets you move through.</p><button class="esim-button" type="button">Explore eSIM plans</button></div>
+				<div class="esim-preview" aria-label="Wakala eSIM preview"><div class="sim-shape"><div class="sim-lines"><span></span><span></span><span></span></div></div></div>
+			</section>
+			<div class="feature-grid" aria-label="Wakala features"><div class="feature"><div class="feature-mark">⌁</div><strong>Local-currency wallet</strong><span>Hold TZS, KES, RWF and NGN in one account.</span></div><div class="feature"><div class="feature-mark">↗</div><strong>Direct transfers</strong><span>Send across borders with the rate shown first.</span></div><div class="feature"><div class="feature-mark">◉</div><strong>Agent cash-out</strong><span>Move from digital balance to trusted local access.</span></div></div>
 			<div class="lower-grid">
 				<section class="card" id="wallet"><div class="section-head"><h2 class="section-title">Your currencies</h2><a href="#wallet">Manage</a></div><div class="currency-row"><div class="currency-mark">TZS</div><div class="row-main"><strong>Tanzanian Shilling</strong><span>Primary wallet</span></div><div class="row-amount">0.00<small>TZS</small></div></div><div class="currency-row"><div class="currency-mark">KES</div><div class="row-main"><strong>Kenyan Shilling</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>KES</small></div></div><div class="currency-row"><div class="currency-mark">NGN</div><div class="row-main"><strong>Nigerian Naira</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>NGN</small></div></div></section>
 				<section class="card" id="activity"><div class="section-head"><h2 class="section-title">Recent activity</h2><a href="#activity">View all</a></div><div class="transaction"><div class="currency-mark">+</div><div class="row-main"><strong>Wallet created</strong><span>Today</span></div><div class="row-amount positive">Ready</div></div><div class="transaction"><div class="currency-mark">FX</div><div class="row-main"><strong>Direct currency rail</strong><span>Available across 5 markets</span></div><div class="row-amount">Live</div></div></section>
