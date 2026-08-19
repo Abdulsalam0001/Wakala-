@@ -1461,6 +1461,9 @@ translateY(-20vh);
   .auth-switch{ margin-top:24px; text-align:center; color:var(--muted-on-dark); font-size:13px; transition:color 1.4s var(--ease); }
   .login-mode .auth-switch{ color:var(--muted-on-paper); }
   .auth-switch button{ border:0; background:none; color:var(--gold-dark); font-weight:700; font-family:inherit; padding:0 0 0 4px; }
+  .auth-status{ min-height:18px; margin-top:14px; color:var(--muted-on-dark); font-size:12px; line-height:1.5; text-align:center; }
+  .auth-status.error{ color:#e07a72; }
+  .auth-status.success{ color:var(--teal); }
   .auth-note{ margin-top:20px; color:var(--muted-on-dark); font-size:11px; line-height:1.5; text-align:center; transition:color 1.4s var(--ease); }
   .login-mode .auth-note{ color:var(--muted-on-paper); }
   @media(max-width:760px){
@@ -1527,7 +1530,7 @@ translateY(-20vh);
       <div class="auth-story-content">
         <span class="eyebrow">A wallet that travels with you</span>
         <h2>Keep your money close to home.</h2>
-        <p>Join the early Wakala network and move between local currencies with less friction, wherever the road takes you.</p>
+        <p>Create your Wakala account and move between local currencies with less friction, wherever the road takes you.</p>
         <div class="auth-route"><i></i><span>TZS</span><span>→</span><span>KES</span><span>→</span><span>RWF</span></div>
       </div>
     </div>
@@ -1539,10 +1542,11 @@ translateY(-20vh);
         <div class="auth-field auth-name-field"><label for="authName">Full name</label><input id="authName" type="text" autocomplete="name" placeholder="Your name" required></div>
         <div class="auth-field"><label for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
         <div class="auth-field auth-password-field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required></div>
-        <button class="btn btn-primary auth-submit" type="submit" id="authSubmit">Join the waitlist</button>
+        <button class="btn btn-primary auth-submit" type="submit" id="authSubmit">Create account</button>
       </form>
+      <p class="auth-status" id="authStatus" role="status" aria-live="polite"></p>
       <p class="auth-switch"><span id="authSwitchPrompt">Already have an account?</span><button type="button" id="authSwitch">Log in</button></p>
-      <p class="auth-note" id="authNote">By continuing, you agree to receive occasional updates from Wakala.</p>
+      <p class="auth-note" id="authNote">By continuing, you agree to Wakala's terms and privacy policy.</p>
     </div>
   </div>
 </section>
@@ -1608,7 +1612,7 @@ translateY(-20vh);
                 <a href="#signup" data-auth="signup"
                    class="btn btn-ghost">
 
-                    Join the waitlist
+                    Create your account
 
                 </a>
 
@@ -3267,8 +3271,12 @@ if (hub) {
 }
 </script>
 
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
 (function(){
+  const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
   const authScreen = document.getElementById('authScreen');
   const authForm = document.getElementById('authForm');
   const authSwitch = document.getElementById('authSwitch');
@@ -3279,6 +3287,7 @@ if (hub) {
   const authSwitchPrompt = document.getElementById('authSwitchPrompt');
   const authNameField = document.querySelector('.auth-name-field');
   const authPassword = document.getElementById('authPassword');
+  const authStatus = document.getElementById('authStatus');
 
   if(!authScreen) return;
 
@@ -3286,13 +3295,15 @@ if (hub) {
     const login = mode === 'login';
     authScreen.classList.toggle('login-mode', login);
     authTitle.textContent = login ? 'Welcome back' : 'Create your account';
-    authIntro.textContent = login ? 'Pick up where you left off with your local-currency wallet.' : 'Be first to access the wallet built for movement across Africa.';
-    authSubmit.textContent = login ? 'Log in to Wakala' : 'Join the waitlist';
+    authIntro.textContent = login ? 'Pick up where you left off with your local-currency wallet.' : 'Create your account for the wallet built for movement across Africa.';
+    authSubmit.textContent = login ? 'Log in to Wakala' : 'Create account';
     authSwitchPrompt.textContent = login ? "Don't have an account?" : 'Already have an account?';
     authSwitch.textContent = login ? 'Sign up' : 'Log in';
     authNameField.hidden = login;
     authNameField.querySelector('input').required = !login;
     authPassword.autocomplete = login ? 'current-password' : 'new-password';
+    authStatus.textContent = '';
+    authStatus.className = 'auth-status';
   }
 
   function openAuth(mode){
@@ -3329,10 +3340,50 @@ if (hub) {
   document.addEventListener('keydown', function(event){
     if(event.key === 'Escape' && authScreen.classList.contains('open')) closeAuth();
   });
-  authForm.addEventListener('submit', function(event){
+  authForm.addEventListener('submit', async function(event){
     event.preventDefault();
-    authSubmit.textContent = authScreen.classList.contains('login-mode') ? 'Login demo submitted' : 'You are on the list';
+    const login = authScreen.classList.contains('login-mode');
+    const email = document.getElementById('authEmail').value.trim();
+    const password = authPassword.value;
+    const name = document.getElementById('authName').value.trim();
+
+    authStatus.textContent = '';
+    authStatus.className = 'auth-status';
+    authSubmit.textContent = login ? 'Logging in...' : 'Creating account...';
     authSubmit.disabled = true;
+
+    const result = login
+      ? await supabase.auth.signInWithPassword({ email, password })
+      : await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: name } }
+        });
+
+    if(result.error){
+      authStatus.textContent = result.error.message;
+      authStatus.className = 'auth-status error';
+      authSubmit.textContent = login ? 'Log in to Wakala' : 'Create account';
+      authSubmit.disabled = false;
+      return;
+    }
+
+    if(login){
+      authStatus.textContent = 'Login successful. Redirecting...';
+      authStatus.className = 'auth-status success';
+      window.location.href = 'dashboard.html';
+      return;
+    }
+
+    if(result.data.session){
+      authStatus.textContent = 'Account created. Redirecting...';
+      authStatus.className = 'auth-status success';
+      window.location.href = 'dashboard.html';
+    } else {
+      authStatus.textContent = 'Account created. Check your email to confirm it, then log in.';
+      authStatus.className = 'auth-status success';
+      authSubmit.textContent = 'Account created';
+    }
   });
 })();
 </script>
