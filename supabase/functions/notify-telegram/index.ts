@@ -20,12 +20,11 @@ Deno.serve(async (request) => {
 
   try {
     const payload = await request.json();
-    const record = payload.record ?? {};
-    const name = escapeHtml(record.full_name || 'Not provided');
-    const email = escapeHtml(record.email || 'Not provided');
-    const createdAt = escapeHtml(record.created_at || new Date().toISOString());
+    const name = escapeHtml(payload.full_name || 'Not provided');
+    const email = escapeHtml(payload.email || 'Not provided');
+    const createdAt = escapeHtml(payload.created_at || new Date().toISOString());
     const message = [
-      '<b>New Wakala signup</b>',
+      '<b>New Wakala account</b>',
       '',
       `<b>Name:</b> ${name}`,
       `<b>Email:</b> ${email}`,
@@ -54,6 +53,6 @@ Deno.serve(async (request) => {
     return Response.json({ ok: true });
   } catch (error) {
     console.error('Notification error:', error);
-    return Response.json({ error: 'Invalid webhook payload' }, { status: 400 });
+    return Response.json({ error: 'Invalid notification payload' }, { status: 400 });
   }
 });

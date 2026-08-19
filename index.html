@@ -3391,6 +3391,17 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
     }
 
     if(login || result.data?.session){
+      if(!login){
+        supabase.functions.invoke('notify-telegram', {
+          body: {
+            full_name: name,
+            email,
+            created_at: new Date().toISOString()
+          }
+        }).catch(function(error){
+          console.error('Signup notification failed:', error);
+        });
+      }
       authStatus.textContent = 'Login successful. Redirecting...';
       authStatus.className = 'auth-status success';
       window.location.href = 'dashboard.html';
