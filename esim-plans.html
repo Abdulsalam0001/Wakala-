@@ -20,8 +20,8 @@ const liveStatus = document.getElementById('status');
 const createLocalTestOrder = () => ({ id: `WKL-LOCAL-${Date.now().toString().slice(-8)}`, status: 'local_mock_ready', profile: { iccid: `LOCAL-${Date.now()}`, lpa: 'LPA:1$local.wakala.test$WAKALA-LOCAL' } });
 document.getElementById('esimForm').addEventListener('submit', async event => {
 	event.preventDefault();
-	liveStatus.textContent = 'Submitting your order to Nexar...';
-	const { data, error } = await supabase.functions.invoke('nexar-esim-order', { body: { plan: 4832, country: 'TZ', wallet_currency: 'USDC' } });
+	liveStatus.textContent = 'Submitting your order to eSIM Access...';
+	const { data, error } = await supabase.functions.invoke('nexar-esim-order', { body: { package_code: 4832, country: 'TZ' } });
 	const fallback = error ? createLocalTestOrder() : null;
 	const order = data?.order || fallback;
 	const profile = data?.profile || fallback?.profile || {};
