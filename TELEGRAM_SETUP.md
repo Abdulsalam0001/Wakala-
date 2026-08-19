@@ -1,4 +1,4 @@
-# Telegram signup notifications
+# Silent Telegram signup notifications
 
 The bot token must stay in Supabase secrets. Never put it in `index.html`, `supabase-config.js`, or GitHub.
 
@@ -41,4 +41,6 @@ In Supabase, open **Database → Webhooks → Create a new webhook**:
 - Type: `Supabase Edge Functions`
 - Function: `notify-telegram`
 
-Save it and create a test account. The function will send the new user's name and email to the configured Telegram chat.
+Save it and create a test account. The function sends the new user's name and email directly to the configured Telegram chat in the background. The user sees no Telegram message or extra step in the Wakala form.
+
+If `profiles` already exists, run the latest `supabase-schema.sql` once in the Supabase SQL Editor so the email column and trigger are updated.
