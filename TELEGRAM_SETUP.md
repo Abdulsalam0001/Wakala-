@@ -27,7 +27,9 @@ Install and log in to the Supabase CLI, then run these commands from the reposit
 
 ```bash
 supabase link --project-ref swptbxwkvlacqhqetoia
-supabase secrets set TELEGRAM_BOT_TOKEN=NEW_TOKEN TELEGRAM_CHAT_ID=YOUR_CHAT_ID
+cp .env.example .env
+# Edit .env and enter the rotated token and chat ID locally.
+supabase secrets set --env-file .env
 supabase functions deploy notify-telegram
 ```
 
