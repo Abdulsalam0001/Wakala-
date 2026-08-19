@@ -52,6 +52,7 @@
 		.balance-change { color:#8BD2B6; font-size:12px; }
 		.account-number { margin-top:8px; color:#9AA6B9; font:400 10px 'IBM Plex Mono',monospace; letter-spacing:.04em; }
 		.currency { border:1px solid rgba(245,241,231,.2); border-radius:20px; padding:7px 10px; color:#F5F1E7; background:transparent; font-size:11px; }
+		.currency-select { border:1px solid rgba(245,241,231,.2); border-radius:20px; padding:7px 10px; color:#F5F1E7; background:var(--ink); font-size:11px; }
 		.card-footer { margin-top:32px; color:#9AA6B9; font-size:11px; }
 		.quick { display:grid; gap:14px; }
 		.quick h3, .section-title { margin:0; font:600 22px Fraunces,serif; }
@@ -63,6 +64,7 @@
 		.lower-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr); gap:18px; margin-top:18px; }
 		.section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
 		.section-head a { color:var(--teal); font-size:12px; font-weight:700; text-decoration:none; }
+		.visibility-toggle { border:0; background:transparent; color:var(--teal); font-size:12px; font-weight:700; cursor:pointer; }
 		.currency-row, .transaction { display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--line); }
 		.currency-row:first-of-type, .transaction:first-of-type { border-top:0; }
 		.currency-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:#E4F1EB; color:var(--teal); font-size:11px; font-weight:700; }
@@ -102,7 +104,8 @@
 				<a class="active" href="dashboard.html"><span class="nav-icon">◈</span>Overview</a>
 				<a href="#wallet"><span class="nav-icon">◌</span>Wallet</a>
 				<a href="#transfers"><span class="nav-icon">↗</span>Transfers</a>
-				<a href="#esim"><span class="nav-icon">▣</span>Travel eSIM</a>
+				<a href="esim-plans.html"><span class="nav-icon">▣</span>Travel eSIM</a>
+				<a href="staking.html"><span class="nav-icon">◒</span>Earn &amp; stake</a>
 				<a href="#activity"><span class="nav-icon">◷</span>Activity</a>
 			</nav>
 			<div class="sidebar-bottom"><p>Wakala is in development. Balances shown here are a product preview.</p><button class="logout" id="logoutButton" type="button">Log out</button></div>
@@ -114,19 +117,19 @@
 			<p class="lead">One account for your money across the markets you move through.</p>
 			<div class="dashboard-grid">
 				<section class="card balance-card shadow-xl" aria-label="Total wallet balance">
-					<div class="card-top"><span class="card-label">Total balance</span><span class="currency">TZS</span></div>
-					<div class="balance-value">0.00 TZS</div><div class="balance-change">Your wallet is ready for its first transfer</div><div class="account-number">WAKALA ACCOUNT  ••••  0042</div>
+					<div class="card-top"><span class="card-label">Total balance</span><select class="currency-select" id="balanceCurrency" aria-label="Choose balance currency"><option>TZS</option><option>KES</option><option>RWF</option><option>NGN</option><option>USDC</option><option>USDT</option><option>BTC</option></select></div>
+					<div class="balance-value" id="balanceValue">0.00 TZS</div><div class="balance-change">Your wallet is ready for its first transfer</div><div class="account-number">WAKALA ACCOUNT  ••••  0042</div>
 					<div class="card-footer"><span>Account status</span><strong>Connected</strong></div>
 				</section>
-				<section class="card quick" id="transfers"><h3 class="font-display">Quick actions</h3><div class="quick-actions"><button class="action transition-colors duration-200"><strong>Send money</strong><span>Move funds across borders</span></button><button class="action transition-colors duration-200"><strong>Convert</strong><span>Switch local currency</span></button><button class="action transition-colors duration-200"><strong>Add funds</strong><span>Top up your wallet</span></button><button class="action transition-colors duration-200"><strong>Get help</strong><span>Talk to Wakala support</span></button></div></section>
+				<section class="card quick" id="transfers"><h3 class="font-display">Quick actions</h3><div class="quick-actions"><button class="action transition-colors duration-200"><strong>Send money</strong><span>Move funds across borders</span></button><button class="action transition-colors duration-200"><strong>Convert</strong><span>Switch local currency</span></button><a class="action transition-colors duration-200" href="deposit.html"><strong>Add funds</strong><span>Top up your wallet</span></a><button class="action transition-colors duration-200"><strong>Get help</strong><span>Talk to Wakala support</span></button></div></section>
 			</div>
 			<section class="esim-card" id="esim" aria-labelledby="esim-title">
-				<div><div class="esim-kicker">Stay connected when you land</div><h2 id="esim-title">Your travel eSIM, ready for the next border.</h2><p>Activate mobile data before you leave, keep your Wakala wallet online, and land connected across the markets you move through.</p><button class="esim-button" type="button">Explore eSIM plans</button></div>
+				<div><div class="esim-kicker">Stay connected when you land</div><h2 id="esim-title">Your travel eSIM, ready for the next border.</h2><p>Activate mobile data before you leave, keep your Wakala wallet online, and land connected across the markets you move through.</p><a class="esim-button" href="esim-plans.html">Explore eSIM plans</a><div id="esimConfig" class="account-number"></div></div>
 				<div class="esim-preview" aria-label="Wakala eSIM preview"><div class="sim-shape"><div class="sim-lines"><span></span><span></span><span></span></div></div></div>
 			</section>
 			<div class="feature-grid" aria-label="Wakala features"><div class="feature"><div class="feature-mark">⌁</div><strong>Local-currency wallet</strong><span>Hold TZS, KES, RWF and NGN in one account.</span></div><div class="feature"><div class="feature-mark">↗</div><strong>Direct transfers</strong><span>Send across borders with the rate shown first.</span></div><div class="feature"><div class="feature-mark">◉</div><strong>Agent cash-out</strong><span>Move from digital balance to trusted local access.</span></div></div>
 			<div class="lower-grid">
-				<section class="card" id="wallet"><div class="section-head"><h2 class="section-title">Your currencies</h2><a href="#wallet">Manage</a></div><div class="currency-row"><div class="currency-mark">TZS</div><div class="row-main"><strong>Tanzanian Shilling</strong><span>Primary wallet</span></div><div class="row-amount">0.00<small>TZS</small></div></div><div class="currency-row"><div class="currency-mark">KES</div><div class="row-main"><strong>Kenyan Shilling</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>KES</small></div></div><div class="currency-row"><div class="currency-mark">NGN</div><div class="row-main"><strong>Nigerian Naira</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>NGN</small></div></div></section>
+				<section class="card" id="wallet"><div class="section-head"><h2 class="section-title">Your currencies</h2><button class="visibility-toggle" id="visibilityToggle" type="button">Hide balances</button></div><div class="currency-row" data-currency-row="TZS"><div class="currency-mark">TZS</div><div class="row-main"><strong>Tanzanian Shilling</strong><span>Primary wallet</span></div><div class="row-amount">0.00<small>TZS</small></div></div><div class="currency-row" data-currency-row="KES"><div class="currency-mark">KES</div><div class="row-main"><strong>Kenyan Shilling</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>KES</small></div></div><div class="currency-row" data-currency-row="RWF"><div class="currency-mark">RWF</div><div class="row-main"><strong>Rwandan Franc</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>RWF</small></div></div><div class="currency-row" data-currency-row="NGN"><div class="currency-mark">NGN</div><div class="row-main"><strong>Nigerian Naira</strong><span>Ready to activate</span></div><div class="row-amount">0.00<small>NGN</small></div></div><div class="currency-row" data-currency-row="USDC"><div class="currency-mark">$</div><div class="row-main"><strong>USD Coin</strong><span>Primary digital asset</span></div><div class="row-amount">0.00<small>USDC</small></div></div><div class="currency-row" data-currency-row="USDT"><div class="currency-mark">$</div><div class="row-main"><strong>Tether</strong><span>Available to activate</span></div><div class="row-amount">0.00<small>USDT</small></div></div><div class="currency-row" data-currency-row="BTC"><div class="currency-mark">BTC</div><div class="row-main"><strong>Bitcoin</strong><span>Available to activate</span></div><div class="row-amount">0.00<small>BTC</small></div></div></section>
 				<section class="card" id="activity"><div class="section-head"><h2 class="section-title">Recent activity</h2><a href="#activity">View all</a></div><div class="transaction"><div class="currency-mark">+</div><div class="row-main"><strong>Wallet created</strong><span>Today</span></div><div class="row-amount positive">Ready</div></div><div class="transaction"><div class="currency-mark">FX</div><div class="row-main"><strong>Direct currency rail</strong><span>Available across 5 markets</span></div><div class="row-amount">Live</div></div></section>
 			</div>
 		</main>
@@ -140,6 +143,9 @@
 		const logoutButton = document.getElementById('logoutButton');
 		const menuToggle = document.getElementById('menuToggle');
 		const nav = document.querySelector('.nav');
+		const balanceCurrency = document.getElementById('balanceCurrency');
+		const balanceValue = document.getElementById('balanceValue');
+		const visibilityToggle = document.getElementById('visibilityToggle');
 		const { data: { session } } = await supabase.auth.getSession();
 
 		if (!session) {
@@ -166,6 +172,17 @@
 				menuToggle.textContent = 'Menu';
 			}
 		});
+		const updateBalance = () => { balanceValue.textContent = `0.00 ${balanceCurrency.value}`; localStorage.setItem('wakala-display-currency', balanceCurrency.value); };
+		const savedCurrency = localStorage.getItem('wakala-display-currency');
+		if (savedCurrency && [...balanceCurrency.options].some(option => option.value === savedCurrency)) balanceCurrency.value = savedCurrency;
+		balanceCurrency.addEventListener('change', updateBalance);
+		let balancesHidden = localStorage.getItem('wakala-hide-balances') === 'true';
+		const updateVisibility = () => { document.querySelectorAll('[data-currency-row]').forEach(row => row.hidden = balancesHidden); visibilityToggle.textContent = balancesHidden ? 'Show balances' : 'Hide balances'; localStorage.setItem('wakala-hide-balances', balancesHidden); };
+		visibilityToggle.addEventListener('click', () => { balancesHidden = !balancesHidden; updateVisibility(); });
+		updateBalance();
+		updateVisibility();
+		const esimOrder = JSON.parse(localStorage.getItem('wakala-esim-order') || 'null');
+		if (esimOrder) document.getElementById('esimConfig').innerHTML = `Order ${esimOrder.id} · ${esimOrder.plan}<br>ICCID ${esimOrder.iccid}<br>LPA ${esimOrder.activationCode}`;
 	</script>
 </body>
 </html>

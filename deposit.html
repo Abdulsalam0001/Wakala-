@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit funds | Wakala</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { ink: '#0D1420', paper: '#F6F2E9', panel: '#FFFDF8', teal: '#229175', gold: '#E4A445' }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Fraunces', 'serif'], mono: ['IBM Plex Mono', 'monospace'] } } } };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#0D1420; --paper:#F6F2E9; --panel:#FFFDF8; --gold:#E4A445; --teal:#229175; --muted:#7A756A; --line:rgba(13,20,32,.11); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--paper); color:var(--ink); font-family:Inter,sans-serif; }
+    button, input, select { font:inherit; }
+    .app { display:grid; grid-template-columns:250px minmax(0,1fr); min-height:100vh; }
+    .sidebar { display:flex; flex-direction:column; padding:28px 20px; background:var(--ink); color:#F5F1E7; }
+    .brand { color:#F5F1E7; font:600 25px Fraunces,serif; text-decoration:none; }
+    .dot { display:inline-block; width:9px; height:9px; margin-right:9px; border-radius:50%; background:var(--gold); vertical-align:2px; }
+    .sidebar-label { margin:68px 12px 14px; color:#718097; font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+    .nav { display:grid; gap:5px; }
+    .nav a { display:flex; align-items:center; gap:12px; padding:12px; border-radius:9px; color:#AAB4C5; font-size:13px; text-decoration:none; }
+    .nav a:hover, .nav a.active { background:#202C42; color:#F5F1E7; }
+    .nav-icon { width:20px; color:var(--gold); font-size:16px; text-align:center; }
+    .sidebar-bottom { margin-top:auto; padding:18px 12px 0; border-top:1px solid rgba(245,241,231,.12); }
+    .sidebar-bottom p { margin:0 0 12px; color:#718097; font-size:11px; line-height:1.5; }
+    .logout { width:100%; padding:10px; border:1px solid rgba(245,241,231,.2); border-radius:8px; background:transparent; color:#F5F1E7; font-size:12px; cursor:pointer; }
+    .content { width:min(100%,1080px); margin:0 auto; padding:30px clamp(20px,5vw,64px) 64px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:64px; }
+    .back { color:var(--teal); font-size:13px; font-weight:700; text-decoration:none; }
+    .secure { display:flex; align-items:center; gap:7px; color:var(--teal); font:500 10px 'IBM Plex Mono',monospace; letter-spacing:.04em; text-transform:uppercase; }
+    .secure::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(34,145,117,.12); }
+    .avatar { display:grid; place-items:center; width:38px; height:38px; margin-left:10px; border-radius:50%; background:var(--teal); color:#fff; font-size:13px; font-weight:700; }
+    .topbar-right { display:flex; align-items:center; }
+    .eyebrow { color:var(--teal); font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { margin:10px 0 8px; font:600 clamp(38px,5vw,58px)/1 Fraunces,serif; letter-spacing:-.02em; }
+    .intro { max-width:550px; margin:0; color:var(--muted); font-size:14px; line-height:1.65; }
+    .deposit-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr); gap:18px; margin-top:38px; }
+    .card { border:1px solid var(--line); border-radius:12px; background:var(--panel); box-shadow:0 16px 38px rgba(13,20,32,.06); }
+    .form-card { padding:28px; }
+    .section-title { margin:0; font:600 23px Fraunces,serif; }
+    .label { display:block; margin:26px 0 9px; color:var(--muted); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .currency-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .currency-option { padding:13px 8px; border:1px solid var(--line); border-radius:9px; background:transparent; color:var(--ink); text-align:left; cursor:pointer; }
+    .currency-option strong, .currency-option span { display:block; }
+    .currency-option strong { font:600 16px Fraunces,serif; }
+    .currency-option span { margin-top:4px; color:var(--muted); font-size:10px; }
+    .currency-option.selected { border-color:var(--teal); background:#EAF5EF; box-shadow:inset 0 0 0 1px var(--teal); }
+    .amount-wrap { display:flex; align-items:center; border:1px solid var(--line); border-radius:9px; background:#fff; overflow:hidden; }
+    .amount-wrap:focus-within { border-color:var(--teal); box-shadow:0 0 0 3px rgba(34,145,117,.12); }
+    .amount-wrap span { padding-left:16px; color:var(--muted); font:500 12px 'IBM Plex Mono',monospace; }
+    input, select { width:100%; border:0; outline:0; background:transparent; color:var(--ink); }
+    input { padding:16px; font-size:20px; }
+    select { padding:14px 16px; border:1px solid var(--line); border-radius:9px; background:#fff; font-size:13px; }
+    .hint { margin:8px 0 0; color:var(--muted); font-size:11px; }
+    .primary { width:100%; margin-top:28px; padding:14px 18px; border:0; border-radius:8px; background:var(--ink); color:#fff; font-size:13px; font-weight:700; cursor:pointer; }
+    .primary:hover { background:var(--teal); }
+    .primary:disabled { opacity:.5; cursor:not-allowed; }
+    .summary-card { padding:26px; background:var(--ink); color:#F5F1E7; }
+    .summary-kicker { color:#8BD2B6; font:500 10px 'IBM Plex Mono',monospace; letter-spacing:.1em; text-transform:uppercase; }
+    .summary-card h2 { margin:9px 0 28px; font:600 28px Fraunces,serif; }
+    .summary-row { display:flex; justify-content:space-between; gap:20px; padding:14px 0; border-top:1px solid rgba(245,241,231,.13); color:#AAB4C5; font-size:12px; }
+    .summary-row strong { color:#F5F1E7; font-weight:600; text-align:right; }
+    .summary-total { margin-top:14px; padding-top:18px; border-top:1px solid rgba(245,241,231,.25); }
+    .summary-total strong { display:block; margin-top:7px; color:#fff; font:600 31px Fraunces,serif; }
+    .notice { margin-top:22px; padding:12px; border-left:2px solid var(--gold); background:rgba(228,164,69,.1); color:#D9CDB3; font-size:11px; line-height:1.55; }
+    .status { min-height:18px; margin:12px 0 0; color:var(--teal); font-size:12px; }
+    @media (max-width:860px) { .app { grid-template-columns:1fr; } .sidebar { padding:18px 20px; } .sidebar-label, .sidebar-bottom { display:none; } .nav { display:flex; margin-top:16px; overflow-x:auto; } .nav a { flex:0 0 auto; padding:9px 12px; } .content { padding-top:26px; } .topbar { margin-bottom:46px; } }
+    @media (max-width:620px) { .content { padding:20px 15px 38px; } .deposit-layout { grid-template-columns:1fr; } .currency-grid { grid-template-columns:repeat(2,1fr); } .form-card, .summary-card { padding:21px; } .topbar { margin-bottom:40px; } .secure { display:none; } }
+  </style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased">
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="dot"></span>WAKALA</a>
+      <div class="sidebar-label">Workspace</div>
+      <nav class="nav" aria-label="Dashboard navigation">
+        <a href="dashboard.html"><span class="nav-icon">◈</span>Overview</a>
+        <a class="active" href="deposit.html"><span class="nav-icon">＋</span>Deposit funds</a>
+        <a href="dashboard.html#transfers"><span class="nav-icon">↗</span>Transfers</a>
+        <a href="dashboard.html#esim"><span class="nav-icon">▣</span>Travel eSIM</a>
+        <a href="dashboard.html#activity"><span class="nav-icon">◷</span>Activity</a>
+      </nav>
+      <div class="sidebar-bottom"><p>Wakala is in development. Deposits shown here are a product preview.</p><button class="logout" id="logoutButton" type="button">Log out</button></div>
+    </aside>
+    <main class="content bg-paper">
+      <div class="topbar"><a class="back" href="dashboard.html">← Back to overview</a><div class="topbar-right"><span class="secure">Secure session</span><div class="avatar" id="avatar">WK</div></div></div>
+      <div class="eyebrow">Fund your wallet</div>
+      <h1>Deposit funds.</h1>
+      <p class="intro">Add money in the currency you need, with the amount and funding method shown clearly before you continue.</p>
+      <div class="deposit-layout">
+        <section class="card form-card" aria-labelledby="deposit-title">
+          <h2 class="section-title" id="deposit-title">Deposit details</h2>
+          <label class="label">Choose a currency</label>
+          <div class="currency-grid" id="currencyOptions">
+            <button class="currency-option selected" type="button" data-currency="TZS" data-name="Tanzanian Shilling" data-symbol="TZS"><strong>TZS</strong><span>Tanzanian Shilling</span></button>
+            <button class="currency-option" type="button" data-currency="KES" data-name="Kenyan Shilling" data-symbol="KES"><strong>KES</strong><span>Kenyan Shilling</span></button>
+            <button class="currency-option" type="button" data-currency="RWF" data-name="Rwandan Franc" data-symbol="RWF"><strong>RWF</strong><span>Rwandan Franc</span></button>
+            <button class="currency-option" type="button" data-currency="NGN" data-name="Nigerian Naira" data-symbol="NGN"><strong>NGN</strong><span>Nigerian Naira</span></button>
+          </div>
+          <label class="label" for="amount">Amount</label>
+          <div class="amount-wrap"><span id="amountCurrency">TZS</span><input id="amount" type="number" min="1" step="0.01" placeholder="0.00" inputmode="decimal" aria-describedby="amountHint"></div>
+          <p class="hint" id="amountHint">Minimum deposit: 1 TZS</p>
+          <label class="label" for="method">Funding method</label>
+          <select id="method"><option>Mobile money</option><option>Bank transfer</option><option>Debit or credit card</option></select>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <button class="primary" id="reviewButton" type="button">Review deposit</button>
+        </section>
+        <aside class="card summary-card" aria-labelledby="summary-title">
+          <div class="summary-kicker">Deposit preview</div>
+          <h2 id="summary-title">Review your deposit</h2>
+          <div class="summary-row"><span>Currency</span><strong id="summaryCurrency">TZS · Tanzanian Shilling</strong></div>
+          <div class="summary-row"><span>Deposit amount</span><strong id="summaryAmount">0.00 TZS</strong></div>
+          <div class="summary-row"><span>Estimated fee</span><strong>Shown at confirmation</strong></div>
+          <div class="summary-total"><span class="summary-kicker">Wallet receives</span><strong id="summaryTotal">0.00 TZS</strong></div>
+          <div class="notice">Your money stays in your selected local-currency wallet. You will see the final rate and any applicable fee before authorising the deposit.</div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) window.location.href = 'login.html';
+
+    const avatar = document.getElementById('avatar');
+    const name = session?.user.user_metadata?.full_name;
+    if (name) avatar.textContent = name.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+
+    const amount = document.getElementById('amount');
+    const method = document.getElementById('method');
+    const status = document.getElementById('status');
+    let selected = { currency: 'TZS', name: 'Tanzanian Shilling', symbol: 'TZS' };
+
+    const formatAmount = () => {
+      const value = Number(amount.value) || 0;
+      return `${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${selected.symbol}`;
+    };
+
+    const updateSummary = () => {
+      document.getElementById('amountCurrency').textContent = selected.symbol;
+      document.getElementById('amountHint').textContent = `Minimum deposit: 1 ${selected.symbol}`;
+      document.getElementById('summaryCurrency').textContent = `${selected.currency} · ${selected.name}`;
+      document.getElementById('summaryAmount').textContent = formatAmount();
+      document.getElementById('summaryTotal').textContent = formatAmount();
+    };
+
+    document.querySelectorAll('.currency-option').forEach(option => option.addEventListener('click', () => {
+      document.querySelectorAll('.currency-option').forEach(item => item.classList.remove('selected'));
+      option.classList.add('selected');
+      selected = { currency: option.dataset.currency, name: option.dataset.name, symbol: option.dataset.symbol };
+      status.textContent = '';
+      updateSummary();
+    }));
+    amount.addEventListener('input', updateSummary);
+    method.addEventListener('change', () => { status.textContent = ''; });
+    document.getElementById('reviewButton').addEventListener('click', () => {
+      if (Number(amount.value) < 1) { status.textContent = `Enter at least 1 ${selected.symbol} to continue.`; status.style.color = '#B94A43'; amount.focus(); return; }
+      status.style.color = 'var(--teal)';
+      status.textContent = `Deposit review ready via ${method.value}. Confirmation will be available soon.`;
+    });
+    document.getElementById('logoutButton').addEventListener('click', async () => { await supabase.auth.signOut(); window.location.href = 'login.html'; });
+    updateSummary();
+  </script>
+</body>
+</html>
