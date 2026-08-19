@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Log in | Wakala</title>
+	<meta name="description" content="Log in to your Wakala local-currency wallet.">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root { --ink:#0D1420; --paper:#FBF7EF; --gold:#E4A445; --teal:#229175; --muted:#726A58; --line:rgba(13,20,32,.14); }
+		* { box-sizing:border-box; }
+		body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; background:linear-gradient(135deg,#0D1420 0 48%,#1b3440 48% 65%,#229175 65% 100%); color:var(--ink); font-family:Inter,sans-serif; }
+		.shell { width:min(920px,100%); display:grid; grid-template-columns:1fr 0.86fr; overflow:hidden; background:var(--paper); border-radius:24px; box-shadow:0 32px 80px rgba(0,0,0,.3); }
+		.intro { padding:52px; color:#F5F1E7; background:linear-gradient(145deg,#101b2e,#09111d); }
+		.brand { color:#F5F1E7; font:600 24px Fraunces,serif; text-decoration:none; }
+		.dot { display:inline-block; width:9px; height:9px; margin-right:9px; border-radius:50%; background:var(--gold); vertical-align:2px; }
+		.intro-content { margin-top:150px; }
+		h1 { max-width:360px; margin:14px 0; font:600 clamp(40px,5vw,64px)/1 Fraunces,serif; }
+		.intro p { max-width:360px; color:#93A0B8; line-height:1.7; }
+		.route { margin-top:32px; color:#93A0B8; font:12px monospace; }
+		.route strong { color:var(--teal); }
+		.form-panel { padding:52px 44px; }
+		h2 { margin:40px 0 8px; font:600 34px Fraunces,serif; }
+		.subtext { margin:0 0 28px; color:var(--muted); font-size:14px; line-height:1.6; }
+		label { display:block; margin:16px 0 7px; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+		input { width:100%; padding:14px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:14px Inter,sans-serif; }
+		input:focus { outline:2px solid rgba(34,145,117,.3); border-color:var(--teal); }
+		button { width:100%; margin-top:24px; padding:14px; border:0; border-radius:9px; background:var(--gold); color:var(--ink); font:700 14px Inter,sans-serif; cursor:pointer; }
+		button:disabled { cursor:wait; opacity:.65; }
+		.message { min-height:22px; margin-top:16px; font-size:13px; line-height:1.5; }
+		.error { color:#b42318; }
+		.success { color:var(--teal); }
+		.back { display:block; margin-top:28px; color:var(--muted); font-size:13px; text-align:center; text-decoration:none; }
+		@media (max-width:700px) { .shell { grid-template-columns:1fr; } .intro { padding:32px; } .intro-content { margin-top:72px; } .form-panel { padding:32px 26px 38px; } h2 { margin-top:8px; } }
+	</style>
+</head>
+<body>
+	<main class="shell">
+		<section class="intro" aria-label="About Wakala">
+			<a class="brand" href="index.html"><span class="dot"></span>WAKALA</a>
+			<div class="intro-content">
+				<div>YOUR MONEY, IN YOUR CURRENCY.</div>
+				<h1>Keep your money close to home.</h1>
+				<p>Move between local currencies across Africa with less friction, wherever the road takes you.</p>
+				<div class="route"><strong>●</strong> TZS &nbsp;→&nbsp; KES &nbsp;→&nbsp; RWF &nbsp;→&nbsp; NGN</div>
+			</div>
+		</section>
+		<section class="form-panel">
+			<h2>Welcome back</h2>
+			<p class="subtext">Log in to continue to your Wakala wallet.</p>
+			<form id="loginForm">
+				<label for="email">Email address</label>
+				<input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+				<button id="submitButton" type="submit">Log in to Wakala</button>
+				<p id="message" class="message" role="status" aria-live="polite"></p>
+			</form>
+			<a class="back" href="index.html">Back to Wakala</a>
+		</section>
+	</main>
+	<script type="module">
+		import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+		import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+		const form = document.getElementById('loginForm');
+		const button = document.getElementById('submitButton');
+		const message = document.getElementById('message');
+		const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			message.className = 'message';
+			message.textContent = '';
+			button.disabled = true;
+			button.textContent = 'Logging in...';
+
+			const { error } = await supabase.auth.signInWithPassword({
+				email: form.email.value.trim(),
+				password: form.password.value
+			});
+
+			if (error) {
+				message.className = 'message error';
+				message.textContent = error.message;
+				button.disabled = false;
+				button.textContent = 'Log in to Wakala';
+				return;
+			}
+
+			message.className = 'message success';
+			message.textContent = 'Login successful. Redirecting...';
+			window.location.href = 'dashboard.html';
+		});
+	</script>
+</body>
+</html>
