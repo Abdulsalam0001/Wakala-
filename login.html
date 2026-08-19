@@ -70,6 +70,11 @@
 		const message = document.getElementById('message');
 		const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
+		if (new URLSearchParams(window.location.search).get('confirmed') === '1') {
+			message.className = 'message success';
+			message.textContent = 'Your email is confirmed. You can now log in to Wakala.';
+		}
+
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 			message.className = 'message';

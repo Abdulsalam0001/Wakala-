@@ -1537,7 +1537,7 @@ translateY(-20vh);
     <div class="auth-panel">
       <button class="auth-close" type="button" aria-label="Close account access">×</button>
       <h3 id="authTitle">Create your account</h3>
-      <p id="authIntro">Be first to access the wallet built for movement across Africa.</p>
+      <p id="authIntro">Create your account for the wallet built for movement across Africa.</p>
       <form class="auth-form" id="authForm">
         <div class="auth-field auth-name-field"><label for="authName">Full name</label><input id="authName" type="text" autocomplete="name" placeholder="Your name" required></div>
         <div class="auth-field"><label for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
@@ -3357,7 +3357,10 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
       : await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: name } }
+          options: {
+            data: { full_name: name },
+            emailRedirectTo: 'https://wakala.cfd/login.html?confirmed=1'
+          }
         });
 
     if(result.error){
