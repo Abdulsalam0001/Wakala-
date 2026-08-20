@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Balance Control | Wakala Admin</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+--ink:#101a2a;
+--ink2:#1b2940;
+--paper:#f5f3ee;
+--panel:#fffefa;
+--line:#e4e1d9;
+--muted:#747871;
+--teal:#1f8b70;
+--tealSoft:#e4f3ed;
+--red:#b34d45;
+--redSoft:#f8e9e7;
+--gold:#d99a35;
+--shadow:0 18px 45px rgba(16,26,42,.08);
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:var(--paper);
+color:var(--ink);
+font-family:'DM Sans',sans-serif;
+}
+
+button,
+input,
+select,
+textarea{
+font:inherit;
+}
+
+.app{
+display:grid;
+grid-template-columns:250px 1fr;
+min-height:100vh;
+}
+
+.sidebar{
+background:var(--ink);
+color:white;
+padding:25px 18px;
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+padding:0 10px;
+font:600 25px Fraunces,serif;
+color:white;
+text-decoration:none;
+}
+
+.logo span{
+display:inline-block;
+width:9px;
+height:9px;
+background:var(--gold);
+border-radius:50%;
+margin-right:8px;
+}
+
+.label{
+margin:55px 12px 12px;
+color:#718098;
+font-size:10px;
+font-weight:700;
+letter-spacing:.14em;
+text-transform:uppercase;
+}
+
+.nav{
+display:grid;
+gap:4px;
+}
+
+.nav a{
+padding:12px;
+border-radius:8px;
+color:#aeb9c9;
+text-decoration:none;
+font-size:13px;
+}
+
+.nav a:hover,
+.nav a.active{
+background:#223149;
+color:white;
+}
+
+.sidebar-bottom{
+margin-top:auto;
+padding:18px 12px 0;
+border-top:1px solid rgba(255,255,255,.12);
+}
+
+.logout{
+width:100%;
+padding:10px;
+border:1px solid rgba(255,255,255,.2);
+border-radius:7px;
+background:transparent;
+color:white;
+cursor:pointer;
+}
+
+.main{
+padding:35px clamp(20px,4vw,60px);
+max-width:1400px;
+width:100%;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:42px;
+}
+
+.eyebrow{
+color:var(--teal);
+font:500 10px 'DM Mono',monospace;
+letter-spacing:.13em;
+text-transform:uppercase;
+}
+
+h1{
+margin:8px 0;
+font:600 clamp(38px,5vw,58px)/1 Fraunces,serif;
+}
+
+.subtitle{
+color:var(--muted);
+font-size:13px;
+}
+
+.admin{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.admin-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:var(--teal);
+box-shadow:0 0 0 4px var(--tealSoft);
+}
+
+.admin-email{
+font-size:12px;
+font-weight:600;
+}
+
+.layout{
+display:grid;
+grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+gap:20px;
+}
+
+.card{
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:15px;
+box-shadow:var(--shadow);
+padding:25px;
+}
+
+.card h2{
+margin:0;
+font:600 24px Fraunces,serif;
+}
+
+.card-description{
+margin:7px 0 24px;
+font-size:12px;
+color:var(--muted);
+line-height:1.6;
+}
+
+.search{
+display:flex;
+gap:10px;
+margin-bottom:18px;
+}
+
+.search input{
+flex:1;
+padding:13px;
+border:1px solid var(--line);
+border-radius:8px;
+background:white;
+outline:none;
+}
+
+.search input:focus{
+border-color:var(--teal);
+}
+
+.user-list{
+display:grid;
+gap:7px;
+max-height:480px;
+overflow:auto;
+}
+
+.user{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px;
+border:1px solid var(--line);
+border-radius:9px;
+background:white;
+cursor:pointer;
+transition:.15s;
+}
+
+.user:hover,
+.user.selected{
+border-color:var(--teal);
+background:var(--tealSoft);
+}
+
+.user-avatar{
+display:grid;
+place-items:center;
+width:38px;
+height:38px;
+border-radius:50%;
+background:var(--ink);
+color:white;
+font-size:11px;
+font-weight:700;
+}
+
+.user-info{
+min-width:0;
+flex:1;
+}
+
+.user-info strong{
+display:block;
+font-size:12px;
+}
+
+.user-info span{
+display:block;
+margin-top:3px;
+font-size:10px;
+color:var(--muted);
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.selected-user{
+padding:14px;
+border-radius:9px;
+background:#eef0eb;
+margin-bottom:20px;
+}
+
+.selected-user strong{
+font-size:13px;
+}
+
+.selected-user span{
+display:block;
+margin-top:4px;
+font-size:10px;
+color:var(--muted);
+}
+
+.field{
+margin-bottom:17px;
+}
+
+.field label{
+display:block;
+margin-bottom:7px;
+font-size:11px;
+font-weight:700;
+}
+
+.field input,
+.field select,
+.field textarea{
+width:100%;
+padding:12px;
+border:1px solid var(--line);
+border-radius:8px;
+background:white;
+outline:none;
+}
+
+.field textarea{
+min-height:90px;
+resize:vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+border-color:var(--teal);
+}
+
+.balance-box{
+padding:18px;
+margin-bottom:20px;
+border-radius:10px;
+background:var(--ink);
+color:white;
+}
+
+.balance-label{
+color:#9ba8ba;
+font-size:10px;
+}
+
+.balance-value{
+margin-top:7px;
+font:600 34px Fraunces,serif;
+}
+
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.btn{
+padding:13px;
+border:0;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+font-weight:700;
+}
+
+.btn-credit{
+background:var(--teal);
+color:white;
+}
+
+.btn-debit{
+background:var(--redSoft);
+color:var(--red);
+}
+
+.btn:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.message{
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+font-size:11px;
+display:none;
+}
+
+.message.success{
+display:block;
+background:var(--tealSoft);
+color:#176b55;
+}
+
+.message.error{
+display:block;
+background:var(--redSoft);
+color:var(--red);
+}
+
+.notice{
+margin-top:20px;
+padding:14px;
+border:1px solid #ead9af;
+background:#fff8e9;
+border-radius:9px;
+font-size:11px;
+line-height:1.6;
+color:#695a3d;
+}
+
+@media(max-width:900px){
+
+.app{
+grid-template-columns:1fr;
+}
+
+.sidebar{
+display:none;
+}
+
+.layout{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+<a href="index.html" class="logo">
+<span></span>WAKALA
+</a>
+
+<div class="label">
+Administration
+</div>
+
+<nav class="nav">
+
+<a href="index.html">
+Overview
+</a>
+
+<a href="users.html">
+Users
+</a>
+
+<a href="balances.html" class="active">
+Balances
+</a>
+
+<a href="transactions.html">
+Transactions
+</a>
+
+<a href="esims.html">
+eSIM
+</a>
+
+<a href="admins.html">
+Administrators
+</a>
+
+<a href="audit.html">
+Audit log
+</a>
+
+<a href="settings.html">
+Settings
+</a>
+
+</nav>
+
+<div class="sidebar-bottom">
+
+<button class="logout" id="logout">
+Log out
+</button>
+
+</div>
+
+</aside>
+
+
+<main class="main">
+
+<div class="top">
+
+<div>
+
+<div class="eyebrow">
+Financial controls
+</div>
+
+<h1>Balance control</h1>
+
+<div class="subtitle">
+Testing controls for Wakala wallet balances.
+</div>
+
+</div>
+
+<div class="admin">
+
+<div class="admin-dot"></div>
+
+<div class="admin-email" id="adminEmail">
+Checking session...
+</div>
+
+</div>
+
+</div>
+
+
+<div class="layout">
+
+
+<section class="card">
+
+<h2>Users</h2>
+
+<p class="card-description">
+Select a registered Wakala user to view and adjust their
+test wallet balance.
+</p>
+
+<div class="search">
+
+<input
+id="search"
+type="search"
+placeholder="Search by email..."
+autocomplete="off"
+>
+
+</div>
+
+<div id="users" class="user-list">
+
+<div style="color:#777;font-size:12px">
+Loading users...
+</div>
+
+</div>
+
+</section>
+
+
+<section class="card">
+
+<h2>Balance adjustment</h2>
+
+<p class="card-description">
+Credit or debit a user's testing balance.
+Every adjustment is recorded with the administrator and reason.
+</p>
+
+
+<div id="noUser">
+
+<div class="notice">
+Select a user from the list to begin.
+</div>
+
+</div>
+
+
+<div id="control" style="display:none">
+
+<div class="selected-user">
+
+<strong id="selectedName"></strong>
+
+<span id="selectedEmail"></span>
+
+</div>
+
+
+<div class="balance-box">
+
+<div class="balance-label">
+CURRENT BALANCE
+</div>
+
+<div class="balance-value" id="currentBalance">
+0.00
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label for="currency">
+Currency
+</label>
+
+<select id="currency">
+
+<option>NGN</option>
+<option>USD</option>
+<option>KES</option>
+<option>TZS</option>
+<option>RWF</option>
+<option>USDC</option>
+<option>USDT</option>
+<option>BTC</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label for="amount">
+Amount
+</label>
+
+<input
+id="amount"
+type="number"
+min="0"
+step="0.00000001"
+placeholder="0.00"
+>
+
+</div>
+
+
+<div class="field">
+
+<label for="reason">
+Reason
+</label>
+
+<textarea
+id="reason"
+placeholder="Example: Test funding"
+></textarea>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn btn-credit"
+id="credit"
+type="button"
+>
++ Add balance
+</button>
+
+<button
+class="btn btn-debit"
+id="debit"
+type="button"
+>
+− Remove balance
+</button>
+
+</div>
+
+
+<div id="message" class="message"></div>
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script type="module">
+
+import {
+createClient
+}
+from
+'https://esm.sh/@supabase/supabase-js@2';
+
+import {
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
+}
+from
+'../supabase-config.js';
+
+
+const supabase =
+createClient(
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
+);
+
+
+let session = null;
+let selectedUser = null;
+let users = [];
+
+
+const usersContainer =
+document.getElementById('users');
+
+const search =
+document.getElementById('search');
+
+const noUser =
+document.getElementById('noUser');
+
+const control =
+document.getElementById('control');
+
+const selectedName =
+document.getElementById('selectedName');
+
+const selectedEmail =
+document.getElementById('selectedEmail');
+
+const currentBalance =
+document.getElementById('currentBalance');
+
+const currency =
+document.getElementById('currency');
+
+const amount =
+document.getElementById('amount');
+
+const reason =
+document.getElementById('reason');
+
+const message =
+document.getElementById('message');
+
+const adminEmail =
+document.getElementById('adminEmail');
+
+
+/* ============================================================
+   AUTHENTICATION
+============================================================ */
+
+async function authenticate(){
+
+const result =
+await supabase.auth.getSession();
+
+session =
+result.data.session;
+
+
+if(!session){
+
+window.location.href =
+'../login.html';
+
+return false;
+
+}
+
+
+adminEmail.textContent =
+session.user.email || 'Administrator';
+
+
+/*
+   Verify that this authenticated user
+   is actually an active Wakala admin.
+*/
+
+const {data:admin,error} =
+await supabase
+
+.from('admin_users')
+
+.select(`
+id,
+status,
+admin_roles (
+name
+)
+`)
+
+.eq('user_id',session.user.id)
+
+.eq('status','active')
+
+.maybeSingle();
+
+
+if(error || !admin){
+
+document.body.innerHTML = `
+<div style="
+display:grid;
+place-items:center;
+min-height:100vh;
+font-family:Arial;
+background:#f5f3ee;
+">
+<div style="
+background:white;
+padding:40px;
+border-radius:14px;
+text-align:center;
+">
+<h2>Access denied</h2>
+<p>You do not have administrator access.</p>
+</div>
+</div>
+`;
+
+return false;
+
+}
+
+
+return true;
+
+}
+
+
+/* ============================================================
+   LOAD USERS
+============================================================ */
+
+async function loadUsers(){
+
+const {data,error} =
+await supabase
+
+.from('admin_user_directory')
+
+.select(`
+user_id,
+email,
+role,
+registered_at
+`)
+
+.order(
+'registered_at',
+{ascending:false}
+);
+
+
+if(error){
+
+usersContainer.innerHTML =
+`<div style="color:#b34d45;font-size:12px">
+Unable to load users.
+</div>`;
+
+console.error(error);
+
+return;
+
+}
+
+
+users = data || [];
+
+renderUsers(users);
+
+}
+
+
+/* ============================================================
+   RENDER USERS
+============================================================ */
+
+function renderUsers(list){
+
+if(!list.length){
+
+usersContainer.innerHTML =
+`<div style="color:#777;font-size:12px">
+No users found.
+</div>`;
+
+return;
+
+}
+
+
+usersContainer.innerHTML =
+list.map(user => {
+
+const email =
+user.email || 'No email';
+
+const initials =
+email
+.split('@')[0]
+.split(/[ ._-]+/)
+.map(x => x[0])
+.join('')
+.slice(0,2)
+.toUpperCase();
+
+
+return `
+
+<div
+class="user ${selectedUser?.user_id === user.user_id ? 'selected':''}"
+data-id="${user.user_id}"
+>
+
+<div class="user-avatar">
+${initials}
+</div>
+
+<div class="user-info">
+
+<strong>
+${escapeHtml(email)}
+</strong>
+
+<span>
+${user.user_id}
+</span>
+
+</div>
+
+</div>
+
+`;
+
+}).join('');
+
+
+document.querySelectorAll('.user')
+.forEach(element => {
+
+element.addEventListener(
+'click',
+() => {
+
+const user =
+users.find(
+x =>
+x.user_id === element.dataset.id
+);
+
+selectUser(user);
+
+});
+
+});
+
+}
+
+
+/* ============================================================
+   SELECT USER
+============================================================ */
+
+async function selectUser(user){
+
+selectedUser = user;
+
+noUser.style.display = 'none';
+
+control.style.display = 'block';
+
+selectedName.textContent =
+user.email || 'User';
+
+selectedEmail.textContent =
+user.user_id;
+
+await loadBalance();
+
+renderUsers(
+filteredUsers()
+);
+
+}
+
+
+/* ============================================================
+   LOAD BALANCE
+============================================================ */
+
+async function loadBalance(){
+
+if(!selectedUser) return;
+
+
+const {data,error} =
+await supabase
+
+.from('admin_test_balances')
+
+.select('balance')
+
+.eq(
+'user_id',
+selectedUser.user_id
+)
+
+.eq(
+'currency',
+currency.value
+)
+
+.maybeSingle();
+
+
+if(error){
+
+console.error(error);
+
+currentBalance.textContent =
+'Unable to load';
+
+return;
+
+}
+
+
+currentBalance.textContent =
+formatBalance(
+data?.balance || 0,
+currency.value
+);
+
+}
+
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+search.addEventListener(
+'input',
+() => {
+
+renderUsers(
+filteredUsers()
+);
+
+});
+
+
+function filteredUsers(){
+
+const query =
+search.value
+.trim()
+.toLowerCase();
+
+if(!query)
+return users;
+
+return users.filter(
+user =>
+(user.email || '')
+.toLowerCase()
+.includes(query)
+);
+
+}
+
+
+/* ============================================================
+   CURRENCY CHANGE
+============================================================ */
+
+currency.addEventListener(
+'change',
+loadBalance
+);
+
+
+/* ============================================================
+   BALANCE ADJUSTMENT
+============================================================ */
+
+async function adjust(direction){
+
+if(!selectedUser){
+
+showMessage(
+'Select a user first.',
+'error'
+);
+
+return;
+
+}
+
+
+const value =
+Number(amount.value);
+
+
+if(!value || value <= 0){
+
+showMessage(
+'Enter a valid amount.',
+'error'
+);
+
+return;
+
+}
+
+
+if(!reason.value.trim()){
+
+showMessage(
+'Enter a reason for this adjustment.',
+'error'
+);
+
+return;
+
+}
+
+
+setButtons(true);
+
+
+try{
+
+const {data,error} =
+await supabase.rpc(
+'admin_adjust_test_balance',
+{
+target_user_id:
+selectedUser.user_id,
+
+target_currency:
+currency.value,
+
+adjustment_amount:
+value,
+
+adjustment_direction:
+direction,
+
+adjustment_reason:
+reason.value.trim()
+}
+);
+
+
+if(error)
+throw error;
+
+
+currentBalance.textContent =
+formatBalance(
+data.balance_after,
+currency.value
+);
+
+amount.value = '';
+reason.value = '';
+
+
+showMessage(
+`Balance updated successfully. New balance: ${formatBalance(data.balance_after,currency.value)}`,
+'success'
+);
+
+
+}catch(error){
+
+console.error(error);
+
+showMessage(
+error.message || 'Unable to update balance.',
+'error'
+);
+
+}finally{
+
+setButtons(false);
+
+}
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+document
+.getElementById('credit')
+.addEventListener(
+'click',
+() => adjust('credit')
+);
+
+
+document
+.getElementById('debit')
+.addEventListener(
+'click',
+() => adjust('debit')
+);
+
+
+function setButtons(disabled){
+
+document
+.querySelectorAll('.btn')
+.forEach(
+button =>
+button.disabled = disabled
+);
+
+}
+
+
+/* ============================================================
+   MESSAGE
+============================================================ */
+
+function showMessage(text,type){
+
+message.textContent = text;
+
+message.className =
+`message ${type}`;
+
+setTimeout(
+() => {
+
+message.className =
+'message';
+
+},
+5000
+);
+
+}
+
+
+/* ============================================================
+   FORMAT
+============================================================ */
+
+function formatBalance(value,code){
+
+const decimals =
+code === 'BTC'
+? 8
+: 2;
+
+return Number(value)
+.toLocaleString(
+undefined,
+{
+minimumFractionDigits:decimals,
+maximumFractionDigits:decimals
+}
+) + ' ' + code;
+
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function escapeHtml(value){
+
+return String(value)
+.replaceAll('&','&amp;')
+.replaceAll('<','&lt;')
+.replaceAll('>','&gt;')
+.replaceAll('"','&quot;')
+.replaceAll("'","&#039;");
+
+}
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+document
+.getElementById('logout')
+.addEventListener(
+'click',
+async () => {
+
+await supabase.auth.signOut();
+
+window.location.href =
+'../login.html';
+
+});
+
+
+/* ============================================================
+   START
+============================================================ */
+
+if(
+await authenticate()
+){
+
+await loadUsers();
+
+}
+
+</script>
+
+</body>
+</html>
