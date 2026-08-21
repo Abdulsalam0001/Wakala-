@@ -1,0 +1,2378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <title>Balance Management | Wakala Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --ink: #101a2a;
+      --ink-2: #1b2940;
+      --paper: #f5f3ee;
+      --panel: #fffefa;
+
+      --teal: #1f8b70;
+      --teal-soft: #e5f3ed;
+
+      --gold: #d99a35;
+      --gold-soft: #fbf0dc;
+
+      --muted: #73756f;
+      --line: #e5e2da;
+
+      --red: #b34d45;
+      --red-soft: #f9e9e7;
+
+      --shadow: 0 18px 42px rgba(16,26,42,.07);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    /* =========================================================
+       SIDEBAR
+       ========================================================= */
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      padding: 25px 18px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .brand {
+      display: block;
+      padding: 0 12px;
+      color: #fff;
+      text-decoration: none;
+      font: 600 25px Fraunces, serif;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin-right: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      vertical-align: 2px;
+    }
+
+    .admin-badge {
+      margin: 8px 12px 0;
+      color: #8290a5;
+      font: 500 9px "DM Mono", monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-label {
+      margin: 55px 12px 12px;
+      color: #728098;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: grid;
+      gap: 4px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      color: #acb7c8;
+      font-size: 13px;
+      text-decoration: none;
+      transition: .15s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: #223149;
+      color: #fff;
+    }
+
+    .nav-icon {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      color: var(--gold);
+      font-size: 16px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 18px 12px 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    .admin-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: #9eabbd;
+      font: 500 10px "DM Mono", monospace;
+    }
+
+    .admin-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 4px rgba(31,139,112,.12);
+    }
+
+    .logout {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 7px;
+      background: transparent;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .logout:hover {
+      background: rgba(255,255,255,.06);
+    }
+
+    /* =========================================================
+       MAIN
+       ========================================================= */
+
+    .main {
+      min-width: 0;
+      padding: 30px clamp(20px, 4vw, 56px) 60px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 44px;
+    }
+
+    .topbar-left small {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .topbar-left strong {
+      font: 600 22px Fraunces, serif;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .secure {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--teal);
+      font: 500 10px "DM Mono", monospace;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .secure::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 4px rgba(31,139,112,.12);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font: 500 10px "DM Mono", monospace;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 8px;
+      font: 600 clamp(38px, 5vw, 58px)/1 Fraunces, serif;
+      letter-spacing: -.02em;
+    }
+
+    .intro {
+      max-width: 650px;
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    /* =========================================================
+       LAYOUT
+       ========================================================= */
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font: 600 23px Fraunces, serif;
+    }
+
+    .card-header p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 14px 15px 14px 42px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(31,139,112,.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .results {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .user-result {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      text-align: left;
+      transition: .15s ease;
+    }
+
+    .user-result:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .user-avatar {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .user-result-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .user-result-main strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .user-result-main span {
+      display: block;
+      margin-top: 3px;
+      overflow: hidden;
+      color: var(--muted);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .user-result-account {
+      color: var(--muted);
+      font: 500 9px "DM Mono", monospace;
+    }
+
+    .empty {
+      padding: 18px 5px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    /* =========================================================
+       SELECTED USER
+       ========================================================= */
+
+    .selected-user {
+      display: none;
+      margin-top: 20px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .selected-user.visible {
+      display: block;
+    }
+
+    .selected-user-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .selected-user-avatar {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .selected-user-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .selected-user-info strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .selected-user-info span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .account-number {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 500 10px "DM Mono", monospace;
+    }
+
+    /* =========================================================
+       BALANCES
+       ========================================================= */
+
+    .balances {
+      display: grid;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .balance-currency {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .currency-mark {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .balance-currency strong {
+      display: block;
+      font-size: 11px;
+    }
+
+    .balance-currency span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .balance-number {
+      font: 600 14px "DM Mono", monospace;
+    }
+
+    /* =========================================================
+       FORM
+       ========================================================= */
+
+    .form-section {
+      display: grid;
+      gap: 17px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .field input,
+    .field select {
+      padding: 13px;
+    }
+
+    .field textarea {
+      min-height: 88px;
+      resize: vertical;
+      padding: 13px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(31,139,112,.1);
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .action-option {
+      position: relative;
+    }
+
+    .action-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .action-option label {
+      display: block;
+      margin: 0;
+      padding: 12px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+      cursor: pointer;
+    }
+
+    .action-option input:checked + label {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .warning {
+      padding: 13px;
+      border: 1px solid #ead7ae;
+      border-radius: 9px;
+      background: var(--gold-soft);
+      color: #72541e;
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .submit {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .submit:hover {
+      background: var(--ink-2);
+    }
+
+    .submit:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    /* =========================================================
+       MESSAGE
+       ========================================================= */
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 9px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      border: 1px solid #b9ddcf;
+      background: var(--teal-soft);
+      color: #17664f;
+    }
+
+    .message.error {
+      border: 1px solid #e4b9b4;
+      background: var(--red-soft);
+      color: #8e2f29;
+    }
+
+    /* =========================================================
+       HISTORY
+       ========================================================= */
+
+    .history-card {
+      margin-top: 18px;
+    }
+
+    .history-list {
+      padding: 0 24px;
+    }
+
+    .history-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 18px;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .history-row:first-child {
+      border-top: 0;
+    }
+
+    .history-main strong {
+      display: block;
+      font-size: 11px;
+    }
+
+    .history-main span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .history-amount {
+      font: 600 11px "DM Mono", monospace;
+    }
+
+    .history-date {
+      color: var(--muted);
+      font: 400 9px "DM Mono", monospace;
+    }
+
+    .positive {
+      color: var(--teal);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    .menu-toggle {
+      display: none;
+      padding: 7px 10px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 7px;
+      background: transparent;
+      color: #fff;
+      font-size: 11px;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 215px minmax(0,1fr);
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        padding: 15px 18px;
+      }
+
+      .sidebar-label,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav {
+        display: none;
+        margin-top: 15px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,.12);
+      }
+
+      .nav.open {
+        display: grid;
+      }
+
+      .main {
+        padding: 24px 15px 45px;
+      }
+
+      .secure {
+        display: none;
+      }
+
+      .topbar {
+        margin-bottom: 35px;
+      }
+
+      .card-body,
+      .card-header {
+        padding-left: 19px;
+        padding-right: 19px;
+      }
+
+      .history-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .history-date {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- =========================================================
+       SIDEBAR
+       ========================================================= -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div>
+        <a class="brand" href="admin-dashboard.html">
+          <span class="dot"></span>WAKALA
+        </a>
+
+        <div class="admin-badge">
+          Administration
+        </div>
+      </div>
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+    </div>
+
+    <div class="sidebar-label">
+      Control centre
+    </div>
+
+    <nav class="nav" id="nav">
+
+      <a href="admin-dashboard.html">
+        <span class="nav-icon">◈</span>
+        Overview
+      </a>
+
+      <a href="admin-users.html">
+        <span class="nav-icon">◎</span>
+        Users
+      </a>
+
+      <a class="active" href="admin-balances.html">
+        <span class="nav-icon">₦</span>
+        Balances
+      </a>
+
+      <a href="admin-transactions.html">
+        <span class="nav-icon">⇄</span>
+        Transactions
+      </a>
+
+      <a href="admin-deposits.html">
+        <span class="nav-icon">＋</span>
+        Deposits
+      </a>
+
+      <a href="admin-esim.html">
+        <span class="nav-icon">▣</span>
+        eSIM
+      </a>
+
+      <a href="admin-settings.html">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </a>
+
+      <a href="admin-audit.html">
+        <span class="nav-icon">◷</span>
+        Audit log
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <div class="admin-status">
+        Secure admin session
+      </div>
+
+      <button
+        class="logout"
+        id="logoutButton"
+        type="button"
+      >
+        Log out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN
+       ========================================================= -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+        <small>Wakala Administration</small>
+        <strong>Balance management</strong>
+      </div>
+
+      <div class="topbar-right">
+        <span class="secure">
+          Secure session
+        </span>
+
+        <div class="avatar" id="adminAvatar">
+          SA
+        </div>
+      </div>
+
+    </header>
+
+
+    <section class="intro">
+
+      <div class="eyebrow">
+        Financial controls
+      </div>
+
+      <h1>
+        Manage balances.
+      </h1>
+
+      <p>
+        Make authorized test or operational balance adjustments.
+        Every adjustment is recorded as a transaction and an audit event.
+      </p>
+
+    </section>
+
+
+    <!-- =======================================================
+         MAIN GRID
+         ======================================================= -->
+
+    <div class="content-grid">
+
+
+      <!-- =====================================================
+           CUSTOMER
+           ===================================================== -->
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <h2>Select customer</h2>
+
+          <p>
+            Search by customer name or email address.
+          </p>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="search-wrap">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+              id="userSearch"
+              type="search"
+              autocomplete="off"
+              placeholder="Search customer..."
+            >
+
+          </div>
+
+          <div
+            class="results"
+            id="userResults"
+          ></div>
+
+
+          <!-- SELECTED USER -->
+
+          <div
+            class="selected-user"
+            id="selectedUser"
+          >
+
+            <div class="selected-user-top">
+
+              <div
+                class="selected-user-avatar"
+                id="selectedAvatar"
+              >
+                —
+              </div>
+
+              <div class="selected-user-info">
+
+                <strong id="selectedName">
+                  —
+                </strong>
+
+                <span id="selectedEmail">
+                  —
+                </span>
+
+              </div>
+
+            </div>
+
+            <div
+              class="account-number"
+              id="selectedAccount"
+            >
+              Account —
+            </div>
+
+          </div>
+
+
+          <!-- BALANCES -->
+
+          <div
+            class="balances"
+            id="balances"
+          ></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           ADJUSTMENT FORM
+           ===================================================== -->
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <h2>Adjust balance</h2>
+
+          <p>
+            This changes the customer's available wallet balance.
+          </p>
+
+        </div>
+
+        <div class="card-body">
+
+          <form
+            id="adjustmentForm"
+            class="form-section"
+          >
+
+            <div class="field">
+
+              <label for="currency">
+                Currency
+              </label>
+
+              <select id="currency" required>
+
+                <option value="NGN">NGN — Nigerian Naira</option>
+                <option value="KES">KES — Kenyan Shilling</option>
+                <option value="TZS">TZS — Tanzanian Shilling</option>
+                <option value="RWF">RWF — Rwandan Franc</option>
+                <option value="USDC">USDC — USD Coin</option>
+                <option value="USDT">USDT — Tether</option>
+                <option value="BTC">BTC — Bitcoin</option>
+
+              </select>
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Adjustment type
+              </label>
+
+              <div class="action-grid">
+
+                <div class="action-option">
+
+                  <input
+                    id="actionAdd"
+                    type="radio"
+                    name="action"
+                    value="add"
+                    checked
+                  >
+
+                  <label for="actionAdd">
+                    Add
+                  </label>
+
+                </div>
+
+                <div class="action-option">
+
+                  <input
+                    id="actionRemove"
+                    type="radio"
+                    name="action"
+                    value="remove"
+                  >
+
+                  <label for="actionRemove">
+                    Remove
+                  </label>
+
+                </div>
+
+                <div class="action-option">
+
+                  <input
+                    id="actionSet"
+                    type="radio"
+                    name="action"
+                    value="set"
+                  >
+
+                  <label for="actionSet">
+                    Set
+                  </label>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="amount">
+                Amount
+              </label>
+
+              <input
+                id="amount"
+                type="number"
+                min="0"
+                step="0.00000001"
+                inputmode="decimal"
+                placeholder="0.00"
+                required
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="reason">
+                Reason
+              </label>
+
+              <textarea
+                id="reason"
+                maxlength="500"
+                placeholder="Example: Test wallet funding"
+                required
+              ></textarea>
+
+            </div>
+
+
+            <div class="warning">
+
+              <strong>Financial control:</strong>
+              This action changes the customer's real wallet balance.
+              Only use it for authorized operational or testing purposes.
+              The adjustment will be permanently recorded in the audit trail.
+
+            </div>
+
+
+            <button
+              class="submit"
+              id="submitButton"
+              type="submit"
+            >
+              Adjust balance
+            </button>
+
+            <div
+              class="message"
+              id="message"
+              role="status"
+              aria-live="polite"
+            ></div>
+
+          </form>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- =======================================================
+         RECENT ADJUSTMENTS
+         ======================================================= -->
+
+    <section class="card history-card">
+
+      <div class="card-header">
+
+        <h2>Recent adjustments</h2>
+
+        <p>
+          Balance adjustments recorded against customer wallets.
+        </p>
+
+      </div>
+
+      <div
+        class="history-list"
+        id="historyList"
+      >
+
+        <div class="empty">
+          Loading adjustments...
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script type="module">
+
+  import {
+    createClient
+  } from "https://esm.sh/@supabase/supabase-js@2";
+
+  import {
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  } from "./supabase-config.js";
+
+
+  /* =========================================================
+     SUPABASE
+     ========================================================= */
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  /* =========================================================
+     ELEMENTS
+     ========================================================= */
+
+  const userSearch =
+    document.getElementById("userSearch");
+
+  const userResults =
+    document.getElementById("userResults");
+
+  const selectedUser =
+    document.getElementById("selectedUser");
+
+  const selectedAvatar =
+    document.getElementById("selectedAvatar");
+
+  const selectedName =
+    document.getElementById("selectedName");
+
+  const selectedEmail =
+    document.getElementById("selectedEmail");
+
+  const selectedAccount =
+    document.getElementById("selectedAccount");
+
+  const balances =
+    document.getElementById("balances");
+
+  const currency =
+    document.getElementById("currency");
+
+  const amount =
+    document.getElementById("amount");
+
+  const reason =
+    document.getElementById("reason");
+
+  const form =
+    document.getElementById("adjustmentForm");
+
+  const submitButton =
+    document.getElementById("submitButton");
+
+  const message =
+    document.getElementById("message");
+
+  const historyList =
+    document.getElementById("historyList");
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+  const adminAvatar =
+    document.getElementById("adminAvatar");
+
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+
+  let currentUser = null;
+  let selectedCustomer = null;
+
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  function initials(name) {
+
+    if (!name) return "?";
+
+    return name
+      .trim()
+      .split(/\s+/)
+      .map(part => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
+  }
+
+
+  function formatNumber(value, currencyCode) {
+
+    const number = Number(value || 0);
+
+    const decimals =
+      currencyCode === "BTC"
+        ? 8
+        : 2;
+
+    return number.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      }
+    );
+
+  }
+
+
+  function currencySymbol(code) {
+
+    const symbols = {
+      NGN: "₦",
+      KES: "KSh",
+      TZS: "TSh",
+      RWF: "RF",
+      USDC: "$",
+      USDT: "$",
+      BTC: "₿"
+    };
+
+    return symbols[code] || code;
+
+  }
+
+
+  function showMessage(text, type) {
+
+    message.textContent = text;
+
+    message.className =
+      `message show ${type}`;
+
+  }
+
+
+  function clearMessage() {
+
+    message.textContent = "";
+
+    message.className =
+      "message";
+
+  }
+
+
+  /* =========================================================
+     AUTHENTICATION + ADMIN AUTHORIZATION
+     ========================================================= */
+
+  async function initializeAdmin() {
+
+    const {
+      data: {
+        session
+      }
+    } = await supabase.auth.getSession();
+
+
+    if (!session) {
+
+      window.location.href =
+        "login.html";
+
+      return false;
+
+    }
+
+
+    currentUser =
+      session.user;
+
+
+    /*
+     * Verify that this authenticated user is an active
+     * administrator with wallets.adjust permission.
+     */
+
+    const {
+      data: adminRecord,
+      error: adminError
+    } = await supabase
+
+      .from("admin_users")
+      .select(`
+        id,
+        status,
+        role:admin_roles (
+          id,
+          name
+        )
+      `)
+      .eq("user_id", currentUser.id)
+      .eq("status", "active")
+      .maybeSingle();
+
+
+    if (adminError) {
+
+      console.error(adminError);
+
+      showMessage(
+        "Unable to verify administrator access.",
+        "error"
+      );
+
+      return false;
+
+    }
+
+
+    if (!adminRecord) {
+
+      alert(
+        "Administrator access required."
+      );
+
+      window.location.href =
+        "dashboard.html";
+
+      return false;
+
+    }
+
+
+    /*
+     * Verify permission.
+     */
+
+    const {
+      data: permission,
+      error: permissionError
+    } = await supabase
+
+      .from("admin_role_permissions")
+      .select(`
+        permission:admin_permissions (
+          key
+        )
+      `)
+      .eq(
+        "role_id",
+        adminRecord.role.id
+      );
+
+
+    if (permissionError) {
+
+      console.error(permissionError);
+
+      showMessage(
+        "Unable to verify administrator permissions.",
+        "error"
+      );
+
+      return false;
+
+    }
+
+
+    const canAdjust =
+      permission?.some(
+        row =>
+          row.permission?.key ===
+          "wallets.adjust"
+      );
+
+
+    if (!canAdjust) {
+
+      alert(
+        "You do not have permission to adjust wallet balances."
+      );
+
+      window.location.href =
+        "admin-dashboard.html";
+
+      return false;
+
+    }
+
+
+    adminAvatar.textContent =
+      initials(
+        adminRecord.role?.name ||
+        "SA"
+      );
+
+
+    return true;
+
+  }
+
+
+  /* =========================================================
+     SEARCH USERS
+     ========================================================= */
+
+  let searchTimer = null;
+
+  userSearch.addEventListener(
+    "input",
+    () => {
+
+      clearTimeout(searchTimer);
+
+      const query =
+        userSearch.value.trim();
+
+
+      if (query.length < 2) {
+
+        userResults.innerHTML = "";
+
+        return;
+
+      }
+
+
+      searchTimer =
+        setTimeout(
+          () => searchUsers(query),
+          250
+        );
+
+    }
+  );
+
+
+  async function searchUsers(query) {
+
+    userResults.innerHTML =
+      `<div class="empty">Searching...</div>`;
+
+
+    /*
+     * Search profiles.
+     */
+
+    const {
+      data: profiles,
+      error
+    } = await supabase
+
+      .from("profiles")
+      .select(`
+        id,
+        full_name
+      `)
+      .ilike(
+        "full_name",
+        `%${query}%`
+      )
+      .limit(10);
+
+
+    if (error) {
+
+      console.error(error);
+
+      userResults.innerHTML =
+        `<div class="empty">
+          Unable to search customers.
+        </div>`;
+
+      return;
+
+    }
+
+
+    if (!profiles?.length) {
+
+      userResults.innerHTML =
+        `<div class="empty">
+          No customers found.
+        </div>`;
+
+      return;
+
+    }
+
+
+    /*
+     * Load wallets for the returned profiles.
+     */
+
+    const userIds =
+      profiles.map(user => user.id);
+
+
+    const {
+      data: wallets
+    } = await supabase
+
+      .from("wallets")
+      .select(`
+        id,
+        user_id,
+        account_number,
+        status
+      `)
+      .in(
+        "user_id",
+        userIds
+      );
+
+
+    const walletMap =
+      new Map(
+        (wallets || [])
+          .map(wallet => [
+            wallet.user_id,
+            wallet
+          ])
+      );
+
+
+    userResults.innerHTML = "";
+
+
+    profiles.forEach(profile => {
+
+      const wallet =
+        walletMap.get(profile.id);
+
+
+      const button =
+        document.createElement("button");
+
+
+      button.type = "button";
+
+      button.className =
+        "user-result";
+
+
+      button.innerHTML = `
+
+        <span class="user-avatar">
+          ${initials(profile.full_name)}
+        </span>
+
+        <span class="user-result-main">
+
+          <strong>
+            ${escapeHtml(
+              profile.full_name ||
+              "Unnamed customer"
+            )}
+          </strong>
+
+          <span>
+            Customer account
+          </span>
+
+        </span>
+
+        <span class="user-result-account">
+          ${
+            wallet?.account_number ||
+            "No wallet"
+          }
+        </span>
+
+      `;
+
+
+      button.addEventListener(
+        "click",
+        () => selectCustomer(
+          profile,
+          wallet
+        )
+      );
+
+
+      userResults.appendChild(button);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     SELECT CUSTOMER
+     ========================================================= */
+
+  async function selectCustomer(
+    profile,
+    wallet
+  ) {
+
+    if (!wallet) {
+
+      showMessage(
+        "This customer does not have an active wallet.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    selectedCustomer = {
+      ...profile,
+      wallet
+    };
+
+
+    selectedAvatar.textContent =
+      initials(profile.full_name);
+
+
+    selectedName.textContent =
+      profile.full_name ||
+      "Unnamed customer";
+
+
+    selectedEmail.textContent =
+      `Customer ID: ${profile.id}`;
+
+
+    selectedAccount.textContent =
+      `WAKALA ACCOUNT · ${wallet.account_number}`;
+
+
+    selectedUser.classList.add(
+      "visible"
+    );
+
+
+    await loadBalances(wallet.id);
+
+    await loadAdjustmentHistory(
+      wallet.id
+    );
+
+  }
+
+
+  /* =========================================================
+     LOAD BALANCES
+     ========================================================= */
+
+  async function loadBalances(walletId) {
+
+    balances.innerHTML =
+      `<div class="empty">Loading balances...</div>`;
+
+
+    const {
+      data,
+      error
+    } = await supabase
+
+      .from("wallet_balances")
+      .select(`
+        id,
+        currency,
+        available,
+        pending
+      `)
+      .eq(
+        "wallet_id",
+        walletId
+      )
+      .order(
+        "currency"
+      );
+
+
+    if (error) {
+
+      console.error(error);
+
+      balances.innerHTML =
+        `<div class="empty">
+          Unable to load balances.
+        </div>`;
+
+      return;
+
+    }
+
+
+    if (!data?.length) {
+
+      balances.innerHTML =
+        `<div class="empty">
+          No wallet balances found.
+        </div>`;
+
+      return;
+
+    }
+
+
+    balances.innerHTML = "";
+
+
+    data.forEach(balance => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "balance-row";
+
+
+      row.innerHTML = `
+
+        <div class="balance-currency">
+
+          <div class="currency-mark">
+            ${escapeHtml(
+              balance.currency
+            )}
+          </div>
+
+          <div>
+
+            <strong>
+              ${escapeHtml(
+                balance.currency
+              )}
+            </strong>
+
+            <span>
+              Available balance
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="balance-number">
+          ${currencySymbol(balance.currency)}
+          ${formatNumber(
+            balance.available,
+            balance.currency
+          )}
+        </div>
+
+      `;
+
+
+      balances.appendChild(row);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     ADJUST BALANCE
+     ========================================================= */
+
+  form.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      clearMessage();
+
+
+      if (!selectedCustomer) {
+
+        showMessage(
+          "Select a customer first.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const action =
+        document.querySelector(
+          'input[name="action"]:checked'
+        )?.value;
+
+
+      const numericAmount =
+        Number(amount.value);
+
+
+      const reasonText =
+        reason.value.trim();
+
+
+      if (!action) {
+
+        showMessage(
+          "Select an adjustment type.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !Number.isFinite(numericAmount) ||
+        numericAmount < 0
+      ) {
+
+        showMessage(
+          "Enter a valid amount.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (reasonText.length < 3) {
+
+        showMessage(
+          "Enter a reason for this adjustment.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const confirmed =
+        confirm(
+          `Confirm ${action} of ${numericAmount.toLocaleString()} ${currency.value} for ${selectedCustomer.full_name || "this customer"}?`
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        "Processing...";
+
+
+      try {
+
+        /*
+         * This calls the secure PostgreSQL RPC.
+         *
+         * The database checks:
+         *
+         * auth.uid()
+         *      ↓
+         * active admin
+         *      ↓
+         * wallets.adjust
+         */
+
+        const {
+          data,
+          error
+        } = await supabase.rpc(
+          "admin_adjust_wallet_balance",
+          {
+            p_user_id:
+              selectedCustomer.id,
+
+            p_currency:
+              currency.value,
+
+            p_action:
+              action,
+
+            p_amount:
+              numericAmount,
+
+            p_reason:
+              reasonText
+          }
+        );
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        console.log(
+          "Balance adjustment:",
+          data
+        );
+
+
+        showMessage(
+          `Balance updated successfully. New ${currency.value} balance: ${formatNumber(data.after_balance, currency.value)} ${currency.value}.`,
+          "success"
+        );
+
+
+        amount.value = "";
+
+        reason.value = "";
+
+
+        /*
+         * Reload everything from Supabase.
+         */
+
+        await loadBalances(
+          selectedCustomer.wallet.id
+        );
+
+        await loadAdjustmentHistory(
+          selectedCustomer.wallet.id
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Adjustment error:",
+          error
+        );
+
+
+        showMessage(
+          error.message ||
+          "The balance adjustment failed.",
+          "error"
+        );
+
+      } finally {
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          "Adjust balance";
+
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     ADJUSTMENT HISTORY
+     ========================================================= */
+
+  async function loadAdjustmentHistory(
+    walletId
+  ) {
+
+    historyList.innerHTML =
+      `<div class="empty">
+        Loading...
+      </div>`;
+
+
+    const {
+      data,
+      error
+    } = await supabase
+
+      .from("transactions")
+      .select(`
+        id,
+        currency,
+        amount,
+        reference,
+        description,
+        status,
+        created_at
+      `)
+      .eq(
+        "wallet_id",
+        walletId
+      )
+      .eq(
+        "type",
+        "adjustment"
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(10);
+
+
+    if (error) {
+
+      console.error(error);
+
+      historyList.innerHTML =
+        `<div class="empty">
+          Unable to load adjustment history.
+        </div>`;
+
+      return;
+
+    }
+
+
+    if (!data?.length) {
+
+      historyList.innerHTML =
+        `<div class="empty">
+          No balance adjustments yet.
+        </div>`;
+
+      return;
+
+    }
+
+
+    historyList.innerHTML = "";
+
+
+    data.forEach(transaction => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "history-row";
+
+
+      const amountValue =
+        Number(transaction.amount);
+
+
+      const amountClass =
+        amountValue >= 0
+          ? "positive"
+          : "negative";
+
+
+      const sign =
+        amountValue >= 0
+          ? "+"
+          : "";
+
+
+      const date =
+        new Date(
+          transaction.created_at
+        ).toLocaleString(
+          "en-NG",
+          {
+            dateStyle: "medium",
+            timeStyle: "short"
+          }
+        );
+
+
+      row.innerHTML = `
+
+        <div class="history-main">
+
+          <strong>
+            ${escapeHtml(
+              transaction.description ||
+              "Balance adjustment"
+            )}
+          </strong>
+
+          <span>
+            ${escapeHtml(
+              transaction.reference
+            )}
+          </span>
+
+        </div>
+
+        <div class="history-amount ${amountClass}">
+          ${sign}${formatNumber(
+            amountValue,
+            transaction.currency
+          )}
+          ${escapeHtml(
+            transaction.currency
+          )}
+        </div>
+
+        <div class="history-date">
+          ${escapeHtml(date)}
+        </div>
+
+      `;
+
+
+      historyList.appendChild(row);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     ESCAPE HTML
+     ========================================================= */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* =========================================================
+     LOGOUT
+     ========================================================= */
+
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+
+      await supabase.auth.signOut();
+
+      window.location.href =
+        "login.html";
+
+    }
+  );
+
+
+  /* =========================================================
+     MOBILE MENU
+     ========================================================= */
+
+  const menuToggle =
+    document.getElementById(
+      "menuToggle"
+    );
+
+  const nav =
+    document.getElementById(
+      "nav"
+    );
+
+
+  menuToggle?.addEventListener(
+    "click",
+    () => {
+
+      const open =
+        nav.classList.toggle(
+          "open"
+        );
+
+      menuToggle.setAttribute(
+        "aria-expanded",
+        String(open)
+      );
+
+      menuToggle.textContent =
+        open
+          ? "Close"
+          : "Menu";
+
+    }
+  );
+
+
+  /* =========================================================
+     INITIALIZE
+     ========================================================= */
+
+  const authorized =
+    await initializeAdmin();
+
+
+  if (authorized) {
+
+    await loadAdjustmentHistory(
+      "__none__"
+    );
+
+  }
+
+</script>
+
+</body>
+</html>
