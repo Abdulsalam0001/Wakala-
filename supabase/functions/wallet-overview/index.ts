@@ -1,26 +1,45 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://wakala.cfd",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Methods":
+    "GET, POST, OPTIONS",
 };
 
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 Deno.serve(async (req) => {
+  // IMPORTANT:
+  // Handle browser CORS preflight BEFORE anything else.
   if (req.method === "OPTIONS") {
-    return new Response("ok", {
+    return new Response(null, {
+      status: 204,
       headers: corsHeaders,
     });
   }
 
   try {
-    // --------------------------------------------------
-    // 1. Create client using the user's JWT
-    // --------------------------------------------------
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return json(
+        {
+          error: "Supabase environment variables are missing",
+        },
+        500
+      );
+    }
 
     const authHeader = req.headers.get("Authorization");
 
@@ -45,18 +64,18 @@ Deno.serve(async (req) => {
       }
     );
 
-    // --------------------------------------------------
-    // 2. Identify logged-in user
-    // --------------------------------------------------
+    // -----------------------------------------
+    // AUTH
+    // -----------------------------------------
 
     const {
-      data: {
-        user,
-      },
+      data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
+      console.error("Auth error:", userError);
+
       return json(
         {
           error: "Unauthorized",
@@ -65,9 +84,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // --------------------------------------------------
-    // 3. Load profile
-    // --------------------------------------------------
+    // -----------------------------------------
+    // PROFILE
+    // -----------------------------------------
 
     const {
       data: profile,
@@ -88,14 +107,15 @@ Deno.serve(async (req) => {
       return json(
         {
           error: "Unable to load profile",
+          details: profileError.message,
         },
         500
       );
     }
 
-    // --------------------------------------------------
-    // 4. Load wallet
-    // --------------------------------------------------
+    // -----------------------------------------
+    // WALLET
+    // -----------------------------------------
 
     const {
       data: wallet,
@@ -116,6 +136,7 @@ Deno.serve(async (req) => {
       return json(
         {
           error: "Unable to load wallet",
+          details: walletError.message,
         },
         500
       );
@@ -130,9 +151,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // --------------------------------------------------
-    // 5. Load REAL wallet balances
-    // --------------------------------------------------
+    // -----------------------------------------
+    // REAL WALLET BALANCES
+    // -----------------------------------------
 
     const {
       data: balances,
@@ -152,17 +173,11 @@ Deno.serve(async (req) => {
       return json(
         {
           error: "Unable to load wallet balances",
+          details: balanceError.message,
         },
         500
       );
     }
-
-    // --------------------------------------------------
-    // 6. Normalize balances
-    //
-    // This guarantees the frontend receives all
-    // supported currencies even if one is missing.
-    // --------------------------------------------------
 
     const supportedCurrencies = [
       "TZS",
@@ -181,19 +196,16 @@ Deno.serve(async (req) => {
       ])
     );
 
-    const normalizedBalances = supportedCurrencies.map(
-      (currency) => ({
+    const normalizedBalances =
+      supportedCurrencies.map((currency) => ({
         currency,
-        available: balanceMap.get(currency) ?? 0,
-      })
-    );
+        available:
+          balanceMap.get(currency) ?? 0,
+      }));
 
-    // --------------------------------------------------
-    // 7. Load recent transactions
-    //
-    // If your transactions table has different columns,
-    // this section can be adjusted separately.
-    // --------------------------------------------------
+    // -----------------------------------------
+    // TRANSACTIONS
+    // -----------------------------------------
 
     let transactions: any[] = [];
 
@@ -226,9 +238,9 @@ Deno.serve(async (req) => {
       transactions = transactionData ?? [];
     }
 
-    // --------------------------------------------------
-    // 8. Return dashboard payload
-    // --------------------------------------------------
+    // -----------------------------------------
+    // RESPONSE
+    // -----------------------------------------
 
     return json({
       profile: {
@@ -247,7 +259,8 @@ Deno.serve(async (req) => {
 
       wallet: {
         id: wallet.id,
-        account_number: wallet.account_number,
+        account_number:
+          wallet.account_number,
       },
 
       balances: normalizedBalances,
@@ -263,28 +276,12 @@ Deno.serve(async (req) => {
     return json(
       {
         error: "Internal server error",
+        details:
+          error instanceof Error
+            ? error.message
+            : String(error),
       },
       500
     );
   }
 });
-
-// --------------------------------------------------
-// JSON helper
-// --------------------------------------------------
-
-function json(
-  body: unknown,
-  status = 200
-) {
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-}
