@@ -1,999 +1,577 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Balance Management | Wakala Admin</title>
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Creator Applications | Wakala Admin</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
   <style>
+
     :root {
-      --ink: #0d1420;
-      --ink-2: #172235;
-      --paper: #f5f3ee;
-      --panel: #fffefa;
-      --teal: #208b70;
-      --teal-soft: #e5f3ed;
-      --gold: #d99a35;
-      --red: #b42318;
-      --red-soft: #fcebea;
-      --muted: #73756f;
-      --line: #e4e1d9;
-      --white: #ffffff;
-      --shadow: 0 12px 35px rgba(13, 20, 32, .07);
+      --ink:#0D1420;
+      --paper:#F6F2E9;
+      --panel:#FFFDF8;
+      --gold:#E4A445;
+      --teal:#229175;
+      --muted:#7A756A;
+      --line:rgba(13,20,32,.10);
+      --soft:#EAF5EF;
+      --danger:#B42318;
+      --success:#168447;
     }
 
     * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
+      box-sizing:border-box;
     }
 
     body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: "DM Sans", sans-serif;
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:Inter,sans-serif;
     }
 
     button,
-    input,
     select {
-      font: inherit;
+      font:inherit;
     }
 
-    button {
-      cursor: pointer;
-    }
-
-    .app {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 245px 1fr;
-    }
-
-    /* SIDEBAR */
-
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 26px 18px;
-      background: var(--ink);
-      color: white;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand {
-      color: white;
-      text-decoration: none;
-      font: 600 25px Fraunces, serif;
-      padding: 0 12px;
-    }
-
-    .brand-dot {
-      display: inline-block;
-      width: 9px;
-      height: 9px;
-      margin-right: 9px;
-      border-radius: 50%;
-      background: var(--gold);
-      vertical-align: 2px;
-    }
-
-    .admin-label {
-      margin: 48px 12px 12px;
-      color: #718096;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+    .shell {
+      width:min(1250px,100%);
+      margin:auto;
+      padding:0 25px;
     }
 
     .nav {
-      display: grid;
-      gap: 4px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:23px 0;
+      border-bottom:1px solid var(--line);
     }
 
-    .nav a {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 12px;
-      border-radius: 8px;
-      color: #aeb9ca;
-      text-decoration: none;
-      font-size: 13px;
+    .brand {
+      color:var(--ink);
+      font:600 25px Fraunces,serif;
     }
 
-    .nav a:hover,
-    .nav a.active {
-      background: #223149;
-      color: white;
+    .dot {
+      display:inline-block;
+      width:9px;
+      height:9px;
+      margin-right:9px;
+      border-radius:50%;
+      background:var(--gold);
     }
 
-    .nav-icon {
-      width: 20px;
-      color: var(--gold);
-      text-align: center;
+    .nav-links {
+      display:flex;
+      gap:15px;
+      align-items:center;
     }
 
-    .sidebar-bottom {
-      margin-top: auto;
-      padding: 18px 12px 0;
-      border-top: 1px solid rgba(255,255,255,.1);
-    }
-
-    .admin-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 13px;
-      color: #aeb9ca;
-      font-size: 11px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #43c59e;
-      box-shadow: 0 0 0 4px rgba(67,197,158,.12);
+    .nav-links a {
+      color:var(--teal);
+      font-size:12px;
+      font-weight:700;
+      text-decoration:none;
     }
 
     .logout {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 7px;
-      background: transparent;
-      color: white;
-      font-size: 12px;
+      border:0;
+      border-radius:7px;
+      padding:9px 13px;
+      background:var(--ink);
+      color:#fff;
+      cursor:pointer;
+      font-size:11px;
+      font-weight:700;
     }
 
-    .logout:hover {
-      background: rgba(255,255,255,.06);
+    .page-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:20px;
+      padding:45px 0 28px;
     }
 
-    /* MAIN */
-
-    .main {
-      min-width: 0;
-      padding: 32px clamp(20px, 4vw, 55px) 60px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 45px;
-    }
-
-    .topbar-left small {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .security {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--teal);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-
-    .security-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--teal);
-    }
-
-    .avatar {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--teal);
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .eyebrow {
-      color: var(--teal);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .13em;
-      text-transform: uppercase;
+    .kicker {
+      color:var(--teal);
+      font:700 10px 'IBM Plex Mono',monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     h1 {
-      margin: 8px 0 8px;
-      font: 600 clamp(38px, 5vw, 58px)/1 Fraunces, serif;
-      letter-spacing: -.025em;
+      margin:7px 0 8px;
+      font:600 42px Fraunces,serif;
     }
 
-    .intro {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      max-width: 620px;
+    .page-header p {
+      max-width:620px;
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
     }
-
-    /* STATS */
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 30px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:20px;
     }
 
     .stat {
-      padding: 20px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      box-shadow: var(--shadow);
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:11px;
+      background:var(--panel);
     }
 
-    .stat-label {
-      color: var(--muted);
-      font-size: 11px;
+    .stat span {
+      display:block;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
-    .stat-value {
-      margin-top: 7px;
-      font: 600 30px Fraunces, serif;
+    .stat strong {
+      display:block;
+      margin-top:7px;
+      font:600 28px Fraunces,serif;
     }
 
-    /* CONTROLS */
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 25px;
-      padding: 15px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 13px;
+    .toolbar {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:11px;
+      background:var(--panel);
     }
 
-    .search {
-      flex: 1;
-      min-width: 180px;
-      padding: 12px 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      outline: none;
-      font-size: 13px;
+    .filters {
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
     }
 
-    .search:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(32,139,112,.1);
+    .filters select {
+      min-width:150px;
+      padding:10px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:11px;
     }
 
     .refresh {
-      padding: 12px 15px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--ink);
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
+      border:0;
+      border-radius:7px;
+      padding:10px 14px;
+      background:var(--ink);
+      color:#fff;
+      cursor:pointer;
+      font-size:11px;
+      font-weight:700;
     }
 
-    .refresh:hover {
-      background: var(--ink-2);
+    .applications {
+      display:grid;
+      gap:14px;
+      padding-bottom:60px;
     }
 
-    /* CUSTOMER TABLE */
-
-    .customers {
-      margin-top: 18px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .application {
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--panel);
     }
 
-    .table-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 20px 22px;
-      border-bottom: 1px solid var(--line);
+    .application-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:20px;
     }
 
-    .table-header h2 {
-      margin: 0;
-      font: 600 23px Fraunces, serif;
+    .application h2 {
+      margin:7px 0 5px;
+      font:600 21px Fraunces,serif;
     }
 
-    .count {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      min-width: 800px;
-      border-collapse: collapse;
-    }
-
-    th {
-      padding: 12px 20px;
-      background: #faf8f2;
-      color: var(--muted);
-      text-align: left;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 15px 20px;
-      border-top: 1px solid var(--line);
-      vertical-align: middle;
-      font-size: 12px;
-    }
-
-    tbody tr:hover {
-      background: #fbfaf6;
-    }
-
-    .customer {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-
-    .customer-avatar {
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      background: var(--teal-soft);
-      color: var(--teal);
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .customer-name {
-      font-weight: 700;
-    }
-
-    .customer-id {
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 9px;
-      font-family: monospace;
-    }
-
-    .account {
-      font-family: monospace;
-      font-size: 11px;
-    }
-
-    .balance-cell {
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .currency {
-      margin-left: 3px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 500;
+    .application-id {
+      color:var(--muted);
+      font:400 9px 'IBM Plex Mono',monospace;
+      word-break:break-all;
     }
 
     .status {
-      display: inline-flex;
-      padding: 5px 8px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:5px;
+      font:600 10px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
     }
 
-    .status-active {
-      background: var(--teal-soft);
-      color: var(--teal);
+    .status.pending {
+      background:rgba(228,164,69,.15);
+      color:#95620B;
     }
 
-    .status-restricted {
-      background: #fff4db;
-      color: #956319;
+    .status.approved {
+      background:rgba(34,145,117,.12);
+      color:var(--teal);
     }
 
-    .status-suspended,
-    .status-closed {
-      background: var(--red-soft);
-      color: var(--red);
+    .status.rejected {
+      background:rgba(180,35,24,.10);
+      color:var(--danger);
     }
 
-    .adjust {
-      padding: 8px 11px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: white;
-      color: var(--ink);
-      font-size: 10px;
-      font-weight: 700;
+    .status.withdrawn {
+      background:rgba(13,20,32,.08);
+      color:var(--muted);
     }
 
-    .adjust:hover {
-      border-color: var(--teal);
-      color: var(--teal);
+    .application-grid {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:18px;
     }
 
-    /* EMPTY / LOADING */
-
-    .state {
-      padding: 55px 25px;
-      text-align: center;
-      color: var(--muted);
+    .detail {
+      padding:12px;
+      border-radius:8px;
+      background:var(--soft);
     }
 
-    .state strong {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--ink);
-      font: 600 22px Fraunces, serif;
+    .detail span {
+      display:block;
+      margin-bottom:5px;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.07em;
     }
 
-    /* MODAL */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      place-items: center;
-      padding: 20px;
-      background: rgba(13,20,32,.58);
-      backdrop-filter: blur(5px);
+    .detail strong {
+      font-size:12px;
+      word-break:break-word;
     }
 
-    .modal.open {
-      display: grid;
+    .note {
+      margin-top:14px;
+      padding:14px;
+      border-left:3px solid var(--gold);
+      background:rgba(228,164,69,.08);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.7;
+      white-space:pre-line;
     }
 
-    .modal-box {
-      width: min(480px,100%);
-      padding: 27px;
-      border-radius: 16px;
-      background: var(--panel);
-      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+    .application-actions {
+      display:flex;
+      gap:9px;
+      margin-top:17px;
+      flex-wrap:wrap;
     }
 
-    .modal-box h2 {
-      margin: 0 0 7px;
-      font: 600 28px Fraunces, serif;
+    .action {
+      border:0;
+      border-radius:7px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:11px;
+      font-weight:700;
     }
 
-    .modal-description {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.55;
+    .approve {
+      background:var(--teal);
+      color:#fff;
     }
 
-    .form-group {
-      margin-top: 15px;
+    .reject {
+      background:var(--danger);
+      color:#fff;
     }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
+    .pending-button {
+      background:var(--ink);
+      color:#fff;
     }
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      outline: none;
-      font-size: 13px;
+    .view-profile {
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:7px;
+      background:var(--soft);
+      color:var(--teal);
+      font-size:11px;
+      font-weight:700;
     }
 
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--teal);
+    .loading,
+    .empty {
+      padding:50px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--panel);
+      color:var(--muted);
+      text-align:center;
+      font-size:12px;
     }
 
-    .modal-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-top: 22px;
+    footer {
+      padding:30px 0 45px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:10px;
     }
 
-    .cancel {
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .confirm {
-      padding: 12px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--teal);
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .confirm:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    .modal-message {
-      min-height: 18px;
-      margin-top: 12px;
-      font-size: 11px;
-    }
-
-    .modal-error {
-      color: var(--red);
-    }
-
-    .modal-success {
-      color: var(--teal);
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: relative;
-        height: auto;
-      }
-
-      .admin-label {
-        margin-top: 25px;
-      }
+    @media(max-width:850px) {
 
       .stats {
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr 1fr;
       }
+
+      .application-grid {
+        grid-template-columns:1fr 1fr;
+      }
+
     }
 
-    @media (max-width: 600px) {
-      .main {
-        padding: 23px 15px 45px;
+    @media(max-width:600px) {
+
+      .shell {
+        padding:0 16px;
       }
 
-      .topbar {
-        margin-bottom: 35px;
-      }
-
-      .security {
-        display: none;
-      }
-
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .search {
-        width: 100%;
+      .page-header {
+        display:block;
       }
 
       h1 {
-        font-size: 43px;
+        font-size:35px;
       }
 
-      .table-header {
-        padding: 17px;
+      .stats,
+      .application-grid {
+        grid-template-columns:1fr;
       }
+
+      .toolbar {
+        display:block;
+      }
+
+      .refresh {
+        margin-top:10px;
+      }
+
+      .application-top {
+        display:block;
+      }
+
+      .status {
+        margin-top:12px;
+      }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
-<div class="app">
+<div class="shell">
 
-  <!-- SIDEBAR -->
+  <nav class="nav">
 
-  <aside class="sidebar">
-
-    <a class="brand" href="admin-dashboard.html">
-      <span class="brand-dot"></span>WAKALA
+    <a
+      class="brand"
+      href="dashboard.html"
+    >
+      <span class="dot"></span>WAKALA
     </a>
 
-    <div class="admin-label">Administration</div>
+    <div class="nav-links">
 
-    <nav class="nav">
-
-      <a href="admin-dashboard.html">
-        <span class="nav-icon">◈</span>
-        Overview
+      <a href="dashboard.html">
+        Dashboard
       </a>
 
-      <a href="admin-users.html">
-        <span class="nav-icon">♙</span>
-        Customers
-      </a>
-
-      <a class="active" href="admin-balances.html">
-        <span class="nav-icon">₦</span>
-        Balances
-      </a>
-
-      <a href="admin-transactions.html">
-        <span class="nav-icon">⇄</span>
-        Transactions
-      </a>
-
-      <a href="admin-esim.html">
-        <span class="nav-icon">▣</span>
-        eSIM
-      </a>
-
-      <a href="admin-settings.html">
-        <span class="nav-icon">⚙</span>
-        Settings
-      </a>
-
-      <a href="admin-audit.html">
-        <span class="nav-icon">◷</span>
-        Audit logs
-      </a>
-
-    </nav>
-
-    <div class="sidebar-bottom">
-
-      <div class="admin-status">
-        <span class="status-dot"></span>
-        Super admin session
-      </div>
-
-      <button class="logout" id="logoutButton">
+      <button
+        class="logout"
+        id="logoutButton"
+      >
         Log out
       </button>
 
     </div>
 
-  </aside>
+  </nav>
 
 
-  <!-- MAIN -->
+  <main>
 
-  <main class="main">
+    <header class="page-header">
 
-    <div class="topbar">
+      <div>
 
-      <div class="topbar-left">
-        <small id="dateText">Admin console</small>
-      </div>
-
-      <div class="topbar-right">
-
-        <span class="security">
-          <span class="security-dot"></span>
-          Secure session
-        </span>
-
-        <div class="avatar" id="adminAvatar">
-          SA
+        <div class="kicker">
+          Administration
         </div>
 
+        <h1>
+          Creator applications
+        </h1>
+
+        <p>
+          Review every creator application submitted through the Wakala
+          creator network. Applications are independent records, so the
+          same creator may appear multiple times.
+        </p>
+
       </div>
 
-    </div>
+    </header>
 
-
-    <div class="eyebrow">
-      Wallet operations
-    </div>
-
-    <h1>Balance management</h1>
-
-    <p class="intro">
-      View customer wallet balances and make authorised test adjustments.
-      Every adjustment is recorded in the admin audit trail.
-    </p>
-
-
-    <!-- STATS -->
 
     <section class="stats">
 
       <div class="stat">
-        <div class="stat-label">
-          Customers
-        </div>
-
-        <div class="stat-value" id="customerCount">
-          —
-        </div>
+        <span>Total</span>
+        <strong id="totalCount">0</strong>
       </div>
 
       <div class="stat">
-        <div class="stat-label">
-          Wallets
-        </div>
-
-        <div class="stat-value" id="walletCount">
-          —
-        </div>
+        <span>Pending</span>
+        <strong id="pendingCount">0</strong>
       </div>
 
       <div class="stat">
-        <div class="stat-label">
-          Balance records
-        </div>
+        <span>Approved</span>
+        <strong id="approvedCount">0</strong>
+      </div>
 
-        <div class="stat-value" id="balanceCount">
-          —
-        </div>
+      <div class="stat">
+        <span>Rejected</span>
+        <strong id="rejectedCount">0</strong>
       </div>
 
     </section>
 
 
-    <!-- SEARCH -->
+    <section class="toolbar">
 
-    <section class="controls">
+      <div class="filters">
 
-      <input
-        id="searchInput"
-        class="search"
-        type="search"
-        placeholder="Search customer name, account number or user ID..."
-        autocomplete="off"
+        <select id="statusFilter">
+
+          <option value="all">
+            All statuses
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="approved">
+            Approved
+          </option>
+
+          <option value="rejected">
+            Rejected
+          </option>
+
+          <option value="withdrawn">
+            Withdrawn
+          </option>
+
+        </select>
+
+
+        <select id="campaignFilter">
+
+          <option value="all">
+            All campaigns
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        class="refresh"
+        id="refreshButton"
       >
-
-      <button id="refreshButton" class="refresh">
-        Refresh
+        Refresh applications
       </button>
 
     </section>
 
 
-    <!-- CUSTOMERS -->
+    <section
+      id="applications"
+      class="applications"
+    >
 
-    <section class="customers">
-
-      <div class="table-header">
-
-        <h2>Customer balances</h2>
-
-        <span class="count" id="resultCount">
-          Loading...
-        </span>
-
-      </div>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Account</th>
-              <th>Currency</th>
-              <th>Available</th>
-              <th>Pending</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody id="customerTable">
-
-            <tr>
-              <td colspan="7">
-                <div class="state">
-                  Loading customers...
-                </div>
-              </td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
+      <div class="loading">
+        Loading applications...
       </div>
 
     </section>
 
   </main>
 
-</div>
 
-
-<!-- ADJUSTMENT MODAL -->
-
-<div class="modal" id="adjustmentModal">
-
-  <div class="modal-box">
-
-    <h2>Adjust balance</h2>
-
-    <p class="modal-description" id="modalCustomer">
-      Customer balance adjustment.
-    </p>
-
-
-    <div class="form-group">
-
-      <label for="adjustCurrency">
-        Currency
-      </label>
-
-      <select id="adjustCurrency">
-
-        <option value="TZS">TZS — Tanzanian Shilling</option>
-        <option value="KES">KES — Kenyan Shilling</option>
-        <option value="RWF">RWF — Rwandan Franc</option>
-        <option value="NGN">NGN — Nigerian Naira</option>
-        <option value="USDC">USDC</option>
-        <option value="USDT">USDT</option>
-        <option value="BTC">BTC</option>
-
-      </select>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="adjustAmount">
-        Amount
-      </label>
-
-      <input
-        id="adjustAmount"
-        type="number"
-        step="any"
-        placeholder="1000"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="adjustMode">
-        Adjustment
-      </label>
-
-      <select id="adjustMode">
-
-        <option value="add">
-          Add to available balance
-        </option>
-
-        <option value="subtract">
-          Subtract from available balance
-        </option>
-
-        <option value="set">
-          Set available balance
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="adjustReason">
-        Reason
-      </label>
-
-      <input
-        id="adjustReason"
-        type="text"
-        placeholder="Test balance adjustment"
-      >
-
-    </div>
-
-
-    <div
-      id="modalMessage"
-      class="modal-message"
-    ></div>
-
-
-    <div class="modal-actions">
-
-      <button
-        type="button"
-        class="cancel"
-        id="cancelAdjustment"
-      >
-        Cancel
-      </button>
-
-      <button
-        type="button"
-        class="confirm"
-        id="confirmAdjustment"
-      >
-        Apply adjustment
-      </button>
-
-    </div>
-
-  </div>
+  <footer>
+    © <span id="year"></span> Wakala Administration
+  </footer>
 
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script type="module">
 
-import {
-  createClient
-} from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from
+  'https://esm.sh/@supabase/supabase-js@2';
 
 import {
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
-} from "./supabase-config.js";
+} from './supabase-config.js';
 
-
-/* --------------------------------------------------
-   SUPABASE
--------------------------------------------------- */
 
 const supabase = createClient(
   SUPABASE_URL,
@@ -1001,1062 +579,805 @@ const supabase = createClient(
 );
 
 
-/* --------------------------------------------------
-   DOM
--------------------------------------------------- */
+const applicationsContainer =
+  document.getElementById('applications');
 
-const table = document.getElementById("customerTable");
-const searchInput = document.getElementById("searchInput");
+const statusFilter =
+  document.getElementById('statusFilter');
 
-const customerCount =
-  document.getElementById("customerCount");
-
-const walletCount =
-  document.getElementById("walletCount");
-
-const balanceCount =
-  document.getElementById("balanceCount");
-
-const resultCount =
-  document.getElementById("resultCount");
+const campaignFilter =
+  document.getElementById('campaignFilter');
 
 const refreshButton =
-  document.getElementById("refreshButton");
+  document.getElementById('refreshButton');
 
 const logoutButton =
-  document.getElementById("logoutButton");
-
-const modal =
-  document.getElementById("adjustmentModal");
-
-const modalCustomer =
-  document.getElementById("modalCustomer");
-
-const modalMessage =
-  document.getElementById("modalMessage");
-
-const adjustCurrency =
-  document.getElementById("adjustCurrency");
-
-const adjustAmount =
-  document.getElementById("adjustAmount");
-
-const adjustMode =
-  document.getElementById("adjustMode");
-
-const adjustReason =
-  document.getElementById("adjustReason");
-
-const confirmAdjustment =
-  document.getElementById("confirmAdjustment");
-
-const cancelAdjustment =
-  document.getElementById("cancelAdjustment");
+  document.getElementById('logoutButton');
 
 
-/* --------------------------------------------------
-   STATE
--------------------------------------------------- */
-
-let customers = [];
-
-let selectedWalletId = null;
-
-let selectedUserId = null;
-
-let selectedCustomerName = "";
+let currentAdmin = null;
+let allApplications = [];
 
 
-/* --------------------------------------------------
-   AUTHENTICATION
--------------------------------------------------- */
-
-const {
-  data: {
-    session
-  },
-  error: sessionError
-} = await supabase.auth.getSession();
+document.getElementById('year').textContent =
+  new Date().getFullYear();
 
 
-if (
-  sessionError ||
-  !session
-) {
+/* =========================================
+   AUTH + ADMIN CHECK
+========================================= */
 
-  window.location.href = "login.html";
-
-  throw new Error(
-    "No authenticated session."
-  );
-}
-
-
-/* --------------------------------------------------
-   ADMIN CHECK
--------------------------------------------------- */
-
-const {
-  data: adminUser,
-  error: adminError
-} = await supabase
-  .from("admin_users")
-  .select(`
-    id,
-    user_id,
-    role_id,
-    status,
-    admin_roles (
-      id,
-      name
-    )
-  `)
-  .eq("user_id", session.user.id)
-  .eq("status", "active")
-  .maybeSingle();
-
-
-if (
-  adminError ||
-  !adminUser
-) {
-
-  alert(
-    "You do not have access to the admin console."
-  );
-
-  window.location.href = "dashboard.html";
-
-  throw new Error(
-    "Admin access denied."
-  );
-}
-
-
-/* --------------------------------------------------
-   SUPER ADMIN CHECK
--------------------------------------------------- */
-
-const roleName =
-  adminUser.admin_roles?.name;
-
-
-if (roleName !== "super_admin") {
-
-  alert(
-    "Super admin access required."
-  );
-
-  window.location.href =
-    "admin-dashboard.html";
-
-  throw new Error(
-    "Super admin required."
-  );
-}
-
-
-/* --------------------------------------------------
-   ADMIN AVATAR
--------------------------------------------------- */
-
-const metadata =
-  session.user.user_metadata || {};
-
-const adminName =
-  metadata.full_name ||
-  metadata.name ||
-  "Super Admin";
-
-document.getElementById(
-  "adminAvatar"
-).textContent =
-  adminName
-    .split(/\s+/)
-    .map(x => x[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-
-/* --------------------------------------------------
-   LOAD CUSTOMERS
--------------------------------------------------- */
-
-async function loadCustomers() {
-
-  table.innerHTML = `
-    <tr>
-      <td colspan="7">
-        <div class="state">
-          Loading customers...
-        </div>
-      </td>
-    </tr>
-  `;
-
-  /*
-    IMPORTANT:
-
-    We deliberately load the relationship
-    in stages instead of relying on Supabase
-    relationship names.
-
-    This avoids the common problem where a
-    dashboard shows zero customers because
-    a foreign-key relationship was assumed.
-  */
-
-
-  /* STEP 1 — profiles */
+async function initialiseAdmin() {
 
   const {
-    data: profiles,
-    error: profilesError
-  } = await supabase
-    .from("profiles")
-    .select(`
-      id,
-      full_name,
-      created_at
-    `)
-    .order(
-      "created_at",
-      {
-        ascending: false
-      }
-    );
+    data: sessionData,
+    error: sessionError
+  } = await supabase.auth.getSession();
 
 
-  if (profilesError) {
+  if (sessionError) {
 
-    console.error(
-      "profiles error:",
-      profilesError
-    );
+    console.error(sessionError);
 
-    showError(
-      "Could not load customers: " +
-      profilesError.message
+    showAccessDenied(
+      'Unable to verify your session.'
     );
 
     return;
   }
 
 
-  /* STEP 2 — wallets */
+  const user =
+    sessionData?.session?.user;
+
+
+  if (!user) {
+
+    window.location.href =
+      'login.html';
+
+    return;
+  }
+
+
+  /*
+   * Check admin_users.
+   */
 
   const {
-    data: wallets,
-    error: walletsError
+    data: admin,
+    error: adminError
   } = await supabase
-    .from("wallets")
+    .from('admin_users')
     .select(`
       id,
       user_id,
-      account_number,
+      role_id,
       status,
-      created_at
-    `);
+      admin_roles (
+        id,
+        name,
+        description
+      )
+    `)
+    .eq(
+      'user_id',
+      user.id
+    )
+    .eq(
+      'status',
+      'active'
+    )
+    .maybeSingle();
 
 
-  if (walletsError) {
+  if (
+    adminError ||
+    !admin
+  ) {
 
     console.error(
-      "wallets error:",
-      walletsError
+      'Admin verification failed:',
+      adminError
     );
 
-    showError(
-      "Could not load wallets: " +
-      walletsError.message
+    showAccessDenied(
+      'You do not have permission to access this page.'
     );
 
     return;
   }
 
 
-  /* STEP 3 — balances */
+  currentAdmin =
+    admin;
+
+
+  await loadApplications();
+
+}
+
+
+/* =========================================
+   LOAD APPLICATIONS
+========================================= */
+
+async function loadApplications() {
+
+  applicationsContainer.innerHTML = `
+    <div class="loading">
+      Loading creator applications...
+    </div>
+  `;
+
 
   const {
-    data: balances,
-    error: balancesError
+    data,
+    error
   } = await supabase
-    .from("wallet_balances")
+    .from('creator_applications')
     .select(`
       id,
-      wallet_id,
-      currency,
-      available,
-      pending,
+      campaign_id,
+      user_id,
+      platform_username,
+      portfolio_url,
+      application_note,
+      status,
+      reviewed_by,
+      reviewed_at,
       created_at,
-      updated_at
+
+      creator_campaigns (
+        id,
+        title,
+        description,
+        platform,
+        content_type,
+        reward_per_1000_impressions,
+        max_reward,
+        requirements,
+        status
+      )
     `)
     .order(
-      "currency",
+      'created_at',
       {
-        ascending: true
+        ascending:false
       }
     );
 
 
-  if (balancesError) {
+  if (error) {
 
     console.error(
-      "wallet_balances error:",
-      balancesError
+      'Application loading error:',
+      error
     );
 
-    showError(
-      "Could not load wallet balances: " +
-      balancesError.message
-    );
-
-    return;
-  }
-
-
-  /* --------------------------------------------------
-     BUILD CUSTOMER MAP
-  -------------------------------------------------- */
-
-  const profileMap =
-    new Map(
-      profiles.map(profile => [
-        profile.id,
-        profile
-      ])
-    );
-
-
-  const walletMap =
-    new Map(
-      wallets.map(wallet => [
-        wallet.id,
-        wallet
-      ])
-    );
-
-
-  /*
-    Create one row per wallet balance.
-
-    This means a customer with:
-
-    TZS
-    KES
-    NGN
-    USDC
-
-    will have four balance rows.
-  */
-
-  customers =
-    balances
-      .map(balance => {
-
-        const wallet =
-          walletMap.get(
-            balance.wallet_id
-          );
-
-        if (!wallet) {
-          return null;
-        }
-
-        const profile =
-          profileMap.get(
-            wallet.user_id
-          );
-
-        if (!profile) {
-          return null;
-        }
-
-        return {
-          profile,
-          wallet,
-          balance
-        };
-
-      })
-      .filter(Boolean);
-
-
-  /* --------------------------------------------------
-     UPDATE STATISTICS
-  -------------------------------------------------- */
-
-  customerCount.textContent =
-    profiles.length.toLocaleString();
-
-  walletCount.textContent =
-    wallets.length.toLocaleString();
-
-  balanceCount.textContent =
-    balances.length.toLocaleString();
-
-
-  renderCustomers();
-}
-
-
-/* --------------------------------------------------
-   RENDER
--------------------------------------------------- */
-
-function renderCustomers() {
-
-  const query =
-    searchInput.value
-      .trim()
-      .toLowerCase();
-
-
-  const filtered =
-    customers.filter(item => {
-
-      const profile =
-        item.profile;
-
-      const wallet =
-        item.wallet;
-
-      return (
-
-        String(
-          profile.full_name || ""
-        )
-          .toLowerCase()
-          .includes(query)
-
-        ||
-
-        String(
-          profile.id || ""
-        )
-          .toLowerCase()
-          .includes(query)
-
-        ||
-
-        String(
-          wallet.account_number || ""
-        )
-          .toLowerCase()
-          .includes(query)
-
-        ||
-
-        String(
-          item.balance.currency || ""
-        )
-          .toLowerCase()
-          .includes(query)
-
-      );
-
-    });
-
-
-  resultCount.textContent =
-    `${filtered.length} balance record${filtered.length === 1 ? "" : "s"}`;
-
-
-  if (!filtered.length) {
-
-    table.innerHTML = `
-      <tr>
-        <td colspan="7">
-          <div class="state">
-            <strong>No customers found</strong>
-            ${
-              customers.length
-                ? "Try a different search."
-                : "No wallet balance records were found."
-            }
-          </div>
-        </td>
-      </tr>
+    applicationsContainer.innerHTML = `
+      <div class="empty">
+        Unable to load creator applications.
+        <br><br>
+        ${escapeHtml(error.message)}
+      </div>
     `;
 
     return;
   }
 
 
-  table.innerHTML =
+  allApplications =
+    data || [];
+
+
+  updateStatistics();
+
+  populateCampaignFilter();
+
+  renderApplications();
+
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+function updateStatistics() {
+
+  document.getElementById(
+    'totalCount'
+  ).textContent =
+    allApplications.length;
+
+
+  document.getElementById(
+    'pendingCount'
+  ).textContent =
+    allApplications.filter(
+      app => app.status === 'pending'
+    ).length;
+
+
+  document.getElementById(
+    'approvedCount'
+  ).textContent =
+    allApplications.filter(
+      app => app.status === 'approved'
+    ).length;
+
+
+  document.getElementById(
+    'rejectedCount'
+  ).textContent =
+    allApplications.filter(
+      app => app.status === 'rejected'
+    ).length;
+
+}
+
+
+/* =========================================
+   CAMPAIGN FILTER
+========================================= */
+
+function populateCampaignFilter() {
+
+  const campaigns =
+    new Map();
+
+
+  allApplications.forEach(app => {
+
+    const campaign =
+      app.creator_campaigns;
+
+
+    if (
+      campaign &&
+      campaign.id
+    ) {
+
+      campaigns.set(
+        campaign.id,
+        campaign.title
+      );
+
+    }
+
+  });
+
+
+  campaignFilter.innerHTML = `
+    <option value="all">
+      All campaigns
+    </option>
+
+    ${
+      [...campaigns.entries()]
+        .map(
+          ([id,title]) => `
+            <option value="${escapeHtml(id)}">
+              ${escapeHtml(title)}
+            </option>
+          `
+        )
+        .join('')
+    }
+  `;
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function renderApplications() {
+
+  let filtered =
+    [...allApplications];
+
+
+  const status =
+    statusFilter.value;
+
+
+  const campaign =
+    campaignFilter.value;
+
+
+  if (status !== 'all') {
+
+    filtered =
+      filtered.filter(
+        app =>
+          app.status === status
+      );
+
+  }
+
+
+  if (campaign !== 'all') {
+
+    filtered =
+      filtered.filter(
+        app =>
+          app.campaign_id === campaign
+      );
+
+  }
+
+
+  if (!filtered.length) {
+
+    applicationsContainer.innerHTML = `
+      <div class="empty">
+        No creator applications match the selected filters.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  applicationsContainer.innerHTML =
     filtered
-      .map(item => {
+      .map(renderApplication)
+      .join('');
 
-        const profile =
-          item.profile;
-
-        const wallet =
-          item.wallet;
-
-        const balance =
-          item.balance;
-
-
-        const name =
-          profile.full_name ||
-          "Unnamed customer";
-
-
-        const initials =
-          name
-            .split(/\s+/)
-            .filter(Boolean)
-            .map(x => x[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase();
-
-
-        const status =
-          wallet.status || "active";
-
-
-        const available =
-          Number(
-            balance.available || 0
-          );
-
-
-        const pending =
-          Number(
-            balance.pending || 0
-          );
-
-
-        return `
-          <tr>
-
-            <td>
-
-              <div class="customer">
-
-                <div class="customer-avatar">
-                  ${escapeHtml(initials)}
-                </div>
-
-                <div>
-
-                  <div class="customer-name">
-                    ${escapeHtml(name)}
-                  </div>
-
-                  <div class="customer-id">
-                    ${escapeHtml(profile.id)}
-                  </div>
-
-                </div>
-
-              </div>
-
-            </td>
-
-
-            <td>
-              <span class="account">
-                ${escapeHtml(wallet.account_number)}
-              </span>
-            </td>
-
-
-            <td>
-              <strong>
-                ${escapeHtml(balance.currency)}
-              </strong>
-            </td>
-
-
-            <td>
-              <span class="balance-cell">
-                ${formatAmount(available)}
-                <span class="currency">
-                  ${escapeHtml(balance.currency)}
-                </span>
-              </span>
-            </td>
-
-
-            <td>
-              ${formatAmount(pending)}
-            </td>
-
-
-            <td>
-
-              <span class="status status-${escapeHtml(status)}">
-                ${escapeHtml(status)}
-              </span>
-
-            </td>
-
-
-            <td>
-
-              <button
-                class="adjust"
-                data-wallet="${escapeHtml(wallet.id)}"
-                data-user="${escapeHtml(profile.id)}"
-                data-name="${escapeHtml(name)}"
-                data-currency="${escapeHtml(balance.currency)}"
-              >
-                Adjust
-              </button>
-
-            </td>
-
-          </tr>
-        `;
-
-      })
-      .join("");
-
-
-  /* Attach adjustment buttons */
 
   document
-    .querySelectorAll(".adjust")
+    .querySelectorAll('[data-action="approve"]')
     .forEach(button => {
 
       button.addEventListener(
-        "click",
-        () => {
-
-          openAdjustment(
-            button.dataset.wallet,
-            button.dataset.user,
-            button.dataset.name,
-            button.dataset.currency
-          );
-
-        }
+        'click',
+        () => updateApplicationStatus(
+          button.dataset.id,
+          'approved'
+        )
       );
 
     });
+
+
+  document
+    .querySelectorAll('[data-action="reject"]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => updateApplicationStatus(
+          button.dataset.id,
+          'rejected'
+        )
+      );
+
+    });
+
 }
 
 
-/* --------------------------------------------------
-   OPEN ADJUSTMENT
--------------------------------------------------- */
+/* =========================================
+   APPLICATION CARD
+========================================= */
 
-function openAdjustment(
-  walletId,
-  userId,
-  customerName,
-  currency
+function renderApplication(app) {
+
+  const campaign =
+    app.creator_campaigns;
+
+
+  const status =
+    String(
+      app.status || 'pending'
+    ).toLowerCase();
+
+
+  const submitted =
+    app.created_at
+      ? new Date(
+          app.created_at
+        ).toLocaleString()
+      : 'Unknown';
+
+
+  return `
+
+    <article
+      class="application"
+    >
+
+      <div class="application-top">
+
+        <div>
+
+          <div class="kicker">
+            ${escapeHtml(
+              campaign?.platform ||
+              'Creator application'
+            )}
+          </div>
+
+          <h2>
+            ${escapeHtml(
+              campaign?.title ||
+              'Unknown campaign'
+            )}
+          </h2>
+
+          <div class="application-id">
+            Application ID:
+            ${escapeHtml(app.id)}
+            <br>
+            Creator ID:
+            ${escapeHtml(app.user_id)}
+            <br>
+            Submitted:
+            ${escapeHtml(submitted)}
+          </div>
+
+        </div>
+
+
+        <span
+          class="status ${escapeHtml(status)}"
+        >
+          ${escapeHtml(status)}
+        </span>
+
+      </div>
+
+
+      <div class="application-grid">
+
+        <div class="detail">
+
+          <span>
+            Platform
+          </span>
+
+          <strong>
+            ${escapeHtml(
+              app.platform_username ||
+              'Not provided'
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+          <span>
+            Content type
+          </span>
+
+          <strong>
+            ${escapeHtml(
+              campaign?.content_type ||
+              'Not provided'
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+          <span>
+            Reward / 1K
+          </span>
+
+          <strong>
+            ${
+              campaign?.reward_per_1000_impressions != null
+                ? Number(
+                    campaign.reward_per_1000_impressions
+                  ).toFixed(2) + ' USDC'
+                : 'Not specified'
+            }
+          </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+          <span>
+            Maximum reward
+          </span>
+
+          <strong>
+            ${
+              campaign?.max_reward != null
+                ? Number(
+                    campaign.max_reward
+                  ).toFixed(2) + ' USDC'
+                : 'No limit'
+            }
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="note">
+
+        ${escapeHtml(
+          app.application_note ||
+          'No application information provided.'
+        )}
+
+      </div>
+
+
+      <div class="application-actions">
+
+        ${
+          app.portfolio_url
+            ? `
+              <a
+                class="view-profile"
+                href="${escapeHtml(
+                  app.portfolio_url
+                )}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View creator profile →
+              </a>
+            `
+            : ''
+        }
+
+
+        ${
+          status === 'pending'
+            ? `
+              <button
+                class="action approve"
+                data-action="approve"
+                data-id="${escapeHtml(app.id)}"
+              >
+                Approve application
+              </button>
+
+              <button
+                class="action reject"
+                data-action="reject"
+                data-id="${escapeHtml(app.id)}"
+              >
+                Reject application
+              </button>
+            `
+            : ''
+        }
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================================
+   UPDATE STATUS
+========================================= */
+
+async function updateApplicationStatus(
+  applicationId,
+  newStatus
 ) {
 
-  selectedWalletId =
-    walletId;
-
-  selectedUserId =
-    userId;
-
-  selectedCustomerName =
-    customerName;
+  const actionText =
+    newStatus === 'approved'
+      ? 'approve'
+      : 'reject';
 
 
-  modalCustomer.textContent =
-    `${customerName} · ${currency}`;
+  const result =
+    await Swal.fire({
+
+      icon:
+        newStatus === 'approved'
+          ? 'question'
+          : 'warning',
+
+      title:
+        `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} application?`,
+
+      text:
+        `This will mark the creator application as ${newStatus}.`,
+
+      showCancelButton:true,
+
+      confirmButtonText:
+        `Yes, ${actionText}`,
+
+      cancelButtonText:
+        'Cancel',
+
+      confirmButtonColor:
+        newStatus === 'approved'
+          ? '#229175'
+          : '#B42318'
+
+    });
 
 
-  adjustCurrency.value =
-    currency;
+  if (!result.isConfirmed) {
+    return;
+  }
 
 
-  adjustAmount.value =
-    "";
-
-  adjustReason.value =
-    "";
-
-  modalMessage.textContent =
-    "";
-
-  modalMessage.className =
-    "modal-message";
+  const {
+    data: sessionData
+  } = await supabase.auth.getSession();
 
 
-  modal.classList.add(
-    "open"
-  );
+  const adminUser =
+    sessionData?.session?.user;
 
 
-  setTimeout(
-    () => adjustAmount.focus(),
-    50
-  );
+  if (!adminUser) {
+
+    Swal.fire({
+      icon:'error',
+      title:'Session expired',
+      text:'Please log in again.',
+      confirmButtonColor:'#0D1420'
+    });
+
+    return;
+  }
+
+
+  const {
+    error
+  } = await supabase
+    .from('creator_applications')
+    .update({
+
+      status:
+        newStatus,
+
+      reviewed_by:
+        adminUser.id,
+
+      reviewed_at:
+        new Date().toISOString()
+
+    })
+    .eq(
+      'id',
+      applicationId
+    );
+
+
+  if (error) {
+
+    console.error(
+      'Status update error:',
+      error
+    );
+
+    Swal.fire({
+      icon:'error',
+      title:'Update failed',
+      text:error.message,
+      confirmButtonColor:'#0D1420'
+    });
+
+    return;
+  }
+
+
+  Swal.fire({
+    icon:'success',
+    title:'Application updated',
+    text:
+      `The application has been marked ${newStatus}.`,
+    confirmButtonColor:'#229175'
+  });
+
+
+  await loadApplications();
+
 }
 
 
-/* --------------------------------------------------
-   CLOSE MODAL
--------------------------------------------------- */
+/* =========================================
+   FILTER EVENTS
+========================================= */
 
-function closeModal() {
-
-  modal.classList.remove(
-    "open"
-  );
-
-  selectedWalletId = null;
-
-  selectedUserId = null;
-
-  selectedCustomerName = "";
-}
-
-
-cancelAdjustment.addEventListener(
-  "click",
-  closeModal
+statusFilter.addEventListener(
+  'change',
+  renderApplications
 );
 
 
-modal.addEventListener(
-  "click",
-  event => {
-
-    if (
-      event.target === modal
-    ) {
-      closeModal();
-    }
-
-  }
+campaignFilter.addEventListener(
+  'change',
+  renderApplications
 );
 
-
-/* --------------------------------------------------
-   APPLY BALANCE ADJUSTMENT
--------------------------------------------------- */
-
-confirmAdjustment.addEventListener(
-  "click",
-  async () => {
-
-    if (!selectedWalletId) {
-      return;
-    }
-
-
-    const amount =
-      Number(
-        adjustAmount.value
-      );
-
-
-    const currency =
-      adjustCurrency.value;
-
-
-    const mode =
-      adjustMode.value;
-
-
-    const reason =
-      adjustReason.value.trim() ||
-      "Admin test balance adjustment";
-
-
-    if (
-      !Number.isFinite(amount) ||
-      amount < 0
-    ) {
-
-      showModalError(
-        "Enter a valid amount."
-      );
-
-      return;
-    }
-
-
-    if (
-      mode === "add" &&
-      amount === 0
-    ) {
-
-      showModalError(
-        "Enter an amount greater than zero."
-      );
-
-      return;
-    }
-
-
-    confirmAdjustment.disabled =
-      true;
-
-    confirmAdjustment.textContent =
-      "Applying...";
-
-
-    try {
-
-      /*
-        IMPORTANT:
-
-        The actual balance adjustment is performed
-        through the RPC/function created for the
-        admin balance system.
-
-        This prevents the browser from directly
-        editing wallet_balances.
-      */
-
-
-      const {
-        data,
-        error
-      } = await supabase.rpc(
-        "admin_adjust_wallet_balance",
-        {
-          p_wallet_id:
-            selectedWalletId,
-
-          p_currency:
-            currency,
-
-          p_amount:
-            amount,
-
-          p_mode:
-            mode,
-
-          p_reason:
-            reason
-        }
-      );
-
-
-      if (error) {
-
-        console.error(
-          "Adjustment error:",
-          error
-        );
-
-        showModalError(
-          error.message
-        );
-
-        return;
-      }
-
-
-      showModalSuccess(
-        "Balance updated successfully."
-      );
-
-
-      /*
-        Give the database a moment to commit,
-        then reload the authoritative data.
-      */
-
-      await new Promise(
-        resolve =>
-          setTimeout(
-            resolve,
-            400
-          )
-      );
-
-
-      await loadCustomers();
-
-
-      setTimeout(
-        closeModal,
-        700
-      );
-
-    } finally {
-
-      confirmAdjustment.disabled =
-        false;
-
-      confirmAdjustment.textContent =
-        "Apply adjustment";
-
-    }
-
-  }
-);
-
-
-/* --------------------------------------------------
-   SEARCH
--------------------------------------------------- */
-
-searchInput.addEventListener(
-  "input",
-  renderCustomers
-);
-
-
-/* --------------------------------------------------
-   REFRESH
--------------------------------------------------- */
 
 refreshButton.addEventListener(
-  "click",
-  async () => {
-
-    refreshButton.disabled =
-      true;
-
-    refreshButton.textContent =
-      "Refreshing...";
-
-    try {
-
-      await loadCustomers();
-
-    } finally {
-
-      refreshButton.disabled =
-        false;
-
-      refreshButton.textContent =
-        "Refresh";
-
-    }
-
-  }
+  'click',
+  loadApplications
 );
 
 
-/* --------------------------------------------------
+/* =========================================
    LOGOUT
--------------------------------------------------- */
+========================================= */
 
 logoutButton.addEventListener(
-  "click",
+  'click',
   async () => {
 
     await supabase.auth.signOut();
 
     window.location.href =
-      "login.html";
+      'login.html';
 
   }
 );
 
 
-/* --------------------------------------------------
-   HELPERS
--------------------------------------------------- */
+/* =========================================
+   ACCESS DENIED
+========================================= */
 
-function formatAmount(
-  value
-) {
+function showAccessDenied(message) {
 
-  return Number(
-    value || 0
-  ).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 8
-    }
-  );
+  Swal.fire({
 
-}
+    icon:'error',
 
+    title:'Access denied',
 
-function escapeHtml(
-  value
-) {
+    text:message,
 
-  return String(
-    value ?? ""
-  )
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    confirmButtonColor:'#0D1420'
+
+  }).then(() => {
+
+    window.location.href =
+      'dashboard.html';
+
+  });
 
 }
 
 
-function showError(
-  text
-) {
+/* =========================================
+   ESCAPE
+========================================= */
 
-  table.innerHTML = `
-    <tr>
-      <td colspan="7">
-        <div class="state">
-          <strong>Unable to load customers</strong>
-          ${escapeHtml(text)}
-        </div>
-      </td>
-    </tr>
-  `;
+function escapeHtml(value) {
 
-  resultCount.textContent =
-    "Error";
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
 
 }
 
 
-function showModalError(
-  text
-) {
-
-  modalMessage.className =
-    "modal-message modal-error";
-
-  modalMessage.textContent =
-    text;
-
-}
-
-
-function showModalSuccess(
-  text
-) {
-
-  modalMessage.className =
-    "modal-message modal-success";
-
-  modalMessage.textContent =
-    text;
-
-}
-
-
-/* --------------------------------------------------
-   DATE
--------------------------------------------------- */
-
-document.getElementById(
-  "dateText"
-).textContent =
-  new Date().toLocaleDateString(
-    undefined,
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    }
-  );
-
-
-/* --------------------------------------------------
+/* =========================================
    START
--------------------------------------------------- */
+========================================= */
 
-await loadCustomers();
+initialiseAdmin();
 
 </script>
 
