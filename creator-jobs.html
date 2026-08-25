@@ -16,8 +16,7 @@
     rel="stylesheet"
   >
 
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./auth-links.js" defer></script>
 
   <style>
 
@@ -71,10 +70,7 @@
       padding:0 28px;
     }
 
-
-    /* =========================
-       NAVIGATION
-    ========================= */
+    /* NAV */
 
     .nav {
       display:flex;
@@ -118,10 +114,7 @@
       color:#fff !important;
     }
 
-
-    /* =========================
-       HERO
-    ========================= */
+    /* HERO */
 
     .hero {
       display:grid;
@@ -206,10 +199,7 @@
       font-size:10px;
     }
 
-
-    /* =========================
-       HOW IT WORKS
-    ========================= */
+    /* HOW */
 
     .how {
       margin-bottom:45px;
@@ -261,10 +251,7 @@
       line-height:1.6;
     }
 
-
-    /* =========================
-       CAMPAIGNS HEADER
-    ========================= */
+    /* CAMPAIGNS */
 
     .campaign-header {
       display:flex;
@@ -286,11 +273,6 @@
       font-size:12px;
       line-height:1.6;
     }
-
-
-    /* =========================
-       CAMPAIGNS
-    ========================= */
 
     .jobs {
       display:grid;
@@ -392,18 +374,13 @@
       color:#fff;
       font-size:11px;
       font-weight:700;
-      transition:.2s ease;
     }
 
     .apply-job:hover {
       background:var(--teal);
-      transform:translateY(-1px);
     }
 
-
-    /* =========================
-       SIDEBAR
-    ========================= */
+    /* SIDEBAR */
 
     .sidebar-card {
       margin-bottom:18px;
@@ -460,10 +437,7 @@
       color:var(--ink);
     }
 
-
-    /* =========================
-       APPLICATION
-    ========================= */
+    /* APPLICATION */
 
     .apply {
       grid-column:1/-1;
@@ -524,7 +498,6 @@
       color:var(--ink);
       font-size:12px;
       outline:none;
-      transition:.2s ease;
     }
 
     .field input:focus,
@@ -553,86 +526,13 @@
       font-size:12px;
       font-weight:700;
       cursor:pointer;
-      transition:.2s ease;
     }
 
-    .button:hover:not(:disabled) {
+    .button:hover {
       background:var(--teal);
     }
 
-    .status {
-      grid-column:1/-1;
-      min-height:18px;
-      margin:0;
-      color:var(--teal);
-      font-size:12px;
-      line-height:1.5;
-    }
-
-    .status.error {
-      color:var(--danger);
-    }
-
-    .status.success {
-      color:var(--success);
-    }
-
-
-    /* =========================
-       APPLICATION SUCCESS
-    ========================= */
-
-    .success-card {
-      display:none;
-      grid-column:1/-1;
-      padding:20px;
-      border:1px solid rgba(22,132,71,.18);
-      border-radius:10px;
-      background:#EFFAF3;
-    }
-
-    .success-card.show {
-      display:block;
-    }
-
-    .success-card strong {
-      display:block;
-      margin-bottom:7px;
-      color:var(--success);
-      font-size:14px;
-    }
-
-    .success-card p {
-      margin:0;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
-    }
-
-
-    /* =========================
-       LOADING
-    ========================= */
-
-    .loading {
-      padding:25px 0;
-      color:var(--muted);
-      text-align:center;
-      font-size:12px;
-    }
-
-    .empty {
-      padding:30px 10px;
-      color:var(--muted);
-      text-align:center;
-      font-size:12px;
-      line-height:1.6;
-    }
-
-
-    /* =========================
-       FOOTER
-    ========================= */
+    /* FOOTER */
 
     footer {
       margin-top:20px;
@@ -694,32 +594,14 @@
       font-size:10px;
     }
 
-
-    /* =========================
-       SWEET ALERT CUSTOMIZATION
-    ========================= */
-
-    .wakala-popup {
-      border-radius:14px !important;
-      font-family:Inter,sans-serif !important;
-      background:var(--panel) !important;
+    .loading,
+    .empty {
+      padding:30px 10px;
+      color:var(--muted);
+      text-align:center;
+      font-size:12px;
+      line-height:1.6;
     }
-
-    .wakala-title {
-      font-family:Fraunces,serif !important;
-      color:var(--ink) !important;
-    }
-
-    .wakala-confirm {
-      border-radius:7px !important;
-      font-weight:700 !important;
-      padding:11px 22px !important;
-    }
-
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
 
     @media(max-width:850px) {
 
@@ -731,10 +613,6 @@
 
       .steps {
         grid-template-columns:1fr 1fr;
-      }
-
-      .apply {
-        grid-column:auto;
       }
 
       .footer-grid {
@@ -768,9 +646,7 @@
       }
 
       .field.full,
-      .button,
-      .status,
-      .success-card {
+      .button {
         grid-column:auto;
       }
 
@@ -787,10 +663,6 @@
         display:block;
       }
 
-      .campaign-header p {
-        margin-top:12px;
-      }
-
       .footer-bottom {
         display:block;
       }
@@ -805,15 +677,9 @@
 
 </head>
 
-
 <body>
 
 <div class="shell">
-
-
-  <!-- =========================
-       NAVIGATION
-  ========================= -->
 
   <nav class="nav">
 
@@ -845,11 +711,6 @@
 
   <main>
 
-
-    <!-- =========================
-         HERO
-    ========================= -->
-
     <section class="hero">
 
       <div>
@@ -870,7 +731,6 @@
         </p>
 
       </div>
-
 
       <aside class="hero-panel">
 
@@ -907,10 +767,6 @@
     </section>
 
 
-    <!-- =========================
-         HOW IT WORKS
-    ========================= -->
-
     <section class="how">
 
       <div class="kicker">
@@ -924,80 +780,41 @@
       <div class="steps">
 
         <div class="step">
-
-          <div class="step-number">
-            01
-          </div>
-
-          <strong>
-            Choose a campaign
-          </strong>
-
+          <div class="step-number">01</div>
+          <strong>Choose a campaign</strong>
           <p>
             Pick a Wakala brief that matches your audience and content style.
           </p>
-
         </div>
 
-
         <div class="step">
-
-          <div class="step-number">
-            02
-          </div>
-
-          <strong>
-            Create & publish
-          </strong>
-
+          <div class="step-number">02</div>
+          <strong>Create & publish</strong>
           <p>
             Create original content and publish it publicly on an eligible platform.
           </p>
-
         </div>
 
-
         <div class="step">
-
-          <div class="step-number">
-            03
-          </div>
-
-          <strong>
-            Submit your results
-          </strong>
-
+          <div class="step-number">03</div>
+          <strong>Submit your application</strong>
           <p>
-            Submit your published post and performance information for review.
+            Tell Wakala about your content idea and creator profile.
           </p>
-
         </div>
 
-
         <div class="step">
-
-          <div class="step-number">
-            04
-          </div>
-
-          <strong>
-            Admin verification
-          </strong>
-
+          <div class="step-number">04</div>
+          <strong>Admin verification</strong>
           <p>
-            Wakala administrators verify the submission before approving any reward.
+            Wakala administrators review applications and campaign performance.
           </p>
-
         </div>
 
       </div>
 
     </section>
 
-
-    <!-- =========================
-         CAMPAIGN HEADER
-    ========================= -->
 
     <div class="campaign-header">
 
@@ -1014,19 +831,14 @@
       </div>
 
       <p>
-        Campaigns are managed from the Wakala backend. Requirements,
-        rewards and availability may change as new campaigns are opened.
+        Campaigns are managed from the Wakala backend.
+        Requirements, rewards and availability may change.
       </p>
 
     </div>
 
 
     <section class="jobs">
-
-
-      <!-- =========================
-           CAMPAIGN LIST
-      ========================= -->
 
       <div class="job-list">
 
@@ -1044,12 +856,7 @@
       </div>
 
 
-      <!-- =========================
-           SIDEBAR
-      ========================= -->
-
       <aside>
-
 
         <div class="sidebar-card green">
 
@@ -1065,7 +872,6 @@
             Standard campaigns can calculate rewards from verified eligible
             impressions.
           </p>
-
 
           <div class="earning-table">
 
@@ -1117,16 +923,10 @@
 
           </div>
 
-          <p
-            class="note"
-            style="margin-top:15px"
-          >
+          <p class="note">
 
             Repeated, artificial, purchased or otherwise ineligible
             engagement may be rejected.
-
-            A submission does not guarantee payment until it has been
-            reviewed and approved by an administrator.
 
           </p>
 
@@ -1144,29 +944,15 @@
           </h2>
 
           <p class="note">
-
             Wakala is looking for creators who can communicate clearly,
             entertain their audience and produce content people actually
             want to watch.
-
-          </p>
-
-          <p class="note">
-
-            Followers and impressions alone do not guarantee approval.
-            Content quality, originality, accuracy and campaign compliance
-            are also considered.
-
           </p>
 
         </div>
 
       </aside>
 
-
-      <!-- =========================
-           APPLICATION
-      ========================= -->
 
       <section
         class="apply"
@@ -1184,32 +970,26 @@
           </h2>
 
           <p class="apply-description">
-
             Tell us about yourself and the type of content you want to
             create. Your application will be stored in the Wakala creator
             system and made available to administrators for review.
-
           </p>
 
           <p class="apply-description">
-
-            You can submit multiple applications, including multiple
-            applications for the same campaign.
-
+            You are intentionally allowed to submit multiple applications,
+            including multiple applications for the same campaign.
           </p>
-
 
           <div class="application-note">
 
             <strong>
-              Every submission is treated independently.
+              Your application is not a payout request.
             </strong>
 
-            <br>
+            <br><br>
 
-            There is no duplicate-application restriction. Each time you
-            submit this form, Wakala creates a new application record for
-            administrator review.
+            Applications are reviewed separately from content performance
+            and payout approval.
 
           </div>
 
@@ -1220,9 +1000,6 @@
           class="form"
           id="creatorJobsForm"
         >
-
-
-          <!-- NAME -->
 
           <div class="field">
 
@@ -1242,8 +1019,6 @@
           </div>
 
 
-          <!-- EMAIL -->
-
           <div class="field">
 
             <label for="email">
@@ -1262,8 +1037,6 @@
           </div>
 
 
-          <!-- PLATFORM -->
-
           <div class="field">
 
             <label for="platform">
@@ -1280,36 +1053,17 @@
                 Choose platform
               </option>
 
-              <option value="TikTok">
-                TikTok
-              </option>
-
-              <option value="Instagram">
-                Instagram
-              </option>
-
-              <option value="YouTube">
-                YouTube
-              </option>
-
-              <option value="X">
-                X
-              </option>
-
-              <option value="Facebook">
-                Facebook
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
+              <option>TikTok</option>
+              <option>Instagram</option>
+              <option>YouTube</option>
+              <option>X</option>
+              <option>Facebook</option>
+              <option>Other</option>
 
             </select>
 
           </div>
 
-
-          <!-- CAMPAIGN -->
 
           <div class="field">
 
@@ -1332,8 +1086,6 @@
           </div>
 
 
-          <!-- PROFILE -->
-
           <div class="field full">
 
             <label for="profile">
@@ -1350,8 +1102,6 @@
 
           </div>
 
-
-          <!-- FOLLOWERS -->
 
           <div class="field">
 
@@ -1371,8 +1121,6 @@
           </div>
 
 
-          <!-- CONTENT FORMAT -->
-
           <div class="field">
 
             <label for="format">
@@ -1389,44 +1137,19 @@
                 Choose format
               </option>
 
-              <option value="Short video">
-                Short video
-              </option>
-
-              <option value="Long-form video">
-                Long-form video
-              </option>
-
-              <option value="X post/thread">
-                X post / thread
-              </option>
-
-              <option value="UGC">
-                UGC
-              </option>
-
-              <option value="Skit">
-                Skit / comedy
-              </option>
-
-              <option value="Music">
-                Music
-              </option>
-
-              <option value="Educational">
-                Educational content
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
+              <option>Short video</option>
+              <option>Long-form video</option>
+              <option>X post/thread</option>
+              <option>UGC</option>
+              <option>Skit</option>
+              <option>Music</option>
+              <option>Educational</option>
+              <option>Other</option>
 
             </select>
 
           </div>
 
-
-          <!-- CONTENT IDEA -->
 
           <div class="field full">
 
@@ -1443,8 +1166,6 @@
           </div>
 
 
-          <!-- SUBMIT -->
-
           <button
             class="button"
             type="submit"
@@ -1452,36 +1173,6 @@
           >
             Submit creator application
           </button>
-
-
-          <!-- SUCCESS -->
-
-          <div
-            class="success-card"
-            id="successCard"
-          >
-
-            <strong>
-              ✓ Application submitted successfully
-            </strong>
-
-            <p>
-              Your application has been recorded and is now available for
-              administrator review. You can submit another application for
-              another campaign or the same campaign.
-            </p>
-
-          </div>
-
-
-          <!-- STATUS -->
-
-          <p
-            class="status"
-            id="formStatus"
-            role="status"
-            aria-live="polite"
-          ></p>
 
         </form>
 
@@ -1492,14 +1183,9 @@
   </main>
 
 
-  <!-- =========================
-       FOOTER
-  ========================= -->
-
   <footer>
 
     <div class="footer-grid">
-
 
       <div>
 
@@ -1508,13 +1194,8 @@
         </div>
 
         <p class="footer-text">
-
           Wakala Creator Network connects creators with campaigns designed
           to educate, entertain and introduce more people to Wakala.
-
-          Creator rewards are subject to campaign requirements,
-          verification and administrator approval.
-
         </p>
 
       </div>
@@ -1553,21 +1234,10 @@
 
         <div class="footer-links">
 
-          <a href="index.html">
-            Home
-          </a>
-
-          <a href="dashboard.html">
-            Dashboard
-          </a>
-
-          <a href="login.html">
-            Log in
-          </a>
-
-          <a href="register.html">
-            Create account
-          </a>
+          <a href="index.html">Home</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="login.html">Log in</a>
+          <a href="register.html">Create account</a>
 
         </div>
 
@@ -1593,9 +1263,10 @@
 </div>
 
 
-<!-- =========================
-     SUPABASE
-========================= -->
+<!-- SWEET ALERT -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script type="module">
 
@@ -1608,28 +1279,14 @@ import {
 } from './supabase-config.js';
 
 
-/* =========================
-   SUPABASE CLIENT
-========================= */
-
 const supabase = createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
 
-/* =========================
-   ELEMENTS
-========================= */
-
 const form =
   document.getElementById('creatorJobsForm');
-
-const status =
-  document.getElementById('formStatus');
-
-const successCard =
-  document.getElementById('successCard');
 
 const submitButton =
   document.getElementById('submitButton');
@@ -1666,31 +1323,13 @@ let currentUser = null;
 let campaigns = [];
 
 
-/* =========================
-   YEAR
-========================= */
-
 document.getElementById('year').textContent =
   new Date().getFullYear();
 
 
-/* =========================
-   SWEET ALERT CONFIG
-========================= */
-
-const swalBase = {
-  customClass: {
-    popup: 'wakala-popup',
-    title: 'wakala-title',
-    confirmButton: 'wakala-confirm'
-  },
-  buttonsStyling: true
-};
-
-
-/* =========================
-   AUTHENTICATION
-========================= */
+/* =========================================
+   AUTH
+========================================= */
 
 async function initialise() {
 
@@ -1702,14 +1341,14 @@ async function initialise() {
 
   if (error) {
 
-    console.error(
-      'Session error:',
-      error
-    );
+    console.error(error);
 
-    showError(
-      'Unable to check your account session. Please refresh the page.'
-    );
+    Swal.fire({
+      icon:'error',
+      title:'Session error',
+      text:'Unable to verify your account session.',
+      confirmButtonColor:'#0D1420'
+    });
 
     return;
   }
@@ -1721,46 +1360,30 @@ async function initialise() {
 
   if (!currentUser) {
 
-    submitButton.disabled = true;
-
-    showError(
-      'Please log in to apply for creator campaigns.'
-    );
-
-    await Swal.fire({
-      ...swalBase,
-      icon:'info',
+    Swal.fire({
+      icon:'warning',
       title:'Login required',
-      text:'Please log in to your Wakala account before submitting a creator application.',
-      confirmButtonText:'Log in',
-      confirmButtonColor:'#0D1420'
-    }).then(result => {
+      text:'Please log in before applying for a creator campaign.',
+      confirmButtonColor:'#229175'
+    }).then(() => {
 
-      if (result.isConfirmed) {
-        window.location.href = 'login.html';
-      }
+      window.location.href =
+        'login.html';
 
     });
+
+    submitButton.disabled = true;
 
     return;
   }
 
 
-  /*
-   * Automatically populate email.
-   */
-
   emailInput.value =
     currentUser.email || '';
 
 
-  /*
-   * Load profile.
-   */
-
   const {
-    data: profile,
-    error: profileError
+    data: profile
   } = await supabase
     .from('profiles')
     .select('full_name')
@@ -1768,10 +1391,7 @@ async function initialise() {
     .maybeSingle();
 
 
-  if (
-    !profileError &&
-    profile?.full_name
-  ) {
+  if (profile?.full_name) {
 
     nameInput.value =
       profile.full_name;
@@ -1784,9 +1404,9 @@ async function initialise() {
 }
 
 
-/* =========================
+/* =========================================
    LOAD CAMPAIGNS
-========================= */
+========================================= */
 
 async function loadCampaigns() {
 
@@ -1811,35 +1431,31 @@ async function loadCampaigns() {
       status,
       created_at
     `)
-    .eq(
-      'status',
-      'open'
-    )
-    .order(
-      'created_at',
-      {
-        ascending:false
-      }
-    );
+    .eq('status','open')
+    .order('created_at',{
+      ascending:false
+    });
 
 
   if (error) {
 
     console.error(
-      'Campaign loading error:',
+      'Campaign error:',
       error
     );
 
     campaignList.innerHTML = `
       <div class="empty">
         Unable to load creator campaigns.
-        Please refresh the page and try again.
       </div>
     `;
 
-    showError(
-      'Unable to load creator campaigns.'
-    );
+    Swal.fire({
+      icon:'error',
+      title:'Campaigns unavailable',
+      text:error.message,
+      confirmButtonColor:'#0D1420'
+    });
 
     return;
   }
@@ -1854,13 +1470,12 @@ async function loadCampaigns() {
     campaignList.innerHTML = `
       <div class="empty">
         There are currently no open creator campaigns.
-        Please check back later.
       </div>
     `;
 
     campaignSelect.innerHTML = `
       <option value="">
-        No campaigns currently available
+        No campaigns available
       </option>
     `;
 
@@ -1869,155 +1484,141 @@ async function loadCampaigns() {
 
 
   renderCampaigns();
-
   populateCampaignSelector();
 
 }
 
 
-/* =========================
-   RENDER CAMPAIGNS
-========================= */
+/* =========================================
+   RENDER
+========================================= */
 
 function renderCampaigns() {
 
   campaignList.innerHTML =
-    campaigns.map(
-      campaign => {
+    campaigns.map(campaign => {
 
-        const reward =
-          Number(
-            campaign.reward_per_1000_impressions || 0
-          );
-
-        const maxReward =
-          Number(
-            campaign.max_reward || 0
-          );
+      const reward =
+        Number(
+          campaign.reward_per_1000_impressions || 0
+        );
 
 
-        return `
-
-          <article class="job">
-
-            <div class="job-top">
-
-              <div>
-
-                <span class="tag">
-                  ${escapeHtml(
-                    campaign.platform ||
-                    'ALL SOCIAL PLATFORMS'
-                  )}
-                </span>
-
-                <h3>
-                  ${escapeHtml(
-                    campaign.title
-                  )}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    campaign.description || ''
-                  )}
-                </p>
-
-              </div>
+      const maxReward =
+        Number(
+          campaign.max_reward || 0
+        );
 
 
-              <div class="reward">
+      return `
 
-                ${reward.toFixed(2)} USDC
+        <article class="job">
 
-                <small>
-                  per 1,000 verified impressions
-                </small>
+          <div class="job-top">
 
-              </div>
+            <div>
+
+              <span class="tag">
+                ${escapeHtml(
+                  campaign.platform ||
+                  'ALL PLATFORMS'
+                )}
+              </span>
+
+              <h3>
+                ${escapeHtml(
+                  campaign.title
+                )}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  campaign.description || ''
+                )}
+              </p>
 
             </div>
 
+            <div class="reward">
 
-            <div class="requirements">
+              ${reward.toFixed(2)} USDC
 
-              <strong>
-                Campaign requirements:
-              </strong>
-
-              ${escapeHtml(
-                campaign.requirements || ''
-              )}
-
-              ${
-                maxReward > 0
-                  ? `
-                    <br><br>
-
-                    <strong>
-                      Maximum campaign reward:
-                    </strong>
-
-                    ${maxReward.toFixed(2)} USDC
-                  `
-                  : ''
-              }
+              <small>
+                per 1,000 verified impressions
+              </small>
 
             </div>
 
-
-            <a
-              href="#apply"
-              class="apply-job"
-              data-campaign-id="${escapeHtml(campaign.id)}"
-            >
-              Apply for campaign →
-            </a>
-
-          </article>
-
-        `;
-
-      }
-    ).join('');
+          </div>
 
 
-  /*
-   * Connect campaign buttons.
-   */
+          <div class="requirements">
+
+            <strong>
+              Campaign requirements:
+            </strong>
+
+            ${escapeHtml(
+              campaign.requirements || 'No additional requirements.'
+            )}
+
+            ${
+              maxReward > 0
+                ? `
+                  <br><br>
+
+                  <strong>
+                    Maximum campaign reward:
+                  </strong>
+
+                  ${maxReward.toFixed(2)} USDC
+                `
+                : ''
+            }
+
+          </div>
+
+
+          <a
+            href="#apply"
+            class="apply-job"
+            data-campaign-id="${escapeHtml(campaign.id)}"
+          >
+            Apply for campaign →
+          </a>
+
+        </article>
+
+      `;
+
+    }).join('');
+
 
   document
     .querySelectorAll('.apply-job')
     .forEach(button => {
 
-      button.addEventListener(
-        'click',
-        () => {
+      button.addEventListener('click', () => {
 
-          const campaignId =
-            button.dataset.campaignId;
+        campaignSelect.value =
+          button.dataset.campaignId;
 
-          campaignSelect.value =
-            campaignId;
+        document
+          .getElementById('apply')
+          .scrollIntoView({
+            behavior:'smooth'
+          });
 
-          document
-            .getElementById('apply')
-            .scrollIntoView({
-              behavior:'smooth',
-              block:'start'
-            });
-
-        }
-      );
+      });
 
     });
 
 }
 
 
-/* =========================
-   CAMPAIGN SELECTOR
-========================= */
+/* =========================================
+   SELECT
+========================================= */
 
 function populateCampaignSelector() {
 
@@ -2028,19 +1629,11 @@ function populateCampaignSelector() {
     </option>
 
     ${
-      campaigns.map(
-        campaign => `
-
-          <option
-            value="${escapeHtml(campaign.id)}"
-          >
-            ${escapeHtml(
-              campaign.title
-            )}
-          </option>
-
-        `
-      ).join('')
+      campaigns.map(campaign => `
+        <option value="${escapeHtml(campaign.id)}">
+          ${escapeHtml(campaign.title)}
+        </option>
+      `).join('')
     }
 
   `;
@@ -2048,9 +1641,9 @@ function populateCampaignSelector() {
 }
 
 
-/* =========================
-   SUBMIT APPLICATION
-========================= */
+/* =========================================
+   SUBMIT
+========================================= */
 
 form.addEventListener(
   'submit',
@@ -2058,34 +1651,19 @@ form.addEventListener(
 
     event.preventDefault();
 
-    clearStatus();
-
-    successCard.classList.remove(
-      'show'
-    );
-
-
-    /*
-     * AUTH CHECK
-     */
 
     if (!currentUser) {
 
-      await Swal.fire({
-        ...swalBase,
+      Swal.fire({
         icon:'warning',
         title:'Login required',
-        text:'Please log in before applying for a campaign.',
-        confirmButtonColor:'#0D1420'
+        text:'Please log in first.',
+        confirmButtonColor:'#229175'
       });
 
       return;
     }
 
-
-    /*
-     * CAMPAIGN CHECK
-     */
 
     const campaignId =
       campaignSelect.value;
@@ -2093,8 +1671,7 @@ form.addEventListener(
 
     if (!campaignId) {
 
-      await Swal.fire({
-        ...swalBase,
+      Swal.fire({
         icon:'warning',
         title:'Select a campaign',
         text:'Please choose the campaign you want to apply for.',
@@ -2109,18 +1686,16 @@ form.addEventListener(
 
     const campaign =
       campaigns.find(
-        item =>
-          item.id === campaignId
+        item => item.id === campaignId
       );
 
 
     if (!campaign) {
 
-      await Swal.fire({
-        ...swalBase,
+      Swal.fire({
         icon:'error',
         title:'Campaign unavailable',
-        text:'The selected campaign is no longer available.',
+        text:'This campaign is no longer available.',
         confirmButtonColor:'#0D1420'
       });
 
@@ -2128,51 +1703,10 @@ form.addEventListener(
     }
 
 
-    /*
-     * VALIDATE REQUIRED FIELDS
-     */
-
-    if (
-      !nameInput.value.trim() ||
-      !emailInput.value.trim() ||
-      !platformInput.value ||
-      !profileInput.value.trim() ||
-      !formatInput.value
-    ) {
-
-      await Swal.fire({
-        ...swalBase,
-        icon:'warning',
-        title:'Complete the form',
-        text:'Please complete all required fields before submitting.',
-        confirmButtonColor:'#229175'
-      });
-
-      return;
-    }
-
-
-    /*
-     * DISABLE BUTTON WHILE SUBMITTING.
-     *
-     * This only prevents accidental double-clicks
-     * during THIS request.
-     *
-     * It does NOT prevent another application later.
-     */
-
     submitButton.disabled = true;
 
     submitButton.textContent =
-      'Submitting application...';
-
-
-    const profileUrl =
-      profileInput.value.trim();
-
-
-    const platform =
-      platformInput.value;
+      'Submitting...';
 
 
     const applicationNote = [
@@ -2181,15 +1715,13 @@ form.addEventListener(
 
       `Email: ${emailInput.value.trim()}`,
 
-      `Main platform: ${platform}`,
+      `Main platform: ${platformInput.value}`,
 
       `Approximate followers: ${
         followersInput.value.trim() || 'Not provided'
       }`,
 
-      `Content format: ${
-        formatInput.value
-      }`,
+      `Content format: ${formatInput.value}`,
 
       `Content idea: ${
         ideaInput.value.trim() || 'Not provided'
@@ -2199,23 +1731,11 @@ form.addEventListener(
 
 
     /*
-     * ==========================================
      * IMPORTANT:
      *
-     * THERE IS NO DUPLICATE CHECK.
+     * There is deliberately NO duplicate check.
      *
-     * EVERY SUBMISSION CREATES A NEW ROW.
-     *
-     * A CREATOR CAN SUBMIT:
-     *
-     * Campaign A
-     * Campaign A
-     * Campaign A
-     * Campaign B
-     * Campaign A
-     *
-     * All are independent applications.
-     * ==========================================
+     * Every click creates a new application.
      */
 
     const {
@@ -2232,10 +1752,10 @@ form.addEventListener(
           currentUser.id,
 
         platform_username:
-          platform,
+          platformInput.value,
 
         portfolio_url:
-          profileUrl,
+          profileInput.value.trim(),
 
         application_note:
           applicationNote,
@@ -2248,14 +1768,10 @@ form.addEventListener(
       .single();
 
 
-    /*
-     * DATABASE ERROR
-     */
-
     if (error) {
 
       console.error(
-        'Creator application error:',
+        'Application insert error:',
         error
       );
 
@@ -2266,180 +1782,84 @@ form.addEventListener(
         'Submit creator application';
 
 
-      showError(
-        error.message ||
-        'Unable to submit your application.'
-      );
-
-
-      await Swal.fire({
-        ...swalBase,
+      Swal.fire({
         icon:'error',
         title:'Submission failed',
-        text:
-          error.message ||
-          'We could not submit your application. Please try again.',
+        text:error.message ||
+          'Unable to submit your application.',
         confirmButtonColor:'#0D1420'
       });
 
-
       return;
-
     }
 
 
-    /*
-     * SUCCESS
-     */
-
     console.log(
-      'Creator application created:',
+      'Application created:',
       data
     );
 
 
-    successCard.classList.add(
-      'show'
-    );
-
-
-    status.className =
-      'status success';
-
-
-    status.textContent =
-      'Your application has been saved successfully.';
-
-
     /*
-     * SweetAlert success
+     * IMPORTANT:
+     *
+     * Do NOT disable future submissions.
      */
 
-    await Swal.fire({
-      ...swalBase,
-      icon:'success',
-      title:'Application submitted',
-      text:'Your application has been successfully submitted and is now awaiting administrator review.',
-      confirmButtonText:'Done',
-      confirmButtonColor:'#229175'
-    });
-
-
-    /*
-     * Remember selected campaign.
-     */
-
-    const selectedCampaignId =
+    const selectedCampaign =
       campaignSelect.value;
 
 
-    /*
-     * RESET FORM.
-     *
-     * This allows another application.
-     */
-
     form.reset();
 
-
-    /*
-     * Restore email.
-     */
 
     emailInput.value =
       currentUser.email || '';
 
 
-    /*
-     * Restore selected campaign.
-     */
-
     campaignSelect.value =
-      selectedCampaignId;
+      selectedCampaign;
 
-
-    /*
-     * Allow another submission.
-     */
 
     submitButton.disabled =
       false;
-
 
     submitButton.textContent =
       'Submit another creator application';
 
 
+    Swal.fire({
+      icon:'success',
+      title:'Application submitted',
+      text:
+        'Your creator application has been successfully submitted and is now available for Wakala administrators to review.',
+      confirmButtonText:'Great',
+      confirmButtonColor:'#229175'
+    });
+
   }
 );
 
 
-/* =========================
-   ERROR MESSAGE
-========================= */
-
-function showError(message) {
-
-  status.className =
-    'status error';
-
-  status.textContent =
-    message;
-
-}
-
-
-/* =========================
-   CLEAR STATUS
-========================= */
-
-function clearStatus() {
-
-  status.className =
-    'status';
-
-  status.textContent =
-    '';
-
-}
-
-
-/* =========================
-   HTML ESCAPING
-========================= */
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
 function escapeHtml(value) {
 
-  return String(
-    value ?? ''
-  )
-  .replace(
-    /&/g,
-    '&amp;'
-  )
-  .replace(
-    /</g,
-    '&lt;'
-  )
-  .replace(
-    />/g,
-    '&gt;'
-  )
-  .replace(
-    /"/g,
-    '&quot;'
-  )
-  .replace(
-    /'/g,
-    '&#039;'
-  );
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
 
 }
 
 
-/* =========================
+/* =========================================
    START
-========================= */
+========================================= */
 
 initialise();
 
