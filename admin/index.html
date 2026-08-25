@@ -3,17 +3,26 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <title>Admin | Wakala</title>
+  <title>Admin Console | Wakala</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
 
@@ -28,7 +37,8 @@
       --soft:#EAF5EF;
       --success:#168447;
       --danger:#B42318;
-      --white:#ffffff;
+      --warning:#B7791F;
+      --white:#FFFFFF;
     }
 
     * {
@@ -56,13 +66,19 @@
       cursor:pointer;
     }
 
+    a {
+      text-decoration:none;
+    }
+
     .shell {
       width:min(1400px,100%);
       margin:auto;
-      padding:0 25px;
+      padding:0 28px;
     }
 
-    /* NAV */
+    /* =========================================
+       NAV
+    ========================================= */
 
     .nav {
       display:flex;
@@ -75,7 +91,6 @@
 
     .brand {
       color:var(--ink);
-      text-decoration:none;
       font:600 25px Fraunces,serif;
     }
 
@@ -89,48 +104,50 @@
       vertical-align:2px;
     }
 
-    .admin-badge {
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      margin-left:10px;
-      padding:5px 8px;
-      border-radius:5px;
-      background:var(--soft);
-      color:var(--teal);
-      font:600 9px 'IBM Plex Mono',monospace;
-      letter-spacing:.08em;
-    }
-
     .nav-right {
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
     }
 
-    .admin-email {
-      color:var(--muted);
-      font-size:11px;
+    .admin-pill {
+      display:flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 11px;
+      border-radius:7px;
+      background:var(--soft);
+      color:var(--teal);
+      font:600 10px 'IBM Plex Mono',monospace;
     }
 
-    .logout {
-      padding:9px 13px;
-      border:0;
+    .nav-button {
+      padding:10px 14px;
       border-radius:7px;
       background:var(--ink);
-      color:white;
+      color:#fff;
       font-size:11px;
       font-weight:700;
     }
 
-    /* LAYOUT */
-
-    .layout {
-      display:grid;
-      grid-template-columns:220px 1fr;
-      gap:25px;
-      padding:30px 0 60px;
+    .nav-button:hover {
+      background:var(--teal);
     }
+
+    /* =========================================
+       LAYOUT
+    ========================================= */
+
+    .admin-layout {
+      display:grid;
+      grid-template-columns:230px 1fr;
+      gap:22px;
+      padding:28px 0 60px;
+    }
+
+    /* =========================================
+       SIDEBAR
+    ========================================= */
 
     .sidebar {
       align-self:start;
@@ -142,50 +159,66 @@
       background:var(--panel);
     }
 
-    .side-title {
-      margin:4px 9px 12px;
+    .sidebar-label {
+      margin:5px 9px 10px;
       color:var(--muted);
       font:600 9px 'IBM Plex Mono',monospace;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .side-button {
-      display:flex;
+    .side-link {
       width:100%;
+      display:flex;
       align-items:center;
       gap:10px;
-      margin-bottom:4px;
       padding:11px 10px;
+      margin-bottom:4px;
       border:0;
       border-radius:7px;
       background:transparent;
       color:var(--muted);
       text-align:left;
-      font-size:11px;
+      font-size:12px;
       font-weight:600;
     }
 
-    .side-button:hover,
-    .side-button.active {
+    .side-link:hover {
       background:var(--soft);
       color:var(--teal);
     }
 
-    .side-icon {
-      width:22px;
-      text-align:center;
-      font-family:'IBM Plex Mono',monospace;
+    .side-link.active {
+      background:var(--ink);
+      color:#fff;
     }
 
-    /* MAIN */
+    .side-icon {
+      width:20px;
+      text-align:center;
+      font-size:13px;
+    }
+
+    .sidebar-divider {
+      height:1px;
+      margin:15px 5px;
+      background:var(--line);
+    }
+
+    /* =========================================
+       MAIN
+    ========================================= */
+
+    .main {
+      min-width:0;
+    }
 
     .page-header {
       display:flex;
-      align-items:end;
+      align-items:flex-end;
       justify-content:space-between;
       gap:20px;
-      margin-bottom:25px;
+      margin-bottom:24px;
     }
 
     .kicker {
@@ -196,19 +229,19 @@
     }
 
     .page-header h1 {
-      margin:7px 0 0;
+      margin:7px 0 5px;
       font:600 38px Fraunces,serif;
+      letter-spacing:-.025em;
     }
 
     .page-header p {
-      max-width:500px;
-      margin:8px 0 0;
+      margin:0;
       color:var(--muted);
       font-size:12px;
-      line-height:1.7;
+      line-height:1.6;
     }
 
-    .refresh {
+    .refresh-btn {
       padding:10px 14px;
       border:1px solid var(--line);
       border-radius:7px;
@@ -218,7 +251,14 @@
       font-weight:700;
     }
 
-    /* PANELS */
+    .refresh-btn:hover {
+      border-color:var(--teal);
+      color:var(--teal);
+    }
+
+    /* =========================================
+       SECTIONS
+    ========================================= */
 
     .section {
       display:none;
@@ -228,17 +268,21 @@
       display:block;
     }
 
+    /* =========================================
+       STATS
+    ========================================= */
+
     .stats {
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:14px;
+      gap:13px;
       margin-bottom:20px;
     }
 
     .stat {
       padding:20px;
       border:1px solid var(--line);
-      border-radius:12px;
+      border-radius:11px;
       background:var(--panel);
     }
 
@@ -250,263 +294,455 @@
     }
 
     .stat-value {
-      margin-top:10px;
-      font:600 30px Fraunces,serif;
+      margin-top:9px;
+      font:600 28px Fraunces,serif;
     }
 
-    .stat-sub {
+    .stat-meta {
       margin-top:5px;
       color:var(--muted);
       font-size:10px;
     }
 
+    /* =========================================
+       PANELS
+    ========================================= */
+
     .panel {
-      margin-bottom:20px;
+      margin-bottom:18px;
+      padding:22px;
       border:1px solid var(--line);
       border-radius:12px;
       background:var(--panel);
-      overflow:hidden;
     }
 
     .panel-header {
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap:15px;
-      padding:18px 20px;
-      border-bottom:1px solid var(--line);
+      margin-bottom:18px;
     }
 
-    .panel-header h2 {
+    .panel-title {
       margin:0;
-      font:600 22px Fraunces,serif;
+      font:600 23px Fraunces,serif;
     }
 
-    .panel-header span {
+    .panel-subtitle {
+      margin:4px 0 0;
       color:var(--muted);
-      font-size:10px;
+      font-size:11px;
     }
 
-    .panel-body {
-      padding:20px;
-    }
-
-    /* BALANCE */
-
-    .balance-grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:15px;
-    }
-
-    .balance-card {
-      padding:20px;
-      border-radius:10px;
-      background:var(--ink);
-      color:white;
-    }
-
-    .balance-card:nth-child(2) {
-      background:var(--teal);
-    }
-
-    .balance-card:nth-child(3) {
-      background:var(--gold);
-      color:var(--ink);
-    }
-
-    .balance-card span {
-      display:block;
-      opacity:.75;
-      font-size:10px;
-    }
-
-    .balance-card strong {
-      display:block;
-      margin-top:10px;
-      font:600 28px 'IBM Plex Mono',monospace;
-    }
-
-    /* TABLE */
+    /* =========================================
+       TABLE
+    ========================================= */
 
     .table-wrap {
-      width:100%;
       overflow-x:auto;
+      border:1px solid var(--line);
+      border-radius:9px;
+      background:#fff;
     }
 
     table {
       width:100%;
       border-collapse:collapse;
+      min-width:700px;
     }
 
     th {
-      padding:12px;
+      padding:11px 13px;
       border-bottom:1px solid var(--line);
+      background:#FAF8F1;
       color:var(--muted);
-      text-align:left;
       font:600 9px 'IBM Plex Mono',monospace;
-      letter-spacing:.05em;
+      text-align:left;
       text-transform:uppercase;
+      letter-spacing:.06em;
       white-space:nowrap;
     }
 
     td {
-      padding:13px 12px;
+      padding:13px;
       border-bottom:1px solid var(--line);
-      color:var(--ink);
       font-size:11px;
-      vertical-align:top;
+      vertical-align:middle;
     }
 
     tr:last-child td {
       border-bottom:0;
     }
 
-    .status-pill {
+    .primary-text {
+      color:var(--ink);
+      font-weight:700;
+    }
+
+    .secondary-text {
+      margin-top:3px;
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    /* =========================================
+       STATUS
+    ========================================= */
+
+    .status-badge {
       display:inline-block;
       padding:5px 8px;
       border-radius:5px;
-      background:var(--soft);
-      color:var(--teal);
       font:600 9px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
     }
 
-    .status-pill.pending {
+    .status-pending {
       background:rgba(228,164,69,.14);
-      color:#9A6713;
+      color:var(--warning);
     }
 
-    .status-pill.rejected {
+    .status-approved {
+      background:rgba(22,132,71,.12);
+      color:var(--success);
+    }
+
+    .status-rejected {
       background:rgba(180,35,24,.10);
       color:var(--danger);
     }
 
-    .status-pill.approved {
-      background:rgba(22,132,71,.10);
-      color:var(--success);
+    .status-withdrawn {
+      background:rgba(13,20,32,.08);
+      color:var(--muted);
     }
 
-    .status-pill.active {
-      background:var(--soft);
-      color:var(--teal);
-    }
-
-    /* ACTIONS */
+    /* =========================================
+       ACTION BUTTONS
+    ========================================= */
 
     .actions {
       display:flex;
-      flex-wrap:wrap;
       gap:6px;
+      flex-wrap:wrap;
     }
 
-    .small-button {
+    .action-btn {
       padding:7px 9px;
       border:1px solid var(--line);
       border-radius:6px;
-      background:white;
+      background:#fff;
       color:var(--ink);
       font-size:9px;
       font-weight:700;
     }
 
-    .small-button:hover {
+    .action-btn:hover {
       border-color:var(--teal);
       color:var(--teal);
     }
 
-    .small-button.approve {
-      background:var(--teal);
-      color:white;
-      border-color:var(--teal);
+    .action-btn.approve:hover {
+      border-color:var(--success);
+      color:var(--success);
     }
 
-    .small-button.reject {
-      background:var(--danger);
-      color:white;
+    .action-btn.reject:hover {
       border-color:var(--danger);
+      color:var(--danger);
     }
 
-    /* LOADING */
+    /* =========================================
+       SEARCH
+    ========================================= */
+
+    .toolbar {
+      display:flex;
+      align-items:center;
+      gap:9px;
+      margin-bottom:15px;
+    }
+
+    .search {
+      flex:1;
+      min-width:0;
+      padding:11px 12px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      outline:none;
+      font-size:11px;
+    }
+
+    .search:focus {
+      border-color:var(--teal);
+      box-shadow:0 0 0 3px rgba(34,145,117,.08);
+    }
+
+    .filter {
+      padding:11px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:11px;
+      outline:none;
+    }
+
+    /* =========================================
+       CREATOR DETAIL
+    ========================================= */
+
+    .detail-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .detail-item {
+      padding:13px;
+      border-radius:8px;
+      background:var(--soft);
+    }
+
+    .detail-label {
+      margin-bottom:5px;
+      color:var(--muted);
+      font:600 9px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
+    }
+
+    .detail-value {
+      color:var(--ink);
+      font-size:12px;
+      line-height:1.5;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    /* =========================================
+       BALANCE CARDS
+    ========================================= */
+
+    .balance-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:13px;
+    }
+
+    .balance-card {
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:11px;
+      background:var(--panel);
+    }
+
+    .balance-card h3 {
+      margin:0 0 7px;
+      font:600 19px Fraunces,serif;
+    }
+
+    .balance-number {
+      color:var(--teal);
+      font:600 26px 'IBM Plex Mono',monospace;
+    }
+
+    .balance-note {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    /* =========================================
+       ESIM
+    ========================================= */
+
+    .esim-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:13px;
+    }
+
+    .esim-card {
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:11px;
+      background:var(--panel);
+    }
+
+    .esim-card h3 {
+      margin:0 0 8px;
+      font:600 20px Fraunces,serif;
+    }
+
+    .esim-card p {
+      margin:0;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .esim-stat {
+      margin-top:15px;
+      padding-top:14px;
+      border-top:1px solid var(--line);
+    }
+
+    .esim-stat strong {
+      display:block;
+      color:var(--teal);
+      font:600 22px 'IBM Plex Mono',monospace;
+    }
+
+    .esim-stat span {
+      color:var(--muted);
+      font-size:9px;
+    }
+
+    /* =========================================
+       LOADING
+    ========================================= */
 
     .loading {
-      padding:35px;
+      padding:30px;
       color:var(--muted);
       text-align:center;
       font-size:11px;
     }
 
     .empty {
-      padding:35px;
+      padding:30px;
       color:var(--muted);
       text-align:center;
       font-size:11px;
+    }
+
+    /* =========================================
+       ACCESS DENIED
+    ========================================= */
+
+    .access-denied {
+      display:none;
+      min-height:60vh;
+      place-items:center;
+      text-align:center;
+    }
+
+    .access-box {
+      max-width:500px;
+      padding:40px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:var(--panel);
+    }
+
+    .access-box h1 {
+      margin:0 0 10px;
+      font:600 34px Fraunces,serif;
+    }
+
+    .access-box p {
+      color:var(--muted);
+      font-size:12px;
       line-height:1.7;
     }
 
-    .error-box {
-      padding:15px;
-      border-radius:8px;
-      background:rgba(180,35,24,.08);
-      color:var(--danger);
-      font-size:11px;
-      line-height:1.6;
-    }
-
-    /* CREATOR DETAIL */
-
-    .creator-note {
-      max-width:500px;
-      white-space:pre-wrap;
-      line-height:1.5;
-      color:var(--muted);
-    }
-
-    .link {
-      color:var(--teal);
-      font-weight:600;
-      word-break:break-all;
-    }
-
-    /* SEARCH */
-
-    .toolbar {
-      display:flex;
-      gap:10px;
-      margin-bottom:15px;
-    }
-
-    .toolbar input,
-    .toolbar select {
-      padding:10px 12px;
-      border:1px solid var(--line);
+    .access-box a {
+      display:inline-block;
+      margin-top:15px;
+      padding:11px 15px;
       border-radius:7px;
-      background:white;
-      color:var(--ink);
-      outline:none;
+      background:var(--ink);
+      color:#fff;
       font-size:11px;
+      font-weight:700;
     }
 
-    .toolbar input {
-      min-width:240px;
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    footer {
+      padding:35px 0 45px;
+      border-top:1px solid var(--line);
     }
 
-    /* MOBILE */
+    .footer-grid {
+      display:grid;
+      grid-template-columns:1.4fr .8fr .8fr;
+      gap:30px;
+    }
 
-    @media(max-width:1000px) {
+    .footer-brand {
+      color:var(--ink);
+      font:600 23px Fraunces,serif;
+    }
+
+    .footer-text {
+      max-width:430px;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.7;
+    }
+
+    .footer-title {
+      margin-bottom:10px;
+      color:var(--ink);
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .footer-links {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .footer-links a {
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .footer-links a:hover {
+      color:var(--teal);
+    }
+
+    .footer-bottom {
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      margin-top:25px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:9px;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media(max-width:1050px) {
 
       .stats {
         grid-template-columns:1fr 1fr;
       }
 
-      .balance-grid {
-        grid-template-columns:1fr;
+      .balance-grid,
+      .esim-grid {
+        grid-template-columns:1fr 1fr;
       }
 
     }
 
-    @media(max-width:750px) {
+    @media(max-width:800px) {
 
-      .layout {
+      .admin-layout {
         grid-template-columns:1fr;
       }
 
@@ -515,18 +751,49 @@
         display:flex;
         overflow-x:auto;
         gap:5px;
+        padding:8px;
       }
 
-      .side-title {
+      .sidebar-label,
+      .sidebar-divider {
         display:none;
       }
 
-      .side-button {
-        flex:none;
+      .side-link {
+        flex:0 0 auto;
+        width:auto;
+        margin:0;
+      }
+
+      .side-link span:last-child {
+        display:none;
+      }
+
+      .side-icon {
         width:auto;
       }
 
-      .admin-email {
+      .detail-grid {
+        grid-template-columns:1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns:1fr 1fr;
+      }
+
+    }
+
+    @media(max-width:600px) {
+
+      .shell {
+        padding:0 15px;
+      }
+
+      .nav {
+        align-items:flex-start;
+      }
+
+      .admin-pill {
         display:none;
       }
 
@@ -534,29 +801,36 @@
         display:block;
       }
 
-    }
-
-    @media(max-width:550px) {
-
-      .shell {
-        padding:0 15px;
+      .page-header h1 {
+        font-size:32px;
       }
 
-      .stats {
+      .refresh-btn {
+        margin-top:14px;
+      }
+
+      .stats,
+      .balance-grid,
+      .esim-grid,
+      .footer-grid {
         grid-template-columns:1fr;
       }
 
       .toolbar {
-        flex-direction:column;
+        display:block;
       }
 
-      .toolbar input {
-        min-width:0;
+      .filter {
         width:100%;
+        margin-top:7px;
       }
 
-      .page-header h1 {
-        font-size:32px;
+      .footer-bottom {
+        display:block;
+      }
+
+      .footer-bottom div + div {
+        margin-top:7px;
       }
 
     }
@@ -569,1393 +843,1073 @@
 
 <div class="shell">
 
-  <!-- NAV -->
+  <!-- =====================================
+       NAVIGATION
+  ===================================== -->
 
   <nav class="nav">
 
-    <a href="index.html" class="brand">
+    <a
+      class="brand"
+      href="index.html"
+    >
       <span class="dot"></span>WAKALA
-      <span class="admin-badge">ADMIN</span>
     </a>
 
     <div class="nav-right">
 
-      <span
-        id="adminEmail"
-        class="admin-email"
+      <div
+        class="admin-pill"
+        id="adminIdentity"
       >
-        Checking account...
-      </span>
+        ADMIN
+      </div>
 
-      <button
-        id="logoutButton"
-        class="logout"
+      <a
+        class="nav-button"
+        href="dashboard.html"
       >
-        Log out
-      </button>
+        User Dashboard
+      </a>
 
     </div>
 
   </nav>
 
 
-  <div class="layout">
+  <!-- =====================================
+       ACCESS DENIED
+  ===================================== -->
 
-    <!-- SIDEBAR -->
+  <section
+    class="access-denied"
+    id="accessDenied"
+  >
 
-    <aside class="sidebar">
+    <div class="access-box">
 
-      <div class="side-title">
-        Administration
-      </div>
+      <h1>
+        Access restricted.
+      </h1>
 
-      <button
-        class="side-button active"
-        data-section="overview"
-      >
-        <span class="side-icon">01</span>
-        Overview
-      </button>
+      <p>
+        This area is reserved for active Wakala administrators.
+        Your account either does not have administrator access or
+        your administrator account is not active.
+      </p>
 
-      <button
-        class="side-button"
-        data-section="balance"
-      >
-        <span class="side-icon">02</span>
-        Balance
-      </button>
+      <a href="login.html">
+        Return to login
+      </a>
 
-      <button
-        class="side-button"
-        data-section="creators"
-      >
-        <span class="side-icon">03</span>
-        Creators
-      </button>
+    </div>
 
-      <button
-        class="side-button"
-        data-section="esim"
-      >
-        <span class="side-icon">04</span>
-        eSIM
-      </button>
-
-      <button
-        class="side-button"
-        data-section="users"
-      >
-        <span class="side-icon">05</span>
-        Users
-      </button>
-
-    </aside>
+  </section>
 
 
-    <main>
+  <!-- =====================================
+       ADMIN APPLICATION
+  ===================================== -->
 
-      <!-- =========================
-           OVERVIEW
-      ========================= -->
+  <div
+    id="adminApplication"
+    style="display:none;"
+  >
 
-      <section
-        id="overview"
-        class="section active"
-      >
+    <div class="admin-layout">
 
-        <div class="page-header">
 
-          <div>
+      <!-- =================================
+           SIDEBAR
+      ================================= -->
 
-            <div class="kicker">
-              Wakala administration
-            </div>
+      <aside class="sidebar">
 
-            <h1>
-              Overview
-            </h1>
-
-            <p>
-              Manage balances, creators, eSIM products and users
-              from one administration area.
-            </p>
-
-          </div>
-
-          <button
-            class="refresh"
-            onclick="loadEverything()"
-          >
-            Refresh data
-          </button>
-
+        <div class="sidebar-label">
+          Administration
         </div>
 
+        <button
+          class="side-link active"
+          data-section="overview"
+        >
+          <span class="side-icon">⌂</span>
+          <span>Overview</span>
+        </button>
 
-        <div class="stats">
+        <button
+          class="side-link"
+          data-section="balances"
+        >
+          <span class="side-icon">₿</span>
+          <span>Balances</span>
+        </button>
 
-          <div class="stat">
-            <div class="stat-label">
-              Users
+        <button
+          class="side-link"
+          data-section="esim"
+        >
+          <span class="side-icon">◉</span>
+          <span>eSIM</span>
+        </button>
+
+        <button
+          class="side-link"
+          data-section="creators"
+        >
+          <span class="side-icon">✦</span>
+          <span>Creators</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <button
+          class="side-link"
+          id="logoutButton"
+        >
+          <span class="side-icon">↪</span>
+          <span>Sign out</span>
+        </button>
+
+      </aside>
+
+
+      <!-- =================================
+           MAIN
+      ================================= -->
+
+      <main class="main">
+
+
+        <!-- =================================
+             OVERVIEW
+        ================================= -->
+
+        <section
+          class="section active"
+          id="section-overview"
+        >
+
+          <div class="page-header">
+
+            <div>
+
+              <div class="kicker">
+                Wakala administration
+              </div>
+
+              <h1>
+                Admin overview.
+              </h1>
+
+              <p>
+                Manage creator activity, balances and eSIM operations
+                from one control centre.
+              </p>
+
             </div>
-            <div
-              id="statUsers"
-              class="stat-value"
+
+            <button
+              class="refresh-btn"
+              id="refreshOverview"
             >
-              —
-            </div>
-            <div class="stat-sub">
-              Registered profiles
-            </div>
+              ↻ Refresh
+            </button>
+
           </div>
 
 
-          <div class="stat">
-            <div class="stat-label">
-              Creator applications
+          <div class="stats">
+
+            <div class="stat">
+
+              <div class="stat-label">
+                Creator applications
+              </div>
+
+              <div
+                class="stat-value"
+                id="statApplications"
+              >
+                —
+              </div>
+
+              <div class="stat-meta">
+                All applications
+              </div>
+
             </div>
+
+
+            <div class="stat">
+
+              <div class="stat-label">
+                Pending review
+              </div>
+
+              <div
+                class="stat-value"
+                id="statPending"
+              >
+                —
+              </div>
+
+              <div class="stat-meta">
+                Awaiting administrator action
+              </div>
+
+            </div>
+
+
+            <div class="stat">
+
+              <div class="stat-label">
+                Approved
+              </div>
+
+              <div
+                class="stat-value"
+                id="statApproved"
+              >
+                —
+              </div>
+
+              <div class="stat-meta">
+                Approved applications
+              </div>
+
+            </div>
+
+
+            <div class="stat">
+
+              <div class="stat-label">
+                Open campaigns
+              </div>
+
+              <div
+                class="stat-value"
+                id="statCampaigns"
+              >
+                —
+              </div>
+
+              <div class="stat-meta">
+                Currently available
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <h2 class="panel-title">
+                  Latest creator applications
+                </h2>
+
+                <p class="panel-subtitle">
+                  Most recent submissions received by Wakala.
+                </p>
+
+              </div>
+
+              <button
+                class="action-btn"
+                data-section-jump="creators"
+              >
+                View all
+              </button>
+
+            </div>
+
             <div
-              id="statApplications"
-              class="stat-value"
+              id="overviewApplications"
+              class="loading"
             >
-              —
+              Loading applications...
             </div>
-            <div class="stat-sub">
-              All submissions
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================
+             BALANCES
+        ================================= -->
+
+        <section
+          class="section"
+          id="section-balances"
+        >
+
+          <div class="page-header">
+
+            <div>
+
+              <div class="kicker">
+                Wallet administration
+              </div>
+
+              <h1>
+                Balances.
+              </h1>
+
+              <p>
+                Monitor Wakala wallet balances and account activity.
+              </p>
+
             </div>
+
+            <button
+              class="refresh-btn"
+              id="refreshBalances"
+            >
+              ↻ Refresh
+            </button>
+
           </div>
 
 
-          <div class="stat">
-            <div class="stat-label">
-              Pending creators
+          <div class="balance-grid">
+
+            <div class="balance-card">
+
+              <h3>
+                Wallet accounts
+              </h3>
+
+              <div
+                class="balance-number"
+                id="walletCount"
+              >
+                —
+              </div>
+
+              <div class="balance-note">
+                Registered Wakala wallets
+              </div>
+
             </div>
+
+
+            <div class="balance-card">
+
+              <h3>
+                Balance records
+              </h3>
+
+              <div
+                class="balance-number"
+                id="balanceCount"
+              >
+                —
+              </div>
+
+              <div class="balance-note">
+                Wallet balance records
+              </div>
+
+            </div>
+
+
+            <div class="balance-card">
+
+              <h3>
+                Access
+              </h3>
+
+              <div
+                class="balance-number"
+                style="font-size:17px;"
+              >
+                ADMIN
+              </div>
+
+              <div class="balance-note">
+                Balance management can be extended here.
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <h2 class="panel-title">
+                  Wallets
+                </h2>
+
+                <p class="panel-subtitle">
+                  Wakala user wallet accounts.
+                </p>
+
+              </div>
+
+            </div>
+
             <div
-              id="statPending"
-              class="stat-value"
+              id="walletTable"
+              class="loading"
             >
-              —
+              Loading wallets...
             </div>
-            <div class="stat-sub">
-              Awaiting review
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================
+             ESIM
+        ================================= -->
+
+        <section
+          class="section"
+          id="section-esim"
+        >
+
+          <div class="page-header">
+
+            <div>
+
+              <div class="kicker">
+                Connectivity
+              </div>
+
+              <h1>
+                eSIM.
+              </h1>
+
+              <p>
+                eSIM operations and inventory management.
+              </p>
+
             </div>
+
+            <a
+              class="refresh-btn"
+              href="esim-plans.html"
+            >
+              Customer eSIM page
+            </a>
+
           </div>
 
 
-          <div class="stat">
-            <div class="stat-label">
-              Open campaigns
+          <div class="esim-grid">
+
+            <div class="esim-card">
+
+              <h3>
+                Plans
+              </h3>
+
+              <p>
+                Manage the eSIM packages presented to customers.
+              </p>
+
+              <div class="esim-stat">
+
+                <strong id="esimPlansCount">
+                  —
+                </strong>
+
+                <span>
+                  Available plans
+                </span>
+
+              </div>
+
             </div>
+
+
+            <div class="esim-card">
+
+              <h3>
+                Orders
+              </h3>
+
+              <p>
+                Monitor customer eSIM purchases and fulfilment.
+              </p>
+
+              <div class="esim-stat">
+
+                <strong id="esimOrdersCount">
+                  —
+                </strong>
+
+                <span>
+                  Orders
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="esim-card">
+
+              <h3>
+                Inventory
+              </h3>
+
+              <p>
+                ICCIDs and eSIM inventory can be managed from this area.
+              </p>
+
+              <div class="esim-stat">
+
+                <strong id="esimInventoryCount">
+                  —
+                </strong>
+
+                <span>
+                  Inventory records
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <h2 class="panel-title">
+                  eSIM administration
+                </h2>
+
+                <p class="panel-subtitle">
+                  Open the eSIM customer page or connect the management
+                  tables when they are present in the database.
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="detail-grid">
+
+              <div class="detail-item">
+
+                <div class="detail-label">
+                  Customer plans
+                </div>
+
+                <div class="detail-value">
+                  Use esim-plans.html for the customer-facing package catalogue.
+                </div>
+
+              </div>
+
+              <div class="detail-item">
+
+                <div class="detail-label">
+                  Backend
+                </div>
+
+                <div class="detail-value">
+                  Plans, orders, ICCIDs, QR codes and usage should remain
+                  server-controlled and never expose provider secrets to the browser.
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================
+             CREATORS
+        ================================= -->
+
+        <section
+          class="section"
+          id="section-creators"
+        >
+
+          <div class="page-header">
+
+            <div>
+
+              <div class="kicker">
+                Creator network
+              </div>
+
+              <h1>
+                Creator applications.
+              </h1>
+
+              <p>
+                Review every creator application submitted through Wakala.
+              </p>
+
+            </div>
+
+            <button
+              class="refresh-btn"
+              id="refreshCreators"
+            >
+              ↻ Refresh
+            </button>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="toolbar">
+
+              <input
+                class="search"
+                id="creatorSearch"
+                type="search"
+                placeholder="Search name, email, platform or campaign..."
+              >
+
+              <select
+                class="filter"
+                id="creatorStatusFilter"
+              >
+
+                <option value="all">
+                  All statuses
+                </option>
+
+                <option value="pending">
+                  Pending
+                </option>
+
+                <option value="approved">
+                  Approved
+                </option>
+
+                <option value="rejected">
+                  Rejected
+                </option>
+
+                <option value="withdrawn">
+                  Withdrawn
+                </option>
+
+              </select>
+
+            </div>
+
+
             <div
-              id="statCampaigns"
-              class="stat-value"
+              id="creatorApplicationsTable"
+              class="loading"
             >
-              —
+              Loading creator applications...
             </div>
-            <div class="stat-sub">
-              Currently available
-            </div>
+
           </div>
 
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h2>
-              Recent creator submissions
-            </h2>
-
-            <span>
-              Latest applications
-            </span>
-
-          </div>
 
           <div
-            id="recentApplications"
-            class="panel-body"
-          >
-            <div class="loading">
-              Loading creator submissions...
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- =========================
-           BALANCE
-      ========================= -->
-
-      <section
-        id="balance"
-        class="section"
-      >
-
-        <div class="page-header">
-
-          <div>
-
-            <div class="kicker">
-              Financial controls
-            </div>
-
-            <h1>
-              Balance
-            </h1>
-
-            <p>
-              View wallet balances currently recorded in Wakala.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="balance-grid">
-
-          <div class="balance-card">
-
-            <span>
-              Total wallet balance
-            </span>
-
-            <strong id="totalBalance">
-              0.00
-            </strong>
-
-          </div>
-
-
-          <div class="balance-card">
-
-            <span>
-              Wallet records
-            </span>
-
-            <strong id="walletCount">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="balance-card">
-
-            <span>
-              Currency
-            </span>
-
-            <strong>
-              USDC
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h2>
-              Wallet balances
-            </h2>
-
-          </div>
-
-          <div id="walletTable">
-            <div class="loading">
-              Loading balances...
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- =========================
-           CREATORS
-      ========================= -->
-
-      <section
-        id="creators"
-        class="section"
-      >
-
-        <div class="page-header">
-
-          <div>
-
-            <div class="kicker">
-              Creator network
-            </div>
-
-            <h1>
-              Creator submissions
-            </h1>
-
-            <p>
-              Every application is shown as an individual record.
-              Multiple applications from the same creator are intentionally
-              allowed and are not merged.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="toolbar">
-
-          <input
-            id="creatorSearch"
-            type="search"
-            placeholder="Search creator applications..."
+            class="panel"
+            id="creatorDetailPanel"
+            style="display:none;"
           >
 
-          <select id="creatorStatus">
+            <div class="panel-header">
 
-            <option value="all">
-              All statuses
-            </option>
+              <div>
 
-            <option value="pending">
-              Pending
-            </option>
+                <h2 class="panel-title">
+                  Application details
+                </h2>
 
-            <option value="approved">
-              Approved
-            </option>
+                <p class="panel-subtitle">
+                  Full information for the selected creator application.
+                </p>
 
-            <option value="rejected">
-              Rejected
-            </option>
+              </div>
 
-            <option value="withdrawn">
-              Withdrawn
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h2>
-              Applications
-            </h2>
-
-            <span id="creatorCount">
-              —
-            </span>
-
-          </div>
-
-          <div id="creatorTable">
-
-            <div class="loading">
-              Loading creator submissions...
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- =========================
-           ESIM
-      ========================= -->
-
-      <section
-        id="esim"
-        class="section"
-      >
-
-        <div class="page-header">
-
-          <div>
-
-            <div class="kicker">
-              Connectivity
-            </div>
-
-            <h1>
-              eSIM
-            </h1>
-
-            <p>
-              Manage the eSIM area from this administration interface.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h2>
-              eSIM management
-            </h2>
-
-          </div>
-
-          <div class="panel-body">
-
-            <div class="empty">
-
-              eSIM management is connected to the administration area.
-              Your plans, orders, ICCIDs, QR codes and usage tables can
-              be connected here as they are created.
-
-              <br><br>
-
-              <a
-                href="esim-plans.html"
-                style="color:var(--teal);font-weight:700"
+              <button
+                class="action-btn"
+                id="closeCreatorDetails"
               >
-                Open customer eSIM plans →
-              </a>
+                Close
+              </button>
 
             </div>
+
+            <div
+              id="creatorDetails"
+            ></div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+
+    <!-- =====================================
+         FOOTER
+    ===================================== -->
+
+    <footer>
+
+      <div class="footer-grid">
+
+        <div>
+
+          <div class="footer-brand">
+            <span class="dot"></span>WAKALA
+          </div>
+
+          <p class="footer-text">
+            Wakala administration console. This area is restricted
+            to authorized administrators and should never be shared
+            with ordinary users.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <div class="footer-title">
+            Admin
+          </div>
+
+          <div class="footer-links">
+
+            <a href="#"
+               data-section-jump="overview">
+              Overview
+            </a>
+
+            <a href="#"
+               data-section-jump="balances">
+              Balances
+            </a>
+
+            <a href="#"
+               data-section-jump="esim">
+              eSIM
+            </a>
+
+            <a href="#"
+               data-section-jump="creators">
+              Creators
+            </a>
 
           </div>
 
         </div>
 
-      </section>
 
+        <div>
 
-      <!-- =========================
-           USERS
-      ========================= -->
+          <div class="footer-title">
+            Wakala
+          </div>
 
-      <section
-        id="users"
-        class="section"
-      >
+          <div class="footer-links">
 
-        <div class="page-header">
+            <a href="index.html">
+              Home
+            </a>
 
-          <div>
+            <a href="dashboard.html">
+              User dashboard
+            </a>
 
-            <div class="kicker">
-              Accounts
-            </div>
+            <a href="creator-jobs.html">
+              Creator jobs
+            </a>
 
-            <h1>
-              Users
-            </h1>
-
-            <p>
-              Registered Wakala profiles.
-            </p>
+            <a href="esim-plans.html">
+              eSIM
+            </a>
 
           </div>
 
         </div>
 
+      </div>
 
-        <div class="panel">
 
-          <div class="panel-header">
+      <div class="footer-bottom">
 
-            <h2>
-              Registered users
-            </h2>
-
-          </div>
-
-          <div id="usersTable">
-
-            <div class="loading">
-              Loading users...
-            </div>
-
-          </div>
-
+        <div>
+          © <span id="year"></span> Wakala. All rights reserved.
         </div>
 
-      </section>
+        <div>
+          Authorized administration only.
+        </div>
 
-    </main>
+      </div>
+
+    </footer>
 
   </div>
 
 </div>
 
 
+<!-- =========================================
+     SUPABASE
+========================================= -->
+
 <script type="module">
 
-import { createClient } from
+  import {
+    createClient
+  } from
   'https://esm.sh/@supabase/supabase-js@2';
 
-import {
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-} from './supabase-config.js';
+  import {
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  } from './supabase-config.js';
 
 
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+  const supabase =
+    createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-/* =========================================================
-   STATE
-========================================================= */
+  /* =========================================
+     GLOBAL STATE
+  ========================================= */
 
-let currentUser = null;
-let applications = [];
-let profiles = [];
-let wallets = [];
+  let currentUser = null;
 
+  let adminRecord = null;
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const adminEmail =
-  document.getElementById('adminEmail');
-
-const logoutButton =
-  document.getElementById('logoutButton');
+  let applications = [];
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+  /* =========================================
+     ELEMENTS
+  ========================================= */
 
-document
-  .querySelectorAll('.side-button')
-  .forEach(button => {
+  const adminApplication =
+    document.getElementById('adminApplication');
 
-    button.addEventListener('click', () => {
+  const accessDenied =
+    document.getElementById('accessDenied');
 
-      const target =
-        button.dataset.section;
-
-      document
-        .querySelectorAll('.side-button')
-        .forEach(item => {
-          item.classList.remove('active');
-        });
-
-      button.classList.add('active');
+  const adminIdentity =
+    document.getElementById('adminIdentity');
 
 
-      document
-        .querySelectorAll('.section')
-        .forEach(section => {
-          section.classList.remove('active');
-        });
+  /* =========================================
+     YEAR
+  ========================================= */
+
+  document.getElementById('year').textContent =
+    new Date().getFullYear();
 
 
-      document
-        .getElementById(target)
-        .classList.add('active');
+  /* =========================================
+     SWEET ALERT
+  ========================================= */
 
+  function swalSuccess(title, text = '') {
+
+    return Swal.fire({
+      icon:'success',
+      title,
+      text,
+      confirmButtonColor:'#229175'
     });
 
-  });
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-logoutButton.addEventListener(
-  'click',
-  async () => {
-
-    await supabase.auth.signOut();
-
-    window.location.href =
-      'login.html';
-
   }
-);
 
 
-/* =========================================================
-   AUTH + ADMIN CHECK
-========================================================= */
+  function swalError(title, text = '') {
 
-async function initialiseAdmin() {
-
-  const {
-    data,
-    error
-  } = await supabase.auth.getSession();
-
-
-  if (error) {
-
-    showFatalError(
-      'Unable to check your session: ' +
-      error.message
-    );
-
-    return;
+    return Swal.fire({
+      icon:'error',
+      title,
+      text,
+      confirmButtonColor:'#0D1420'
+    });
 
   }
 
 
-  currentUser =
-    data?.session?.user || null;
+  /* =========================================
+     AUTH + ADMIN CHECK
+  ========================================= */
 
+  async function initialiseAdmin() {
 
-  if (!currentUser) {
-
-    window.location.href =
-      'login.html';
-
-    return;
-
-  }
-
-
-  adminEmail.textContent =
-    currentUser.email || 'Administrator';
-
-
-  /*
-   * IMPORTANT:
-   *
-   * Check admin_users rather than assuming
-   * that every logged-in account is an admin.
-   */
-
-  const {
-    data: adminRecord,
-    error: adminError
-  } = await supabase
-    .from('admin_users')
-    .select(`
-      id,
-      user_id,
-      role_id,
-      status
-    `)
-    .eq(
-      'user_id',
-      currentUser.id
-    )
-    .maybeSingle();
-
-
-  if (adminError) {
-
-    console.error(
-      'Admin lookup error:',
-      adminError
-    );
-
-    showFatalError(
-      'Admin verification failed: ' +
-      adminError.message
-    );
-
-    return;
-
-  }
-
-
-  if (!adminRecord) {
-
-    showFatalError(
-      'This account is authenticated but is not registered as a Wakala administrator.'
-    );
-
-    return;
-
-  }
-
-
-  if (
-    adminRecord.status &&
-    adminRecord.status !== 'active'
-  ) {
-
-    showFatalError(
-      'Your administrator account is not active.'
-    );
-
-    return;
-
-  }
-
-
-  await loadEverything();
-
-}
-
-
-/* =========================================================
-   LOAD EVERYTHING
-========================================================= */
-
-window.loadEverything =
-  async function() {
-
-    await Promise.all([
-      loadProfiles(),
-      loadApplications(),
-      loadCampaigns(),
-      loadWallets()
-    ]);
-
-  };
-
-
-/* =========================================================
-   USERS
-========================================================= */
-
-async function loadProfiles() {
-
-  const {
-    data,
-    error
-  } = await supabase
-    .from('profiles')
-    .select('*')
-    .order(
-      'created_at',
-      {
-        ascending:false
-      }
-    );
-
-
-  if (error) {
-
-    console.error(
-      'Profiles error:',
+    const {
+      data,
       error
-    );
+    } =
+    await supabase.auth.getSession();
 
-    document.getElementById(
-      'usersTable'
-    ).innerHTML = `
-      <div class="panel-body">
-        <div class="error-box">
-          Unable to load users.<br><br>
-          ${escapeHtml(error.message)}
-        </div>
-      </div>
-    `;
 
-    return;
+    if (error) {
 
-  }
+      console.error(error);
 
+      showAccessDenied();
 
-  profiles =
-    data || [];
+      return;
 
-
-  document.getElementById(
-    'statUsers'
-  ).textContent =
-    profiles.length;
-
-
-  renderUsers();
-
-}
-
-
-/* =========================================================
-   CAMPAIGNS
-========================================================= */
-
-async function loadCampaigns() {
-
-  const {
-    data,
-    error
-  } = await supabase
-    .from('creator_campaigns')
-    .select('id,status,title,created_at')
-    .order(
-      'created_at',
-      {
-        ascending:false
-      }
-    );
-
-
-  if (error) {
-
-    console.error(
-      'Campaign error:',
-      error
-    );
-
-    return;
-
-  }
-
-
-  const campaigns =
-    data || [];
-
-
-  document.getElementById(
-    'statCampaigns'
-  ).textContent =
-    campaigns.filter(
-      campaign =>
-        campaign.status === 'open'
-    ).length;
-
-}
-
-
-/* =========================================================
-   APPLICATIONS
-========================================================= */
-
-async function loadApplications() {
-
-  const {
-    data,
-    error
-  } = await supabase
-    .from('creator_applications')
-    .select(`
-      id,
-      campaign_id,
-      user_id,
-      platform_username,
-      portfolio_url,
-      application_note,
-      status,
-      reviewed_by,
-      created_at
-    `)
-    .order(
-      'created_at',
-      {
-        ascending:false
-      }
-    );
-
-
-  if (error) {
-
-    console.error(
-      'Creator applications error:',
-      error
-    );
-
-
-    document.getElementById(
-      'creatorTable'
-    ).innerHTML = `
-      <div class="panel-body">
-        <div class="error-box">
-          <strong>
-            Unable to load creator submissions.
-          </strong>
-
-          <br><br>
-
-          ${escapeHtml(error.message)}
-
-          <br><br>
-
-          This is usually caused by an RLS policy on
-          creator_applications.
-        </div>
-      </div>
-    `;
-
-
-    document.getElementById(
-      'recentApplications'
-    ).innerHTML = `
-      <div class="error-box">
-        ${escapeHtml(error.message)}
-      </div>
-    `;
-
-
-    return;
-
-  }
-
-
-  applications =
-    data || [];
-
-
-  document.getElementById(
-    'statApplications'
-  ).textContent =
-    applications.length;
-
-
-  document.getElementById(
-    'statPending'
-  ).textContent =
-    applications.filter(
-      item =>
-        item.status === 'pending'
-    ).length;
-
-
-  renderApplications();
-
-  renderRecentApplications();
-
-}
-
-
-/* =========================================================
-   WALLETS
-========================================================= */
-
-async function loadWallets() {
-
-  const {
-    data,
-    error
-  } = await supabase
-    .from('wallet_balances')
-    .select('*');
-
-
-  if (error) {
-
-    console.error(
-      'Wallet error:',
-      error
-    );
-
-
-    document.getElementById(
-      'walletTable'
-    ).innerHTML = `
-      <div class="panel-body">
-        <div class="error-box">
-          Unable to load balances.<br><br>
-          ${escapeHtml(error.message)}
-        </div>
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  wallets =
-    data || [];
-
-
-  document.getElementById(
-    'walletCount'
-  ).textContent =
-    wallets.length;
-
-
-  /*
-   * Try to calculate the balance from common
-   * balance column names.
-   */
-
-  let total = 0;
-
-
-  wallets.forEach(wallet => {
-
-    const value =
-      Number(
-        wallet.balance ??
-        wallet.available_balance ??
-        wallet.amount ??
-        0
-      );
-
-    if (!Number.isNaN(value)) {
-      total += value;
     }
 
-  });
+
+    currentUser =
+      data?.session?.user || null;
 
 
-  document.getElementById(
-    'totalBalance'
-  ).textContent =
-    total.toFixed(2);
+    if (!currentUser) {
+
+      showAccessDenied();
+
+      return;
+
+    }
 
 
-  renderWallets();
+    /*
+     * IMPORTANT:
+     *
+     * We explicitly check admin_users here.
+     *
+     * Your RLS policies require:
+     *
+     * admin_users.status = active
+     *
+     * for creator application access.
+     */
 
-}
-
-
-/* =========================================================
-   RENDER USERS
-========================================================= */
-
-function renderUsers() {
-
-  const container =
-    document.getElementById(
-      'usersTable'
-    );
-
-
-  if (!profiles.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        No user profiles were found.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>User</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Created</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            profiles.map(profile => `
-
-              <tr>
-
-                <td>
-                  ${escapeHtml(profile.id)}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    profile.full_name ||
-                    '—'
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    profile.phone ||
-                    '—'
-                  )}
-                </td>
-
-                <td>
-                  ${formatDate(
-                    profile.created_at
-                  )}
-                </td>
-
-              </tr>
-
-            `).join('')
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
+    const {
+      data: admin,
+      error: adminError
+    } =
+    await supabase
+      .from('admin_users')
+      .select(`
+        id,
+        user_id,
+        role_id,
+        status,
+        created_at
+      `)
+      .eq(
+        'user_id',
+        currentUser.id
+      )
+      .eq(
+        'status',
+        'active'
+      )
+      .maybeSingle();
 
 
-/* =========================================================
-   RENDER APPLICATIONS
-========================================================= */
+    if (adminError) {
 
-function renderApplications() {
-
-  const container =
-    document.getElementById(
-      'creatorTable'
-    );
-
-
-  const search =
-    (
-      document.getElementById(
-        'creatorSearch'
-      ).value || ''
-    ).toLowerCase();
-
-
-  const selectedStatus =
-    document.getElementById(
-      'creatorStatus'
-    ).value;
-
-
-  const filtered =
-    applications.filter(application => {
-
-      const text = [
-
-        application.id,
-
-        application.user_id,
-
-        application.platform_username,
-
-        application.portfolio_url,
-
-        application.application_note
-
-      ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase();
-
-
-      const matchesSearch =
-        !search ||
-        text.includes(search);
-
-
-      const matchesStatus =
-        selectedStatus === 'all' ||
-        application.status === selectedStatus;
-
-
-      return (
-        matchesSearch &&
-        matchesStatus
+      console.error(
+        'Admin check error:',
+        adminError
       );
 
-    });
+      showAccessDenied();
+
+      return;
+
+    }
 
 
-  document.getElementById(
-    'creatorCount'
-  ).textContent =
-    `${filtered.length} submission${filtered.length === 1 ? '' : 's'}`;
+    if (!admin) {
+
+      showAccessDenied();
+
+      return;
+
+    }
 
 
-  if (!filtered.length) {
+    adminRecord =
+      admin;
 
-    container.innerHTML = `
-      <div class="empty">
-        No creator submissions match the current filter.
-      </div>
-    `;
 
-    return;
+    adminApplication.style.display =
+      'block';
+
+    accessDenied.style.display =
+      'none';
+
+
+    adminIdentity.textContent =
+      'ADMIN • ' +
+      (
+        currentUser.email ||
+        'AUTHORIZED'
+      );
+
+
+    await loadOverview();
 
   }
 
 
-  container.innerHTML = `
+  /* =========================================
+     ACCESS DENIED
+  ========================================= */
 
-    <div class="table-wrap">
+  function showAccessDenied() {
 
-      <table>
+    adminApplication.style.display =
+      'none';
 
-        <thead>
+    accessDenied.style.display =
+      'grid';
 
-          <tr>
-            <th>Submitted</th>
-            <th>Creator ID</th>
-            <th>Campaign</th>
-            <th>Platform</th>
-            <th>Profile</th>
-            <th>Application</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            filtered.map(application => `
-
-              <tr>
-
-                <td>
-                  ${formatDate(
-                    application.created_at
-                  )}
-                </td>
-
-                <td>
-                  <small>
-                    ${escapeHtml(
-                      application.user_id
-                    )}
-                  </small>
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    application.campaign_id
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    application.platform_username ||
-                    '—'
-                  )}
-                </td>
-
-                <td>
-
-                  ${
-                    application.portfolio_url
-
-                    ? `
-
-                      <a
-                        class="link"
-                        href="${escapeHtml(
-                          application.portfolio_url
-                        )}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View profile
-                      </a>
-
-                    `
-
-                    : '—'
-                  }
-
-                </td>
-
-                <td>
-
-                  <div class="creator-note">
-
-                    ${escapeHtml(
-                      application.application_note ||
-                      'No application note.'
-                    )}
-
-                  </div>
-
-                </td>
-
-                <td>
-
-                  <span class="status-pill ${escapeHtml(
-                    application.status || ''
-                  )}">
-
-                    ${escapeHtml(
-                      application.status ||
-                      'unknown'
-                    )}
-
-                  </span>
-
-                </td>
-
-                <td>
-
-                  <div class="actions">
-
-                    ${
-                      application.status !== 'approved'
-                      ? `
-                        <button
-                          class="small-button approve"
-                          data-action="approve"
-                          data-id="${application.id}"
-                        >
-                          Approve
-                        </button>
-                      `
-                      : ''
-                    }
-
-                    ${
-                      application.status !== 'rejected'
-                      ? `
-                        <button
-                          class="small-button reject"
-                          data-action="reject"
-                          data-id="${application.id}"
-                        >
-                          Reject
-                        </button>
-                      `
-                      : ''
-                    }
-
-                  </div>
-
-                </td>
-
-              </tr>
-
-            `).join('')
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
+  }
 
 
-  container
-    .querySelectorAll('[data-action]')
+  /* =========================================
+     NAVIGATION
+  ========================================= */
+
+  document
+    .querySelectorAll('.side-link[data-section]')
     .forEach(button => {
 
       button.addEventListener(
         'click',
         () => {
 
-          updateApplicationStatus(
-            button.dataset.id,
-            button.dataset.action
+          switchSection(
+            button.dataset.section
           );
 
         }
@@ -1963,369 +1917,1672 @@ function renderApplications() {
 
     });
 
-}
 
+  document
+    .querySelectorAll('[data-section-jump]')
+    .forEach(button => {
 
-/* =========================================================
-   RECENT APPLICATIONS
-========================================================= */
+      button.addEventListener(
+        'click',
+        event => {
 
-function renderRecentApplications() {
+          event.preventDefault();
 
-  const container =
-    document.getElementById(
-      'recentApplications'
-    );
+          switchSection(
+            button.dataset.sectionJump
+          );
 
+        }
+      );
 
-  const recent =
-    applications.slice(0,8);
+    });
 
 
-  if (!recent.length) {
+  function switchSection(section) {
 
-    container.innerHTML = `
-      <div class="empty">
-        No creator submissions have been recorded yet.
-      </div>
-    `;
+    document
+      .querySelectorAll('.section')
+      .forEach(item => {
 
-    return;
+        item.classList.remove(
+          'active'
+        );
 
-  }
+      });
 
 
-  container.innerHTML = `
+    const target =
+      document.getElementById(
+        `section-${section}`
+      );
 
-    <div class="table-wrap">
 
-      <table>
+    if (target) {
 
-        <thead>
+      target.classList.add(
+        'active'
+      );
 
-          <tr>
-            <th>Date</th>
-            <th>User</th>
-            <th>Campaign</th>
-            <th>Platform</th>
-            <th>Status</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            recent.map(item => `
-
-              <tr>
-
-                <td>
-                  ${formatDate(
-                    item.created_at
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    item.user_id
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    item.campaign_id
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    item.platform_username ||
-                    '—'
-                  )}
-                </td>
-
-                <td>
-
-                  <span class="status-pill ${escapeHtml(
-                    item.status || ''
-                  )}">
-                    ${escapeHtml(
-                      item.status || 'unknown'
-                    )}
-                  </span>
-
-                </td>
-
-              </tr>
-
-            `).join('')
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   WALLET TABLE
-========================================================= */
-
-function renderWallets() {
-
-  const container =
-    document.getElementById(
-      'walletTable'
-    );
-
-
-  if (!wallets.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        No wallet balances were found.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>Wallet</th>
-            <th>User</th>
-            <th>Balance</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            wallets.map(wallet => {
-
-              const balance =
-                wallet.balance ??
-                wallet.available_balance ??
-                wallet.amount ??
-                0;
-
-
-              return `
-
-                <tr>
-
-                  <td>
-                    ${escapeHtml(
-                      wallet.id ||
-                      '—'
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      wallet.user_id ||
-                      '—'
-                    )}
-                  </td>
-
-                  <td>
-                    ${Number(
-                      balance || 0
-                    ).toFixed(2)}
-                  </td>
-
-                </tr>
-
-              `;
-
-            }).join('')
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   UPDATE APPLICATION
-========================================================= */
-
-async function updateApplicationStatus(
-  applicationId,
-  action
-) {
-
-  const newStatus =
-    action === 'approve'
-      ? 'approved'
-      : 'rejected';
-
-
-  const {
-    error
-  } = await supabase
-    .from('creator_applications')
-    .update({
-
-      status:
-        newStatus,
-
-      reviewed_by:
-        currentUser.id
-
-    })
-    .eq(
-      'id',
-      applicationId
-    );
-
-
-  if (error) {
-
-    alert(
-      'Unable to update application: ' +
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  await loadApplications();
-
-}
-
-
-/* =========================================================
-   SEARCH / FILTER
-========================================================= */
-
-document
-  .getElementById('creatorSearch')
-  .addEventListener(
-    'input',
-    renderApplications
-  );
-
-
-document
-  .getElementById('creatorStatus')
-  .addEventListener(
-    'change',
-    renderApplications
-  );
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function formatDate(value) {
-
-  if (!value) {
-    return '—';
-  }
-
-
-  const date =
-    new Date(value);
-
-
-  if (Number.isNaN(
-    date.getTime()
-  )) {
-
-    return '—';
-
-  }
-
-
-  return date.toLocaleString(
-    undefined,
-    {
-      dateStyle:'medium',
-      timeStyle:'short'
     }
-  );
-
-}
 
 
-function escapeHtml(value) {
+    document
+      .querySelectorAll(
+        '.side-link[data-section]'
+      )
+      .forEach(button => {
 
-  return String(
-    value ?? ''
-  )
-  .replace(/&/g,'&amp;')
-  .replace(/</g,'&lt;')
-  .replace(/>/g,'&gt;')
-  .replace(/"/g,'&quot;')
-  .replace(/'/g,'&#039;');
+        button.classList.toggle(
+          'active',
+          button.dataset.section === section
+        );
 
-}
+      });
 
 
-/* =========================================================
-   FATAL ERROR
-========================================================= */
+    if (section === 'balances') {
 
-function showFatalError(message) {
+      loadBalances();
 
-  document.querySelector('main').innerHTML = `
+    }
 
-    <div class="panel">
 
-      <div class="panel-body">
+    if (section === 'esim') {
 
-        <div class="error-box">
+      loadEsim();
 
+    }
+
+
+    if (section === 'creators') {
+
+      loadApplications();
+
+    }
+
+  }
+
+
+  /* =========================================
+     OVERVIEW
+  ========================================= */
+
+  async function loadOverview() {
+
+    await loadApplicationStats();
+
+    await loadCampaignStats();
+
+    await loadLatestApplications();
+
+  }
+
+
+  async function loadApplicationStats() {
+
+    const {
+      data,
+      error
+    } =
+    await supabase
+      .from('creator_applications')
+      .select(
+        'id,status'
+      );
+
+
+    if (error) {
+
+      console.error(
+        'Application stats error:',
+        error
+      );
+
+      return;
+
+    }
+
+
+    const rows =
+      data || [];
+
+
+    document.getElementById(
+      'statApplications'
+    ).textContent =
+      rows.length;
+
+
+    document.getElementById(
+      'statPending'
+    ).textContent =
+      rows.filter(
+        row =>
+          row.status === 'pending'
+      ).length;
+
+
+    document.getElementById(
+      'statApproved'
+    ).textContent =
+      rows.filter(
+        row =>
+          row.status === 'approved'
+      ).length;
+
+  }
+
+
+  async function loadCampaignStats() {
+
+    const {
+      data,
+      error
+    } =
+    await supabase
+      .from('creator_campaigns')
+      .select('id')
+      .eq(
+        'status',
+        'open'
+      );
+
+
+    if (error) {
+
+      console.error(
+        'Campaign stats error:',
+        error
+      );
+
+      return;
+
+    }
+
+
+    document.getElementById(
+      'statCampaigns'
+    ).textContent =
+      data?.length || 0;
+
+  }
+
+
+  /* =========================================
+     LATEST APPLICATIONS
+  ========================================= */
+
+  async function loadLatestApplications() {
+
+    const container =
+      document.getElementById(
+        'overviewApplications'
+      );
+
+
+    container.innerHTML =
+      '<div class="loading">Loading applications...</div>';
+
+
+    const {
+      data,
+      error
+    } =
+    await supabase
+      .from('creator_applications')
+      .select(`
+        id,
+        user_id,
+        campaign_id,
+        platform_username,
+        portfolio_url,
+        application_note,
+        status,
+        created_at
+      `)
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      )
+      .limit(8);
+
+
+    if (error) {
+
+      console.error(
+        'Latest applications error:',
+        error
+      );
+
+
+      container.innerHTML = `
+        <div class="empty">
+          Unable to load applications.
+          Check the browser console for the Supabase error.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    if (!data?.length) {
+
+      container.innerHTML = `
+        <div class="empty">
+          No creator applications have been submitted yet.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      buildApplicationTable(
+        data,
+        true
+      );
+
+  }
+
+
+  /* =========================================
+     CREATOR APPLICATIONS
+  ========================================= */
+
+  async function loadApplications() {
+
+    const container =
+      document.getElementById(
+        'creatorApplicationsTable'
+      );
+
+
+    container.innerHTML =
+      '<div class="loading">Loading creator applications...</div>';
+
+
+    /*
+     * IMPORTANT:
+     *
+     * We query creator_applications directly.
+     *
+     * We do NOT use a complicated relational join
+     * here because your current RLS policies may
+     * block related profiles/campaign rows.
+     *
+     * First get the application records.
+     * Then separately resolve campaign names.
+     */
+
+    const {
+      data,
+      error
+    } =
+    await supabase
+      .from('creator_applications')
+      .select(`
+        id,
+        user_id,
+        campaign_id,
+        platform_username,
+        portfolio_url,
+        application_note,
+        status,
+        reviewed_by,
+        created_at
+      `)
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+
+    if (error) {
+
+      console.error(
+        'CREATOR APPLICATION QUERY ERROR:',
+        error
+      );
+
+
+      container.innerHTML = `
+        <div class="empty">
           <strong>
-            Admin dashboard unavailable
+            Applications could not be loaded.
           </strong>
 
           <br><br>
 
-          ${escapeHtml(message)}
+          ${escapeHtml(error.message)}
+
+          <br><br>
+
+          Check that the logged-in account exists in
+          <strong>admin_users</strong> and has
+          <strong>status = active</strong>.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    applications =
+      data || [];
+
+
+    await resolveCampaignNames();
+
+
+    renderApplications();
+
+  }
+
+
+  /* =========================================
+     CAMPAIGN NAMES
+  ========================================= */
+
+  const campaignNames =
+    new Map();
+
+
+  async function resolveCampaignNames() {
+
+    const ids =
+      [
+        ...new Set(
+          applications
+            .map(
+              item =>
+                item.campaign_id
+            )
+            .filter(Boolean)
+        )
+      ];
+
+
+    if (!ids.length) {
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } =
+    await supabase
+      .from('creator_campaigns')
+      .select(
+        'id,title'
+      )
+      .in(
+        'id',
+        ids
+      );
+
+
+    if (error) {
+
+      console.warn(
+        'Campaign name lookup failed:',
+        error
+      );
+
+      return;
+
+    }
+
+
+    (data || []).forEach(
+      campaign => {
+
+        campaignNames.set(
+          campaign.id,
+          campaign.title
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     RENDER APPLICATIONS
+  ========================================= */
+
+  function renderApplications() {
+
+    const search =
+      document
+        .getElementById(
+          'creatorSearch'
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const filter =
+      document
+        .getElementById(
+          'creatorStatusFilter'
+        )
+        .value;
+
+
+    const filtered =
+      applications.filter(
+        application => {
+
+          const campaign =
+            (
+              campaignNames.get(
+                application.campaign_id
+              ) ||
+              ''
+            ).toLowerCase();
+
+
+          const searchable =
+            [
+              application.user_id,
+              application.platform_username,
+              application.portfolio_url,
+              application.application_note,
+              campaign,
+              application.status
+            ]
+            .join(' ')
+            .toLowerCase();
+
+
+          const matchesSearch =
+            !search ||
+            searchable.includes(search);
+
+
+          const matchesStatus =
+            filter === 'all' ||
+            application.status === filter;
+
+
+          return (
+            matchesSearch &&
+            matchesStatus
+          );
+
+        }
+      );
+
+
+    const container =
+      document.getElementById(
+        'creatorApplicationsTable'
+      );
+
+
+    if (!filtered.length) {
+
+      container.innerHTML = `
+        <div class="empty">
+          No creator applications match your search.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      buildApplicationTable(
+        filtered,
+        false
+      );
+
+
+    container
+      .querySelectorAll(
+        '[data-view-application]'
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const application =
+              applications.find(
+                item =>
+                  item.id ===
+                  button.dataset.viewApplication
+              );
+
+
+            if (application) {
+
+              showApplicationDetails(
+                application
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+
+    container
+      .querySelectorAll(
+        '[data-approve-application]'
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            updateApplicationStatus(
+              button.dataset.approveApplication,
+              'approved'
+            );
+
+          }
+        );
+
+      });
+
+
+    container
+      .querySelectorAll(
+        '[data-reject-application]'
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            updateApplicationStatus(
+              button.dataset.rejectApplication,
+              'rejected'
+            );
+
+          }
+        );
+
+      });
+
+  }
+
+
+  /* =========================================
+     APPLICATION TABLE
+  ========================================= */
+
+  function buildApplicationTable(
+    rows,
+    compact = false
+  ) {
+
+    return `
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Creator
+              </th>
+
+              <th>
+                Campaign
+              </th>
+
+              <th>
+                Platform
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Submitted
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${rows.map(
+              application => {
+
+                const campaign =
+                  campaignNames.get(
+                    application.campaign_id
+                  ) ||
+                  'Campaign ' +
+                  String(
+                    application.campaign_id
+                  ).slice(0,8);
+
+
+                return `
+
+                  <tr>
+
+                    <td>
+
+                      <div class="primary-text">
+                        ${escapeHtml(
+                          getCreatorName(
+                            application
+                          )
+                        )}
+                      </div>
+
+                      <div class="secondary-text">
+                        ${escapeHtml(
+                          application.user_id
+                        )}
+                      </div>
+
+                    </td>
+
+
+                    <td>
+
+                      <div class="primary-text">
+                        ${escapeHtml(
+                          campaign
+                        )}
+                      </div>
+
+                    </td>
+
+
+                    <td>
+
+                      ${escapeHtml(
+                        application.platform_username ||
+                        'Not provided'
+                      )}
+
+                    </td>
+
+
+                    <td>
+
+                      ${statusBadge(
+                        application.status
+                      )}
+
+                    </td>
+
+
+                    <td>
+
+                      ${formatDate(
+                        application.created_at
+                      )}
+
+                    </td>
+
+
+                    <td>
+
+                      <div class="actions">
+
+                        <button
+                          class="action-btn"
+                          data-view-application="${application.id}"
+                        >
+                          View
+                        </button>
+
+                        ${
+                          application.status === 'pending'
+                          ? `
+
+                            <button
+                              class="action-btn approve"
+                              data-approve-application="${application.id}"
+                            >
+                              Approve
+                            </button>
+
+                            <button
+                              class="action-btn reject"
+                              data-reject-application="${application.id}"
+                            >
+                              Reject
+                            </button>
+
+                          `
+                          : ''
+                        }
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                `;
+
+              }
+            ).join('')}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================================
+     CREATOR NAME
+  ========================================= */
+
+  function getCreatorName(application) {
+
+    /*
+     * application_note contains the creator name
+     * because the frontend currently stores it there.
+     */
+
+    const note =
+      application.application_note ||
+      '';
+
+
+    const match =
+      note.match(
+        /Creator name:\s*(.+)/
+      );
+
+
+    if (
+      match &&
+      match[1]
+    ) {
+
+      return match[1]
+        .split('\n')[0]
+        .trim();
+
+    }
+
+
+    return 'Creator';
+
+  }
+
+
+  /* =========================================
+     STATUS BADGE
+  ========================================= */
+
+  function statusBadge(status) {
+
+    const safe =
+      status || 'pending';
+
+
+    return `
+      <span
+        class="status-badge status-${escapeHtml(
+          safe
+        )}"
+      >
+        ${escapeHtml(safe)}
+      </span>
+    `;
+
+  }
+
+
+  /* =========================================
+     APPLICATION DETAILS
+  ========================================= */
+
+  function showApplicationDetails(
+    application
+  ) {
+
+    const panel =
+      document.getElementById(
+        'creatorDetailPanel'
+      );
+
+
+    const details =
+      document.getElementById(
+        'creatorDetails'
+      );
+
+
+    const campaign =
+      campaignNames.get(
+        application.campaign_id
+      ) ||
+      application.campaign_id;
+
+
+    details.innerHTML = `
+
+      <div class="detail-grid">
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Creator
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              getCreatorName(
+                application
+              )
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            User ID
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              application.user_id
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Campaign
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              campaign
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Platform
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              application.platform_username ||
+              'Not provided'
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Profile / Portfolio
+          </div>
+
+          <div class="detail-value">
+            ${
+              application.portfolio_url
+                ? `
+                  <a
+                    href="${escapeHtml(
+                      application.portfolio_url
+                    )}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="color:var(--teal);"
+                  >
+                    ${escapeHtml(
+                      application.portfolio_url
+                    )}
+                  </a>
+                `
+                : 'Not provided'
+            }
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Status
+          </div>
+
+          <div class="detail-value">
+            ${statusBadge(
+              application.status
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Submitted
+          </div>
+
+          <div class="detail-value">
+            ${formatDate(
+              application.created_at
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Application ID
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              application.id
+            )}
+          </div>
+
+        </div>
+
+
+        <div
+          class="detail-item"
+          style="grid-column:1/-1;"
+        >
+
+          <div class="detail-label">
+            Application information
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              application.application_note ||
+              'No application information provided.'
+            )}
+          </div>
 
         </div>
 
       </div>
 
-    </div>
-
-  `;
-
-}
+    `;
 
 
-/* =========================================================
-   START
-========================================================= */
+    panel.style.display =
+      'block';
 
-initialiseAdmin();
+
+    panel.scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+
+  }
+
+
+  document
+    .getElementById(
+      'closeCreatorDetails'
+    )
+    .addEventListener(
+      'click',
+      () => {
+
+        document.getElementById(
+          'creatorDetailPanel'
+        ).style.display =
+          'none';
+
+      }
+    );
+
+
+  /* =========================================
+     UPDATE APPLICATION STATUS
+  ========================================= */
+
+  async function updateApplicationStatus(
+    applicationId,
+    newStatus
+  ) {
+
+    const action =
+      newStatus === 'approved'
+        ? 'approve'
+        : 'reject';
+
+
+    const confirmation =
+      await Swal.fire({
+
+        icon:
+          newStatus === 'approved'
+            ? 'question'
+            : 'warning',
+
+        title:
+          newStatus === 'approved'
+            ? 'Approve application?'
+            : 'Reject application?',
+
+        text:
+          newStatus === 'approved'
+            ? 'This creator application will be marked as approved.'
+            : 'This creator application will be marked as rejected.',
+
+        showCancelButton:true,
+
+        confirmButtonText:
+          newStatus === 'approved'
+            ? 'Approve'
+            : 'Reject',
+
+        cancelButtonText:
+          'Cancel',
+
+        confirmButtonColor:
+          newStatus === 'approved'
+            ? '#168447'
+            : '#B42318',
+
+        cancelButtonColor:
+          '#0D1420'
+
+      });
+
+
+    if (!confirmation.isConfirmed) {
+      return;
+    }
+
+
+    const {
+      error
+    } =
+    await supabase
+      .from('creator_applications')
+      .update({
+
+        status:
+          newStatus,
+
+        reviewed_by:
+          currentUser.id
+
+      })
+      .eq(
+        'id',
+        applicationId
+      );
+
+
+    if (error) {
+
+      console.error(
+        'Application update error:',
+        error
+      );
+
+
+      await swalError(
+        'Update failed',
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    await swalSuccess(
+      newStatus === 'approved'
+        ? 'Application approved'
+        : 'Application rejected'
+    );
+
+
+    await loadApplications();
+
+    await loadOverview();
+
+  }
+
+
+  /* =========================================
+     BALANCES
+  ========================================= */
+
+  async function loadBalances() {
+
+    const walletContainer =
+      document.getElementById(
+        'walletTable'
+      );
+
+
+    walletContainer.innerHTML =
+      '<div class="loading">Loading wallets...</div>';
+
+
+    const walletsResult =
+      await supabase
+        .from('wallets')
+        .select(`
+          id,
+          user_id
+        `);
+
+
+    if (walletsResult.error) {
+
+      console.error(
+        walletsResult.error
+      );
+
+
+      walletContainer.innerHTML = `
+        <div class="empty">
+          Unable to load wallets.
+          <br><br>
+          ${escapeHtml(
+            walletsResult.error.message
+          )}
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    const wallets =
+      walletsResult.data || [];
+
+
+    document.getElementById(
+      'walletCount'
+    ).textContent =
+      wallets.length;
+
+
+    const balancesResult =
+      await supabase
+        .from('wallet_balances')
+        .select(`
+          id,
+          wallet_id
+        `);
+
+
+    if (
+      !balancesResult.error
+    ) {
+
+      document.getElementById(
+        'balanceCount'
+      ).textContent =
+        (
+          balancesResult.data ||
+          []
+        ).length;
+
+    }
+
+
+    if (!wallets.length) {
+
+      walletContainer.innerHTML = `
+        <div class="empty">
+          No wallets found.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    walletContainer.innerHTML = `
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Wallet
+              </th>
+
+              <th>
+                User ID
+              </th>
+
+              <th>
+                Wallet ID
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${wallets.map(
+              wallet => `
+
+                <tr>
+
+                  <td>
+                    <span class="primary-text">
+                      Wakala Wallet
+                    </span>
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      wallet.user_id
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      wallet.id
+                    )}
+                  </td>
+
+                </tr>
+
+              `
+            ).join('')}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================================
+     ESIM
+  ========================================= */
+
+  async function loadEsim() {
+
+    /*
+     * We deliberately do not guess your eSIM table names.
+     *
+     * Your eSIM backend has been designed around plans,
+     * orders, ICCIDs and usage, but the exact table names
+     * must match the database.
+     *
+     * The cards remain functional placeholders until
+     * those exact table names are confirmed.
+     */
+
+    const planCandidates = [
+      'esim_plans',
+      'plans'
+    ];
+
+    const orderCandidates = [
+      'esim_orders',
+      'orders'
+    ];
+
+    const inventoryCandidates = [
+      'esim_iccids',
+      'iccids'
+    ];
+
+
+    const planCount =
+      await findCount(
+        planCandidates
+      );
+
+
+    const orderCount =
+      await findCount(
+        orderCandidates
+      );
+
+
+    const inventoryCount =
+      await findCount(
+        inventoryCandidates
+      );
+
+
+    document.getElementById(
+      'esimPlansCount'
+    ).textContent =
+      planCount === null
+        ? '—'
+        : planCount;
+
+
+    document.getElementById(
+      'esimOrdersCount'
+    ).textContent =
+      orderCount === null
+        ? '—'
+        : orderCount;
+
+
+    document.getElementById(
+      'esimInventoryCount'
+    ).textContent =
+      inventoryCount === null
+        ? '—'
+        : inventoryCount;
+
+  }
+
+
+  async function findCount(
+    tableCandidates
+  ) {
+
+    for (
+      const table
+      of tableCandidates
+    ) {
+
+      const {
+        count,
+        error
+      } =
+      await supabase
+        .from(table)
+        .select(
+          '*',
+          {
+            count:'exact',
+            head:true
+          }
+        );
+
+
+      if (!error) {
+        return count || 0;
+      }
+
+    }
+
+
+    return null;
+
+  }
+
+
+  /* =========================================
+     SEARCH
+  ========================================= */
+
+  document
+    .getElementById(
+      'creatorSearch'
+    )
+    .addEventListener(
+      'input',
+      renderApplications
+    );
+
+
+  document
+    .getElementById(
+      'creatorStatusFilter'
+    )
+    .addEventListener(
+      'change',
+      renderApplications
+    );
+
+
+  /* =========================================
+     REFRESH BUTTONS
+  ========================================= */
+
+  document
+    .getElementById(
+      'refreshOverview'
+    )
+    .addEventListener(
+      'click',
+      async () => {
+
+        await loadOverview();
+
+        await swalSuccess(
+          'Overview refreshed'
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      'refreshCreators'
+    )
+    .addEventListener(
+      'click',
+      async () => {
+
+        await loadApplications();
+
+        await swalSuccess(
+          'Creator applications refreshed'
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      'refreshBalances'
+    )
+    .addEventListener(
+      'click',
+      async () => {
+
+        await loadBalances();
+
+        await swalSuccess(
+          'Balances refreshed'
+        );
+
+      }
+    );
+
+
+  /* =========================================
+     LOGOUT
+  ========================================= */
+
+  document
+    .getElementById(
+      'logoutButton'
+    )
+    .addEventListener(
+      'click',
+      async () => {
+
+        const result =
+          await Swal.fire({
+
+            icon:'question',
+
+            title:'Sign out?',
+
+            text:
+              'You will be signed out of the Wakala admin console.',
+
+            showCancelButton:true,
+
+            confirmButtonText:
+              'Sign out',
+
+            cancelButtonText:
+              'Cancel',
+
+            confirmButtonColor:
+              '#0D1420'
+
+          });
+
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+
+        await supabase.auth.signOut();
+
+
+        window.location.href =
+          'login.html';
+
+      }
+    );
+
+
+  /* =========================================
+     FORMAT DATE
+  ========================================= */
+
+  function formatDate(
+    value
+  ) {
+
+    if (!value) {
+      return '—';
+    }
+
+
+    try {
+
+      return new Intl.DateTimeFormat(
+        'en-GB',
+        {
+          dateStyle:'medium',
+          timeStyle:'short'
+        }
+      ).format(
+        new Date(value)
+      );
+
+    }
+    catch {
+
+      return value;
+
+    }
+
+  }
+
+
+  /* =========================================
+     HTML ESCAPE
+  ========================================= */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ''
+    )
+      .replace(
+        /&/g,
+        '&amp;'
+      )
+      .replace(
+        /</g,
+        '&lt;'
+      )
+      .replace(
+        />/g,
+        '&gt;'
+      )
+      .replace(
+        /"/g,
+        '&quot;'
+      )
+      .replace(
+        /'/g,
+        '&#039;'
+      );
+
+  }
+
+
+  /* =========================================
+     START
+  ========================================= */
+
+  initialiseAdmin();
 
 </script>
 
