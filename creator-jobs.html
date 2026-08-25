@@ -1257,28 +1257,471 @@
 </div>
 
 
-<script>
-  const form = document.getElementById('creatorJobsForm');
-  const status = document.getElementById('formStatus');
-  const submitButton = document.getElementById('submitButton');
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  form.addEventListener('submit', async function(event) {
+import {
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+} from './supabase-config.js';
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const form = document.getElementById('creatorJobsForm');
+const status = document.getElementById('formStatus');
+
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const linkInput = document.getElementById('link');
+const formatInput = document.getElementById('format');
+
+let currentUser = null;
+let campaigns = [];
+let selectedCampaign = null;
+
+
+/* =========================================================
+   AUTHENTICATION
+   ========================================================= */
+
+async function initialise() {
+
+  const {
+    data: {
+      session
+    },
+    error
+  } = await supabase.auth.getSession();
+
+  if (error || !session) {
+    status.className = 'status';
+    status.textContent =
+      'Please log in to apply for a creator campaign.';
+
+    form.querySelector('button').disabled = true;
+
+    return;
+  }
+
+  currentUser = session.user;
+
+  emailInput.value = currentUser.email || '';
+
+  /*
+   * Load profile name if available.
+   */
+
+  const {
+    data: profile
+  } = await supabase
+    .from('profiles')
+    .select('full_name')
+    .eq('id', currentUser.id)
+    .maybeSingle();
+
+  if (profile?.full_name) {
+    nameInput.value = profile.full_name;
+  }
+
+  await loadCampaigns();
+}
+
+
+/* =========================================================
+   LOAD OPEN CAMPAIGNS
+   ========================================================= */
+
+async function loadCampaigns() {
+
+  status.textContent = 'Loading open creator campaigns...';
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from('creator_campaigns')
+    .select(`
+      id,
+      title,
+      description,
+      platform,
+      content_type,
+      reward_per_1000_impressions,
+      max_reward,
+      requirements,
+      status
+    `)
+    .eq('status', 'open')
+    .order('created_at', {
+      ascending: false
+    });
+
+  if (error) {
+
+    console.error(
+      'Creator campaigns error:',
+      error
+    );
+
+    status.className = 'status error';
+
+    status.textContent =
+      'Unable to load creator campaigns. Please try again.';
+
+    return;
+  }
+
+  campaigns = data || [];
+
+  if (!campaigns.length) {
+
+    status.className = 'status';
+
+    status.textContent =
+      'There are currently no open creator campaigns.';
+
+    return;
+  }
+
+  /*
+   * Automatically select first campaign.
+   */
+
+  selectedCampaign = campaigns[0];
+
+  renderCampaigns();
+
+  status.textContent = '';
+}
+
+
+/* =========================================================
+   RENDER CAMPAIGNS
+   ========================================================= */
+
+function renderCampaigns() {
+
+  /*
+   * Find/create campaign selector.
+   */
+
+  let selector =
+    document.getElementById('campaignSelector');
+
+  if (!selector) {
+
+    selector = document.createElement('div');
+
+    selector.id = 'campaignSelector';
+
+    selector.style.cssText = `
+      grid-column:1/-1;
+      margin-bottom:8px;
+    `;
+
+    form.insertBefore(
+      selector,
+      form.firstElementChild
+    );
+  }
+
+  selector.innerHTML = `
+    <div style="
+      margin-bottom:8px;
+      color:#7A756A;
+      font-size:11px;
+      font-weight:700;
+    ">
+      CAMPAIGN
+    </div>
+
+    <select
+      id="campaign"
+      style="
+        width:100%;
+        padding:12px;
+        border:1px solid rgba(13,20,32,.1);
+        border-radius:7px;
+        background:#fff;
+        color:#0D1420;
+        font:inherit;
+        font-size:12px;
+      "
+    >
+      ${campaigns.map(campaign => `
+        <option value="${campaign.id}">
+          ${escapeHtml(campaign.title)}
+        </option>
+      `).join('')}
+    </select>
+
+    <div
+      id="campaignDetails"
+      style="
+        margin-top:10px;
+        padding:12px;
+        border-radius:8px;
+        background:#EAF5EF;
+        color:#726A58;
+        font-size:11px;
+        line-height:1.6;
+      "
+    ></div>
+  `;
+
+  const campaignSelect =
+    document.getElementById('campaign');
+
+  campaignSelect.value =
+    selectedCampaign.id;
+
+  campaignSelect.addEventListener(
+    'change',
+    () => {
+
+      selectedCampaign =
+        campaigns.find(
+          campaign =>
+            campaign.id === campaignSelect.value
+        );
+
+      updateCampaignDetails();
+    }
+  );
+
+  updateCampaignDetails();
+}
+
+
+/* =========================================================
+   CAMPAIGN DETAILS
+   ========================================================= */
+
+function updateCampaignDetails() {
+
+  const details =
+    document.getElementById('campaignDetails');
+
+  if (!details || !selectedCampaign) {
+    return;
+  }
+
+  details.innerHTML = `
+    <strong style="color:#0D1420;">
+      ${escapeHtml(selectedCampaign.title)}
+    </strong>
+
+    <br>
+
+    ${escapeHtml(
+      selectedCampaign.description || ''
+    )}
+
+    <br><br>
+
+    <strong>
+      Reward:
+    </strong>
+
+    ${Number(
+      selectedCampaign.reward_per_1000_impressions || 0
+    ).toFixed(2)}
+    USDC per 1,000 verified impressions
+
+    ${
+      selectedCampaign.max_reward
+        ? `
+          · Maximum:
+          ${Number(selectedCampaign.max_reward).toFixed(2)}
+          USDC
+        `
+        : ''
+    }
+
+    <br>
+
+    <strong>
+      Requirements:
+    </strong>
+
+    ${escapeHtml(
+      selectedCampaign.requirements || ''
+    )}
+  `;
+}
+
+
+/* =========================================================
+   SUBMIT APPLICATION
+   ========================================================= */
+
+form.addEventListener(
+  'submit',
+  async event => {
 
     event.preventDefault();
 
-    status.style.color = '#229175';
-    status.textContent = 'Application received.';
+    status.className = 'status';
+    status.textContent = '';
+
+    if (!currentUser) {
+
+      status.className = 'status error';
+
+      status.textContent =
+        'Please log in before applying.';
+
+      return;
+    }
+
+    if (!selectedCampaign) {
+
+      status.className = 'status error';
+
+      status.textContent =
+        'Please select a creator campaign.';
+
+      return;
+    }
+
+    const submitButton =
+      form.querySelector('button[type="submit"]');
 
     submitButton.disabled = true;
-    submitButton.textContent = 'Application submitted';
+    submitButton.textContent =
+      'Submitting application...';
 
-    setTimeout(() => {
-      form.reset();
+
+    const platformUsername =
+      linkInput.value
+        .trim()
+        .replace(/^https?:\/\/(www\.)?/i, '')
+        .replace(/^x\.com\//i, '@')
+        .replace(/^twitter\.com\//i, '@');
+
+
+    const applicationNote = `
+Creator name: ${nameInput.value.trim()}
+Email: ${emailInput.value.trim()}
+Content format: ${formatInput.value}
+`.trim();
+
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from('creator_applications')
+      .insert({
+        campaign_id: selectedCampaign.id,
+        user_id: currentUser.id,
+        platform_username: platformUsername,
+        portfolio_url: linkInput.value.trim(),
+        application_note: applicationNote,
+        status: 'pending'
+      })
+      .select()
+      .single();
+
+
+    if (error) {
+
+      console.error(
+        'Creator application error:',
+        error
+      );
+
+      if (error.code === '23505') {
+
+        status.className = 'status error';
+
+        status.textContent =
+          'You have already applied for this campaign.';
+
+      } else {
+
+        status.className = 'status error';
+
+        status.textContent =
+          error.message ||
+          'Unable to submit your application.';
+      }
+
       submitButton.disabled = false;
-      submitButton.textContent = 'Submit creator application';
-    }, 2500);
+      submitButton.textContent =
+        'Submit creator application';
 
-  });
+      return;
+    }
+
+
+    console.log(
+      'Creator application created:',
+      data
+    );
+
+
+    status.className = 'status';
+
+    status.textContent =
+      '✓ Application submitted successfully. Your application is now waiting for admin review.';
+
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+      'Application submitted';
+
+    form.reset();
+
+    emailInput.value =
+      currentUser.email || '';
+
+    nameInput.value =
+      currentUser.user_metadata?.full_name || '';
+
+    /*
+     * Restore campaign selection.
+     */
+
+    if (selectedCampaign) {
+
+      const campaignSelect =
+        document.getElementById('campaign');
+
+      if (campaignSelect) {
+        campaignSelect.value =
+          selectedCampaign.id;
+      }
+    }
+  }
+);
+
+
+/* =========================================================
+   HTML ESCAPING
+   ========================================================= */
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+initialise();
+
 </script>
 
 </body>
