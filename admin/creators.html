@@ -1,462 +1,812 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Creator Management | Wakala Admin</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
-  rel="stylesheet"
->
-
-<style>
-
-:root {
-  --ink:#0D1420;
-  --paper:#F6F2E9;
-  --panel:#FFFDF8;
-  --gold:#E4A445;
-  --teal:#229175;
-  --muted:#7A756A;
-  --line:rgba(13,20,32,.10);
-  --soft:#EAF5EF;
-  --danger:#B42318;
-  --success:#168447;
-}
-
-* {
-  box-sizing:border-box;
-}
-
-body {
-  margin:0;
-  background:var(--paper);
-  color:var(--ink);
-  font-family:Inter,sans-serif;
-}
-
-button,
-input,
-select {
-  font:inherit;
-}
-
-.shell {
-  width:min(1250px,100%);
-  margin:auto;
-  padding:0 24px;
-}
-
-.nav {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:24px 0;
-  border-bottom:1px solid var(--line);
-}
-
-.brand {
-  color:var(--ink);
-  text-decoration:none;
-  font:600 25px Fraunces,serif;
-}
-
-.dot {
-  display:inline-block;
-  width:9px;
-  height:9px;
-  margin-right:9px;
-  border-radius:50%;
-  background:var(--gold);
-}
-
-.nav-right {
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.nav-right a {
-  padding:9px 13px;
-  border-radius:7px;
-  color:var(--teal);
-  text-decoration:none;
-  font-size:12px;
-  font-weight:700;
-}
-
-.nav-right a.dark {
-  background:var(--ink);
-  color:white;
-}
-
-.hero {
-  padding:50px 0 30px;
-}
-
-.kicker {
-  color:var(--teal);
-  font:700 10px 'IBM Plex Mono',monospace;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-.hero h1 {
-  margin:9px 0;
-  font:600 clamp(38px,6vw,62px)/1 Fraunces,serif;
-}
-
-.hero p {
-  max-width:650px;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.7;
-}
-
-.stats {
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-  margin-bottom:25px;
-}
-
-.stat {
-  padding:20px;
-  border:1px solid var(--line);
-  border-radius:11px;
-  background:var(--panel);
-}
-
-.stat span {
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:700;
-  text-transform:uppercase;
-}
-
-.stat strong {
-  display:block;
-  margin-top:8px;
-  font:600 27px Fraunces,serif;
-}
-
-.workspace {
-  border:1px solid var(--line);
-  border-radius:13px;
-  background:var(--panel);
-  overflow:hidden;
-}
-
-.tabs {
-  display:flex;
-  border-bottom:1px solid var(--line);
-  overflow:auto;
-}
-
-.tab {
-  padding:16px 20px;
-  border:0;
-  border-bottom:2px solid transparent;
-  background:none;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-  white-space:nowrap;
-}
-
-.tab.active {
-  color:var(--teal);
-  border-bottom-color:var(--teal);
-}
-
-.toolbar {
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  padding:18px;
-  border-bottom:1px solid var(--line);
-}
-
-.search {
-  flex:1;
-  max-width:420px;
-}
-
-.search input,
-.filter select {
-  width:100%;
-  padding:11px;
-  border:1px solid var(--line);
-  border-radius:7px;
-  background:white;
-  color:var(--ink);
-  font-size:12px;
-}
-
-.table-wrap {
-  overflow-x:auto;
-}
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px;
-}
-
-th {
-  padding:13px 18px;
-  background:#FAF8F1;
-  color:var(--muted);
-  text-align:left;
-  font:600 9px 'IBM Plex Mono',monospace;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-
-td {
-  padding:15px 18px;
-  border-top:1px solid var(--line);
-  font-size:12px;
-}
-
-.creator {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.avatar {
-  display:grid;
-  place-items:center;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  background:var(--soft);
-  color:var(--teal);
-  font-weight:700;
-  font-size:11px;
-}
-
-.creator-name {
-  font-weight:700;
-}
-
-.creator-email {
-  margin-top:3px;
-  color:var(--muted);
-  font-size:10px;
-}
-
-.badge {
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:5px;
-  font:600 9px 'IBM Plex Mono',monospace;
-  text-transform:uppercase;
-}
-
-.badge.pending {
-  background:#FFF3D9;
-  color:#946200;
-}
-
-.badge.approved,
-.badge.verified,
-.badge.paid {
-  background:#E7F5ED;
-  color:var(--success);
-}
-
-.badge.rejected,
-.badge.failed {
-  background:#FDECEC;
-  color:var(--danger);
-}
-
-.action {
-  padding:8px 11px;
-  border:0;
-  border-radius:6px;
-  background:var(--ink);
-  color:white;
-  font-size:10px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.action.green {
-  background:var(--teal);
-}
-
-.action.red {
-  background:var(--danger);
-}
-
-.empty {
-  padding:50px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.loading {
-  padding:40px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.modal-backdrop {
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:rgba(13,20,32,.55);
-  z-index:100;
-}
-
-.modal {
-  width:min(650px,100%);
-  max-height:90vh;
-  overflow:auto;
-  padding:26px;
-  border-radius:14px;
-  background:var(--panel);
-  box-shadow:0 30px 80px rgba(0,0,0,.25);
-}
-
-.modal-header {
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  align-items:start;
-  margin-bottom:22px;
-}
-
-.modal-header h2 {
-  margin:5px 0;
-  font:600 28px Fraunces,serif;
-}
-
-.close {
-  border:0;
-  background:none;
-  font-size:22px;
-  cursor:pointer;
-}
-
-.detail-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.detail {
-  padding:13px;
-  border-radius:8px;
-  background:#F7F5EE;
-}
-
-.detail span {
-  display:block;
-  margin-bottom:5px;
-  color:var(--muted);
-  font-size:9px;
-  font-weight:700;
-  text-transform:uppercase;
-}
-
-.detail strong {
-  font-size:12px;
-  word-break:break-word;
-}
-
-.modal-actions {
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.modal-actions button {
-  flex:1;
-  padding:12px;
-  border:0;
-  border-radius:7px;
-  color:white;
-  font-size:11px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.approve {
-  background:var(--teal);
-}
-
-.reject {
-  background:var(--danger);
-}
-
-footer {
-  padding:35px 0 50px;
-  color:var(--muted);
-  font-size:10px;
-  line-height:1.7;
-}
-
-footer strong {
-  color:var(--ink);
-}
-
-@media(max-width:900px) {
-
-  .stats {
-    grid-template-columns:repeat(3,1fr);
-  }
-
-}
-
-@media(max-width:600px) {
-
-  .shell {
-    padding:0 15px;
-  }
-
-  .stats {
-    grid-template-columns:1fr 1fr;
-  }
-
-  .toolbar {
-    display:block;
-  }
-
-  .search {
-    max-width:none;
-  }
-
-  .filter {
-    margin-top:10px;
-  }
-
-  .detail-grid {
-    grid-template-columns:1fr;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Creator Submissions | Wakala Admin</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    :root {
+      --ink:#0D1420;
+      --paper:#F6F2E9;
+      --panel:#FFFDF8;
+      --gold:#E4A445;
+      --teal:#229175;
+      --muted:#7A756A;
+      --line:rgba(13,20,32,.10);
+      --soft:#EAF5EF;
+      --success:#168447;
+      --danger:#B42318;
+      --warning:#A15C00;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    body {
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font:inherit;
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .shell {
+      width:min(1450px,100%);
+      margin:auto;
+      padding:0 25px;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .nav {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      padding:21px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand {
+      font:600 25px Fraunces,serif;
+      white-space:nowrap;
+    }
+
+    .dot {
+      display:inline-block;
+      width:9px;
+      height:9px;
+      margin-right:8px;
+      border-radius:50%;
+      background:var(--gold);
+      vertical-align:2px;
+    }
+
+    .nav-links {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav-link {
+      padding:8px 11px;
+      border-radius:7px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background:var(--soft);
+      color:var(--teal);
+    }
+
+    .admin-label {
+      padding:7px 10px;
+      border-radius:999px;
+      background:var(--soft);
+      color:var(--teal);
+      font:600 10px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .page-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:25px;
+      padding:45px 0 28px;
+    }
+
+    .eyebrow {
+      color:var(--teal);
+      font:700 10px 'IBM Plex Mono',monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    h1 {
+      margin:8px 0;
+      font:600 clamp(36px,5vw,54px)/1 Fraunces,serif;
+      letter-spacing:-.03em;
+    }
+
+    .page-description {
+      max-width:700px;
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    /* =========================
+       NOTICE
+    ========================= */
+
+    .notice {
+      display:none;
+      margin-bottom:15px;
+      padding:14px 16px;
+      border-radius:9px;
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .notice.show {
+      display:block;
+    }
+
+    .notice.error {
+      background:#FCEBE8;
+      color:var(--danger);
+    }
+
+    .notice.success {
+      background:#E7F6EC;
+      color:#13743E;
+    }
+
+    .notice.warning {
+      background:#FFF3D9;
+      color:#8A5700;
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .stat {
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--panel);
+    }
+
+    .stat-label {
+      color:var(--muted);
+      font:600 9px 'IBM Plex Mono',monospace;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .stat-value {
+      margin-top:8px;
+      font:600 29px Fraunces,serif;
+    }
+
+    .stat-value.green {
+      color:var(--teal);
+    }
+
+    .stat-value.gold {
+      color:var(--warning);
+    }
+
+    .stat-value.red {
+      color:var(--danger);
+    }
+
+    /* =========================
+       TOOLBAR
+    ========================= */
+
+    .toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:15px;
+      margin-bottom:14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--panel);
+    }
+
+    .toolbar-left {
+      display:flex;
+      flex:1;
+      gap:10px;
+    }
+
+    .search {
+      width:min(390px,100%);
+      padding:11px 13px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:12px;
+      outline:none;
+    }
+
+    .search:focus,
+    .filter:focus,
+    .verify-field input:focus,
+    .verify-field textarea:focus {
+      border-color:var(--teal);
+      box-shadow:0 0 0 3px rgba(34,145,117,.08);
+    }
+
+    .filter {
+      padding:11px 13px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:12px;
+      outline:none;
+    }
+
+    .refresh {
+      padding:11px 15px;
+      border:0;
+      border-radius:7px;
+      background:var(--ink);
+      color:#fff;
+      font-size:11px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .refresh:hover {
+      background:var(--teal);
+    }
+
+    .refresh:disabled {
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-card {
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:13px;
+      background:var(--panel);
+      box-shadow:0 12px 30px rgba(13,20,32,.05);
+    }
+
+    .table-wrap {
+      overflow-x:auto;
+    }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      min-width:1100px;
+    }
+
+    th {
+      padding:13px 15px;
+      background:#F9F7F0;
+      border-bottom:1px solid var(--line);
+      color:var(--muted);
+      font:600 9px 'IBM Plex Mono',monospace;
+      letter-spacing:.06em;
+      text-align:left;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    td {
+      padding:15px;
+      border-bottom:1px solid var(--line);
+      font-size:12px;
+      vertical-align:middle;
+    }
+
+    tr:last-child td {
+      border-bottom:0;
+    }
+
+    tr:hover td {
+      background:rgba(234,245,239,.3);
+    }
+
+    .creator-name {
+      font-weight:700;
+    }
+
+    .creator-id {
+      max-width:230px;
+      margin-top:4px;
+      color:var(--muted);
+      font:10px 'IBM Plex Mono',monospace;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .campaign-name {
+      font-weight:600;
+    }
+
+    .platform {
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .number {
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11px;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status-badge {
+      display:inline-flex;
+      align-items:center;
+      padding:5px 8px;
+      border-radius:999px;
+      font:600 9px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
+    }
+
+    .status-pending {
+      background:#FFF3D9;
+      color:#8A5700;
+    }
+
+    .status-verified {
+      background:#E7F6EC;
+      color:#13743E;
+    }
+
+    .status-rejected {
+      background:#FCEBE8;
+      color:#A52318;
+    }
+
+    .status-other {
+      background:#ECEEF1;
+      color:#4B5563;
+    }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .action {
+      padding:8px 11px;
+      border:0;
+      border-radius:6px;
+      background:var(--ink);
+      color:#fff;
+      font-size:10px;
+      font-weight:700;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .action:hover {
+      background:var(--teal);
+    }
+
+    .action.secondary {
+      background:#E9EEE9;
+      color:var(--ink);
+    }
+
+    .action.danger {
+      background:#FCEBE8;
+      color:var(--danger);
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    .loading {
+      padding:60px 25px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .loading-spinner {
+      width:26px;
+      height:26px;
+      margin:0 auto 12px;
+      border:3px solid rgba(34,145,117,.15);
+      border-top-color:var(--teal);
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform:rotate(360deg);
+      }
+    }
+
+    /* =========================
+       EMPTY
+    ========================= */
+
+    .empty {
+      padding:65px 20px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .empty strong {
+      display:block;
+      margin-bottom:7px;
+      color:var(--ink);
+      font:600 22px Fraunces,serif;
+    }
+
+    .empty small {
+      display:block;
+      margin-top:12px;
+      font-size:10px;
+      line-height:1.6;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-backdrop {
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(13,20,32,.65);
+      backdrop-filter:blur(5px);
+    }
+
+    .modal-backdrop.open {
+      display:flex;
+    }
+
+    .modal {
+      width:min(760px,100%);
+      max-height:90vh;
+      overflow:auto;
+      border-radius:15px;
+      background:var(--panel);
+      box-shadow:0 30px 80px rgba(0,0,0,.25);
+    }
+
+    .modal-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:15px;
+      padding:23px 25px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .modal-header h2 {
+      margin:6px 0 0;
+      font:600 27px Fraunces,serif;
+    }
+
+    .close {
+      width:32px;
+      height:32px;
+      border:0;
+      border-radius:50%;
+      background:#F0EEE7;
+      color:var(--ink);
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .modal-body {
+      padding:25px;
+    }
+
+    .detail-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .detail {
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#fff;
+    }
+
+    .detail.full {
+      grid-column:1/-1;
+    }
+
+    .detail-label {
+      margin-bottom:5px;
+      color:var(--muted);
+      font:600 9px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
+    }
+
+    .detail-value {
+      font-size:12px;
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .post-link {
+      display:inline-block;
+      margin-top:8px;
+      color:var(--teal);
+      font-size:11px;
+      font-weight:700;
+    }
+
+    /* =========================
+       VERIFICATION
+    ========================= */
+
+    .verify-box {
+      margin-top:22px;
+      padding:18px;
+      border-radius:10px;
+      background:var(--soft);
+    }
+
+    .verify-box h3 {
+      margin:0 0 15px;
+      font:600 20px Fraunces,serif;
+    }
+
+    .verify-form {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .verify-field label {
+      display:block;
+      margin-bottom:6px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .verify-field input,
+    .verify-field textarea {
+      width:100%;
+      padding:11px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:12px;
+      outline:none;
+    }
+
+    .verify-field textarea {
+      min-height:70px;
+      resize:vertical;
+    }
+
+    .verify-field.full {
+      grid-column:1/-1;
+    }
+
+    .calculation {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-top:12px;
+      padding:13px;
+      border-radius:8px;
+      background:#fff;
+    }
+
+    .calculation span {
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .calculation strong {
+      color:var(--teal);
+      font:600 20px 'IBM Plex Mono',monospace;
+    }
+
+    .modal-actions {
+      display:flex;
+      justify-content:flex-end;
+      gap:9px;
+      margin-top:18px;
+    }
+
+    .modal-button {
+      padding:11px 15px;
+      border:0;
+      border-radius:7px;
+      font-size:11px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .verify-button {
+      background:var(--teal);
+      color:#fff;
+    }
+
+    .reject-button {
+      background:#FCEBE8;
+      color:var(--danger);
+    }
+
+    .modal-button:disabled {
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    .modal-status {
+      min-height:18px;
+      margin-top:12px;
+      color:var(--teal);
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    .modal-status.error {
+      color:var(--danger);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      margin-top:35px;
+      padding:30px 0 45px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.7;
+    }
+
+    footer strong {
+      color:var(--ink);
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media(max-width:1000px) {
+
+      .nav {
+        align-items:flex-start;
+      }
+
+      .nav-links {
+        max-width:650px;
+      }
+
+      .stats {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .page-header {
+        display:block;
+      }
+
+    }
+
+    @media(max-width:650px) {
+
+      .shell {
+        padding:0 15px;
+      }
+
+      .nav {
+        display:block;
+      }
+
+      .nav-links {
+        margin-top:15px;
+        justify-content:flex-start;
+      }
+
+      .admin-label {
+        display:none;
+      }
+
+      .stats {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .toolbar {
+        display:block;
+      }
+
+      .toolbar-left {
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .search {
+        width:100%;
+      }
+
+      .filter {
+        width:100%;
+      }
+
+      .refresh {
+        width:100%;
+        margin-top:10px;
+      }
+
+      .detail-grid,
+      .verify-form {
+        grid-template-columns:1fr;
+      }
+
+      .detail.full,
+      .verify-field.full {
+        grid-column:auto;
+      }
+
+      .modal-actions {
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
 
 </head>
 
@@ -464,179 +814,486 @@ footer strong {
 
 <div class="shell">
 
-<nav class="nav">
+  <!-- =====================================================
+       NAVIGATION
+  ====================================================== -->
 
-  <a href="index.html" class="brand">
-    <span class="dot"></span>WAKALA
-  </a>
+  <nav class="nav">
 
-  <div class="nav-right">
-    <a href="admin.html">Admin dashboard</a>
-    <a href="dashboard.html" class="dark">User dashboard</a>
-  </div>
+    <a
+      class="brand"
+      href="admin.html"
+    >
+      <span class="dot"></span>WAKALA
+    </a>
 
-</nav>
+    <div class="nav-links">
 
-
-<main>
-
-<section class="hero">
-
-  <div class="kicker">
-    Admin · Creator Network
-  </div>
-
-  <h1>
-    Creator management.
-  </h1>
-
-  <p>
-    Review creator applications, inspect submitted campaigns,
-    verify performance and control creator payouts from one place.
-    Creator payouts are never automatically approved.
-  </p>
-
-</section>
-
-
-<section class="stats">
-
-  <div class="stat">
-    <span>Applications</span>
-    <strong id="statApplications">—</strong>
-  </div>
-
-  <div class="stat">
-    <span>Pending applications</span>
-    <strong id="statPending">—</strong>
-  </div>
-
-  <div class="stat">
-    <span>Submissions</span>
-    <strong id="statSubmissions">—</strong>
-  </div>
-
-  <div class="stat">
-    <span>Verification queue</span>
-    <strong id="statVerification">—</strong>
-  </div>
-
-  <div class="stat">
-    <span>Pending payouts</span>
-    <strong id="statPayouts">—</strong>
-  </div>
-
-</section>
-
-
-<section class="workspace">
-
-  <div class="tabs">
-
-    <button class="tab active" data-tab="applications">
-      Applications
-    </button>
-
-    <button class="tab" data-tab="submissions">
-      Submissions
-    </button>
-
-    <button class="tab" data-tab="payouts">
-      Payouts
-    </button>
-
-  </div>
-
-
-  <div class="toolbar">
-
-    <div class="search">
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Search creator, email or campaign..."
+      <a
+        class="nav-link"
+        href="admin.html"
       >
+        Overview
+      </a>
+
+      <a
+        class="nav-link"
+        href="admin-balances.html"
+      >
+        Balances
+      </a>
+
+      <a
+        class="nav-link"
+        href="admin-esim.html"
+      >
+        eSIM
+      </a>
+
+      <a
+        class="nav-link active"
+        href="admin-creators.html"
+      >
+        Creators
+      </a>
+
+      <a
+        class="nav-link"
+        href="admin-creator-applications.html"
+      >
+        Applications
+      </a>
+
+      <span class="admin-label">
+        Admin
+      </span>
+
     </div>
 
-    <div class="filter">
-
-      <select id="statusFilter">
-        <option value="">All statuses</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-        <option value="verified">Verified</option>
-        <option value="paid">Paid</option>
-      </select>
-
-    </div>
-
-  </div>
+  </nav>
 
 
-  <div id="content">
+  <main>
 
-    <div class="loading">
-      Loading creator data...
-    </div>
+    <!-- =================================================
+         HEADER
+    ================================================== -->
 
-  </div>
-
-</section>
-
-</main>
-
-
-<footer>
-
-<strong>WAKALA CREATOR MANAGEMENT</strong><br>
-
-Administrative creator verification and payout controls.
-Only authorised Wakala administrators should verify submissions
-or approve creator payouts.
-
-</footer>
-
-</div>
-
-
-<!-- MODAL -->
-
-<div class="modal-backdrop" id="modalBackdrop">
-
-  <div class="modal">
-
-    <div class="modal-header">
+    <section class="page-header">
 
       <div>
-        <div class="kicker" id="modalKicker">
-          Creator
+
+        <div class="eyebrow">
+          Creator management
         </div>
 
-        <h2 id="modalTitle">
-          —
-        </h2>
+        <h1>
+          Creator submissions.
+        </h1>
+
+        <p class="page-description">
+          Review every creator submission, verify reported performance,
+          calculate the eligible reward and manage the verification state.
+          Creators are intentionally allowed to submit multiple times.
+        </p>
+
       </div>
 
-      <button class="close" id="closeModal">
-        ×
+    </section>
+
+
+    <!-- =================================================
+         NOTICE
+    ================================================== -->
+
+    <div
+      id="pageNotice"
+      class="notice"
+    ></div>
+
+
+    <!-- =================================================
+         STATS
+    ================================================== -->
+
+    <section class="stats">
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Total submissions
+        </div>
+
+        <div
+          class="stat-value"
+          id="totalCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Pending verification
+        </div>
+
+        <div
+          class="stat-value gold"
+          id="pendingCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Verified
+        </div>
+
+        <div
+          class="stat-value green"
+          id="verifiedCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Verified rewards
+        </div>
+
+        <div
+          class="stat-value green"
+          id="rewardTotal"
+        >
+          0 USDC
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         TOOLBAR
+    ================================================== -->
+
+    <section class="toolbar">
+
+      <div class="toolbar-left">
+
+        <input
+          class="search"
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Search creator, user ID, campaign or platform..."
+        >
+
+        <select
+          class="filter"
+          id="statusFilter"
+        >
+
+          <option value="all">
+            All submissions
+          </option>
+
+          <option value="pending">
+            Pending verification
+          </option>
+
+          <option value="verified">
+            Verified
+          </option>
+
+          <option value="rejected">
+            Rejected
+          </option>
+
+        </select>
+
+      </div>
+
+      <button
+        class="refresh"
+        id="refreshButton"
+        type="button"
+      >
+        Refresh
       </button>
+
+    </section>
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <section class="table-card">
+
+      <div
+        id="loading"
+        class="loading"
+      >
+
+        <div class="loading-spinner"></div>
+
+        Loading creator submissions...
+
+      </div>
+
+
+      <div
+        id="empty"
+        class="empty"
+        style="display:none"
+      >
+
+        <strong>
+          No submissions found.
+        </strong>
+
+        There are currently no creator submissions matching this filter.
+
+        <small id="emptyHint"></small>
+
+      </div>
+
+
+      <div
+        class="table-wrap"
+        id="tableContainer"
+        style="display:none"
+      >
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Creator</th>
+
+              <th>Campaign</th>
+
+              <th>Platform</th>
+
+              <th>Reported impressions</th>
+
+              <th>Verified impressions</th>
+
+              <th>Reward</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="submissionRows"></tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       REVIEW MODAL
+  ====================================================== -->
+
+  <div
+    class="modal-backdrop"
+    id="reviewModal"
+  >
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <div>
+
+          <div class="eyebrow">
+            Submission review
+          </div>
+
+          <h2 id="modalTitle">
+            Review submission
+          </h2>
+
+        </div>
+
+        <button
+          class="close"
+          id="closeModal"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <div
+          class="detail-grid"
+          id="submissionDetails"
+        ></div>
+
+
+        <div
+          class="verify-box"
+          id="verificationBox"
+        >
+
+          <h3>
+            Verify performance
+          </h3>
+
+
+          <div class="verify-form">
+
+            <div class="verify-field">
+
+              <label for="verifiedImpressions">
+                Verified impressions
+              </label>
+
+              <input
+                id="verifiedImpressions"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Enter verified impressions"
+              >
+
+            </div>
+
+
+            <div class="verify-field">
+
+              <label for="campaignRate">
+                Campaign rate
+              </label>
+
+              <input
+                id="campaignRate"
+                type="text"
+                readonly
+              >
+
+            </div>
+
+
+            <div class="verify-field full">
+
+              <label for="verificationNote">
+                Verification note
+              </label>
+
+              <textarea
+                id="verificationNote"
+                placeholder="Optional internal verification note..."
+              ></textarea>
+
+            </div>
+
+          </div>
+
+
+          <div class="calculation">
+
+            <span>
+              Calculated creator reward
+            </span>
+
+            <strong id="calculatedReward">
+              0.00 USDC
+            </strong>
+
+          </div>
+
+
+          <div class="modal-actions">
+
+            <button
+              class="modal-button reject-button"
+              id="rejectButton"
+              type="button"
+            >
+              Reject submission
+            </button>
+
+            <button
+              class="modal-button verify-button"
+              id="verifyButton"
+              type="button"
+            >
+              Verify submission
+            </button>
+
+          </div>
+
+
+          <div
+            class="modal-status"
+            id="modalStatus"
+          ></div>
+
+        </div>
+
+      </div>
 
     </div>
 
-    <div id="modalContent"></div>
-
-    <div class="modal-actions" id="modalActions"></div>
-
   </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer>
+
+    <strong>
+      WAKALA ADMIN · CREATOR MANAGEMENT
+    </strong>
+
+    <br>
+
+    Each creator submission is an independent record.
+    Verification does not automatically authorize payment.
+
+  </footer>
 
 </div>
 
 
 <script type="module">
 
+/* =========================================================
+   SUPABASE
+========================================================= */
+
 import { createClient }
-from 'https://esm.sh/@supabase/supabase-js@2';
+  from 'https://esm.sh/@supabase/supabase-js@2';
 
 import {
   SUPABASE_URL,
@@ -644,20 +1301,31 @@ import {
 } from './supabase-config.js';
 
 
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+const supabase =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
-let applications = [];
-let submissions = [];
-let activeTab = 'applications';
-let selectedRecord = null;
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
+const loading =
+  document.getElementById('loading');
 
-const content =
-  document.getElementById('content');
+const empty =
+  document.getElementById('empty');
+
+const emptyHint =
+  document.getElementById('emptyHint');
+
+const tableContainer =
+  document.getElementById('tableContainer');
+
+const rows =
+  document.getElementById('submissionRows');
 
 const searchInput =
   document.getElementById('searchInput');
@@ -665,1480 +1333,2129 @@ const searchInput =
 const statusFilter =
   document.getElementById('statusFilter');
 
+const refreshButton =
+  document.getElementById('refreshButton');
 
-/* ==========================================================
-   AUTH
-========================================================== */
+const pageNotice =
+  document.getElementById('pageNotice');
 
-async function checkAdmin() {
+const reviewModal =
+  document.getElementById('reviewModal');
+
+const closeModalButton =
+  document.getElementById('closeModal');
+
+const submissionDetails =
+  document.getElementById('submissionDetails');
+
+const verifiedImpressions =
+  document.getElementById('verifiedImpressions');
+
+const campaignRate =
+  document.getElementById('campaignRate');
+
+const verificationNote =
+  document.getElementById('verificationNote');
+
+const calculatedReward =
+  document.getElementById('calculatedReward');
+
+const verifyButton =
+  document.getElementById('verifyButton');
+
+const rejectButton =
+  document.getElementById('rejectButton');
+
+const modalStatus =
+  document.getElementById('modalStatus');
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+
+let submissions = [];
+
+let campaigns = new Map();
+
+let profiles = new Map();
+
+let selectedSubmission = null;
+
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const LOAD_TIMEOUT_MS = 15000;
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+async function initialise() {
+
+  try {
+
+    setLoading(
+      true,
+      'Checking your admin session...'
+    );
+
+
+    const {
+      data: {
+        session
+      },
+      error
+    } =
+      await supabase.auth.getSession();
+
+
+    if (error) {
+
+      throw new Error(
+        `Authentication error: ${error.message}`
+      );
+
+    }
+
+
+    if (!session) {
+
+      showNotice(
+        'You must be logged in to access the Wakala admin panel.',
+        'error'
+      );
+
+      setTimeout(
+        () => {
+          window.location.href =
+            'admin-login.html';
+        },
+        1000
+      );
+
+      return;
+
+    }
+
+
+    currentUser =
+      session.user;
+
+
+    /*
+     * IMPORTANT:
+     *
+     * We deliberately do NOT query admin_users here.
+     *
+     * The previous implementation could get stuck before
+     * creator_submissions was ever queried if the admin_users
+     * RLS/function chain failed.
+     *
+     * The actual authorization must be enforced by Supabase RLS.
+     */
+
+
+    await loadSubmissions();
+
+
+  } catch (error) {
+
+    console.error(
+      'Initialisation failed:',
+      error
+    );
+
+
+    setLoading(
+      false
+    );
+
+
+    showNotice(
+      readableError(error),
+      'error'
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD SUBMISSIONS
+========================================================= */
+
+async function loadSubmissions() {
+
+  setLoading(
+    true,
+    'Loading creator submissions...'
+  );
+
+
+  tableContainer.style.display =
+    'none';
+
+  empty.style.display =
+    'none';
+
+
+  try {
+
+    const result =
+      await withTimeout(
+        supabase
+          .from('creator_submissions')
+          .select(`
+            id,
+            campaign_id,
+            application_id,
+            user_id,
+            platform,
+            post_url,
+            reported_impressions,
+            status,
+            submitted_at,
+            verified_at,
+            verified_by,
+            verified_impressions,
+            calculated_reward,
+            payout_status,
+            payout_approved_at,
+            payout_approved_by,
+            rejection_reason
+          `)
+          .order(
+            'submitted_at',
+            {
+              ascending:false
+            }
+          ),
+        LOAD_TIMEOUT_MS
+      );
+
+
+    if (result.error) {
+
+      throw result.error;
+
+    }
+
+
+    submissions =
+      result.data || [];
+
+
+    /*
+     * Load campaigns independently.
+     *
+     * This avoids relying on Supabase's nested relationship
+     * inference.
+     */
+
+    await loadCampaigns();
+
+
+    /*
+     * Profiles are optional.
+     *
+     * If RLS prevents admin profile access, the submission
+     * table still works and displays the user ID.
+     */
+
+    await loadProfiles();
+
+
+    updateStatistics();
+
+    renderSubmissions();
+
+
+    if (!submissions.length) {
+
+      emptyHint.textContent =
+        'If a creator has already submitted a job, check the creator_submissions table and its INSERT/SELECT RLS policies.';
+
+    } else {
+
+      emptyHint.textContent =
+        '';
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      'Creator submissions error:',
+      error
+    );
+
+
+    submissions = [];
+
+
+    loading.style.display =
+      'none';
+
+    tableContainer.style.display =
+      'none';
+
+    empty.style.display =
+      'block';
+
+    emptyHint.textContent =
+      readableError(error);
+
+
+    showNotice(
+      readableError(error),
+      'error'
+    );
+
+
+    return;
+
+  }
+
+
+  loading.style.display =
+    'none';
+
+}
+
+
+/* =========================================================
+   LOAD CAMPAIGNS
+========================================================= */
+
+async function loadCampaigns() {
+
+  campaigns =
+    new Map();
+
+
+  const campaignIds =
+    [
+      ...new Set(
+        submissions
+          .map(
+            item =>
+              item.campaign_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+
+  if (!campaignIds.length) {
+
+    return;
+
+  }
+
 
   const {
-    data: {
-      session
+    data,
+    error
+  } =
+    await supabase
+      .from('creator_campaigns')
+      .select(`
+        id,
+        title,
+        description,
+        platform,
+        content_type,
+        reward_per_1000_impressions,
+        max_reward,
+        requirements,
+        status
+      `)
+      .in(
+        'id',
+        campaignIds
+      );
+
+
+  if (error) {
+
+    console.warn(
+      'Campaign information could not be loaded:',
+      error
+    );
+
+    return;
+
+  }
+
+
+  (data || []).forEach(
+    campaign => {
+
+      campaigns.set(
+        campaign.id,
+        campaign
+      );
+
     }
-  } = await supabase.auth.getSession();
+  );
+
+}
 
 
-  if (!session) {
+/* =========================================================
+   LOAD PROFILES
+========================================================= */
 
-    window.location.href =
-      'login.html?redirect=admin-creator-jobs.html';
+async function loadProfiles() {
 
-    return false;
+  profiles =
+    new Map();
+
+
+  const userIds =
+    [
+      ...new Set(
+        submissions
+          .map(
+            item =>
+              item.user_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+
+  if (!userIds.length) {
+
+    return;
+
   }
 
 
   /*
-   * IMPORTANT:
+   * We intentionally only request columns that are likely
+   * to exist in the Wakala profiles table.
    *
-   * This frontend check is NOT the security boundary.
-   * Supabase RLS must also protect these tables.
-   *
-   * The actual admin role should be enforced server-side.
+   * DO NOT require email here.
    */
 
-
-  return true;
-}
-
-
-/* ==========================================================
-   LOAD DATA
-========================================================== */
-
-async function loadData() {
-
-  content.innerHTML =
-    '<div class="loading">Loading creator data...</div>';
-
-
-  const applicationsResult =
+  const {
+    data,
+    error
+  } =
     await supabase
-      .from('creator_applications')
+      .from('profiles')
       .select(`
         id,
-        campaign_id,
-        user_id,
-        full_name,
-        email,
-        platform,
-        platform_username,
-        portfolio_url,
-        followers,
-        application_note,
-        status,
-        reviewed_by,
-        reviewed_at,
-        created_at,
-        creator_campaigns (
-          title,
-          reward_per_1000_impressions,
-          max_reward
-        )
+        full_name
       `)
-      .order('created_at', {
-        ascending:false
-      });
+      .in(
+        'id',
+        userIds
+      );
 
 
-  if (applicationsResult.error) {
+  if (error) {
 
-    console.error(
-      applicationsResult.error
+    /*
+     * This is non-fatal.
+     *
+     * A profile RLS failure must NOT prevent submissions
+     * from appearing.
+     */
+
+    console.warn(
+      'Profile information unavailable:',
+      error
     );
-
-    content.innerHTML = `
-      <div class="empty">
-        Unable to load creator applications.
-        <br><br>
-        ${escapeHtml(
-          applicationsResult.error.message
-        )}
-      </div>
-    `;
 
     return;
-  }
-
-
-  applications =
-    applicationsResult.data || [];
-
-
-  const submissionsResult =
-    await supabase
-      .from('creator_submissions')
-      .select(`
-        id,
-        campaign_id,
-        application_id,
-        user_id,
-        platform,
-        post_url,
-        reported_impressions,
-        reported_likes,
-        reported_followers,
-        status,
-        submitted_at,
-        verified_at,
-        verified_by,
-        verification_notes,
-        rejection_reason,
-        payout_amount,
-        payout_status,
-        creator_campaigns (
-          title,
-          reward_per_1000_impressions,
-          max_reward
-        )
-      `)
-      .order('submitted_at', {
-        ascending:false
-      });
-
-
-  if (submissionsResult.error) {
-
-    console.error(
-      submissionsResult.error
-    );
-
-    content.innerHTML = `
-      <div class="empty">
-        Applications loaded, but submissions
-        could not be loaded.
-        <br><br>
-        ${escapeHtml(
-          submissionsResult.error.message
-        )}
-      </div>
-    `;
-
-  } else {
-
-    submissions =
-      submissionsResult.data || [];
 
   }
 
 
-  updateStats();
-  render();
+  (data || []).forEach(
+    profile => {
+
+      profiles.set(
+        profile.id,
+        profile
+      );
+
+    }
+  );
+
 }
 
 
-/* ==========================================================
-   STATS
-========================================================== */
+/* =========================================================
+   STATISTICS
+========================================================= */
 
-function updateStats() {
+function updateStatistics() {
 
-  document.getElementById(
-    'statApplications'
-  ).textContent =
-    applications.length;
-
-
-  document.getElementById(
-    'statPending'
-  ).textContent =
-    applications.filter(
-      x => x.status === 'pending'
-    ).length;
-
-
-  document.getElementById(
-    'statSubmissions'
-  ).textContent =
+  const total =
     submissions.length;
 
 
-  document.getElementById(
-    'statVerification'
-  ).textContent =
+  const pending =
     submissions.filter(
-      x => x.status === 'pending'
+      item =>
+        normalizeStatus(
+          item.status
+        ) === 'pending'
     ).length;
 
 
-  document.getElementById(
-    'statPayouts'
-  ).textContent =
+  const verified =
     submissions.filter(
-      x =>
-        x.payout_status === 'pending' &&
-        x.status === 'verified'
+      item =>
+        normalizeStatus(
+          item.status
+        ) === 'verified'
     ).length;
+
+
+  const rewards =
+    submissions
+      .filter(
+        item =>
+          normalizeStatus(
+            item.status
+          ) === 'verified'
+      )
+      .reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          Number(
+            item.calculated_reward || 0
+          ),
+        0
+      );
+
+
+  document.getElementById(
+    'totalCount'
+  ).textContent =
+    formatNumber(total);
+
+
+  document.getElementById(
+    'pendingCount'
+  ).textContent =
+    formatNumber(pending);
+
+
+  document.getElementById(
+    'verifiedCount'
+  ).textContent =
+    formatNumber(verified);
+
+
+  document.getElementById(
+    'rewardTotal'
+  ).textContent =
+    `${rewards.toFixed(2)} USDC`;
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    FILTER
-========================================================== */
+========================================================= */
 
-function getFilteredRecords(records) {
+function getFilteredSubmissions() {
 
-  const search =
+  const query =
     searchInput.value
       .trim()
       .toLowerCase();
 
 
-  const status =
+  const filter =
     statusFilter.value;
 
 
-  return records.filter(record => {
+  return submissions.filter(
+    item => {
 
-    const campaign =
-      record.creator_campaigns?.title || '';
-
-
-    const searchable = [
-      record.full_name,
-      record.email,
-      record.platform_username,
-      record.platform,
-      campaign,
-      record.post_url
-    ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase();
+      const campaign =
+        campaigns.get(
+          item.campaign_id
+        ) || {};
 
 
-    const matchesSearch =
-      !search ||
-      searchable.includes(search);
+      const profile =
+        profiles.get(
+          item.user_id
+        ) || {};
 
 
-    const matchesStatus =
-      !status ||
-      record.status === status ||
-      record.payout_status === status;
+      const searchable = [
+
+        profile.full_name,
+
+        item.user_id,
+
+        campaign.title,
+
+        campaign.platform,
+
+        item.platform,
+
+        item.post_url,
+
+        item.application_id
+
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
 
 
-    return matchesSearch &&
-           matchesStatus;
+      const matchesSearch =
+        !query ||
+        searchable.includes(query);
 
-  });
+
+      const matchesStatus =
+        filter === 'all' ||
+        normalizeStatus(
+          item.status
+        ) === filter;
+
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+
+    }
+  );
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    RENDER
-========================================================== */
-
-function render() {
-
-  if (activeTab === 'applications') {
-
-    renderApplications();
-
-  } else {
-
-    renderSubmissions();
-
-  }
-
-}
-
-
-/* ==========================================================
-   APPLICATIONS
-========================================================== */
-
-function renderApplications() {
-
-  const records =
-    getFilteredRecords(
-      applications
-    );
-
-
-  if (!records.length) {
-
-    content.innerHTML = `
-      <div class="empty">
-        No creator applications found.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  content.innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Creator</th>
-            <th>Campaign</th>
-            <th>Platform</th>
-            <th>Followers</th>
-            <th>Status</th>
-            <th>Submitted</th>
-            <th></th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${records.map(record => `
-
-            <tr>
-
-              <td>
-
-                <div class="creator">
-
-                  <div class="avatar">
-                    ${initials(record.full_name)}
-                  </div>
-
-                  <div>
-
-                    <div class="creator-name">
-                      ${escapeHtml(
-                        record.full_name ||
-                        'Unknown creator'
-                      )}
-                    </div>
-
-                    <div class="creator-email">
-                      ${escapeHtml(
-                        record.email || ''
-                      )}
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </td>
-
-
-              <td>
-                ${escapeHtml(
-                  record.creator_campaigns?.title ||
-                  'Unknown campaign'
-                )}
-              </td>
-
-
-              <td>
-                ${escapeHtml(
-                  record.platform ||
-                  '—'
-                )}
-              </td>
-
-
-              <td>
-                ${formatNumber(
-                  record.followers || 0
-                )}
-              </td>
-
-
-              <td>
-                ${badge(record.status)}
-              </td>
-
-
-              <td>
-                ${formatDate(
-                  record.created_at
-                )}
-              </td>
-
-
-              <td>
-
-                <button
-                  class="action"
-                  data-action="application"
-                  data-id="${record.id}"
-                >
-                  Review
-                </button>
-
-              </td>
-
-            </tr>
-
-          `).join('')}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ==========================================================
-   SUBMISSIONS
-========================================================== */
+========================================================= */
 
 function renderSubmissions() {
 
-  const records =
-    getFilteredRecords(
-      submissions
-    );
+  const filtered =
+    getFilteredSubmissions();
 
 
-  if (!records.length) {
+  rows.innerHTML =
+    '';
 
-    content.innerHTML = `
-      <div class="empty">
-        No creator submissions found.
-      </div>
-    `;
 
-    return;
-  }
+  if (!filtered.length) {
 
+    tableContainer.style.display =
+      'none';
 
-  content.innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Campaign</th>
-            <th>Platform</th>
-            <th>Impressions</th>
-            <th>Likes</th>
-            <th>Potential reward</th>
-            <th>Status</th>
-            <th>Payout</th>
-            <th></th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${records.map(record => `
-
-            <tr>
-
-              <td>
-                ${escapeHtml(
-                  record.creator_campaigns?.title ||
-                  'Unknown'
-                )}
-              </td>
-
-
-              <td>
-                ${escapeHtml(
-                  record.platform || '—'
-                )}
-              </td>
-
-
-              <td>
-                ${formatNumber(
-                  record.reported_impressions || 0
-                )}
-              </td>
-
-
-              <td>
-                ${formatNumber(
-                  record.reported_likes || 0
-                )}
-              </td>
-
-
-              <td>
-                ${calculateReward(record).toFixed(2)}
-                USDC
-              </td>
-
-
-              <td>
-                ${badge(record.status)}
-              </td>
-
-
-              <td>
-                ${badge(
-                  record.payout_status || 'pending'
-                )}
-              </td>
-
-
-              <td>
-
-                <button
-                  class="action"
-                  data-action="submission"
-                  data-id="${record.id}"
-                >
-                  Review
-                </button>
-
-              </td>
-
-            </tr>
-
-          `).join('')}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ==========================================================
-   REWARD CALCULATION
-========================================================== */
-
-function calculateReward(record) {
-
-  const rate =
-    Number(
-      record.creator_campaigns
-        ?.reward_per_1000_impressions || 0
-    );
-
-
-  const max =
-    Number(
-      record.creator_campaigns
-        ?.max_reward || 0
-    );
-
-
-  const impressions =
-    Number(
-      record.reported_impressions || 0
-    );
-
-
-  let reward =
-    (impressions / 1000) * rate;
-
-
-  if (max > 0) {
-
-    reward =
-      Math.min(
-        reward,
-        max
-      );
-
-  }
-
-
-  return Math.max(
-    0,
-    reward
-  );
-
-}
-
-
-/* ==========================================================
-   MODAL
-========================================================== */
-
-function openModal(type, id) {
-
-  selectedRecord =
-    type === 'application'
-      ? applications.find(x => x.id === id)
-      : submissions.find(x => x.id === id);
-
-
-  if (!selectedRecord) {
-    return;
-  }
-
-
-  document.getElementById(
-    'modalBackdrop'
-  ).style.display = 'flex';
-
-
-  const title =
-    type === 'application'
-      ? (
-        selectedRecord.full_name ||
-        'Creator application'
-      )
-      : (
-        selectedRecord.creator_campaigns?.title ||
-        'Creator submission'
-      );
-
-
-  document.getElementById(
-    'modalKicker'
-  ).textContent =
-    type === 'application'
-      ? 'Creator application'
-      : 'Creator submission';
-
-
-  document.getElementById(
-    'modalTitle'
-  ).textContent =
-    title;
-
-
-  if (type === 'application') {
-
-    showApplicationModal();
-
-  } else {
-
-    showSubmissionModal();
-
-  }
-
-}
-
-
-/* ==========================================================
-   APPLICATION MODAL
-========================================================== */
-
-function showApplicationModal() {
-
-  const r =
-    selectedRecord;
-
-
-  document.getElementById(
-    'modalContent'
-  ).innerHTML = `
-
-    <div class="detail-grid">
-
-      ${detail(
-        'Email',
-        r.email
-      )}
-
-      ${detail(
-        'Platform',
-        r.platform
-      )}
-
-      ${detail(
-        'Username',
-        r.platform_username
-      )}
-
-      ${detail(
-        'Followers',
-        formatNumber(r.followers || 0)
-      )}
-
-      ${detail(
-        'Campaign',
-        r.creator_campaigns?.title
-      )}
-
-      ${detail(
-        'Status',
-        r.status
-      )}
-
-      ${detail(
-        'Applied',
-        formatDate(r.created_at)
-      )}
-
-      ${detail(
-        'Portfolio',
-        r.portfolio_url
-      )}
-
-    </div>
-
-    <div style="
-      margin-top:15px;
-      padding:15px;
-      border-radius:8px;
-      background:#F7F5EE;
-      color:#7A756A;
-      font-size:11px;
-      line-height:1.7;
-    ">
-
-      <strong style="color:#0D1420;">
-        Creator idea
-      </strong>
-
-      <br><br>
-
-      ${escapeHtml(
-        r.application_note ||
-        'No application note provided.'
-      )}
-
-    </div>
-
-  `;
-
-
-  const actions =
-    document.getElementById(
-      'modalActions'
-    );
-
-
-  actions.innerHTML = '';
-
-
-  if (r.status === 'pending') {
-
-    actions.innerHTML = `
-
-      <button
-        class="approve"
-        data-modal-action="approve-application"
-      >
-        Approve creator
-      </button>
-
-      <button
-        class="reject"
-        data-modal-action="reject-application"
-      >
-        Reject application
-      </button>
-
-    `;
-
-  }
-
-}
-
-
-/* ==========================================================
-   SUBMISSION MODAL
-========================================================== */
-
-function showSubmissionModal() {
-
-  const r =
-    selectedRecord;
-
-
-  const reward =
-    calculateReward(r);
-
-
-  document.getElementById(
-    'modalContent'
-  ).innerHTML = `
-
-    <div class="detail-grid">
-
-      ${detail(
-        'Campaign',
-        r.creator_campaigns?.title
-      )}
-
-      ${detail(
-        'Platform',
-        r.platform
-      )}
-
-      ${detail(
-        'Impressions',
-        formatNumber(
-          r.reported_impressions || 0
-        )
-      )}
-
-      ${detail(
-        'Likes',
-        formatNumber(
-          r.reported_likes || 0
-        )
-      )}
-
-      ${detail(
-        'Potential reward',
-        reward.toFixed(2) + ' USDC'
-      )}
-
-      ${detail(
-        'Submission status',
-        r.status
-      )}
-
-      ${detail(
-        'Payout status',
-        r.payout_status || 'pending'
-      )}
-
-      ${detail(
-        'Submitted',
-        formatDate(r.submitted_at)
-      )}
-
-    </div>
-
-
-    <div style="
-      margin-top:15px;
-      padding:14px;
-      border-radius:8px;
-      background:#EAF5EF;
-      font-size:11px;
-      line-height:1.7;
-    ">
-
-      <strong>
-        Submitted post
-      </strong>
-
-      <br><br>
-
-      <a
-        href="${escapeAttribute(r.post_url)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="color:#229175;font-weight:700"
-      >
-        ${escapeHtml(r.post_url || 'No URL')}
-      </a>
-
-    </div>
-
-  `;
-
-
-  const actions =
-    document.getElementById(
-      'modalActions'
-    );
-
-
-  actions.innerHTML = '';
-
-
-  /*
-   * Only allow verification from pending state.
-   */
-
-  if (r.status === 'pending') {
-
-    actions.innerHTML += `
-
-      <button
-        class="approve"
-        data-modal-action="verify-submission"
-      >
-        Verify submission
-      </button>
-
-      <button
-        class="reject"
-        data-modal-action="reject-submission"
-      >
-        Reject submission
-      </button>
-
-    `;
-
-  }
-
-
-  /*
-   * Once verified, payout must still be
-   * explicitly approved.
-   */
-
-  if (
-    r.status === 'verified' &&
-    (r.payout_status || 'pending') === 'pending'
-  ) {
-
-    actions.innerHTML += `
-
-      <button
-        class="approve"
-        data-modal-action="approve-payout"
-      >
-        Approve ${reward.toFixed(2)} USDC payout
-      </button>
-
-    `;
-
-  }
-
-}
-
-
-/* ==========================================================
-   ACTIONS
-========================================================== */
-
-document.addEventListener(
-  'click',
-  async event => {
-
-    const target =
-      event.target.closest(
-        '[data-action]'
-      );
-
-
-    if (target) {
-
-      openModal(
-        target.dataset.action,
-        target.dataset.id
-      );
-
-      return;
-
-    }
-
-
-    const modalAction =
-      event.target.closest(
-        '[data-modal-action]'
-      );
-
-
-    if (!modalAction) {
-      return;
-    }
-
-
-    await performAction(
-      modalAction.dataset.modalAction
-    );
-
-  }
-);
-
-
-/* ==========================================================
-   ADMIN ACTIONS
-========================================================== */
-
-async function performAction(action) {
-
-  if (!selectedRecord) {
-    return;
-  }
-
-
-  const {
-    data: {
-      session
-    }
-  } = await supabase.auth.getSession();
-
-
-  if (!session) {
-
-    alert(
-      'Your session has expired. Please log in again.'
-    );
+    empty.style.display =
+      'block';
 
     return;
 
   }
 
 
-  const adminId =
-    session.user.id;
-
-
-  /*
-   * APPLICATION APPROVAL
-   */
-
-  if (
-    action ===
-    'approve-application'
-  ) {
-
-    const {
-      error
-    } = await supabase
-      .from('creator_applications')
-      .update({
-        status:'approved',
-        reviewed_by:adminId,
-        reviewed_at:new Date().toISOString()
-      })
-      .eq('id', selectedRecord.id);
-
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-
-    }
-
-
-    closeModal();
-
-    await loadData();
-
-    return;
-
-  }
-
-
-  /*
-   * APPLICATION REJECTION
-   */
-
-  if (
-    action ===
-    'reject-application'
-  ) {
-
-    const reason =
-      prompt(
-        'Reason for rejecting this application:'
-      );
-
-
-    if (reason === null) {
-      return;
-    }
-
-
-    const {
-      error
-    } = await supabase
-      .from('creator_applications')
-      .update({
-        status:'rejected',
-        reviewed_by:adminId,
-        reviewed_at:new Date().toISOString(),
-        application_note:
-          `${selectedRecord.application_note || ''}
-
-Admin rejection reason:
-${reason}`
-      })
-      .eq('id', selectedRecord.id);
-
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-
-    }
-
-
-    closeModal();
-
-    await loadData();
-
-    return;
-
-  }
-
-
-  /*
-   * VERIFY SUBMISSION
-   */
-
-  if (
-    action ===
-    'verify-submission'
-  ) {
-
-    const reward =
-      calculateReward(
-        selectedRecord
-      );
-
-
-    const {
-      error
-    } = await supabase
-      .from('creator_submissions')
-      .update({
-        status:'verified',
-        verified_at:
-          new Date().toISOString(),
-        verified_by:
-          adminId,
-        payout_amount:
-          reward,
-        payout_status:
-          'pending'
-      })
-      .eq(
-        'id',
-        selectedRecord.id
-      );
-
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-
-    }
-
-
-    closeModal();
-
-    await loadData();
-
-    return;
-
-  }
-
-
-  /*
-   * REJECT SUBMISSION
-   */
-
-  if (
-    action ===
-    'reject-submission'
-  ) {
-
-    const reason =
-      prompt(
-        'Reason for rejecting this submission:'
-      );
-
-
-    if (reason === null) {
-      return;
-    }
-
-
-    const {
-      error
-    } = await supabase
-      .from('creator_submissions')
-      .update({
-        status:'rejected',
-        rejection_reason:
-          reason,
-        verified_by:
-          adminId,
-        verified_at:
-          new Date().toISOString(),
-        payout_status:
-          'cancelled',
-        payout_amount:
-          0
-      })
-      .eq(
-        'id',
-        selectedRecord.id
-      );
-
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-
-    }
-
-
-    closeModal();
-
-    await loadData();
-
-    return;
-
-  }
-
-
-  /*
-   * APPROVE PAYOUT
-   *
-   * IMPORTANT:
-   *
-   * At this stage this only marks the payout
-   * approved. It does NOT directly move money.
-   *
-   * We will connect this to your wallet/ledger
-   * after the creator verification layer is secure.
-   */
-
-  if (
-    action ===
-    'approve-payout'
-  ) {
-
-    const reward =
-      calculateReward(
-        selectedRecord
-      );
-
-
-    const {
-      error
-    } = await supabase
-      .from('creator_submissions')
-      .update({
-        payout_amount:
-          reward,
-        payout_status:
-          'approved'
-      })
-      .eq(
-        'id',
-        selectedRecord.id
-      )
-      .eq(
-        'status',
-        'verified'
-      );
-
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-
-    }
-
-
-    closeModal();
-
-    await loadData();
-
-  }
-
-}
-
-
-/* ==========================================================
-   TABS
-========================================================== */
-
-document.querySelectorAll(
-  '.tab'
-).forEach(button => {
-
-  button.addEventListener(
-    'click',
-    () => {
-
-      document.querySelectorAll(
-        '.tab'
-      ).forEach(tab =>
-        tab.classList.remove(
-          'active'
-        )
-      );
-
-
-      button.classList.add(
-        'active'
-      );
-
-
-      activeTab =
-        button.dataset.tab;
-
-
-      statusFilter.value =
-        '';
-
-
-      render();
-
-    }
-  );
-
-});
-
-
-searchInput.addEventListener(
-  'input',
-  render
-);
-
-
-statusFilter.addEventListener(
-  'change',
-  render
-);
-
-
-/* ==========================================================
-   MODAL CLOSE
-========================================================== */
-
-function closeModal() {
-
-  document.getElementById(
-    'modalBackdrop'
-  ).style.display =
+  empty.style.display =
     'none';
 
-  selectedRecord =
-    null;
-
-}
+  tableContainer.style.display =
+    'block';
 
 
-document.getElementById(
-  'closeModal'
-).addEventListener(
-  'click',
-  closeModal
-);
+  filtered.forEach(
+    submission => {
+
+      const campaign =
+        campaigns.get(
+          submission.campaign_id
+        ) || {};
 
 
-document.getElementById(
-  'modalBackdrop'
-).addEventListener(
-  'click',
-  event => {
+      const profile =
+        profiles.get(
+          submission.user_id
+        ) || {};
 
-    if (
-      event.target.id ===
-      'modalBackdrop'
-    ) {
 
-      closeModal();
+      const creatorName =
+        profile.full_name ||
+        'Creator';
+
+
+      const creatorId =
+        submission.user_id ||
+        'Unknown user';
+
+
+      const row =
+        document.createElement('tr');
+
+
+      row.innerHTML = `
+
+        <td>
+
+          <div class="creator-name">
+
+            ${escapeHtml(
+              creatorName
+            )}
+
+          </div>
+
+          <div class="creator-id">
+
+            ${escapeHtml(
+              creatorId
+            )}
+
+          </div>
+
+        </td>
+
+
+        <td>
+
+          <div class="campaign-name">
+
+            ${escapeHtml(
+              campaign.title ||
+              'Unknown campaign'
+            )}
+
+          </div>
+
+          <div class="platform">
+
+            ${escapeHtml(
+              campaign.content_type ||
+              ''
+            )}
+
+          </div>
+
+        </td>
+
+
+        <td>
+
+          <div class="platform">
+
+            ${escapeHtml(
+              submission.platform ||
+              campaign.platform ||
+              'Unknown'
+            )}
+
+          </div>
+
+        </td>
+
+
+        <td>
+
+          <span class="number">
+
+            ${formatNumber(
+              submission.reported_impressions
+            )}
+
+          </span>
+
+        </td>
+
+
+        <td>
+
+          <span class="number">
+
+            ${
+              submission.verified_impressions !== null &&
+              submission.verified_impressions !== undefined
+                ? formatNumber(
+                    submission.verified_impressions
+                  )
+                : '—'
+            }
+
+          </span>
+
+        </td>
+
+
+        <td>
+
+          <span class="number">
+
+            ${
+              submission.calculated_reward !== null &&
+              submission.calculated_reward !== undefined
+                ? Number(
+                    submission.calculated_reward
+                  ).toFixed(2) + ' USDC'
+                : '—'
+            }
+
+          </span>
+
+        </td>
+
+
+        <td>
+
+          ${statusBadge(
+            submission.status
+          )}
+
+        </td>
+
+
+        <td>
+
+          <button
+            class="action"
+            data-review="${escapeHtml(
+              submission.id
+            )}"
+            type="button"
+          >
+
+            ${
+              normalizeStatus(
+                submission.status
+              ) === 'pending'
+                ? 'Review'
+                : 'View'
+            }
+
+          </button>
+
+        </td>
+
+      `;
+
+
+      rows.appendChild(row);
 
     }
-
-  }
-);
+  );
 
 
-/* ==========================================================
-   HELPERS
-========================================================== */
+  rows
+    .querySelectorAll(
+      '[data-review]'
+    )
+    .forEach(
+      button => {
 
-function detail(label, value) {
+        button.addEventListener(
+          'click',
+          () => {
 
-  return `
-    <div class="detail">
+            openReview(
+              button.dataset.review
+            );
 
-      <span>
-        ${escapeHtml(label)}
-      </span>
+          }
+        );
 
-      <strong>
-        ${escapeHtml(
-          value ?? '—'
-        )}
-      </strong>
-
-    </div>
-  `;
-
-}
-
-
-function badge(status) {
-
-  const value =
-    status ||
-    'pending';
-
-
-  return `
-    <span class="badge ${escapeAttribute(value)}">
-      ${escapeHtml(value)}
-    </span>
-  `;
-
-}
-
-
-function formatNumber(value) {
-
-  return Number(
-    value || 0
-  ).toLocaleString();
-
-}
-
-
-function formatDate(value) {
-
-  if (!value) {
-    return '—';
-  }
-
-
-  return new Date(value)
-    .toLocaleDateString(
-      undefined,
-      {
-        year:'numeric',
-        month:'short',
-        day:'numeric'
       }
     );
 
 }
 
 
-function initials(name) {
+/* =========================================================
+   STATUS BADGE
+========================================================= */
 
-  if (!name) {
-    return '?';
+function statusBadge(status) {
+
+  const value =
+    normalizeStatus(
+      status
+    );
+
+
+  let className =
+    'status-other';
+
+
+  if (
+    value === 'pending'
+  ) {
+
+    className =
+      'status-pending';
+
   }
 
 
-  return name
-    .split(' ')
-    .slice(0,2)
-    .map(
-      x => x.charAt(0)
-    )
-    .join('')
-    .toUpperCase();
+  if (
+    value === 'verified'
+  ) {
+
+    className =
+      'status-verified';
+
+  }
+
+
+  if (
+    value === 'rejected'
+  ) {
+
+    className =
+      'status-rejected';
+
+  }
+
+
+  return `
+
+    <span
+      class="status-badge ${className}"
+    >
+
+      ${escapeHtml(
+        status ||
+        'pending'
+      )}
+
+    </span>
+
+  `;
 
 }
 
 
-function escapeHtml(value) {
+/* =========================================================
+   OPEN REVIEW
+========================================================= */
+
+function openReview(id) {
+
+  selectedSubmission =
+    submissions.find(
+      item =>
+        String(
+          item.id
+        ) ===
+        String(id)
+    );
+
+
+  if (!selectedSubmission) {
+
+    showNotice(
+      'The selected submission could not be found.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const submission =
+    selectedSubmission;
+
+
+  const campaign =
+    campaigns.get(
+      submission.campaign_id
+    ) || {};
+
+
+  const profile =
+    profiles.get(
+      submission.user_id
+    ) || {};
+
+
+  document.getElementById(
+    'modalTitle'
+  ).textContent =
+    campaign.title ||
+    'Creator submission';
+
+
+  submissionDetails.innerHTML = `
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Creator
+      </div>
+
+      <div class="detail-value">
+
+        <strong>
+          ${escapeHtml(
+            profile.full_name ||
+            'Creator'
+          )}
+        </strong>
+
+        <br>
+
+        <span class="creator-id">
+
+          ${escapeHtml(
+            submission.user_id ||
+            'Unknown user'
+          )}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Platform
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHtml(
+          submission.platform ||
+          campaign.platform ||
+          'Unknown'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Campaign
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHtml(
+          campaign.title ||
+          'Unknown campaign'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Submission ID
+      </div>
+
+      <div class="detail-value">
+
+        <span class="number">
+
+          ${escapeHtml(
+            submission.id ||
+            ''
+          )}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Submitted
+      </div>
+
+      <div class="detail-value">
+
+        ${formatDate(
+          submission.submitted_at
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Reported impressions
+      </div>
+
+      <div class="detail-value">
+
+        <strong>
+
+          ${formatNumber(
+            submission.reported_impressions
+          )}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Current status
+      </div>
+
+      <div class="detail-value">
+
+        ${statusBadge(
+          submission.status
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        Payout status
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHtml(
+          submission.payout_status ||
+          'Not set'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail full">
+
+      <div class="detail-label">
+        Submitted post
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHtml(
+          submission.post_url ||
+          'No URL submitted'
+        )}
+
+        ${
+          submission.post_url
+            ? `
+
+              <br>
+
+              <a
+                class="post-link"
+                href="${safeUrl(
+                  submission.post_url
+                )}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+
+                Open submitted post →
+
+              </a>
+
+            `
+            : ''
+        }
+
+      </div>
+
+    </div>
+
+
+    <div class="detail full">
+
+      <div class="detail-label">
+        Campaign requirements
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHtml(
+          campaign.requirements ||
+          'No additional requirements.'
+        )}
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  const rate =
+    Number(
+      campaign.reward_per_1000_impressions || 0
+    );
+
+
+  campaignRate.value =
+    rate > 0
+      ? `${rate.toFixed(2)} USDC / 1,000`
+      : 'Campaign rate not configured';
+
+
+  verifiedImpressions.value =
+    submission.verified_impressions ??
+    '';
+
+
+  verificationNote.value =
+    '';
+
+
+  calculateReward();
+
+
+  const status =
+    normalizeStatus(
+      submission.status
+    );
+
+
+  const alreadyVerified =
+    status === 'verified';
+
+
+  const alreadyRejected =
+    status === 'rejected';
+
+
+  verifyButton.disabled =
+    alreadyVerified ||
+    alreadyRejected;
+
+
+  rejectButton.disabled =
+    alreadyVerified ||
+    alreadyRejected;
+
+
+  if (alreadyVerified) {
+
+    modalStatus.textContent =
+      `Verified on ${formatDate(
+        submission.verified_at
+      )}. Payout remains subject to separate admin approval.`;
+
+  } else if (alreadyRejected) {
+
+    modalStatus.className =
+      'modal-status error';
+
+    modalStatus.textContent =
+      submission.rejection_reason
+        ? `Rejected: ${submission.rejection_reason}`
+        : 'This submission has been rejected.';
+
+  } else {
+
+    modalStatus.className =
+      'modal-status';
+
+    modalStatus.textContent =
+      '';
+
+  }
+
+
+  reviewModal.classList.add(
+    'open'
+  );
+
+}
+
+
+/* =========================================================
+   CALCULATE REWARD
+========================================================= */
+
+function calculateReward() {
+
+  if (!selectedSubmission) {
+
+    return;
+
+  }
+
+
+  const campaign =
+    campaigns.get(
+      selectedSubmission.campaign_id
+    ) || {};
+
+
+  const impressions =
+    Number(
+      verifiedImpressions.value || 0
+    );
+
+
+  const rate =
+    Number(
+      campaign.reward_per_1000_impressions || 0
+    );
+
+
+  const maximum =
+    Number(
+      campaign.max_reward || 0
+    );
+
+
+  let reward =
+    (
+      impressions /
+      1000
+    ) *
+    rate;
+
+
+  if (
+    maximum > 0 &&
+    reward > maximum
+  ) {
+
+    reward =
+      maximum;
+
+  }
+
+
+  calculatedReward.textContent =
+    `${reward.toFixed(2)} USDC`;
+
+}
+
+
+/* =========================================================
+   VERIFY
+========================================================= */
+
+async function verifySubmission() {
+
+  if (!selectedSubmission) {
+
+    return;
+
+  }
+
+
+  const impressions =
+    Number(
+      verifiedImpressions.value
+    );
+
+
+  if (
+    !Number.isFinite(
+      impressions
+    ) ||
+    impressions < 0
+  ) {
+
+    setModalError(
+      'Enter a valid verified impression count.'
+    );
+
+    return;
+
+  }
+
+
+  const campaign =
+    campaigns.get(
+      selectedSubmission.campaign_id
+    ) || {};
+
+
+  const rate =
+    Number(
+      campaign.reward_per_1000_impressions || 0
+    );
+
+
+  if (
+    rate <= 0
+  ) {
+
+    setModalError(
+      'This campaign does not have a valid reward rate configured.'
+    );
+
+    return;
+
+  }
+
+
+  const maximum =
+    Number(
+      campaign.max_reward || 0
+    );
+
+
+  let reward =
+    (
+      impressions /
+      1000
+    ) *
+    rate;
+
+
+  if (
+    maximum > 0 &&
+    reward > maximum
+  ) {
+
+    reward =
+      maximum;
+
+  }
+
+
+  setActionButtons(
+    true
+  );
+
+
+  modalStatus.className =
+    'modal-status';
+
+  modalStatus.textContent =
+    'Verifying submission...';
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await withTimeout(
+
+        supabase
+          .from('creator_submissions')
+          .update({
+
+            status:
+              'verified',
+
+            verified_impressions:
+              Math.floor(
+                impressions
+              ),
+
+            calculated_reward:
+              Number(
+                reward.toFixed(6)
+              ),
+
+            verified_at:
+              new Date().toISOString(),
+
+            verified_by:
+              currentUser.id,
+
+            payout_status:
+              'pending'
+
+          })
+          .eq(
+            'id',
+            selectedSubmission.id
+          )
+          .eq(
+            'status',
+            'pending'
+          )
+          .select()
+          .maybeSingle(),
+
+        LOAD_TIMEOUT_MS
+
+      );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    /*
+     * If zero rows were updated, the submission may already
+     * have changed status.
+     */
+
+    if (!data) {
+
+      throw new Error(
+        'No submission was updated. It may already have been processed or your admin UPDATE policy does not allow this action.'
+      );
+
+    }
+
+
+    modalStatus.className =
+      'modal-status';
+
+    modalStatus.textContent =
+      `Submission verified for ${reward.toFixed(
+        2
+      )} USDC. Payout remains pending separate approval.`;
+
+
+    await loadSubmissions();
+
+
+    const refreshed =
+      submissions.find(
+        item =>
+          String(
+            item.id
+          ) ===
+          String(
+            selectedSubmission.id
+          )
+      );
+
+
+    if (refreshed) {
+
+      selectedSubmission =
+        refreshed;
+
+    }
+
+
+    verifyButton.disabled =
+      true;
+
+    rejectButton.disabled =
+      true;
+
+
+  } catch (error) {
+
+    console.error(
+      'Verification error:',
+      error
+    );
+
+
+    setModalError(
+      readableError(
+        error
+      )
+    );
+
+
+    setActionButtons(
+      false
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   REJECT
+========================================================= */
+
+async function rejectSubmission() {
+
+  if (!selectedSubmission) {
+
+    return;
+
+  }
+
+
+  const reason =
+    window.prompt(
+      'Why is this submission being rejected?'
+    );
+
+
+  if (
+    reason === null
+  ) {
+
+    return;
+
+  }
+
+
+  const cleanReason =
+    reason.trim();
+
+
+  if (!cleanReason) {
+
+    setModalError(
+      'Please provide a rejection reason.'
+    );
+
+    return;
+
+  }
+
+
+  setActionButtons(
+    true
+  );
+
+
+  modalStatus.className =
+    'modal-status';
+
+  modalStatus.textContent =
+    'Rejecting submission...';
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await withTimeout(
+
+        supabase
+          .from('creator_submissions')
+          .update({
+
+            status:
+              'rejected',
+
+            rejection_reason:
+              cleanReason,
+
+            verified_by:
+              currentUser.id,
+
+            verified_at:
+              new Date().toISOString(),
+
+            payout_status:
+              'rejected'
+
+          })
+          .eq(
+            'id',
+            selectedSubmission.id
+          )
+          .eq(
+            'status',
+            'pending'
+          )
+          .select()
+          .maybeSingle(),
+
+        LOAD_TIMEOUT_MS
+
+      );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    if (!data) {
+
+      throw new Error(
+        'No submission was updated. It may already have been processed or your admin UPDATE policy does not allow this action.'
+      );
+
+    }
+
+
+    modalStatus.className =
+      'modal-status';
+
+    modalStatus.textContent =
+      'Submission rejected successfully.';
+
+
+    await loadSubmissions();
+
+
+    verifyButton.disabled =
+      true;
+
+    rejectButton.disabled =
+      true;
+
+
+  } catch (error) {
+
+    console.error(
+      'Rejection error:',
+      error
+    );
+
+
+    setModalError(
+      readableError(
+        error
+      )
+    );
+
+
+    setActionButtons(
+      false
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function closeReview() {
+
+  reviewModal.classList.remove(
+    'open'
+  );
+
+  selectedSubmission =
+    null;
+
+}
+
+
+closeModalButton.addEventListener(
+  'click',
+  closeReview
+);
+
+
+reviewModal.addEventListener(
+  'click',
+  event => {
+
+    if (
+      event.target ===
+      reviewModal
+    ) {
+
+      closeReview();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  'keydown',
+  event => {
+
+    if (
+      event.key ===
+      'Escape'
+    ) {
+
+      closeReview();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+verifiedImpressions.addEventListener(
+  'input',
+  calculateReward
+);
+
+
+verifyButton.addEventListener(
+  'click',
+  verifySubmission
+);
+
+
+rejectButton.addEventListener(
+  'click',
+  rejectSubmission
+);
+
+
+searchInput.addEventListener(
+  'input',
+  renderSubmissions
+);
+
+
+statusFilter.addEventListener(
+  'change',
+  renderSubmissions
+);
+
+
+refreshButton.addEventListener(
+  'click',
+  async () => {
+
+    refreshButton.disabled =
+      true;
+
+    refreshButton.textContent =
+      'Refreshing...';
+
+
+    try {
+
+      await loadSubmissions();
+
+    } finally {
+
+      refreshButton.disabled =
+        false;
+
+      refreshButton.textContent =
+        'Refresh';
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabase.auth.onAuthStateChange(
+  (
+    event,
+    session
+  ) => {
+
+    if (
+      event === 'SIGNED_OUT'
+    ) {
+
+      window.location.href =
+        'admin-login.html';
+
+    }
+
+
+    if (
+      event === 'SIGNED_IN' &&
+      session
+    ) {
+
+      currentUser =
+        session.user;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   UI HELPERS
+========================================================= */
+
+function setLoading(
+  visible,
+  message = 'Loading creator submissions...'
+) {
+
+  if (!visible) {
+
+    loading.style.display =
+      'none';
+
+    return;
+
+  }
+
+
+  loading.style.display =
+    'block';
+
+  loading.innerHTML = `
+
+    <div class="loading-spinner"></div>
+
+    ${escapeHtml(
+      message
+    )}
+
+  `;
+
+}
+
+
+function setActionButtons(
+  disabled
+) {
+
+  verifyButton.disabled =
+    disabled;
+
+  rejectButton.disabled =
+    disabled;
+
+}
+
+
+function setModalError(
+  message
+) {
+
+  modalStatus.className =
+    'modal-status error';
+
+  modalStatus.textContent =
+    message;
+
+}
+
+
+function showNotice(
+  message,
+  type = 'success'
+) {
+
+  pageNotice.textContent =
+    message;
+
+  pageNotice.className =
+    `notice show ${type}`;
+
+}
+
+
+function normalizeStatus(
+  status
+) {
+
+  return String(
+    status ||
+    'pending'
+  )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+========================================================= */
+
+function withTimeout(
+  promise,
+  milliseconds
+) {
+
+  return Promise.race([
+
+    promise,
+
+    new Promise(
+      (
+        _,
+        reject
+      ) => {
+
+        setTimeout(
+          () => {
+
+            reject(
+              new Error(
+                `Supabase request timed out after ${milliseconds / 1000} seconds. Check your RLS policies, database query and Supabase project status.`
+              )
+            );
+
+          },
+          milliseconds
+        );
+
+      }
+    )
+
+  ]);
+
+}
+
+
+/* =========================================================
+   ERROR HANDLING
+========================================================= */
+
+function readableError(
+  error
+) {
+
+  if (!error) {
+
+    return 'An unknown error occurred.';
+
+  }
+
+
+  if (
+    typeof error ===
+    'string'
+  ) {
+
+    return error;
+
+  }
+
+
+  if (
+    error.message
+  ) {
+
+    return error.message;
+
+  }
+
+
+  return 'Unable to load creator submissions. Check the browser console for details.';
+
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+function formatNumber(
+  value
+) {
+
+  const number =
+    Number(
+      value || 0
+    );
+
+
+  return new Intl.NumberFormat(
+    'en-US'
+  ).format(
+    Number.isFinite(
+      number
+    )
+      ? number
+      : 0
+  );
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(
+  value
+) {
+
+  if (!value) {
+
+    return '—';
+
+  }
+
+
+  const date =
+    new Date(
+      value
+    );
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return '—';
+
+  }
+
+
+  return date.toLocaleString(
+    'en-US',
+    {
+      dateStyle:'medium',
+      timeStyle:'short'
+    }
+  );
+
+}
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(
+  value
+) {
 
   return String(
     value ?? ''
@@ -2167,30 +3484,44 @@ function escapeHtml(value) {
 }
 
 
-function escapeAttribute(value) {
+/* =========================================================
+   SAFE URL
+========================================================= */
 
-  return escapeHtml(
-    value
-  );
+function safeUrl(
+  value
+) {
+
+  try {
+
+    const url =
+      new URL(
+        value
+      );
+
+
+    if (
+      url.protocol === 'http:' ||
+      url.protocol === 'https:'
+    ) {
+
+      return url.href;
+
+    }
+
+  } catch (_) {}
+
+
+  return '#';
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    START
-========================================================== */
+========================================================= */
 
-(async () => {
-
-  const allowed =
-    await checkAdmin();
-
-
-  if (allowed) {
-    await loadData();
-  }
-
-})();
+initialise();
 
 </script>
 
