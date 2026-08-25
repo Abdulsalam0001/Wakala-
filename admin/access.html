@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Login | Wakala</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    :root {
+      --ink:#0D1420;
+      --paper:#F6F2E9;
+      --panel:#FFFDF8;
+      --gold:#E4A445;
+      --teal:#229175;
+      --muted:#7A756A;
+      --line:rgba(13,20,32,.10);
+      --soft:#EAF5EF;
+      --success:#168447;
+      --danger:#B42318;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    html,
+    body {
+      min-height:100%;
+    }
+
+    body {
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+    }
+
+    button,
+    input {
+      font:inherit;
+    }
+
+    .page {
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .shell {
+      width:min(1180px,100%);
+      margin:auto;
+      padding:0 28px;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .nav {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:25px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand {
+      color:var(--ink);
+      text-decoration:none;
+      font:600 25px Fraunces,serif;
+    }
+
+    .dot {
+      display:inline-block;
+      width:9px;
+      height:9px;
+      margin-right:9px;
+      border-radius:50%;
+      background:var(--gold);
+      vertical-align:2px;
+    }
+
+    .nav-right {
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    .nav-right a {
+      color:var(--teal);
+      text-decoration:none;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .nav-button {
+      padding:10px 14px;
+      border-radius:7px;
+      background:var(--ink);
+      color:#fff !important;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    main {
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:70px 0;
+    }
+
+    .login-layout {
+      width:min(900px,100%);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:35px;
+      align-items:stretch;
+    }
+
+    /* =========================
+       INTRO
+    ========================= */
+
+    .intro {
+      padding:35px 10px;
+    }
+
+    .kicker {
+      color:var(--teal);
+      font:700 11px 'IBM Plex Mono',monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .intro h1 {
+      max-width:500px;
+      margin:14px 0 18px;
+      font:600 clamp(42px,6vw,65px)/1 Fraunces,serif;
+      letter-spacing:-.035em;
+    }
+
+    .intro p {
+      max-width:450px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
+    .security-note {
+      max-width:450px;
+      margin-top:25px;
+      padding:15px;
+      border-left:3px solid var(--gold);
+      background:rgba(228,164,69,.09);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.7;
+    }
+
+    .security-note strong {
+      color:var(--ink);
+    }
+
+    /* =========================
+       LOGIN CARD
+    ========================= */
+
+    .login-card {
+      padding:32px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:var(--panel);
+      box-shadow:0 20px 50px rgba(13,20,32,.08);
+    }
+
+    .login-card h2 {
+      margin:8px 0 8px;
+      font:600 30px Fraunces,serif;
+    }
+
+    .login-description {
+      margin:0 0 25px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+    }
+
+    .field {
+      margin-bottom:16px;
+    }
+
+    .field label {
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .field input {
+      width:100%;
+      padding:13px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:12px;
+      outline:none;
+    }
+
+    .field input:focus {
+      border-color:var(--teal);
+      box-shadow:0 0 0 3px rgba(34,145,117,.08);
+    }
+
+    .password-wrap {
+      position:relative;
+    }
+
+    .password-wrap input {
+      padding-right:70px;
+    }
+
+    .toggle-password {
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      color:var(--teal);
+      font-size:10px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .button {
+      width:100%;
+      padding:14px;
+      margin-top:5px;
+      border:0;
+      border-radius:7px;
+      background:var(--ink);
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .button:hover {
+      background:var(--teal);
+    }
+
+    .button:disabled {
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    .status {
+      min-height:20px;
+      margin:15px 0 0;
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .status.error {
+      color:var(--danger);
+    }
+
+    .status.success {
+      color:var(--success);
+    }
+
+    .admin-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      margin-bottom:5px;
+      padding:6px 9px;
+      border-radius:5px;
+      background:var(--soft);
+      color:var(--teal);
+      font:600 9px 'IBM Plex Mono',monospace;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .admin-badge span {
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--teal);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding:25px 0 35px;
+      border-top:1px solid var(--line);
+    }
+
+    .footer-bottom {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .footer-links {
+      display:flex;
+      gap:16px;
+    }
+
+    .footer-links a {
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover {
+      color:var(--teal);
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media(max-width:750px) {
+
+      .shell {
+        padding:0 17px;
+      }
+
+      .login-layout {
+        grid-template-columns:1fr;
+      }
+
+      .intro {
+        padding:25px 0 0;
+      }
+
+      .intro h1 {
+        font-size:47px;
+      }
+
+      main {
+        align-items:flex-start;
+        padding:45px 0;
+      }
+
+      .nav-right a:first-child {
+        display:none;
+      }
+
+    }
+
+    @media(max-width:500px) {
+
+      .nav {
+        padding:20px 0;
+      }
+
+      .brand {
+        font-size:22px;
+      }
+
+      .login-card {
+        padding:23px;
+      }
+
+      .intro {
+        padding-top:10px;
+      }
+
+      .intro h1 {
+        font-size:42px;
+      }
+
+      .footer-bottom {
+        display:block;
+      }
+
+      .footer-links {
+        margin-top:10px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="shell">
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav class="nav">
+
+      <a
+        class="brand"
+        href="index.html"
+      >
+        <span class="dot"></span>WAKALA
+      </a>
+
+      <div class="nav-right">
+
+        <a href="index.html">
+          Back to Wakala
+        </a>
+
+        <a
+          class="nav-button"
+          href="login.html"
+        >
+          User login
+        </a>
+
+      </div>
+
+    </nav>
+
+  </div>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main>
+
+    <div class="shell">
+
+      <div class="login-layout">
+
+        <!-- INTRO -->
+
+        <section class="intro">
+
+          <div class="kicker">
+            Wakala administration
+          </div>
+
+          <h1>
+            Welcome back, administrator.
+          </h1>
+
+          <p>
+            Sign in to manage Wakala users, balances, creator campaigns,
+            creator submissions, eSIM products and other administrative
+            operations.
+          </p>
+
+          <div class="security-note">
+
+            <strong>
+              Protected administration area.
+            </strong>
+
+            <br>
+
+            Access is restricted to accounts that have been explicitly
+            registered as active administrators in the Wakala system.
+
+          </div>
+
+        </section>
+
+
+        <!-- LOGIN -->
+
+        <section class="login-card">
+
+          <div class="admin-badge">
+            <span></span>
+            Admin portal
+          </div>
+
+          <h2>
+            Admin login
+          </h2>
+
+          <p class="login-description">
+            Use your Wakala administrator account to continue.
+          </p>
+
+
+          <form id="adminLoginForm">
+
+            <div class="field">
+
+              <label for="email">
+                Admin email
+              </label>
+
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="username"
+                required
+                placeholder="admin@example.com"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="password">
+                Password
+              </label>
+
+              <div class="password-wrap">
+
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  placeholder="Enter your password"
+                >
+
+                <button
+                  type="button"
+                  class="toggle-password"
+                  id="togglePassword"
+                >
+                  Show
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="button"
+              id="loginButton"
+            >
+              Sign in to admin
+            </button>
+
+
+            <p
+              class="status"
+              id="status"
+              role="status"
+              aria-live="polite"
+            ></p>
+
+          </form>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <div class="shell">
+
+    <footer>
+
+      <div class="footer-bottom">
+
+        <div>
+          © <span id="year"></span> Wakala. All rights reserved.
+        </div>
+
+        <div class="footer-links">
+
+          <a href="index.html">
+            Home
+          </a>
+
+          <a href="login.html">
+            User login
+          </a>
+
+        </div>
+
+      </div>
+
+    </footer>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     SUPABASE
+========================= -->
+
+<script type="module">
+
+  import {
+    createClient
+  } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  import {
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  } from './supabase-config.js';
+
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  const form =
+    document.getElementById('adminLoginForm');
+
+  const emailInput =
+    document.getElementById('email');
+
+  const passwordInput =
+    document.getElementById('password');
+
+  const loginButton =
+    document.getElementById('loginButton');
+
+  const status =
+    document.getElementById('status');
+
+  const togglePassword =
+    document.getElementById('togglePassword');
+
+
+  document.getElementById('year').textContent =
+    new Date().getFullYear();
+
+
+  /* =========================
+     PASSWORD VISIBILITY
+  ========================= */
+
+  togglePassword.addEventListener(
+    'click',
+    () => {
+
+      const isPassword =
+        passwordInput.type === 'password';
+
+      passwordInput.type =
+        isPassword
+          ? 'text'
+          : 'password';
+
+      togglePassword.textContent =
+        isPassword
+          ? 'Hide'
+          : 'Show';
+
+    }
+  );
+
+
+  /* =========================
+     STATUS
+  ========================= */
+
+  function showError(message) {
+
+    status.className =
+      'status error';
+
+    status.textContent =
+      message;
+
+  }
+
+
+  function showSuccess(message) {
+
+    status.className =
+      'status success';
+
+    status.textContent =
+      message;
+
+  }
+
+
+  /* =========================
+     CHECK ADMIN
+  ========================= */
+
+  async function checkAdmin(userId) {
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from('admin_users')
+      .select(`
+        id,
+        user_id,
+        role_id,
+        status
+      `)
+      .eq(
+        'user_id',
+        userId
+      )
+      .eq(
+        'status',
+        'active'
+      )
+      .maybeSingle();
+
+
+    if (error) {
+
+      console.error(
+        'Admin verification error:',
+        error
+      );
+
+      throw new Error(
+        'Unable to verify administrator access.'
+      );
+
+    }
+
+
+    return data;
+
+  }
+
+
+  /* =========================
+     CHECK EXISTING SESSION
+  ========================= */
+
+  async function checkExistingSession() {
+
+    const {
+      data,
+      error
+    } = await supabase.auth.getSession();
+
+
+    if (error) {
+
+      console.error(
+        'Session check error:',
+        error
+      );
+
+      return;
+
+    }
+
+
+    const user =
+      data?.session?.user;
+
+
+    if (!user) {
+      return;
+    }
+
+
+    try {
+
+      const admin =
+        await checkAdmin(user.id);
+
+
+      if (admin) {
+
+        window.location.replace(
+          'adminindex.html'
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  /* =========================
+     LOGIN
+  ========================= */
+
+  form.addEventListener(
+    'submit',
+    async event => {
+
+      event.preventDefault();
+
+
+      status.className =
+        'status';
+
+      status.textContent =
+        '';
+
+
+      const email =
+        emailInput.value.trim();
+
+      const password =
+        passwordInput.value;
+
+
+      if (!email || !password) {
+
+        showError(
+          'Enter your administrator email and password.'
+        );
+
+        return;
+
+      }
+
+
+      loginButton.disabled =
+        true;
+
+      loginButton.textContent =
+        'Signing in...';
+
+
+      try {
+
+        /*
+         * Authenticate through Supabase Auth.
+         */
+
+        const {
+          data,
+          error
+        } = await supabase.auth.signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+        if (error) {
+
+          console.error(
+            'Supabase login error:',
+            error
+          );
+
+          throw new Error(
+            'Invalid email or password.'
+          );
+
+        }
+
+
+        const user =
+          data?.user;
+
+
+        if (!user) {
+
+          throw new Error(
+            'Unable to establish your administrator session.'
+          );
+
+        }
+
+
+        /*
+         * Authentication succeeded.
+         *
+         * Now verify that the account
+         * is actually an active Wakala admin.
+         */
+
+        const admin =
+          await checkAdmin(user.id);
+
+
+        if (!admin) {
+
+          /*
+           * The person may have a normal
+           * Wakala account but is not an admin.
+           *
+           * Sign them back out immediately.
+           */
+
+          await supabase.auth.signOut();
+
+          throw new Error(
+            'This account does not have active administrator access.'
+          );
+
+        }
+
+
+        /*
+         * Everything is valid.
+         */
+
+        showSuccess(
+          'Administrator verified. Opening dashboard...'
+        );
+
+
+        loginButton.textContent =
+          'Access granted';
+
+
+        setTimeout(
+          () => {
+
+            window.location.replace(
+              'adminindex.html'
+            );
+
+          },
+          500
+        );
+
+      } catch (error) {
+
+        console.error(
+          'Admin login error:',
+          error
+        );
+
+        showError(
+          error.message ||
+          'Unable to sign in.'
+        );
+
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          'Sign in to admin';
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     START
+  ========================= */
+
+  checkExistingSession();
+
+</script>
+
+</body>
+</html>
