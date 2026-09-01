@@ -981,46 +981,6 @@ No eSIM orders yet.
 
 </section>
 
-<section class="card esim-section">
-
-<h2>Email Orders</h2>
-
-<p class="desc">
-View every delivery email captured across eSIM purchases while keeping the main eSIM fulfillment view unchanged.
-</p>
-
-<div id="emailOrdersLoader" class="loader-message">
-Loading email orders...
-</div>
-
-<div id="emailOrdersContainer" style="display:none; overflow-x:auto;">
-
-<table class="orders-table">
-
-<thead>
-
-<tr>
-<th>Email</th>
-<th>Country</th>
-<th>Plan</th>
-<th>Requested</th>
-</tr>
-
-</thead>
-
-<tbody id="emailOrdersBody">
-</tbody>
-
-</table>
-
-</div>
-
-<div id="emailOrdersEmpty" style="display:none;" class="empty">
-No email orders yet.
-</div>
-
-</section>
-
 </div>
 
 </main>
@@ -1103,14 +1063,6 @@ const dashboardUsersBody =
 document.getElementById('dashboardUsersBody');
 const dashboardEsimBody =
 document.getElementById('dashboardEsimBody');
-const emailOrdersBody =
-document.getElementById('emailOrdersBody');
-const emailOrdersLoader =
-document.getElementById('emailOrdersLoader');
-const emailOrdersContainer =
-document.getElementById('emailOrdersContainer');
-const emailOrdersEmpty =
-document.getElementById('emailOrdersEmpty');
 
 
 /* ============================================================
@@ -1749,46 +1701,6 @@ dashboardEsimBody.innerHTML = rows;
 
 }
 
-function renderEmailOrders(orders){
-
-if(!orders.length){
-emailOrdersBody.innerHTML = `
-<tr>
-<td colspan="4">No email orders yet.</td>
-</tr>
-`;
-emailOrdersLoader.style.display = 'none';
-emailOrdersEmpty.style.display = 'block';
-emailOrdersContainer.style.display = 'none';
-return;
-}
-
-const rows = orders
-.map(order => {
-const createdDate = order.created_at ? new Intl.DateTimeFormat(undefined, {
-month: 'short',
-day: 'numeric',
-year: 'numeric'
-}).format(new Date(order.created_at)) : '—';
-
-return `
-<tr>
-<td>${escapeHtml(order.delivery_email || order.email || '—')}</td>
-<td>${escapeHtml(order.country_name || order.country_code || '—')}</td>
-<td>${escapeHtml(order.plan_data || '—')}</td>
-<td>${escapeHtml(createdDate)}</td>
-</tr>
-`;
-})
-.join('');
-
-emailOrdersBody.innerHTML = rows;
-emailOrdersLoader.style.display = 'none';
-emailOrdersEmpty.style.display = 'none';
-emailOrdersContainer.style.display = 'block';
-
-}
-
 async function loadDashboardData(){
 
 try{
@@ -1803,13 +1715,7 @@ throw customerResult.error;
 
 const customers = customerResult.data || [];
 
-const allUsersResult = await supabase
-.from('profiles')
-.select('id', { count: 'exact', head: true });
-
-if(allUsersResult.error) throw allUsersResult.error;
-
-const totalUsers = allUsersResult.count || 0;
+const totalUsers = customers.length;
 const totalEsimResult = await supabase
 .from('esim_orders')
 .select('id', { count: 'exact', head: true });
@@ -1839,7 +1745,7 @@ const { data: esimOrders, error: esimOrdersError } = await supabase
 .from('esim_orders')
 .select('*, profiles(full_name, email)')
 .order('created_at', { ascending: false })
-.limit(100);
+.limit(50);
 
 if(esimOrdersError) throw esimOrdersError;
 
@@ -1853,7 +1759,6 @@ email: profile.email || order.delivery_email || ''
 });
 
 renderDashboardEsimOrders(mappedOrders);
-renderEmailOrders(mappedOrders);
 
 }catch(error){
 console.error('Dashboard load failed:', error);
@@ -1868,13 +1773,6 @@ dashboardEsimBody.innerHTML = `
 <td colspan="3">Unable to load eSIM requests.</td>
 </tr>
 `;
-if(emailOrdersBody){
-emailOrdersBody.innerHTML = `
-<tr>
-<td colspan="4">Unable to load email orders.</td>
-</tr>
-`;
-}
 }
 
 }
@@ -2017,11 +1915,6 @@ full_name: order.full_name || order.delivery_email || 'Customer'
 }));
 
 renderDashboardEsimOrders(dashboardOrders);
-renderEmailOrders(data.map(order => ({
-...order,
-email: order.delivery_email || '',
-plan_data: order.plan_data || '—'
-})));
 
 
 }catch(err){
