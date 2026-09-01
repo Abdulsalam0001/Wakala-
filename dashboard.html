@@ -1082,6 +1082,190 @@
     }
 
     /* ========================================
+       ESIM ORDERS
+    ======================================== */
+
+    .esim-orders-card {
+      display: grid;
+      gap: 20px;
+
+      padding: 28px;
+
+      border: 1px solid var(--line);
+      border-radius: 16px;
+
+      background: var(--card);
+
+      box-shadow:
+        0 2px 8px rgba(13,23,38,.035);
+    }
+
+    .esim-orders-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .esim-orders-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 10px 16px;
+
+      border: 1px solid var(--teal);
+      border-radius: 8px;
+
+      background: transparent;
+      color: var(--teal);
+
+      text-decoration: none;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      transition: all .2s ease;
+    }
+
+    .esim-orders-cta:hover {
+      background: rgba(22,132,102,.08);
+      transform: translateY(-1px);
+    }
+
+    .esim-orders-header h2 {
+      margin: 6px 0 4px;
+
+      font-family: Fraunces, serif;
+      font-size: 28px;
+      font-weight: 600;
+
+      letter-spacing: -.025em;
+    }
+
+    .esim-orders-header p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .esim-orders-content {
+      overflow-x: auto;
+    }
+
+    .esim-orders-loader {
+      padding: 40px 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 13px;
+    }
+
+    .esim-orders-table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      font-size: 12px;
+    }
+
+    .esim-orders-table thead {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .esim-orders-table th {
+      padding: 12px 16px;
+
+      text-align: left;
+
+      color: var(--muted);
+
+      font-weight: 600;
+
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .esim-orders-table td {
+      padding: 14px 16px;
+
+      border-top: 1px solid var(--line);
+
+      color: var(--text);
+    }
+
+    .esim-orders-table tr:hover {
+      background: rgba(22,132,102,.02);
+    }
+
+    .order-country {
+      font-weight: 600;
+    }
+
+    .order-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 4px 8px;
+
+      border-radius: 5px;
+
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .order-status.pending_admin_review {
+      background: rgba(183,121,31,.12);
+      color: #b7791f;
+    }
+
+    .order-status.approved {
+      background: rgba(22,132,102,.12);
+      color: #168466;
+    }
+
+    .order-status.provisioned {
+      background: rgba(22,132,102,.12);
+      color: #168466;
+    }
+
+    .order-status.failed {
+      background: rgba(180,35,24,.12);
+      color: #b42318;
+    }
+
+    .esim-orders-empty {
+      padding: 40px 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 13px;
+    }
+
+    .esim-orders-empty a {
+      color: var(--teal);
+
+      text-decoration: none;
+
+      font-weight: 600;
+    }
+
+    .esim-orders-empty a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========================================
        LOADING
     ======================================== */
 
@@ -2139,6 +2323,74 @@
 
         </section>
 
+        <!-- ESIM ORDERS -->
+
+        <section class="esim-orders-card">
+
+          <div class="esim-orders-header">
+
+            <div>
+
+              <div class="eyebrow" style="color:#8BD2B6">
+                Connectivity requests
+              </div>
+
+              <h2>Your eSIM orders</h2>
+
+              <p>
+                Track and manage your eSIM orders.
+              </p>
+
+            </div>
+
+            <a class="esim-orders-cta" href="esim-plans.html">
+              Order new eSIM +
+            </a>
+
+          </div>
+
+          <div class="esim-orders-content">
+
+            <div id="esimOrdersLoader" class="esim-orders-loader">
+              Loading your orders...
+            </div>
+
+            <div id="esimOrdersContainer" style="display:none;">
+
+              <table class="esim-orders-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Country</th>
+                    <th>Data plan</th>
+                    <th>Status</th>
+                    <th>Requested</th>
+                    <th>Email</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="esimOrdersBody">
+                </tbody>
+
+              </table>
+
+            </div>
+
+            <div id="esimOrdersEmpty" style="display:none;" class="esim-orders-empty">
+
+              <p>
+                No eSIM orders yet. 
+                <a href="esim-plans.html">Order your first eSIM →</a>
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
       </div>
 
     </main>
@@ -2680,6 +2932,155 @@
 
 
     /* ======================================
+       LOAD ESIM ORDERS
+    ====================================== */
+
+    async function loadESIMOrders() {
+
+      const loader =
+        document.getElementById("esimOrdersLoader");
+
+      const container =
+        document.getElementById("esimOrdersContainer");
+
+      const empty =
+        document.getElementById("esimOrdersEmpty");
+
+      const body =
+        document.getElementById("esimOrdersBody");
+
+
+      try {
+
+        const {
+          data: { user },
+          error: authError
+        } = await supabase.auth.getUser();
+
+
+        if (authError || !user) {
+          return;
+        }
+
+
+        const { data, error } =
+          await supabase
+            .from("esim_orders")
+            .select("*")
+            .eq("user_id", user.id)
+            .order("created_at", {
+              ascending: false
+            });
+
+
+        if (error) {
+
+          console.error(
+            "Failed to load eSIM orders:",
+            error
+          );
+
+          loader.innerHTML = `
+            <div class="esim-orders-error">
+              Unable to load orders. Please refresh.
+            </div>
+          `;
+
+          return;
+
+        }
+
+
+        if (!data || data.length === 0) {
+
+          loader.style.display = "none";
+          empty.style.display = "block";
+          container.style.display = "none";
+
+          return;
+
+        }
+
+
+        loader.style.display = "none";
+        empty.style.display = "none";
+        container.style.display = "block";
+
+
+        body.innerHTML = "";
+
+
+        data.forEach(order => {
+
+          const row =
+            document.createElement("tr");
+
+
+          const statusClass =
+            `order-status ${order.status}`;
+
+
+          const statusText =
+            order.status
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, l => l.toUpperCase());
+
+
+          const createdDate =
+            formatDate(order.created_at);
+
+
+          row.innerHTML = `
+
+            <td class="order-country">
+              ${order.country_name}
+            </td>
+
+            <td>
+              ${order.plan_data} · ${order.validity_days}d
+            </td>
+
+            <td>
+              <span class="${statusClass}">
+                ${statusText}
+              </span>
+            </td>
+
+            <td>
+              ${createdDate}
+            </td>
+
+            <td>
+              ${order.delivery_email}
+            </td>
+
+          `;
+
+
+          body.appendChild(row);
+
+        });
+
+
+      } catch (err) {
+
+        console.error(
+          "eSIM orders loading error:",
+          err
+        );
+
+        loader.innerHTML = `
+          <div class="esim-orders-error">
+            Error loading orders.
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    /* ======================================
        AUTHENTICATION
     ====================================== */
 
@@ -2740,6 +3141,11 @@
         /* Load actual wallet */
 
         await loadWallet();
+
+
+        /* Load eSIM orders */
+
+        await loadESIMOrders();
 
 
         /* Apply visibility */

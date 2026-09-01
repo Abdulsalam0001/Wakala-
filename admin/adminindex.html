@@ -454,6 +454,79 @@
     }
 
     /* =========================================
+       ADMIN TABLE & MESSAGES
+    ========================================= */
+
+    .admin-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:11px;
+    }
+
+    .admin-table thead {
+      background:#FAF8F1;
+    }
+
+    .admin-table th {
+      padding:11px 13px;
+      border-bottom:1px solid var(--line);
+      color:var(--muted);
+      font:600 9px 'IBM Plex Mono',monospace;
+      text-align:left;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    .admin-table td {
+      padding:13px;
+      border-bottom:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .admin-table tbody tr:hover {
+      background:rgba(13,20,32,.02);
+    }
+
+    .admin-table .order-status {
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:4px 7px;
+      border-radius:4px;
+      font:600 9px 'IBM Plex Mono',monospace;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .admin-table .order-status.pending_admin_review {
+      background:rgba(183,121,31,.15);
+      color:#b7791f;
+    }
+
+    .admin-table .order-status.approved {
+      background:rgba(22,132,102,.15);
+      color:#168466;
+    }
+
+    .admin-table .order-status.provisioned {
+      background:rgba(22,132,102,.15);
+      color:#168466;
+    }
+
+    .admin-table .order-status.failed {
+      background:rgba(180,35,24,.15);
+      color:#b42318;
+    }
+
+    .panel-message {
+      padding:30px 15px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    /* =========================================
        SEARCH
     ========================================= */
 
@@ -1394,45 +1467,49 @@
               <div>
 
                 <h2 class="panel-title">
-                  eSIM administration
+                  Customer eSIM Orders
                 </h2>
 
                 <p class="panel-subtitle">
-                  Open the eSIM customer page or connect the management
-                  tables when they are present in the database.
+                  All eSIM orders submitted by customers. Monitor status and manage fulfillment.
                 </p>
 
               </div>
 
             </div>
 
-            <div class="detail-grid">
+            <div id="esimOrdersAdminLoader" class="panel-message">
+              Loading eSIM orders...
+            </div>
 
-              <div class="detail-item">
+            <div id="esimOrdersAdminContainer" style="display:none; overflow-x:auto;">
 
-                <div class="detail-label">
-                  Customer plans
-                </div>
+              <table class="admin-table">
 
-                <div class="detail-value">
-                  Use esim-plans.html for the customer-facing package catalogue.
-                </div>
+                <thead>
 
-              </div>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Data plan</th>
+                    <th>Device</th>
+                    <th>Status</th>
+                    <th>Requested</th>
+                    <th>Action</th>
+                  </tr>
 
-              <div class="detail-item">
+                </thead>
 
-                <div class="detail-label">
-                  Backend
-                </div>
+                <tbody id="esimOrdersAdminBody">
+                </tbody>
 
-                <div class="detail-value">
-                  Plans, orders, ICCIDs, QR codes and usage should remain
-                  server-controlled and never expose provider secrets to the browser.
-                </div>
+              </table>
 
-              </div>
+            </div>
 
+            <div id="esimOrdersAdminEmpty" style="display:none;" class="panel-message">
+              No eSIM orders yet.
             </div>
 
           </div>
@@ -3268,17 +3345,6 @@
 
   async function loadEsim() {
 
-    /*
-     * We deliberately do not guess your eSIM table names.
-     *
-     * Your eSIM backend has been designed around plans,
-     * orders, ICCIDs and usage, but the exact table names
-     * must match the database.
-     *
-     * The cards remain functional placeholders until
-     * those exact table names are confirmed.
-     */
-
     const planCandidates = [
       'esim_plans',
       'plans'
@@ -3336,7 +3402,172 @@
         ? '—'
         : inventoryCount;
 
+
+    // Load eSIM orders table
+    await loadEsimOrdersTable();
+
   }
+
+
+  async function loadEsimOrdersTable() {
+
+    const loader =
+      document.getElementById(
+        'esimOrdersAdminLoader'
+      );
+
+    const container =
+      document.getElementById(
+        'esimOrdersAdminContainer'
+      );
+
+    const empty =
+      document.getElementById(
+        'esimOrdersAdminEmpty'
+      );
+
+    const body =
+      document.getElementById(
+        'esimOrdersAdminBody'
+      );
+
+
+    try {
+
+      const { data, error } =
+        await supabase
+          .from('esim_orders')
+          .select('*')
+          .order('created_at', {
+            ascending: false
+          })
+          .limit(50);
+
+
+      if (error) {
+
+        console.error(
+          'Failed to load eSIM orders:',
+          error
+        );
+
+        loader.textContent =
+          'Unable to load eSIM orders.';
+
+        return;
+
+      }
+
+
+      if (!data || data.length === 0) {
+
+        loader.style.display = 'none';
+        empty.style.display = 'block';
+        container.style.display = 'none';
+
+        return;
+
+      }
+
+
+      loader.style.display = 'none';
+      empty.style.display = 'none';
+      container.style.display = 'block';
+
+
+      body.innerHTML = '';
+
+
+      data.forEach(order => {
+
+        const row =
+          document.createElement('tr');
+
+
+        const statusClass =
+          `order-status ${order.status}`;
+
+
+        const statusText =
+          order.status
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+
+
+        const createdDate =
+          new Intl.DateTimeFormat(
+            undefined,
+            {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            }
+          ).format(new Date(order.created_at));
+
+
+        row.innerHTML = `
+
+          <td class="primary-text">
+            ${order.country_name}
+          </td>
+
+          <td>
+            ${order.delivery_email}
+          </td>
+
+          <td>
+            ${order.country_name}
+          </td>
+
+          <td>
+            ${order.plan_data} · ${order.validity_days}d
+          </td>
+
+          <td>
+            ${order.device}
+          </td>
+
+          <td>
+            <span class="${statusClass}">
+              ${statusText}
+            </span>
+          </td>
+
+          <td>
+            ${createdDate}
+          </td>
+
+          <td>
+            <button 
+              class="action-btn"
+              onclick="alert('Order ID: ${order.id}\\nEmail: ${order.delivery_email}\\n\\nStatus management coming soon...')"
+            >
+              View
+            </button>
+          </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+      });
+
+
+    } catch (err) {
+
+      console.error(
+        'eSIM orders error:',
+        err
+      );
+
+      loader.textContent =
+        'Error loading eSIM orders.';
+
+    }
+
+  }
+
 
 
   async function findCount(

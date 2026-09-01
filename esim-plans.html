@@ -1391,10 +1391,6 @@ document
     }
 
 
-    const orderId =
-      `WKL-ESIM-${Date.now().toString().slice(-8)}`;
-
-
     button.disabled=true;
 
     button.textContent=
@@ -1403,98 +1399,108 @@ document
     status.textContent=
       "Sending your eSIM request to Wakala operations...";
 
+    try {
+      // Get Supabase client from global scope (initialized below)
+      const supabase = window.supabaseClient;
+      
+      if(!supabase){
+        status.textContent=
+          "Error: Database connection not initialized. Please refresh and try again.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        return;
+      }
 
-    /*
-      Temporary frontend confirmation.
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if(authError || !user){
+        status.textContent=
+          "Error: Please sign in to submit an order.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        return;
+      }
 
-      Do NOT treat this localStorage record
-      as the actual order database.
-
-      Replace this block with the Supabase
-      Edge Function when the backend is connected.
-    */
-
-    const order={
-
-      id:orderId,
-
-      country:country.name,
-
-      country_code:country.code,
-
-      currency:country.currency,
-
-      plan:plan,
-
-      validity_days:selectedPlan.days,
-
-      price_usd:selectedPlan.usd,
-
-      customer_price:localPrice(
+      const localPrice2=localPrice(
         selectedPlan.usd,
         country.currency
-      ),
+      );
 
-      email,
+      // Insert order into database
+      const { data, error } = await supabase
+        .from("esim_orders")
+        .insert({
+          user_id: user.id,
+          country_code: country.code,
+          country_name: country.name,
+          currency: country.currency,
+          plan_data: plan,
+          validity_days: selectedPlan.days,
+          price_usd: selectedPlan.usd,
+          customer_price: localPrice2,
+          delivery_email: email,
+          device: device,
+          notes: notes || null,
+          status: "pending_admin_review",
+          provisioning_target: "within_1_hour"
+        })
+        .select();
 
-      device,
+      if(error){
+        console.error("Order insertion error:", error);
+        status.textContent=
+          "Error submitting order. Please try again.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        return;
+      }
 
-      notes,
+      if(!data || data.length===0){
+        status.textContent=
+          "Order submitted but confirmation failed. Please check your dashboard.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        return;
+      }
 
-      status:"pending_admin_review",
+      const orderId=`WKL-ESIM-${data[0].id}`;
 
-      provisioning_target:"within_1_hour",
+      document.getElementById(
+        "confirmationRef"
+      ).textContent=
+        `Order ${orderId} · ${country.name} · ${plan}`;
 
-      created_at:new Date().toISOString()
+      document
+        .getElementById("confirmation")
+        .classList.add("show");
 
-    };
+      status.textContent=
+        "Order received successfully.";
 
+      button.textContent=
+        "Order submitted";
 
-    localStorage.setItem(
-      "wakala-last-esim-order",
-      JSON.stringify(order)
-    );
+      // Reset form after a delay
+      setTimeout(()=>{
+        document.getElementById("esimForm").reset();
+        document.getElementById("orderPlan").innerHTML=
+          '<option value="">Select plan</option>';
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        status.textContent="";
+        document
+          .getElementById("confirmation")
+          .classList.remove("show");
+      },5000);
 
-
-    document.getElementById(
-      "confirmationRef"
-    ).textContent=
-      `Order ${orderId} · ${country.name} · ${plan}`;
-
-
-    document
-      .getElementById("confirmation")
-      .classList.add("show");
-
-
-    status.textContent=
-      "Order received successfully.";
-
-
-    button.textContent=
-      "Order submitted";
-
-
-    /*
-      Once the backend is ready:
-
-      const { data, error } =
-        await supabase.functions.invoke(
-          "esim-purchase",
-          {
-            body: {
-              country_code: country.code,
-              plan: plan,
-              delivery_email: email,
-              device,
-              notes
-            }
-          }
-        );
-
-      Never put provider API keys
-      inside this HTML file.
-    */
+    }catch(err){
+      console.error("Order submission error:", err);
+      status.textContent=
+        "Unexpected error. Please try again.";
+      button.disabled=false;
+      button.textContent="Submit eSIM order";
+    }
 
   });
 
@@ -1505,6 +1511,14 @@ renderCountries();
 
 selectCountry("NG");
 
+</script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+// Initialize Supabase client globally so it's available in the form handler
+window.supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 </script>
 
 </body>
