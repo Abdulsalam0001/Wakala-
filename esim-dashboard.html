@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>eSIM Orders | Wakala</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --navy: #0d1726;
+      --navy-2: #17263b;
+      --cream: #f7f6f2;
+      --white: #ffffff;
+      --card: #fffefa;
+
+      --teal: #168466;
+      --teal-soft: #e7f4ef;
+
+      --gold: #d69a3a;
+      --gold-soft: #f8edda;
+
+      --text: #101a2a;
+      --muted: #737b82;
+      --line: #e6e4de;
+
+      --shadow: 0 16px 45px rgba(13, 23, 38, .065);
+
+      --sidebar-width: 250px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--cream);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a, button, select {
+      font: inherit;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(22, 132, 102, .25);
+      outline-offset: 3px;
+    }
+
+    /* APP */
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 26px 16px;
+      background: var(--navy);
+      border-right: 1px solid var(--navy-2);
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      margin-bottom: 26px;
+    }
+
+    .sidebar-header a {
+      display: block;
+      color: var(--cream);
+      font: 600 18px Fraunces, serif;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 20px 0 12px;
+    }
+
+    .nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav a {
+      position: relative;
+      padding: 10px 12px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav a:hover {
+      background: var(--navy-2);
+      color: var(--cream);
+    }
+
+    .nav a.active {
+      color: var(--teal);
+      background: rgba(22, 132, 102, 0.1);
+    }
+
+    .nav-icon {
+      font-size: 16px;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid var(--navy-2);
+      padding-top: 16px;
+      margin-top: 20px;
+    }
+
+    .sidebar-footer a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      display: block;
+      padding: 8px 0;
+      transition: color 0.2s ease;
+    }
+
+    .sidebar-footer a:hover {
+      color: var(--cream);
+    }
+
+    /* MAIN */
+    .main {
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+    }
+
+    .header {
+      padding: 32px 40px;
+      border-bottom: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .header h1 {
+      margin: 0;
+      font: 600 32px Fraunces, serif;
+      color: var(--text);
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 40px;
+    }
+
+    /* ORDERS */
+    .orders-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .orders-table {
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .orders-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .orders-table thead {
+      background: var(--navy);
+      color: var(--cream);
+    }
+
+    .orders-table th {
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .orders-table td {
+      padding: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .orders-table tr:hover {
+      background: var(--teal-soft);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-pending {
+      background: rgba(214, 154, 58, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(214, 154, 58, 0.3);
+    }
+
+    .status-approved {
+      background: rgba(22, 132, 102, 0.15);
+      color: var(--teal);
+      border: 1px solid rgba(22, 132, 102, 0.3);
+    }
+
+    .status-provisioned {
+      background: rgba(22, 132, 102, 0.15);
+      color: var(--teal);
+      border: 1px solid rgba(22, 132, 102, 0.3);
+    }
+
+    .status-failed {
+      background: rgba(220, 53, 69, 0.15);
+      color: #c8302d;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 40px;
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px dashed var(--line);
+    }
+
+    .empty-state h2 {
+      margin: 0 0 12px;
+      font: 600 20px Fraunces, serif;
+      color: var(--text);
+    }
+
+    .empty-state p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font: 600 14px DM Sans, sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #13684e;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(22, 132, 102, 0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font: 600 14px DM Sans, sans-serif;
+      cursor: pointer;
+      padding: 6px 8px;
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 70%;
+        max-width: 250px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .header {
+        padding: 20px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .orders-table {
+        font-size: 12px;
+      }
+
+      .orders-table th,
+      .orders-table td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html">⬤ WAKALA</a>
+      <button class="menu-toggle" id="menuToggle">Menu</button>
+    </div>
+
+    <div class="sidebar-label">Dashboard</div>
+    <nav class="nav" id="mainNavigation">
+      <a href="dashboard.html">
+        <span class="nav-icon">◈</span>
+        Overview
+      </a>
+      <a href="#wallet">
+        <span class="nav-icon">◌</span>
+        Wallet
+      </a>
+      <a href="transfer.html">
+        <span class="nav-icon">↗</span>
+        Transfer
+      </a>
+      <a href="deposit.html">
+        <span class="nav-icon">＋</span>
+        Deposit
+      </a>
+      <a href="esim-plans.html">
+        <span class="nav-icon">▣</span>
+        Travel eSIM
+      </a>
+      <a href="esim-dashboard.html" class="active">
+        <span class="nav-icon">☑</span>
+        My eSIM Orders
+      </a>
+      <a href="staking.html">
+        <span class="nav-icon">◒</span>
+        Staking
+      </a>
+      <a href="#activity">
+        <span class="nav-icon">◷</span>
+        Activity
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#">Support</a>
+      <a href="#">Documentation</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>Your eSIM Orders</h1>
+      <p>Track, manage, and view details of all your eSIM orders</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ORDERS TABLE -->
+      <div id="ordersContainer" style="display:none;" class="orders-grid">
+        <div class="orders-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Country</th>
+                <th>Data Plan</th>
+                <th>Device</th>
+                <th>Status</th>
+                <th>Ordered</th>
+                <th>Delivery Email</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- LOADER -->
+      <div id="ordersLoader" class="loader">
+        <div class="spinner"></div>
+        <p>Loading your eSIM orders...</p>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div id="ordersEmpty" style="display:none;" class="empty-state">
+        <h2>No eSIM orders yet</h2>
+        <p>Start your journey with Wakala eSIM. Browse our plans and place your first order.</p>
+        <a href="esim-plans.html" class="btn">Explore eSIM Plans</a>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+// Mobile menu toggle
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const navigation = document.getElementById('mainNavigation');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  menuToggle.setAttribute('aria-expanded', sidebar.classList.contains('open'));
+  menuToggle.textContent = sidebar.classList.contains('open') ? 'Close' : 'Menu';
+});
+
+navigation.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', false);
+      menuToggle.textContent = 'Menu';
+    }
+  });
+});
+
+// Format date
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+// Get status badge class
+function getStatusClass(status) {
+  switch (status) {
+    case 'pending_admin_review':
+      return 'status-pending';
+    case 'approved':
+      return 'status-approved';
+    case 'provisioned':
+      return 'status-provisioned';
+    case 'failed':
+      return 'status-failed';
+    default:
+      return 'status-pending';
+  }
+}
+
+// Format status text
+function formatStatusText(status) {
+  switch (status) {
+    case 'pending_admin_review':
+      return 'Pending Review';
+    case 'approved':
+      return 'Approved';
+    case 'provisioned':
+      return 'Provisioned';
+    case 'failed':
+      return 'Failed';
+    default:
+      return status;
+  }
+}
+
+// Load eSIM orders
+async function loadESIMOrders() {
+  const loader = document.getElementById('ordersLoader');
+  const container = document.getElementById('ordersContainer');
+  const empty = document.getElementById('ordersEmpty');
+  const body = document.getElementById('ordersBody');
+
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const { data: orders, error } = await supabase
+      .from('esim_orders')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(100);
+
+    if (error) {
+      console.error('Error loading orders:', error);
+      loader.innerHTML = '<p style="color: #c8302d;">Failed to load orders. Please try again.</p>';
+      return;
+    }
+
+    loader.style.display = 'none';
+
+    if (!orders || orders.length === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    container.style.display = 'block';
+    body.innerHTML = '';
+
+    orders.forEach(order => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><strong>WKL-ESIM-${order.id}</strong></td>
+        <td>${order.country_name}</td>
+        <td>${order.plan_data}</td>
+        <td>${order.device || '—'}</td>
+        <td><span class="status-badge ${getStatusClass(order.status)}">${formatStatusText(order.status)}</span></td>
+        <td>${formatDate(order.created_at)}</td>
+        <td><small>${order.delivery_email}</small></td>
+      `;
+      body.appendChild(row);
+    });
+
+  } catch (err) {
+    console.error('Error:', err);
+    loader.innerHTML = '<p style="color: #c8302d;">An error occurred. Please try again.</p>';
+  }
+}
+
+// Load on page load
+loadESIMOrders();
+</script>
+
+</body>
+</html>
