@@ -1743,20 +1743,17 @@ approvedEsimRequestsEl.textContent = (approvedEsimResult.count || 0).toLocaleStr
 
 const { data: esimOrders, error: esimOrdersError } = await supabase
 .from('esim_orders')
-.select('*, profiles(full_name, email)')
+.select('*')
 .order('created_at', { ascending: false })
 .limit(50);
 
 if(esimOrdersError) throw esimOrdersError;
 
-const mappedOrders = (esimOrders || []).map(order => {
-const profile = Array.isArray(order.profiles) ? order.profiles[0] : order.profiles || {};
-return {
+const mappedOrders = (esimOrders || []).map(order => ({
 ...order,
-full_name: profile.full_name || order.delivery_email || 'Customer',
-email: profile.email || order.delivery_email || ''
-};
-});
+full_name: order.delivery_email || 'Customer',
+email: order.delivery_email || ''
+}));
 
 renderDashboardEsimOrders(mappedOrders);
 
