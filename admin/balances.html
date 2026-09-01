@@ -406,6 +406,83 @@ font-size:10px;
 line-height:1.6;
 }
 
+/* ============================================================
+   ESIM SECTION
+============================================================ */
+
+.esim-section{
+grid-column:1/-1;
+}
+
+.loader-message{
+padding:25px;
+text-align:center;
+font-size:12px;
+color:var(--muted);
+}
+
+.orders-table{
+width:100%;
+border-collapse:collapse;
+font-size:11px;
+}
+
+.orders-table thead{
+background:#f5f3ee;
+}
+
+.orders-table th{
+padding:11px 13px;
+border-bottom:1px solid var(--line);
+color:var(--muted);
+font:600 9px 'DM Mono',monospace;
+text-align:left;
+text-transform:uppercase;
+letter-spacing:.06em;
+white-space:nowrap;
+}
+
+.orders-table td{
+padding:13px;
+border-bottom:1px solid var(--line);
+color:var(--ink);
+}
+
+.orders-table tbody tr:hover{
+background:#fafaf8;
+}
+
+.order-status{
+display:inline-flex;
+align-items:center;
+gap:4px;
+padding:4px 7px;
+border-radius:4px;
+font:600 9px 'DM Mono',monospace;
+text-transform:uppercase;
+letter-spacing:.04em;
+}
+
+.order-status.pending_admin_review{
+background:rgba(217,154,53,.15);
+color:#d99a35;
+}
+
+.order-status.approved{
+background:rgba(31,139,112,.15);
+color:#1f8b70;
+}
+
+.order-status.provisioned{
+background:rgba(31,139,112,.15);
+color:#1f8b70;
+}
+
+.order-status.failed{
+background:rgba(179,77,69,.15);
+color:#b34d45;
+}
+
 @media(max-width:900px){
 
 .app{
@@ -662,6 +739,56 @@ Every adjustment changes the customer's real available wallet balance and create
 
 </div>
 
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+
+<section class="card esim-section">
+
+<h2>eSIM Orders</h2>
+
+<p class="desc">
+Monitor all customer eSIM orders and their fulfillment status.
+</p>
+
+<div id="esimOrdersLoader" class="loader-message">
+Loading eSIM orders...
+</div>
+
+<div id="esimOrdersContainer" style="display:none; overflow-x:auto;">
+
+<table class="orders-table">
+
+<thead>
+
+<tr>
+<th>Customer</th>
+<th>Email</th>
+<th>Country</th>
+<th>Plan</th>
+<th>Device</th>
+<th>Status</th>
+<th>Requested</th>
+</tr>
+
+</thead>
+
+<tbody id="esimOrdersBody">
+</tbody>
+
+</table>
+
+</div>
+
+<div id="esimOrdersEmpty" style="display:none;" class="empty">
+No eSIM orders yet.
 </div>
 
 </section>
@@ -1302,6 +1429,153 @@ return String(value)
 
 
 /* ============================================================
+   ESIM ORDERS
+============================================================ */
+
+async function loadEsimOrders(){
+
+const loader =
+document.getElementById('esimOrdersLoader');
+
+const container =
+document.getElementById('esimOrdersContainer');
+
+const empty =
+document.getElementById('esimOrdersEmpty');
+
+const body =
+document.getElementById('esimOrdersBody');
+
+
+try{
+
+const { data, error } =
+await supabase
+.from('esim_orders')
+.select('*')
+.order('created_at', {
+ascending: false
+})
+.limit(100);
+
+
+if(error){
+
+console.error(
+'Failed to load eSIM orders:',
+error
+);
+
+loader.textContent =
+'Unable to load eSIM orders.';
+
+return;
+
+}
+
+
+if(!data || data.length === 0){
+
+loader.style.display = 'none';
+empty.style.display = 'block';
+container.style.display = 'none';
+
+return;
+
+}
+
+
+loader.style.display = 'none';
+empty.style.display = 'none';
+container.style.display = 'block';
+
+
+body.innerHTML = '';
+
+
+data.forEach(order => {
+
+const row =
+document.createElement('tr');
+
+
+const statusClass =
+`order-status ${order.status}`;
+
+
+const statusText =
+order.status
+.replace(/_/g, ' ')
+.replace(/\b\w/g, l => l.toUpperCase());
+
+
+const createdDate =
+new Intl.DateTimeFormat(
+undefined,
+{
+day: 'numeric',
+month: 'short',
+year: 'numeric'
+}
+).format(new Date(order.created_at));
+
+
+row.innerHTML = `
+
+<td>
+${order.country_name}
+</td>
+
+<td>
+${order.delivery_email}
+</td>
+
+<td>
+${order.country_name}
+</td>
+
+<td>
+${order.plan_data} · ${order.validity_days}d
+</td>
+
+<td>
+${order.device}
+</td>
+
+<td>
+<span class="${statusClass}">
+${statusText}
+</span>
+</td>
+
+<td>
+${createdDate}
+</td>
+
+`;
+
+
+body.appendChild(row);
+
+});
+
+
+}catch(err){
+
+console.error(
+'eSIM orders error:',
+err
+);
+
+loader.textContent =
+'Error loading eSIM orders.';
+
+}
+
+}
+
+
+/* ============================================================
    LOGOUT
 ============================================================ */
 
@@ -1328,6 +1602,8 @@ await authenticate()
 ){
 
 await loadCustomers();
+
+await loadEsimOrders();
 
 }
 
