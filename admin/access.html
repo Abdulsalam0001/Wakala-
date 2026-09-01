@@ -275,18 +275,48 @@
     }
 
     .status {
-      min-height:20px;
+      min-height:auto;
       margin:15px 0 0;
-      font-size:11px;
+      font-size:13px;
       line-height:1.6;
+      padding:12px 14px;
+      border-radius:6px;
+      transition:all 0.3s ease;
+      opacity:0;
+      max-height:0;
+      overflow:hidden;
     }
 
     .status.error {
-      color:var(--danger);
+      color:#fff;
+      background-color:rgba(220, 53, 69, 0.95);
+      border:1px solid rgba(220, 53, 69, 1);
+      opacity:1;
+      max-height:200px;
+      animation:slideDown 0.3s ease;
     }
 
     .status.success {
-      color:var(--success);
+      color:#fff;
+      background-color:rgba(22, 132, 71, 0.95);
+      border:1px solid rgba(22, 132, 71, 1);
+      font-weight:500;
+      opacity:1;
+      max-height:200px;
+      animation:slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity:0;
+        max-height:0;
+        transform:translateY(-10px);
+      }
+      to {
+        opacity:1;
+        max-height:200px;
+        transform:translateY(0);
+      }
     }
 
     .admin-badge {
@@ -944,12 +974,15 @@
          */
 
         showSuccess(
-          'Administrator verified. Opening dashboard...'
+          '✓ Administrator verified. Redirecting to dashboard...'
         );
 
 
         loginButton.textContent =
           'Access granted';
+
+        loginButton.disabled =
+          true;
 
 
         setTimeout(
@@ -960,7 +993,7 @@
             );
 
           },
-          500
+          1500
         );
 
       } catch (error) {
