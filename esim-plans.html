@@ -1610,10 +1610,10 @@ document
       if(authError || !user){
         // Show auth modal instead of error
         showAuthModal(() => {
-          // Retry form submission after successful auth
+          // Automatically resubmit form after successful authentication
           setTimeout(() => {
             document.getElementById("esimForm").dispatchEvent(new Event("submit"));
-          }, 500);
+          }, 100);
         });
         button.disabled=false;
         button.textContent="Submit eSIM order";
@@ -1808,12 +1808,13 @@ loginForm.addEventListener('submit', async (e) => {
     
     if (data?.user) {
       statusEl.className = 'auth-modal-status success';
-      statusEl.textContent = '✓ Signed in successfully';
+      statusEl.textContent = '✓ Signed in successfully. Submitting your order...';
       
+      // Immediately trigger the callback to resubmit the form
       setTimeout(() => {
         hideAuthModal();
         if (authCallback) authCallback();
-      }, 800);
+      }, 300);
     }
   } catch (err) {
     statusEl.className = 'auth-modal-status error';
@@ -1856,13 +1857,13 @@ signupForm.addEventListener('submit', async (e) => {
     
     if (data?.user) {
       statusEl.className = 'auth-modal-status success';
-      statusEl.textContent = '✓ Account created! Check your email to confirm.';
+      statusEl.textContent = '✓ Account created! Submitting your order...';
       
-      // Auto sign in after signup
+      // Auto submit after signup
       setTimeout(() => {
         hideAuthModal();
         if (authCallback) authCallback();
-      }, 800);
+      }, 300);
     }
   } catch (err) {
     statusEl.className = 'auth-modal-status error';
