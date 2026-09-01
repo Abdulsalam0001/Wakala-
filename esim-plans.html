@@ -1608,10 +1608,16 @@ document
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
       if(authError || !user){
-        status.textContent=
-          "Error: Please sign in to submit an order.";
+        // Show auth modal instead of error
+        showAuthModal(() => {
+          // Retry form submission after successful auth
+          setTimeout(() => {
+            document.getElementById("esimForm").dispatchEvent(new Event("submit"));
+          }, 500);
+        });
         button.disabled=false;
         button.textContent="Submit eSIM order";
+        status.textContent="";
         return;
       }
 
@@ -1712,6 +1718,161 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
 
 // Initialize Supabase client globally so it's available in the form handler
 window.supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+// AUTH MODAL HANDLING
+const authModal = document.getElementById('authModal');
+const loginTab = document.getElementById('loginTab');
+const signupTab = document.getElementById('signupTab');
+const loginForm = document.getElementById('authLoginForm');
+const signupForm = document.getElementById('authSignupForm');
+const authModalClose = document.getElementById('authModalClose');
+
+let authCallback = null;
+
+function showAuthModal(callback) {
+  authCallback = callback;
+  authModal.classList.add('show');
+  loginForm.style.display = 'block';
+  signupForm.style.display = 'none';
+  loginTab.classList.add('active');
+  signupTab.classList.remove('active');
+  document.getElementById('authLoginEmail').focus();
+}
+
+function hideAuthModal() {
+  authModal.classList.remove('show');
+  authCallback = null;
+  // Clear forms
+  loginForm.reset();
+  signupForm.reset();
+  document.getElementById('authLoginStatus').textContent = '';
+  document.getElementById('authSignupStatus').textContent = '';
+}
+
+// Tab switching
+loginTab.addEventListener('click', () => {
+  loginForm.style.display = 'block';
+  signupForm.style.display = 'none';
+  loginTab.classList.add('active');
+  signupTab.classList.remove('active');
+  document.getElementById('authLoginStatus').textContent = '';
+  document.getElementById('authLoginEmail').focus();
+});
+
+signupTab.addEventListener('click', () => {
+  loginForm.style.display = 'none';
+  signupForm.style.display = 'block';
+  loginTab.classList.remove('active');
+  signupTab.classList.add('active');
+  document.getElementById('authSignupStatus').textContent = '';
+  document.getElementById('authSignupEmail').focus();
+});
+
+// Close modal
+authModalClose.addEventListener('click', hideAuthModal);
+authModal.addEventListener('click', (e) => {
+  if (e.target === authModal) hideAuthModal();
+});
+
+// Login form handler
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const email = document.getElementById('authLoginEmail').value.trim();
+  const password = document.getElementById('authLoginPassword').value;
+  const statusEl = document.getElementById('authLoginStatus');
+  const loginBtn = document.getElementById('authLoginBtn');
+  
+  if (!email || !password) {
+    statusEl.className = 'auth-modal-status error';
+    statusEl.textContent = 'Please enter email and password';
+    return;
+  }
+  
+  loginBtn.disabled = true;
+  statusEl.className = 'auth-modal-status';
+  statusEl.textContent = 'Signing in...';
+  
+  try {
+    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+    
+    if (error) {
+      statusEl.className = 'auth-modal-status error';
+      statusEl.textContent = error.message || 'Sign in failed. Please check your credentials.';
+      loginBtn.disabled = false;
+      return;
+    }
+    
+    if (data?.user) {
+      statusEl.className = 'auth-modal-status success';
+      statusEl.textContent = '✓ Signed in successfully';
+      
+      setTimeout(() => {
+        hideAuthModal();
+        if (authCallback) authCallback();
+      }, 800);
+    }
+  } catch (err) {
+    statusEl.className = 'auth-modal-status error';
+    statusEl.textContent = 'An error occurred. Please try again.';
+    loginBtn.disabled = false;
+  }
+});
+
+// Signup form handler
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const email = document.getElementById('authSignupEmail').value.trim();
+  const password = document.getElementById('authSignupPassword').value;
+  const statusEl = document.getElementById('authSignupStatus');
+  const signupBtn = document.getElementById('authSignupBtn');
+  
+  if (!email || !password || password.length < 8) {
+    statusEl.className = 'auth-modal-status error';
+    statusEl.textContent = 'Email and password (min 8 chars) required';
+    return;
+  }
+  
+  signupBtn.disabled = true;
+  statusEl.className = 'auth-modal-status';
+  statusEl.textContent = 'Creating account...';
+  
+  try {
+    const { data, error } = await window.supabaseClient.auth.signUp({
+      email,
+      password
+    });
+    
+    if (error) {
+      statusEl.className = 'auth-modal-status error';
+      statusEl.textContent = error.message || 'Account creation failed.';
+      signupBtn.disabled = false;
+      return;
+    }
+    
+    if (data?.user) {
+      statusEl.className = 'auth-modal-status success';
+      statusEl.textContent = '✓ Account created! Check your email to confirm.';
+      
+      // Auto sign in after signup
+      setTimeout(() => {
+        hideAuthModal();
+        if (authCallback) authCallback();
+      }, 800);
+    }
+  } catch (err) {
+    statusEl.className = 'auth-modal-status error';
+    statusEl.textContent = 'An error occurred. Please try again.';
+    signupBtn.disabled = false;
+  }
+});
+
+// Make showAuthModal globally available
+window.showAuthModal = showAuthModal;
 </script>
 
 </body>
