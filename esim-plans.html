@@ -228,10 +228,17 @@ button,input,select{
   font-size:11px;
   font-weight:700;
   cursor:pointer;
+  transition:all .3s ease;
 }
 
 .view-country:hover{
   border-color:var(--teal);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(34,145,117,.15);
+}
+
+.view-country:active{
+  transform:translateY(0);
 }
 
 /* PLANS */
@@ -242,11 +249,17 @@ button,input,select{
 
 .section-heading{
   margin-bottom:20px;
+  animation:fadeIn .6s ease-out;
+}
+
+.section-heading.refresh{
+  animation:slideUpFresh .5s ease-out;
 }
 
 .section-heading h2{
   margin:8px 0;
   font:600 32px Fraunces,serif;
+  transition:color .4s ease;
 }
 
 .section-heading p{
@@ -259,6 +272,7 @@ button,input,select{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:14px;
+  animation:plansSlideIn .6s ease-out;
 }
 
 .plan{
@@ -268,6 +282,56 @@ button,input,select{
   border-radius:12px;
   background:var(--panel);
   transition:.2s ease;
+  animation:planFadeInUp .5s ease-out backwards;
+}
+
+.plan:nth-child(1){animation-delay:.0s}
+.plan:nth-child(2){animation-delay:.08s}
+.plan:nth-child(3){animation-delay:.16s}
+.plan:nth-child(4){animation-delay:.24s}
+.plan:nth-child(5){animation-delay:.32s}
+.plan:nth-child(6){animation-delay:.4s}
+.plan:nth-child(7){animation-delay:.48s}
+.plan:nth-child(8){animation-delay:.56s}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes slideUpFresh{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes plansSlideIn{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes planFadeInUp{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 .plan:hover{
@@ -334,10 +398,17 @@ button,input,select{
   font-size:12px;
   font-weight:700;
   cursor:pointer;
+  transition:all .3s ease;
 }
 
 .buy:hover{
   background:var(--teal);
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(34,145,117,.2);
+}
+
+.buy:active{
+  transform:translateY(0);
 }
 
 /* ORDER */
@@ -1109,12 +1180,14 @@ function renderPlans(countryCode){
         document.getElementById("orderPlan").value =
           button.dataset.plan;
 
-        document
-          .getElementById("orderSection")
-          .scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-          });
+        setTimeout(() => {
+          document
+            .getElementById("orderSection")
+            .scrollIntoView({
+              behavior:"smooth",
+              block:"start"
+            });
+        }, 600);
 
       });
 
@@ -1188,12 +1261,32 @@ function selectCountry(code){
 
   document.getElementById("orderCountry").value=code;
 
+  // Get the heading element
+  const heading = document.querySelector(".section-heading");
+  
+  // Trigger animation by removing and re-adding class
+  heading.classList.remove("refresh");
+  
+  // Force reflow to restart animation
+  void heading.offsetWidth;
+  
+  heading.classList.add("refresh");
+
   document.getElementById("plansTitle").textContent=
     `${country.name} eSIM plans`;
 
   populatePlanSelect(code);
 
   renderPlans(code);
+  
+  // Smooth scroll to plans section with a slight delay for animation
+  setTimeout(() => {
+    const plansSection = document.querySelector(".plans-section");
+    plansSection.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+  }, 100);
 
 }
 
