@@ -1,2 +1,1869 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Earn & stake | Wakala</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>:root{--ink:#0D1420;--paper:#F6F2E9;--panel:#FFFDF8;--teal:#229175;--gold:#E4A445;--muted:#7A756A;--line:rgba(13,20,32,.11)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif}.wrap{width:min(1100px,100%);margin:auto;padding:0 22px}.nav{display:flex;justify-content:space-between;padding:26px 0}.brand{color:var(--ink);font:600 25px Fraunces,serif;text-decoration:none}.dot{display:inline-block;width:9px;height:9px;margin-right:9px;border-radius:50%;background:var(--gold)}.nav a:not(.brand){color:var(--teal);font-size:13px;font-weight:700;text-decoration:none}.hero{padding:58px 0 45px}.eyebrow{color:var(--teal);font:700 11px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase}.hero h1{max-width:680px;margin:12px 0;font:600 clamp(44px,7vw,72px)/.98 Fraunces,serif}.hero p{max-width:590px;color:var(--muted);font-size:15px;line-height:1.7}.assets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.asset{padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:0 16px 38px rgba(13,20,32,.06)}.asset.featured{border:2px solid var(--teal)}.asset h2{margin:8px 0;font:600 27px Fraunces,serif}.asset p{min-height:50px;color:var(--muted);font-size:12px;line-height:1.55}.rate{display:block;margin-top:20px;color:var(--teal);font:600 25px 'IBM Plex Mono',monospace}.rate small{color:var(--muted);font:400 10px Inter,sans-serif}.stake{margin:18px 0 70px;padding:28px;border-radius:13px;background:var(--ink);color:#fff}.stake h2{margin:8px 0;font:600 31px Fraunces,serif}.stake p{max-width:580px;color:#AAB4C5;font-size:12px;line-height:1.65}.stake-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.field label{display:block;margin-bottom:6px;color:#AAB4C5;font-size:11px;font-weight:700}.field input,.field select{width:100%;padding:12px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:#172237;color:#fff;font:inherit;font-size:12px}.button{grid-column:1/-1;padding:13px;border:0;border-radius:7px;background:var(--gold);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer}.result{grid-column:1/-1;color:#8BD2B6;font-size:12px}@media(max-width:700px){.wrap{padding:0 15px}.assets,.stake-grid{grid-template-columns:1fr}.button,.result{grid-column:auto}}
-</style></head><body><div class="wrap"><nav class="nav"><a class="brand" href="index.html"><span class="dot"></span>WAKALA</a><a href="dashboard.html">Open dashboard →</a></nav><main><section class="hero"><span class="eyebrow">Make your money work harder</span><h1>Start with USDC. Keep the rules clear.</h1><p>Wakala’s future rewards layer is designed around transparent lock periods and visible estimates, with USDC as the primary digital asset. USDT and BTC are supported asset concepts, not promises of profit.</p></section><section class="assets"><article class="asset featured"><span class="eyebrow">PRIMARY</span><h2>USDC</h2><p>A stable-value starting point for the Wakala rewards preview.</p><span class="rate">6.00% <small>estimated APY</small></span></article><article class="asset"><span class="eyebrow">SUPPORTED</span><h2>USDT</h2><p>A stablecoin option with its own network, liquidity and risk disclosures.</p><span class="rate">4.50% <small>estimated APY</small></span></article><article class="asset"><span class="eyebrow">SUPPORTED</span><h2>BTC</h2><p>A volatile asset concept with rewards shown separately from price movement.</p><span class="rate">2.00% <small>estimated APY</small></span></article></section><section class="stake"><span class="eyebrow">Test the calculator</span><h2>Estimate a position.</h2><p>This is a UI preview only. No funds move and no yield is guaranteed. Production staking requires custody, compliance, eligibility, smart-contract or partner controls, and an audited rewards policy.</p><div class="stake-grid"><div class="field"><label for="asset">Asset</label><select id="asset"><option value="USDC">USDC · 6.00% APY</option><option value="USDT">USDT · 4.50% APY</option><option value="BTC">BTC · 2.00% APY</option></select></div><div class="field"><label for="amount">Amount</label><input id="amount" type="number" min="0" step="0.01" placeholder="100"></div><button class="button" id="calculate" type="button">Calculate estimated reward</button><p class="result" id="result" role="status"></p></div></section></main></div><script>const rates={USDC:.06,USDT:.045,BTC:.02};document.getElementById('calculate').addEventListener('click',()=>{const asset=document.getElementById('asset').value;const amount=Number(document.getElementById('amount').value)||0;document.getElementById('result').textContent=`Estimated one-year reward: ${(amount*rates[asset]).toFixed(2)} ${asset}. Preview only.`;});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Creator Jobs | Wakala</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <script src="./auth-links.js" defer></script>
+
+  <style>
+
+    :root {
+      --ink:#0D1420;
+      --paper:#F6F2E9;
+      --panel:#FFFDF8;
+      --gold:#E4A445;
+      --teal:#229175;
+      --muted:#7A756A;
+      --line:rgba(13,20,32,.10);
+      --soft:#EAF5EF;
+      --success:#168447;
+      --danger:#B42318;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    html {
+      scroll-behavior:smooth;
+    }
+
+    body {
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+    }
+
+    a {
+      text-decoration:none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font:inherit;
+    }
+
+    button:disabled {
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    .shell {
+      width:min(1180px,100%);
+      margin:auto;
+      padding:0 28px;
+    }
+
+    /* NAV */
+
+    .nav {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:25px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand {
+      color:var(--ink);
+      font:600 25px Fraunces,serif;
+    }
+
+    .dot {
+      display:inline-block;
+      width:9px;
+      height:9px;
+      margin-right:9px;
+      border-radius:50%;
+      background:var(--gold);
+      vertical-align:2px;
+    }
+
+    .nav-links {
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    .nav-links a {
+      color:var(--teal);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .nav-button {
+      padding:10px 15px;
+      border-radius:8px;
+      background:var(--ink);
+      color:#fff !important;
+    }
+
+    /* HERO */
+
+    .hero {
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:45px;
+      padding:70px 0 55px;
+    }
+
+    .eyebrow,
+    .kicker {
+      color:var(--teal);
+      font:700 11px 'IBM Plex Mono',monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .hero h1 {
+      max-width:700px;
+      margin:13px 0 18px;
+      font:600 clamp(44px,7vw,78px)/.98 Fraunces,serif;
+      letter-spacing:-.035em;
+    }
+
+    .hero p {
+      max-width:590px;
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.8;
+    }
+
+    .hero-panel {
+      align-self:end;
+      padding:30px;
+      border-radius:16px;
+      background:var(--ink);
+      color:#F5F1E7;
+      box-shadow:0 22px 50px rgba(13,20,32,.14);
+    }
+
+    .hero-panel .mini-title {
+      color:#8BD2B6;
+      font:500 11px 'IBM Plex Mono',monospace;
+      letter-spacing:.1em;
+    }
+
+    .hero-panel h2 {
+      margin:12px 0 8px;
+      font:600 45px Fraunces,serif;
+    }
+
+    .hero-panel p {
+      color:#AAB4C5;
+      font-size:12px;
+      line-height:1.7;
+    }
+
+    .earning-box {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .earning {
+      padding:13px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:9px;
+      background:rgba(255,255,255,.04);
+    }
+
+    .earning strong {
+      display:block;
+      color:#fff;
+      font-size:18px;
+    }
+
+    .earning span {
+      display:block;
+      margin-top:4px;
+      color:#AAB4C5;
+      font-size:10px;
+    }
+
+    /* HOW */
+
+    .how {
+      margin-bottom:45px;
+      padding:28px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:var(--panel);
+    }
+
+    .how h2 {
+      margin:7px 0 22px;
+      font:600 28px Fraunces,serif;
+    }
+
+    .steps {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+
+    .step {
+      padding:18px;
+      border-radius:10px;
+      background:var(--soft);
+    }
+
+    .step-number {
+      display:grid;
+      place-items:center;
+      width:30px;
+      height:30px;
+      margin-bottom:12px;
+      border-radius:50%;
+      background:var(--teal);
+      color:#fff;
+      font:600 12px 'IBM Plex Mono',monospace;
+    }
+
+    .step strong {
+      display:block;
+      margin-bottom:7px;
+      font-size:13px;
+    }
+
+    .step p {
+      margin:0;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    /* CAMPAIGNS */
+
+    .campaign-header {
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:20px;
+    }
+
+    .campaign-header h2 {
+      margin:6px 0 0;
+      font:600 32px Fraunces,serif;
+    }
+
+    .campaign-header p {
+      max-width:430px;
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .jobs {
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      padding-bottom:65px;
+    }
+
+    .job-list,
+    .sidebar-card,
+    .apply {
+      padding:27px;
+      border:1px solid var(--line);
+      border-radius:13px;
+      background:var(--panel);
+      box-shadow:0 14px 35px rgba(13,20,32,.05);
+    }
+
+    .job-list h2,
+    .sidebar-card h2 {
+      margin:0 0 17px;
+      font:600 24px Fraunces,serif;
+    }
+
+    .job {
+      padding:22px 0;
+      border-top:1px solid var(--line);
+    }
+
+    .job:first-of-type {
+      border-top:0;
+      padding-top:5px;
+    }
+
+    .job-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:start;
+      gap:20px;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:5px 8px;
+      border-radius:5px;
+      background:var(--soft);
+      color:var(--teal);
+      font:600 10px 'IBM Plex Mono',monospace;
+    }
+
+    .job h3 {
+      margin:9px 0 6px;
+      font-size:16px;
+    }
+
+    .job p {
+      max-width:620px;
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.65;
+    }
+
+    .reward {
+      flex:none;
+      color:var(--teal);
+      font:600 17px 'IBM Plex Mono',monospace;
+      text-align:right;
+    }
+
+    .reward small {
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font:400 10px Inter,sans-serif;
+      white-space:nowrap;
+    }
+
+    .requirements {
+      margin-top:13px;
+      padding:12px;
+      border-left:3px solid var(--gold);
+      background:rgba(228,164,69,.08);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .requirements strong {
+      color:var(--ink);
+    }
+
+    .apply-job {
+      display:inline-block;
+      margin-top:13px;
+      padding:9px 13px;
+      border-radius:7px;
+      background:var(--ink);
+      color:#fff;
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .apply-job:hover {
+      background:var(--teal);
+    }
+
+    /* SIDEBAR */
+
+    .sidebar-card {
+      margin-bottom:18px;
+    }
+
+    .sidebar-card.green {
+      background:var(--soft);
+    }
+
+    .sidebar-card h2 {
+      font-size:22px;
+    }
+
+    .earning-table {
+      overflow:hidden;
+      margin-top:15px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      background:#fff;
+    }
+
+    .earning-row {
+      display:flex;
+      justify-content:space-between;
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      font-size:12px;
+    }
+
+    .earning-row:last-child {
+      border-bottom:0;
+    }
+
+    .earning-row strong {
+      color:var(--teal);
+    }
+
+    .note {
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.7;
+    }
+
+    .important {
+      padding:14px;
+      border-radius:9px;
+      background:rgba(228,164,69,.12);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.65;
+    }
+
+    .important strong {
+      color:var(--ink);
+    }
+
+    /* APPLICATION */
+
+    .apply {
+      grid-column:1/-1;
+      display:grid;
+      grid-template-columns:.8fr 1.2fr;
+      gap:35px;
+    }
+
+    .apply h2 {
+      margin:7px 0 10px;
+      font:600 30px Fraunces,serif;
+    }
+
+    .apply-description {
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .application-note {
+      margin-top:18px;
+      padding:14px;
+      border-radius:9px;
+      background:var(--soft);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.65;
+    }
+
+    .application-note strong {
+      color:var(--ink);
+    }
+
+    .form {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:13px;
+    }
+
+    .field label {
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width:100%;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:7px;
+      background:#fff;
+      color:var(--ink);
+      font-size:12px;
+      outline:none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color:var(--teal);
+      box-shadow:0 0 0 3px rgba(34,145,117,.08);
+    }
+
+    .field textarea {
+      min-height:100px;
+      resize:vertical;
+    }
+
+    .field.full {
+      grid-column:1/-1;
+    }
+
+    .button {
+      grid-column:1/-1;
+      padding:14px;
+      border:0;
+      border-radius:7px;
+      background:var(--ink);
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .button:hover {
+      background:var(--teal);
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top:20px;
+      padding:40px 0 50px;
+      border-top:1px solid var(--line);
+    }
+
+    .footer-grid {
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr;
+      gap:35px;
+    }
+
+    .footer-brand {
+      color:var(--ink);
+      font:600 24px Fraunces,serif;
+    }
+
+    .footer-text {
+      max-width:420px;
+      margin-top:12px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.7;
+    }
+
+    .footer-title {
+      margin-bottom:12px;
+      color:var(--ink);
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .footer-links {
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+    }
+
+    .footer-links a {
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .footer-links a:hover {
+      color:var(--teal);
+    }
+
+    .footer-bottom {
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      margin-top:35px;
+      padding-top:20px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .loading,
+    .empty {
+      padding:30px 10px;
+      color:var(--muted);
+      text-align:center;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    @media(max-width:850px) {
+
+      .hero,
+      .jobs,
+      .apply {
+        grid-template-columns:1fr;
+      }
+
+      .steps {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns:1fr 1fr;
+      }
+
+    }
+
+    @media(max-width:600px) {
+
+      .shell {
+        padding:0 17px;
+      }
+
+      .nav-links a:first-child {
+        display:none;
+      }
+
+      .hero {
+        padding-top:45px;
+      }
+
+      .hero h1 {
+        font-size:47px;
+      }
+
+      .steps,
+      .form,
+      .footer-grid {
+        grid-template-columns:1fr;
+      }
+
+      .field.full,
+      .button {
+        grid-column:auto;
+      }
+
+      .job-top {
+        display:block;
+      }
+
+      .reward {
+        margin-top:12px;
+        text-align:left;
+      }
+
+      .campaign-header {
+        display:block;
+      }
+
+      .footer-bottom {
+        display:block;
+      }
+
+      .footer-bottom div + div {
+        margin-top:8px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="shell">
+
+  <nav class="nav">
+
+    <a class="brand" href="index.html">
+      <span class="dot"></span>WAKALA
+    </a>
+
+    <div class="nav-links">
+
+      <a href="dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="login.html">
+        Log in
+      </a>
+
+      <a
+        class="nav-button"
+        href="register.html"
+      >
+        Create account
+      </a>
+
+    </div>
+
+  </nav>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div>
+
+        <span class="eyebrow">
+          Wakala creator network
+        </span>
+
+        <h1>
+          Turn your audience into opportunity.
+        </h1>
+
+        <p>
+          Create useful, entertaining and authentic content about Wakala
+          and earn USDC based on verified performance. Choose a campaign,
+          create your content, publish it publicly and submit your results
+          for review.
+        </p>
+
+      </div>
+
+      <aside class="hero-panel">
+
+        <div class="mini-title">
+          CREATOR PERFORMANCE REWARD
+        </div>
+
+        <h2>
+          5 USDC
+        </h2>
+
+        <p>
+          Standard campaigns can pay 5 USDC for every verified 1,000
+          eligible impressions, subject to campaign limits and successful
+          administrator verification.
+        </p>
+
+        <div class="earning-box">
+
+          <div class="earning">
+            <strong>1,000</strong>
+            <span>Verified impressions</span>
+          </div>
+
+          <div class="earning">
+            <strong>5 USDC</strong>
+            <span>Base reward</span>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </section>
+
+
+    <section class="how">
+
+      <div class="kicker">
+        How it works
+      </div>
+
+      <h2>
+        Simple, transparent creator rewards.
+      </h2>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-number">01</div>
+          <strong>Choose a campaign</strong>
+          <p>
+            Pick a Wakala brief that matches your audience and content style.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">02</div>
+          <strong>Create & publish</strong>
+          <p>
+            Create original content and publish it publicly on an eligible platform.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">03</div>
+          <strong>Submit your application</strong>
+          <p>
+            Tell Wakala about your content idea and creator profile.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">04</div>
+          <strong>Admin verification</strong>
+          <p>
+            Wakala administrators review applications and campaign performance.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="campaign-header">
+
+      <div>
+
+        <div class="kicker">
+          Open campaigns
+        </div>
+
+        <h2>
+          Choose your campaign.
+        </h2>
+
+      </div>
+
+      <p>
+        Campaigns are managed from the Wakala backend.
+        Requirements, rewards and availability may change.
+      </p>
+
+    </div>
+
+
+    <section class="jobs">
+
+      <div class="job-list">
+
+        <h2>
+          Creator campaigns
+        </h2>
+
+        <div
+          id="campaignList"
+          class="loading"
+        >
+          Loading open campaigns...
+        </div>
+
+      </div>
+
+
+      <aside>
+
+        <div class="sidebar-card green">
+
+          <div class="kicker">
+            Creator rewards
+          </div>
+
+          <h2>
+            Earn based on verified reach.
+          </h2>
+
+          <p class="note">
+            Standard campaigns can calculate rewards from verified eligible
+            impressions.
+          </p>
+
+          <div class="earning-table">
+
+            <div class="earning-row">
+              <span>1,000 impressions</span>
+              <strong>5 USDC</strong>
+            </div>
+
+            <div class="earning-row">
+              <span>5,000 impressions</span>
+              <strong>25 USDC</strong>
+            </div>
+
+            <div class="earning-row">
+              <span>10,000 impressions</span>
+              <strong>50 USDC</strong>
+            </div>
+
+            <div class="earning-row">
+              <span>20,000 impressions</span>
+              <strong>100 USDC</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="sidebar-card">
+
+          <div class="kicker">
+            Important
+          </div>
+
+          <h2>
+            Verification comes first.
+          </h2>
+
+          <div class="important">
+
+            <strong>
+              Only Wakala administrators can verify submissions and approve payouts.
+            </strong>
+
+            <br><br>
+
+            Reported impressions, likes, followers and other campaign
+            requirements are subject to verification.
+
+          </div>
+
+          <p class="note">
+
+            Repeated, artificial, purchased or otherwise ineligible
+            engagement may be rejected.
+
+          </p>
+
+        </div>
+
+
+        <div class="sidebar-card">
+
+          <div class="kicker">
+            Creator standard
+          </div>
+
+          <h2>
+            Quality matters.
+          </h2>
+
+          <p class="note">
+            Wakala is looking for creators who can communicate clearly,
+            entertain their audience and produce content people actually
+            want to watch.
+          </p>
+
+        </div>
+
+      </aside>
+
+
+      <section
+        class="apply"
+        id="apply"
+      >
+
+        <div>
+
+          <div class="kicker">
+            Creator application
+          </div>
+
+          <h2>
+            Create with Wakala.
+          </h2>
+
+          <p class="apply-description">
+            Tell us about yourself and the type of content you want to
+            create. Your application will be stored in the Wakala creator
+            system and made available to administrators for review.
+          </p>
+
+          <p class="apply-description">
+            You are intentionally allowed to submit multiple applications,
+            including multiple applications for the same campaign.
+          </p>
+
+          <div class="application-note">
+
+            <strong>
+              Your application is not a payout request.
+            </strong>
+
+            <br><br>
+
+            Applications are reviewed separately from content performance
+            and payout approval.
+
+          </div>
+
+        </div>
+
+
+        <form
+          class="form"
+          id="creatorJobsForm"
+        >
+
+          <div class="field">
+
+            <label for="name">
+              Full name
+            </label>
+
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="Your full name"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="you@example.com"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="platform">
+              Main platform
+            </label>
+
+            <select
+              id="platform"
+              name="platform"
+              required
+            >
+
+              <option value="">
+                Choose platform
+              </option>
+
+              <option>TikTok</option>
+              <option>Instagram</option>
+              <option>YouTube</option>
+              <option>X</option>
+              <option>Facebook</option>
+              <option>Other</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="campaign">
+              Campaign
+            </label>
+
+            <select
+              id="campaign"
+              name="campaign"
+              required
+            >
+
+              <option value="">
+                Loading campaigns...
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field full">
+
+            <label for="profile">
+              Social profile
+            </label>
+
+            <input
+              id="profile"
+              name="profile"
+              type="url"
+              required
+              placeholder="https://instagram.com/yourname"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="followers">
+              Approximate followers
+            </label>
+
+            <input
+              id="followers"
+              name="followers"
+              type="number"
+              min="0"
+              inputmode="numeric"
+              placeholder="e.g. 8500"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="format">
+              Content format
+            </label>
+
+            <select
+              id="format"
+              name="format"
+              required
+            >
+
+              <option value="">
+                Choose format
+              </option>
+
+              <option>Short video</option>
+              <option>Long-form video</option>
+              <option>X post/thread</option>
+              <option>UGC</option>
+              <option>Skit</option>
+              <option>Music</option>
+              <option>Educational</option>
+              <option>Other</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field full">
+
+            <label for="idea">
+              Tell us what you want to create
+            </label>
+
+            <textarea
+              id="idea"
+              name="idea"
+              placeholder="Briefly describe your content idea..."
+            ></textarea>
+
+          </div>
+
+
+          <button
+            class="button"
+            type="submit"
+            id="submitButton"
+          >
+            Submit creator application
+          </button>
+
+        </form>
+
+      </section>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+
+    <div class="footer-grid">
+
+      <div>
+
+        <div class="footer-brand">
+          <span class="dot"></span>WAKALA
+        </div>
+
+        <p class="footer-text">
+          Wakala Creator Network connects creators with campaigns designed
+          to educate, entertain and introduce more people to Wakala.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <div class="footer-title">
+          Creator
+        </div>
+
+        <div class="footer-links">
+
+          <a href="#apply">
+            Apply to become a creator
+          </a>
+
+          <a href="#campaignList">
+            View campaigns
+          </a>
+
+          <a href="dashboard.html">
+            Creator dashboard
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="footer-title">
+          Wakala
+        </div>
+
+        <div class="footer-links">
+
+          <a href="index.html">Home</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="login.html">Log in</a>
+          <a href="register.html">Create account</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <div>
+        © <span id="year"></span> Wakala. All rights reserved.
+      </div>
+
+      <div>
+        Creator rewards are subject to verification and approval.
+      </div>
+
+    </div>
+
+  </footer>
+
+</div>
+
+
+<!-- SWEET ALERT -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script type="module">
+
+import { createClient } from
+  'https://esm.sh/@supabase/supabase-js@2';
+
+import {
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+} from './supabase-config.js';
+
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+const form =
+  document.getElementById('creatorJobsForm');
+
+const submitButton =
+  document.getElementById('submitButton');
+
+const campaignList =
+  document.getElementById('campaignList');
+
+const campaignSelect =
+  document.getElementById('campaign');
+
+const nameInput =
+  document.getElementById('name');
+
+const emailInput =
+  document.getElementById('email');
+
+const platformInput =
+  document.getElementById('platform');
+
+const profileInput =
+  document.getElementById('profile');
+
+const followersInput =
+  document.getElementById('followers');
+
+const formatInput =
+  document.getElementById('format');
+
+const ideaInput =
+  document.getElementById('idea');
+
+
+let currentUser = null;
+let campaigns = [];
+
+
+document.getElementById('year').textContent =
+  new Date().getFullYear();
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+async function initialise() {
+
+  const {
+    data,
+    error
+  } = await supabase.auth.getSession();
+
+
+  if (error) {
+
+    console.error(error);
+
+    Swal.fire({
+      icon:'error',
+      title:'Session error',
+      text:'Unable to verify your account session.',
+      confirmButtonColor:'#0D1420'
+    });
+
+    return;
+  }
+
+
+  currentUser =
+    data?.session?.user || null;
+
+
+  if (!currentUser) {
+
+    Swal.fire({
+      icon:'warning',
+      title:'Login required',
+      text:'Please log in before applying for a creator campaign.',
+      confirmButtonColor:'#229175'
+    }).then(() => {
+
+      window.location.href =
+        'login.html';
+
+    });
+
+    submitButton.disabled = true;
+
+    return;
+  }
+
+
+  emailInput.value =
+    currentUser.email || '';
+
+
+  const {
+    data: profile
+  } = await supabase
+    .from('profiles')
+    .select('full_name')
+    .eq('id', currentUser.id)
+    .maybeSingle();
+
+
+  if (profile?.full_name) {
+
+    nameInput.value =
+      profile.full_name;
+
+  }
+
+
+  await loadCampaigns();
+
+}
+
+
+/* =========================================
+   LOAD CAMPAIGNS
+========================================= */
+
+async function loadCampaigns() {
+
+  campaignList.innerHTML =
+    'Loading open campaigns...';
+
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from('creator_campaigns')
+    .select(`
+      id,
+      title,
+      description,
+      platform,
+      content_type,
+      reward_per_1000_impressions,
+      max_reward,
+      requirements,
+      status,
+      created_at
+    `)
+    .eq('status','open')
+    .order('created_at',{
+      ascending:false
+    });
+
+
+  if (error) {
+
+    console.error(
+      'Campaign error:',
+      error
+    );
+
+    campaignList.innerHTML = `
+      <div class="empty">
+        Unable to load creator campaigns.
+      </div>
+    `;
+
+    Swal.fire({
+      icon:'error',
+      title:'Campaigns unavailable',
+      text:error.message,
+      confirmButtonColor:'#0D1420'
+    });
+
+    return;
+  }
+
+
+  campaigns =
+    data || [];
+
+
+  if (!campaigns.length) {
+
+    campaignList.innerHTML = `
+      <div class="empty">
+        There are currently no open creator campaigns.
+      </div>
+    `;
+
+    campaignSelect.innerHTML = `
+      <option value="">
+        No campaigns available
+      </option>
+    `;
+
+    return;
+  }
+
+
+  renderCampaigns();
+  populateCampaignSelector();
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function renderCampaigns() {
+
+  campaignList.innerHTML =
+    campaigns.map(campaign => {
+
+      const reward =
+        Number(
+          campaign.reward_per_1000_impressions || 0
+        );
+
+
+      const maxReward =
+        Number(
+          campaign.max_reward || 0
+        );
+
+
+      return `
+
+        <article class="job">
+
+          <div class="job-top">
+
+            <div>
+
+              <span class="tag">
+                ${escapeHtml(
+                  campaign.platform ||
+                  'ALL PLATFORMS'
+                )}
+              </span>
+
+              <h3>
+                ${escapeHtml(
+                  campaign.title
+                )}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  campaign.description || ''
+                )}
+              </p>
+
+            </div>
+
+            <div class="reward">
+
+              ${reward.toFixed(2)} USDC
+
+              <small>
+                per 1,000 verified impressions
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="requirements">
+
+            <strong>
+              Campaign requirements:
+            </strong>
+
+            ${escapeHtml(
+              campaign.requirements || 'No additional requirements.'
+            )}
+
+            ${
+              maxReward > 0
+                ? `
+                  <br><br>
+
+                  <strong>
+                    Maximum campaign reward:
+                  </strong>
+
+                  ${maxReward.toFixed(2)} USDC
+                `
+                : ''
+            }
+
+          </div>
+
+
+          <a
+            href="#apply"
+            class="apply-job"
+            data-campaign-id="${escapeHtml(campaign.id)}"
+          >
+            Apply for campaign →
+          </a>
+
+        </article>
+
+      `;
+
+    }).join('');
+
+
+  document
+    .querySelectorAll('.apply-job')
+    .forEach(button => {
+
+      button.addEventListener('click', () => {
+
+        campaignSelect.value =
+          button.dataset.campaignId;
+
+        document
+          .getElementById('apply')
+          .scrollIntoView({
+            behavior:'smooth'
+          });
+
+      });
+
+    });
+
+}
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+function populateCampaignSelector() {
+
+  campaignSelect.innerHTML = `
+
+    <option value="">
+      Choose campaign
+    </option>
+
+    ${
+      campaigns.map(campaign => `
+        <option value="${escapeHtml(campaign.id)}">
+          ${escapeHtml(campaign.title)}
+        </option>
+      `).join('')
+    }
+
+  `;
+
+}
+
+
+/* =========================================
+   SUBMIT
+========================================= */
+
+form.addEventListener(
+  'submit',
+  async event => {
+
+    event.preventDefault();
+
+
+    if (!currentUser) {
+
+      Swal.fire({
+        icon:'warning',
+        title:'Login required',
+        text:'Please log in first.',
+        confirmButtonColor:'#229175'
+      });
+
+      return;
+    }
+
+
+    const campaignId =
+      campaignSelect.value;
+
+
+    if (!campaignId) {
+
+      Swal.fire({
+        icon:'warning',
+        title:'Select a campaign',
+        text:'Please choose the campaign you want to apply for.',
+        confirmButtonColor:'#229175'
+      });
+
+      campaignSelect.focus();
+
+      return;
+    }
+
+
+    const campaign =
+      campaigns.find(
+        item => item.id === campaignId
+      );
+
+
+    if (!campaign) {
+
+      Swal.fire({
+        icon:'error',
+        title:'Campaign unavailable',
+        text:'This campaign is no longer available.',
+        confirmButtonColor:'#0D1420'
+      });
+
+      return;
+    }
+
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+      'Submitting...';
+
+
+    const applicationNote = [
+
+      `Creator name: ${nameInput.value.trim()}`,
+
+      `Email: ${emailInput.value.trim()}`,
+
+      `Main platform: ${platformInput.value}`,
+
+      `Approximate followers: ${
+        followersInput.value.trim() || 'Not provided'
+      }`,
+
+      `Content format: ${formatInput.value}`,
+
+      `Content idea: ${
+        ideaInput.value.trim() || 'Not provided'
+      }`
+
+    ].join('\n');
+
+
+    /*
+     * IMPORTANT:
+     *
+     * There is deliberately NO duplicate check.
+     *
+     * Every click creates a new application.
+     */
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from('creator_applications')
+      .insert({
+
+        campaign_id:
+          campaign.id,
+
+        user_id:
+          currentUser.id,
+
+        platform_username:
+          platformInput.value,
+
+        portfolio_url:
+          profileInput.value.trim(),
+
+        application_note:
+          applicationNote,
+
+        status:
+          'pending'
+
+      })
+      .select()
+      .single();
+
+
+    if (error) {
+
+      console.error(
+        'Application insert error:',
+        error
+      );
+
+
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        'Submit creator application';
+
+
+      Swal.fire({
+        icon:'error',
+        title:'Submission failed',
+        text:error.message ||
+          'Unable to submit your application.',
+        confirmButtonColor:'#0D1420'
+      });
+
+      return;
+    }
+
+
+    console.log(
+      'Application created:',
+      data
+    );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Do NOT disable future submissions.
+     */
+
+    const selectedCampaign =
+      campaignSelect.value;
+
+
+    form.reset();
+
+
+    emailInput.value =
+      currentUser.email || '';
+
+
+    campaignSelect.value =
+      selectedCampaign;
+
+
+    submitButton.disabled =
+      false;
+
+    submitButton.textContent =
+      'Submit another creator application';
+
+
+    Swal.fire({
+      icon:'success',
+      title:'Application submitted',
+      text:
+        'Your creator application has been successfully submitted and is now available for Wakala administrators to review.',
+      confirmButtonText:'Great',
+      confirmButtonColor:'#229175'
+    });
+
+  }
+);
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+initialise();
+
+</script>
+
+</body>
+</html>
