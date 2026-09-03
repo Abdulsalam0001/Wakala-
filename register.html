@@ -255,7 +255,7 @@
       button.textContent = 'Creating account...';
 
       const { data, error } = await supabase.auth.signUp({
-        email: form.email.value.trim(),
+        email: form.email.value.trim().toLowerCase(),
         password: form.password.value,
         options: {
           data: {

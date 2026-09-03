@@ -95,7 +95,9 @@
 
 			if (error) {
 				message.className = 'message error';
-				message.textContent = error.message;
+				message.textContent = /confirm|email not confirmed/i.test(error.message)
+					? 'Please confirm your email address before logging in.'
+					: error.message;
 				button.disabled = false;
 				button.textContent = 'Log in to Wakala';
 				return;

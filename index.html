@@ -3331,7 +3331,7 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
   authForm.addEventListener('submit', async function(event){
     event.preventDefault();
     const login = authScreen.classList.contains('login-mode');
-    const email = document.getElementById('authEmail').value.trim();
+    const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const password = authPassword.value;
     const name = document.getElementById('authName').value.trim();
 
