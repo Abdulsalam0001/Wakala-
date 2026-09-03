@@ -2,442 +2,211 @@
 
 <html lang="en">
 <head>
+  <script src="../auth-links.js" defer></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Admin Login | Wakala</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+  <title>Admin Access | Wakala</title>
 
   <style>
-    :root {
-      --ink: #0D1420;
-      --paper: #F6F2E9;
-      --panel: #FFFDF8;
-      --gold: #E4A445;
-      --teal: #229175;
-      --muted: #7A756A;
-      --line: rgba(13, 20, 32, .10);
-      --soft: #EAF5EF;
-      --success: #168447;
-      --danger: #B42318;
-    }
-
     * {
       box-sizing: border-box;
     }
 
     html,
     body {
+      margin: 0;
       min-height: 100%;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #f5f7fb;
+      color: #111827;
     }
 
     body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: Inter, sans-serif;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .shell {
-      width: min(1180px, 100%);
-      margin: auto;
-      padding: 0 28px;
-    }
-
-    /* =========================
-       NAVIGATION
-    ========================= */
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 25px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand {
-      color: var(--ink);
-      text-decoration: none;
-      font: 600 25px Fraunces, serif;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 9px;
-      height: 9px;
-      margin-right: 9px;
-      border-radius: 50%;
-      background: var(--gold);
-      vertical-align: 2px;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .nav-right a {
-      color: var(--teal);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .nav-button {
-      padding: 10px 14px;
-      border-radius: 7px;
-      background: var(--ink);
-      color: #fff !important;
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    main {
-      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 70px 0;
+      padding: 24px;
     }
 
-    .login-layout {
-      width: min(900px, 100%);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 35px;
-      align-items: stretch;
-    }
-
-    /* =========================
-       INTRO
-    ========================= */
-
-    .intro {
-      padding: 35px 10px;
-    }
-
-    .kicker {
-      color: var(--teal);
-      font: 700 11px 'IBM Plex Mono', monospace;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .intro h1 {
-      max-width: 500px;
-      margin: 14px 0 18px;
-      font: 600 clamp(42px, 6vw, 65px)/1 Fraunces, serif;
-      letter-spacing: -.035em;
-    }
-
-    .intro p {
-      max-width: 450px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .security-note {
-      max-width: 450px;
-      margin-top: 25px;
-      padding: 15px;
-      border-left: 3px solid var(--gold);
-      background: rgba(228, 164, 69, .09);
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.7;
-    }
-
-    .security-note strong {
-      color: var(--ink);
-    }
-
-    /* =========================
-       LOGIN CARD
-    ========================= */
-
-    .login-card {
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
       padding: 32px;
-      border: 1px solid var(--line);
+      box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
       border-radius: 15px;
-      background: var(--panel);
-      box-shadow: 0 20px 50px rgba(13, 20, 32, .08);
+      background: #111827;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 20px;
     }
 
-    .login-card h2 {
-      margin: 8px 0 8px;
-      font: 600 30px Fraunces, serif;
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      letter-spacing: -0.5px;
     }
 
-    .login-description {
-      margin: 0 0 25px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
+    .subtitle {
+      margin: 0 0 28px;
+      color: #6b7280;
+      line-height: 1.6;
+      font-size: 14px;
     }
-
-    .field {
-      margin-bottom: 16px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 7px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #fff;
-      color: var(--ink);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .field input:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(34, 145, 117, .08);
-    }
-
-    .password-wrap {
-      position: relative;
-    }
-
-    .password-wrap input {
-      padding-right: 70px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: var(--teal);
-      font-size: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 5px;
-      border: 0;
-      border-radius: 7px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    .button:hover {
-      background: var(--teal);
-    }
-
-    .button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    /* =========================
-       STATUS
-    ========================= */
 
     .status {
-      min-height: auto;
-      margin: 15px 0 0;
-      padding: 12px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      line-height: 1.6;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: all .3s ease;
-    }
-
-    .status.error {
-      color: #fff;
-      background: rgba(180, 35, 24, .95);
-      border: 1px solid var(--danger);
-      opacity: 1;
-      max-height: 200px;
-      animation: slideDown .3s ease;
-    }
-
-    .status.success {
-      color: #fff;
-      background: rgba(22, 132, 71, .95);
-      border: 1px solid var(--success);
-      font-weight: 500;
-      opacity: 1;
-      max-height: 200px;
-      animation: slideDown .3s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        max-height: 0;
-        transform: translateY(-10px);
-      }
-
-      to {
-        opacity: 1;
-        max-height: 200px;
-        transform: translateY(0);
-      }
-    }
-
-    /* =========================
-       ADMIN BADGE
-    ========================= */
-
-    .admin-badge {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 7px;
-      margin-bottom: 5px;
-      padding: 6px 9px;
-      border-radius: 5px;
-      background: var(--soft);
-      color: var(--teal);
-      font: 600 9px 'IBM Plex Mono', monospace;
-      letter-spacing: .05em;
-      text-transform: uppercase;
+      gap: 10px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+      font-size: 14px;
     }
 
-    .admin-badge span {
-      width: 6px;
-      height: 6px;
+    .dot {
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: var(--teal);
+      background: #9ca3af;
+      flex-shrink: 0;
     }
 
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer {
-      padding: 25px 0 35px;
-      border-top: 1px solid var(--line);
+    .dot.success {
+      background: #16a34a;
     }
 
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 10px;
+    .dot.error {
+      background: #dc2626;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 16px;
+    .dot.loading {
+      background: #f59e0b;
     }
 
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
+    .message {
+      display: none;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .footer-links a:hover {
-      color: var(--teal);
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 750px) {
-      .shell {
-        padding: 0 17px;
-      }
-
-      .login-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .intro {
-        padding: 25px 0 0;
-      }
-
-      .intro h1 {
-        font-size: 47px;
-      }
-
-      main {
-        align-items: flex-start;
-        padding: 45px 0;
-      }
-
-      .nav-right a:first-child {
-        display: none;
-      }
+    .message.info {
+      display: block;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
     }
 
-    @media (max-width: 500px) {
-      .nav {
-        padding: 20px 0;
-      }
+    .message.success {
+      display: block;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
 
-      .brand {
-        font-size: 22px;
-      }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #111827;
+      color: #ffffff;
+      transition: 0.2s ease;
+    }
 
-      .login-card {
-        padding: 23px;
-      }
+    button:hover {
+      background: #1f2937;
+    }
 
-      .intro {
-        padding-top: 10px;
-      }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
 
-      .intro h1 {
-        font-size: 42px;
-      }
+    .secondary {
+      margin-top: 10px;
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
 
-      .footer-bottom {
-        display: block;
-      }
+    .secondary:hover {
+      background: #f9fafb;
+    }
 
-      .footer-links {
-        margin-top: 10px;
-      }
+    .user-info {
+      display: none;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .user-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .user-info span {
+      color: #6b7280;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .role {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 12px;
     }
   </style>
 
@@ -445,732 +214,378 @@
 
 <body>
 
-<div class="page">
-
-  <!-- =========================
-       NAVIGATION
-  ========================= -->
-
-  <div class="shell">
-    <nav class="nav">
+  <div class="card">
 
 ```
-  <a class="brand" href="../index.html">
-    <span class="dot"></span>WAKALA
-  </a>
+<div class="logo">W</div>
 
-  <div class="nav-right">
+<h1>Administrator Access</h1>
 
-    <a href="../index.html">
-      Back to Wakala
-    </a>
+<p class="subtitle">
+  Verifying your Wakala administrator account and permissions.
+</p>
 
-    <a
-      class="nav-button"
-      href="../login.html"
-    >
-      User login
-    </a>
+<div id="statusBox" class="status">
+  <span id="statusDot" class="dot loading"></span>
+  <span id="statusText">Checking authentication...</span>
+</div>
 
-  </div>
+<div id="messageBox" class="message"></div>
 
-</nav>
-```
+<div id="userInfo" class="user-info">
+  <strong id="userEmail">—</strong>
+  <span id="userId">—</span>
+  <div id="userRole" class="role">—</div>
+</div>
 
-  </div>
+<button id="continueBtn" disabled>
+  Continue to Admin Dashboard
+</button>
 
-  <!-- =========================
-       MAIN
-  ========================= -->
+<button id="logoutBtn" class="secondary">
+  Sign Out
+</button>
 
-  <main>
-
-```
-<div class="shell">
-
-  <div class="login-layout">
-
-    <!-- INTRO -->
-
-    <section class="intro">
-
-      <div class="kicker">
-        Wakala administration
-      </div>
-
-      <h1>
-        Welcome back, administrator.
-      </h1>
-
-      <p>
-        Sign in to manage Wakala users, balances, creator campaigns,
-        creator submissions, eSIM products and other administrative
-        operations.
-      </p>
-
-      <div class="security-note">
-
-        <strong>
-          Protected administration area.
-        </strong>
-
-        <br>
-
-        Access is restricted to accounts that have been explicitly
-        registered as active administrators in the Wakala system.
-
-      </div>
-
-    </section>
-
-
-    <!-- LOGIN -->
-
-    <section class="login-card">
-
-      <div class="admin-badge">
-        <span></span>
-        Admin portal
-      </div>
-
-      <h2>
-        Admin login
-      </h2>
-
-      <p class="login-description">
-        Use your Wakala administrator account to continue.
-      </p>
-
-
-      <form id="adminLoginForm">
-
-        <div class="field">
-
-          <label for="email">
-            Admin email
-          </label>
-
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="username"
-            required
-            placeholder="admin@example.com"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label for="password">
-            Password
-          </label>
-
-          <div class="password-wrap">
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              placeholder="Enter your password"
-            >
-
-            <button
-              type="button"
-              class="toggle-password"
-              id="togglePassword"
-            >
-              Show
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="button"
-          id="loginButton"
-        >
-          Sign in to admin
-        </button>
-
-
-        <p
-          class="status"
-          id="status"
-          role="status"
-          aria-live="polite"
-        ></p>
-
-      </form>
-
-    </section>
-
-  </div>
-
+<div class="footer">
+  Wakala Administrator Console
 </div>
 ```
 
-  </main>
-
-  <!-- =========================
-       FOOTER
-  ========================= -->
-
-  <div class="shell">
-
-```
-<footer>
-
-  <div class="footer-bottom">
-
-    <div>
-      © <span id="year"></span> Wakala. All rights reserved.
-    </div>
-
-    <div class="footer-links">
-
-      <a href="../index.html">
-        Home
-      </a>
-
-      <a href="../login.html">
-        User login
-      </a>
-
-    </div>
-
   </div>
 
-</footer>
-```
+  <script type="module">
 
-  </div>
+    import { createClient } from
+      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-</div>
+    import {
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    } from "../supabase-config.js";
 
-<!-- =========================
-     SUPABASE
-========================= -->
-
-<script type="module">
-
-  import { createClient } from
-    'https://esm.sh/@supabase/supabase-js@2';
-
-  import {
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  } from '../supabase-config.js';
-
-
-  /* =========================
-     SUPABASE CLIENT
-  ========================= */
-
-  const supabase = createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    }
-  );
-
-
-  /* =========================
-     ELEMENTS
-  ========================= */
-
-  const form =
-    document.getElementById('adminLoginForm');
-
-  const emailInput =
-    document.getElementById('email');
-
-  const passwordInput =
-    document.getElementById('password');
-
-  const loginButton =
-    document.getElementById('loginButton');
-
-  const status =
-    document.getElementById('status');
-
-  const togglePassword =
-    document.getElementById('togglePassword');
-
-  const year =
-    document.getElementById('year');
-
-
-  year.textContent =
-    new Date().getFullYear();
-
-
-  /* =========================
-     PASSWORD VISIBILITY
-  ========================= */
-
-  togglePassword.addEventListener(
-    'click',
-    () => {
-
-      const isPassword =
-        passwordInput.type === 'password';
-
-      passwordInput.type =
-        isPassword
-          ? 'text'
-          : 'password';
-
-      togglePassword.textContent =
-        isPassword
-          ? 'Hide'
-          : 'Show';
-
-    }
-  );
-
-
-  /* =========================
-     STATUS
-  ========================= */
-
-  function clearStatus() {
-
-    status.className = 'status';
-    status.textContent = '';
-
-  }
-
-
-  function showError(message) {
-
-    status.className =
-      'status error';
-
-    status.textContent =
-      message;
-
-  }
-
-
-  function showSuccess(message) {
-
-    status.className =
-      'status success';
-
-    status.textContent =
-      message;
-
-  }
-
-
-  /* =========================
-     VERIFY ADMIN
-     
-     IMPORTANT:
-     
-     This does NOT query
-     admin_users directly.
-     
-     The RPC uses auth.uid()
-     on the Supabase server.
-  ========================= */
-
-  async function checkAdmin() {
-
-    const {
-      data,
-      error
-    } = await supabase.rpc(
-      'verify_admin_access'
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
     );
 
+    const statusBox = document.getElementById("statusBox");
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
 
-    if (error) {
+    const messageBox = document.getElementById("messageBox");
 
-      console.error(
-        'Admin verification RPC error:',
-        error
-      );
+    const userInfo = document.getElementById("userInfo");
+    const userEmail = document.getElementById("userEmail");
+    const userId = document.getElementById("userId");
+    const userRole = document.getElementById("userRole");
 
-      throw new Error(
-        'Unable to verify administrator access.'
-      );
+    const continueBtn = document.getElementById("continueBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
+    function setStatus(type, text) {
+      statusDot.className = "dot " + type;
+      statusText.textContent = text;
     }
 
-
-    console.log(
-      'Admin verification result:',
-      data
-    );
-
-
-    /*
-      PostgreSQL RETURNS TABLE functions
-      normally return an array.
-
-      We support both array and object
-      responses for safety.
-    */
-
-    const admin =
-      Array.isArray(data)
-        ? data[0]
-        : data;
-
-
-    if (
-      !admin ||
-      admin.is_admin !== true
-    ) {
-
-      return null;
-
+    function showMessage(type, text) {
+      messageBox.className = "message " + type;
+      messageBox.textContent = text;
     }
 
-
-    return admin;
-
-  }
-
-
-  /* =========================
-     CHECK EXISTING SESSION
-  ========================= */
-
-  async function checkExistingSession() {
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase.auth.getSession();
-
-
-      if (error) {
-
-        console.error(
-          'Session check error:',
-          error
-        );
-
-        return;
-
-      }
-
-
-      const session =
-        data?.session;
-
-      const user =
-        session?.user;
-
-
-      if (!session || !user) {
-
-        return;
-
-      }
-
-
-      console.log(
-        'Existing session user:',
-        user.id,
-        user.email
-      );
-
-
-      /*
-        Verify the currently authenticated
-        user through auth.uid().
-      */
-
-      const admin =
-        await checkAdmin();
-
-
-      if (!admin) {
-
-        /*
-          User has a valid Supabase session
-          but is not an administrator.
-
-          Leave the user signed out rather
-          than allowing the session to remain
-          on the admin portal.
-        */
-
-        console.warn(
-          'Existing session is not an active administrator.'
-        );
-
-        await supabase.auth.signOut();
-
-        return;
-
-      }
-
-
-      console.log(
-        'Existing administrator verified:',
-        admin.role_name
-      );
-
-
-      /*
-        Already authenticated and verified.
-      */
-
-      window.location.replace(
-        './adminindex.html'
-      );
-
-    } catch (error) {
-
-      console.error(
-        'Existing session admin check failed:',
-        error
-      );
-
+    function hideMessage() {
+      messageBox.className = "message";
+      messageBox.textContent = "";
     }
 
-  }
-
-
-  /* =========================
-     LOGIN
-  ========================= */
-
-  form.addEventListener(
-    'submit',
-    async event => {
-
-      event.preventDefault();
-
-      clearStatus();
-
-
-      const email =
-        emailInput.value.trim();
-
-      const password =
-        passwordInput.value;
-
-
-      if (!email || !password) {
-
-        showError(
-          'Enter your administrator email and password.'
-        );
-
-        return;
-
-      }
-
-
-      loginButton.disabled =
-        true;
-
-      loginButton.textContent =
-        'Signing in...';
-
+    async function checkAdmin() {
 
       try {
 
+        hideMessage();
+
+        setStatus(
+          "loading",
+          "Checking administrator permissions..."
+        );
+
+        continueBtn.disabled = true;
+
         /*
-          STEP 1
-          
-          Authenticate using Supabase Auth.
-        */
+         * IMPORTANT:
+         *
+         * Do NOT query admin_users directly from the browser.
+         *
+         * get_admin_role() is SECURITY DEFINER and performs
+         * the administrator check safely inside PostgreSQL.
+         */
 
         const {
-          data,
+          data: role,
           error
-        } =
-          await supabase.auth.signInWithPassword({
-            email,
-            password
-          });
-
+        } = await supabase.rpc("get_admin_role");
 
         if (error) {
 
           console.error(
-            'Supabase login error:',
+            "Admin role RPC error:",
             error
           );
 
           throw new Error(
-            'Invalid email or password.'
+            "Unable to verify administrator access."
           );
-
         }
-
-
-        const user =
-          data?.user;
-
-        const session =
-          data?.session;
-
-
-        if (!user || !session) {
-
-          throw new Error(
-            'Unable to establish your administrator session.'
-          );
-
-        }
-
 
         console.log(
-          'Authenticated user:',
-          user.id,
-          user.email
+          "Admin role result:",
+          role
         );
 
+        if (!role) {
 
-        /*
-          STEP 2
-          
-          Verify administrator status.
-
-          We intentionally do NOT do:
-
-          .from('admin_users')
-
-          here.
-
-          The RPC determines the user
-          using auth.uid() server-side.
-        */
-
-        const admin =
-          await checkAdmin();
-
-
-        /*
-          STEP 3
-          
-          Authentication succeeded but
-          administrator authorization failed.
-        */
-
-        if (!admin) {
-
-          await supabase.auth.signOut();
-
-          throw new Error(
-            'This account does not have active administrator access.'
+          setStatus(
+            "error",
+            "Administrator access denied"
           );
 
+          showMessage(
+            "error",
+            "Your account is signed in, but it is not registered as an active Wakala administrator."
+          );
+
+          return false;
         }
 
+        const normalizedRole =
+          String(role).trim().toLowerCase();
 
-        console.log(
-          'Administrator verified:',
-          {
-            user_id: user.id,
-            email: user.email,
-            role: admin.role_name
+        const allowedRoles = [
+          "super_admin",
+          "admin",
+          "moderator"
+        ];
+
+        if (
+          !allowedRoles.includes(normalizedRole)
+        ) {
+
+          setStatus(
+            "error",
+            "Administrator access denied"
+          );
+
+          showMessage(
+            "error",
+            "Your administrator role does not have access to this console."
+          );
+
+          return false;
+        }
+
+        const {
+          data: {
+            user
           }
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+
+          setStatus(
+            "error",
+            "Authentication required"
+          );
+
+          showMessage(
+            "error",
+            "Your session has expired. Please sign in again."
+          );
+
+          return false;
+        }
+
+        userEmail.textContent =
+          user.email || "Authenticated user";
+
+        userId.textContent =
+          "User ID: " + user.id;
+
+        userRole.textContent =
+          normalizedRole.replace("_", " ");
+
+        userInfo.style.display = "block";
+
+        setStatus(
+          "success",
+          "Administrator verified"
         );
 
-
-        /*
-          STEP 4
-          
-          Access granted.
-        */
-
-        showSuccess(
-          '✓ Administrator verified. Redirecting to dashboard...'
+        showMessage(
+          "success",
+          "Access granted. Your administrator permissions have been verified."
         );
 
+        continueBtn.disabled = false;
 
-        loginButton.textContent =
-          'Access granted';
-
-        loginButton.disabled =
-          true;
-
-
-        setTimeout(
-          () => {
-
-            window.location.replace(
-              './adminindex.html'
-            );
-
-          },
-          700
-        );
-
+        return true;
 
       } catch (error) {
 
         console.error(
-          'Admin login error:',
+          "Admin verification failed:",
           error
         );
 
-
-        showError(
-          error?.message ||
-          'Unable to sign in.'
+        setStatus(
+          "error",
+          "Verification failed"
         );
 
+        showMessage(
+          "error",
+          error.message ||
+          "Unable to verify administrator access."
+        );
 
-        loginButton.disabled =
-          false;
-
-        loginButton.textContent =
-          'Sign in to admin';
-
+        return false;
       }
-
     }
-  );
 
+    continueBtn.addEventListener(
+      "click",
+      async () => {
 
-  /* =========================
-     AUTH STATE LISTENER
-  ========================= */
+        continueBtn.disabled = true;
 
-  supabase.auth.onAuthStateChange(
-    (event, session) => {
+        const allowed =
+          await checkAdmin();
 
-      console.log(
-        'Auth state:',
-        event,
-        session?.user?.id || 'No user'
-      );
+        if (allowed) {
 
+          window.location.href =
+            "./adminindex.html";
+        }
+      }
+    );
+
+    logoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        logoutBtn.disabled = true;
+
+        try {
+
+          await supabase.auth.signOut();
+
+        } catch (error) {
+
+          console.error(
+            "Logout error:",
+            error
+          );
+
+        } finally {
+
+          window.location.href =
+            "../login.html";
+        }
+      }
+    );
+
+    /*
+     * Handle the existing session.
+     */
+
+    async function initialize() {
+
+      try {
+
+        const {
+          data: {
+            session
+          }
+        } = await supabase.auth.getSession();
+
+        if (!session) {
+
+          setStatus(
+            "error",
+            "Not signed in"
+          );
+
+          showMessage(
+            "error",
+            "Please sign in with your Wakala administrator account."
+          );
+
+          return;
+        }
+
+        console.log(
+          "Existing session user:",
+          session.user.id,
+          session.user.email
+        );
+
+        await checkAdmin();
+
+      } catch (error) {
+
+        console.error(
+          "Initialization error:",
+          error
+        );
+
+        setStatus(
+          "error",
+          "Initialization failed"
+        );
+
+        showMessage(
+          "error",
+          "Unable to initialize administrator access."
+        );
+      }
     }
-  );
 
+    /*
+     * Monitor login/logout changes.
+     */
 
-  /* =========================
-     START
-  ========================= */
+    supabase.auth.onAuthStateChange(
+      async (event, session) => {
 
-  checkExistingSession();
+        console.log(
+          "Auth state:",
+          event,
+          session?.user?.id
+        );
 
-</script>
+        if (
+          event === "SIGNED_OUT"
+        ) {
+
+          window.location.href =
+            "../login.html";
+
+          return;
+        }
+
+        if (
+          event === "SIGNED_IN" ||
+          event === "INITIAL_SESSION"
+        ) {
+
+          if (session) {
+            await checkAdmin();
+          }
+        }
+      }
+    );
+
+    initialize();
+
+  </script>
 
 </body>
 </html>
