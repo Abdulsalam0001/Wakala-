@@ -656,7 +656,7 @@
 <!-- =========================
      SUPABASE
 ========================= -->
-
+```html
 <script type="module">
 
   import {
@@ -671,7 +671,14 @@
 
   const supabase = createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
   );
 
 
@@ -751,36 +758,30 @@
 
   /* =========================
      CHECK ADMIN
+     
+     IMPORTANT:
+     Do NOT query admin_users
+     directly from the browser.
+     
+     The RPC uses auth.uid()
+     server-side and avoids the
+     recursive RLS policy.
   ========================= */
 
-  async function checkAdmin(userId) {
+  async function checkAdmin() {
 
     const {
       data,
       error
-    } = await supabase
-      .from('admin_users')
-      .select(`
-        id,
-        user_id,
-        role_id,
-        status
-      `)
-      .eq(
-        'user_id',
-        userId
-      )
-      .eq(
-        'status',
-        'active'
-      )
-      .maybeSingle();
+    } = await supabase.rpc(
+      'verify_admin_access'
+    );
 
 
     if (error) {
 
       console.error(
-        'Admin verification error:',
+        'Admin verification RPC error:',
         error
       );
 
@@ -791,7 +792,29 @@
     }
 
 
-    return data;
+    console.log(
+      'Admin verification result:',
+      data
+    );
+
+
+    const admin =
+      Array.isArray(data)
+        ? data[0]
+        : data;
+
+
+    if (
+      !admin ||
+      admin.is_admin !== true
+    ) {
+
+      return null;
+
+    }
+
+
+    return admin;
 
   }
 
@@ -802,40 +825,59 @@
 
   async function checkExistingSession() {
 
-    const {
-      data,
-      error
-    } = await supabase.auth.getSession();
-
-
-    if (error) {
-
-      console.error(
-        'Session check error:',
-        error
-      );
-
-      return;
-
-    }
-
-
-    const user =
-      data?.session?.user;
-
-
-    if (!user) {
-      return;
-    }
-
-
     try {
 
+      const {
+        data,
+        error
+      } = await supabase.auth.getSession();
+
+
+      if (error) {
+
+        console.error(
+          'Session check error:',
+          error
+        );
+
+        return;
+
+      }
+
+
+      const session =
+        data?.session;
+
+
+      const user =
+        session?.user;
+
+
+      if (!session || !user) {
+
+        return;
+
+      }
+
+
+      console.log(
+        'Existing session user:',
+        user.id,
+        user.email
+      );
+
+
       const admin =
-        await checkAdmin(user.id);
+        await checkAdmin();
 
 
       if (admin) {
+
+        console.log(
+          'Existing administrator verified:',
+          admin.role_name
+        );
+
 
         window.location.replace(
           'adminindex.html'
@@ -845,7 +887,10 @@
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        'Existing session admin check failed:',
+        error
+      );
 
     }
 
@@ -898,18 +943,20 @@
       try {
 
         /*
-         * Authenticate through Supabase Auth.
+         * Authenticate through
+         * Supabase Auth.
          */
 
         const {
           data,
           error
-        } = await supabase.auth.signInWithPassword({
+        } =
+          await supabase.auth.signInWithPassword({
 
-          email,
-          password
+            email,
+            password
 
-        });
+          });
 
 
         if (error) {
@@ -930,7 +977,11 @@
           data?.user;
 
 
-        if (!user) {
+        const session =
+          data?.session;
+
+
+        if (!user || !session) {
 
           throw new Error(
             'Unable to establish your administrator session.'
@@ -939,33 +990,54 @@
         }
 
 
+        console.log(
+          'Authenticated user:',
+          user.id,
+          user.email
+        );
+
+
         /*
-         * Authentication succeeded.
+         * IMPORTANT:
          *
-         * Now verify that the account
-         * is actually an active Wakala admin.
+         * The UUID is now taken directly
+         * from the authenticated Supabase
+         * session.
+         *
+         * We do NOT send the UUID into
+         * the admin verification query.
+         *
+         * verify_admin_access() uses
+         * auth.uid() server-side.
          */
 
+
         const admin =
-          await checkAdmin(user.id);
+          await checkAdmin();
 
 
         if (!admin) {
 
           /*
-           * The person may have a normal
-           * Wakala account but is not an admin.
-           *
-           * Sign them back out immediately.
+           * Authentication succeeded,
+           * but this account is not an
+           * active Wakala administrator.
            */
 
           await supabase.auth.signOut();
+
 
           throw new Error(
             'This account does not have active administrator access.'
           );
 
         }
+
+
+        console.log(
+          'Administrator verified:',
+          admin.role_name
+        );
 
 
         /*
@@ -992,7 +1064,7 @@
             );
 
           },
-          1500
+          1000
         );
 
       } catch (error) {
@@ -1001,6 +1073,7 @@
           'Admin login error:',
           error
         );
+
 
         showError(
           error.message ||
@@ -1021,12 +1094,31 @@
 
 
   /* =========================
+     AUTH STATE LISTENER
+  ========================= */
+
+  supabase.auth.onAuthStateChange(
+    (event, session) => {
+
+      console.log(
+        'Auth state:',
+        event,
+        session?.user?.id || 'No user'
+      );
+
+    }
+  );
+
+
+  /* =========================
      START
   ========================= */
 
   checkExistingSession();
 
 </script>
+```
+
 
 </body>
 </html>
