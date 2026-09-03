@@ -2,34 +2,14 @@
 
 <html lang="en">
 <head>
+
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Balances | Wakala Admin</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
   <style>
-    :root {
-      --ink: #0D1420;
-      --paper: #F6F2E9;
-      --panel: #FFFDF8;
-      --gold: #E4A445;
-      --teal: #229175;
-      --muted: #7A756A;
-      --line: rgba(13,20,32,.10);
-      --soft: #EAF5EF;
-      --success: #168447;
-      --danger: #B42318;
-      --warning: #A15C00;
-      --white: #FFFFFF;
-    }
 
     * {
       box-sizing: border-box;
@@ -38,13 +18,18 @@
     html,
     body {
       margin: 0;
+      padding: 0;
       min-height: 100%;
-    }
-
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: Inter, sans-serif;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #f5f7fb;
+      color: #111827;
     }
 
     button,
@@ -58,616 +43,544 @@
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-    }
-
     .app {
-      min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      min-height: 100vh;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 250px;
+      background: #111827;
+      color: #ffffff;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: 22px 16px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 10px 25px;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      border-radius: 10px;
+      font-weight: 900;
+    }
+
+    .nav-title {
+      color: #9ca3af;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 15px 10px 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 3px;
+      transition: 0.2s;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1f2937;
+      color: #ffffff;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      min-width: 0;
+    }
 
     .topbar {
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,253,248,.88);
-      backdrop-filter: blur(12px);
+      height: 72px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
       position: sticky;
       top: 0;
       z-index: 50;
     }
 
-    .topbar-inner {
-      width: min(1400px, 100%);
-      margin: auto;
-      padding: 18px 28px;
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .admin-status {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+      gap: 8px;
+      color: #6b7280;
+      font-size: 13px;
     }
 
-    .brand {
-      text-decoration: none;
-      font: 600 25px Fraunces, serif;
-      color: var(--ink);
-    }
-
-    .brand-dot {
-      display: inline-block;
-      width: 9px;
-      height: 9px;
+    .status-dot {
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--gold);
-      margin-right: 8px;
-      vertical-align: 2px;
+      background: #16a34a;
     }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .admin-identity {
-      text-align: right;
-    }
-
-    .admin-email {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .admin-role {
-      margin-top: 3px;
-      font: 600 9px 'IBM Plex Mono', monospace;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-
-    .logout-button {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--ink);
-      border-radius: 7px;
-      padding: 9px 13px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .logout-button:hover {
-      background: var(--ink);
-      color: #fff;
-    }
-
-    /* =========================
-       LAYOUT
-    ========================= */
 
     .content {
-      width: min(1400px, 100%);
-      margin: auto;
-      padding: 30px 28px 60px;
-      flex: 1;
+      padding: 28px;
     }
 
-    .page-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 25px;
-      margin-bottom: 25px;
-    }
-
-    .kicker {
-      color: var(--teal);
-      font: 700 10px 'IBM Plex Mono', monospace;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .page-header h1 {
-      margin: 8px 0 7px;
-      font: 600 clamp(34px, 5vw, 52px)/1 Fraunces, serif;
-      letter-spacing: -.035em;
-    }
-
-    .page-header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-      max-width: 650px;
-    }
-
-    .security-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 11px;
-      border-radius: 7px;
-      background: var(--soft);
-      color: var(--teal);
-      font: 600 9px 'IBM Plex Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      white-space: nowrap;
-    }
-
-    .security-pill span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--teal);
-    }
-
-    /* =========================
-       GRID
-    ========================= */
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(300px, 390px) minmax(0, 1fr);
-      gap: 22px;
-      align-items: start;
-    }
+    /* CARDS */
 
     .card {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
-      box-shadow: 0 12px 35px rgba(13,20,32,.05);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
     }
 
     .card-header {
-      padding: 19px 20px;
-      border-bottom: 1px solid var(--line);
+      padding: 20px 22px;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .card-header h2 {
       margin: 0;
-      font: 600 22px Fraunces, serif;
+      font-size: 17px;
     }
 
     .card-header p {
       margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
+      color: #6b7280;
+      font-size: 13px;
     }
 
     .card-body {
-      padding: 20px;
+      padding: 22px;
     }
 
-    /* =========================
-       CUSTOMER SEARCH
-    ========================= */
+    /* CUSTOMER SEARCH */
 
-    .search-wrap {
+    .search-row {
       display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-row input {
+      flex: 1;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      outline: none;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6b7280;
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 17px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .btn-primary {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #1f2937;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* CUSTOMER LIST */
+
+    .customer-list {
+      display: grid;
       gap: 8px;
     }
 
-    .search-input {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #fff;
-      color: var(--ink);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .search-input:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(34,145,117,.08);
-    }
-
-    .search-button {
-      border: 0;
-      border-radius: 7px;
-      padding: 0 15px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .search-button:hover {
-      background: var(--teal);
-    }
-
-    .customer-list {
-      margin-top: 18px;
+    .customer {
       display: flex;
-      flex-direction: column;
-      gap: 7px;
-      max-height: 620px;
-      overflow-y: auto;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      transition: 0.2s;
     }
 
-    .customer-item {
-      width: 100%;
-      text-align: left;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      background: #fff;
-      padding: 13px;
-      transition: .15s ease;
+    .customer:hover {
+      background: #f9fafb;
     }
 
-    .customer-item:hover {
-      border-color: rgba(34,145,117,.25);
-      transform: translateY(-1px);
-    }
-
-    .customer-item.active {
-      border-color: var(--teal);
-      background: var(--soft);
+    .customer-main {
+      min-width: 0;
     }
 
     .customer-name {
-      font-size: 12px;
       font-weight: 700;
-      color: var(--ink);
+      margin-bottom: 4px;
     }
 
     .customer-meta {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-
-    .customer-id {
-      margin-top: 5px;
-      font: 500 9px 'IBM Plex Mono', monospace;
-      color: #9A9488;
+      color: #6b7280;
+      font-size: 12px;
       word-break: break-all;
     }
 
-    .empty {
-      padding: 25px 10px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
+    .customer-actions {
+      flex-shrink: 0;
     }
 
-    .loading {
-      padding: 25px 10px;
-      text-align: center;
-      color: var(--muted);
-      font: 500 10px 'IBM Plex Mono', monospace;
+    /* BALANCE */
+
+    .balance-panel {
+      display: none;
+      margin-top: 25px;
     }
 
-    /* =========================
-       BALANCE PANEL
-    ========================= */
+    .balance-panel.visible {
+      display: block;
+    }
 
     .selected-customer {
-      padding: 14px;
+      padding: 17px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
       margin-bottom: 18px;
-      border-radius: 9px;
-      background: var(--soft);
-      border: 1px solid rgba(34,145,117,.12);
     }
 
-    .selected-label {
-      color: var(--teal);
-      font: 700 9px 'IBM Plex Mono', monospace;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+    .selected-customer strong {
+      display: block;
+      margin-bottom: 4px;
     }
 
-    .selected-name {
-      margin-top: 5px;
-      font: 600 20px Fraunces, serif;
-    }
-
-    .selected-email {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 10px;
+    .selected-customer span {
+      color: #6b7280;
+      font-size: 12px;
     }
 
     .balance-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(170px, 1fr)
+      );
+      gap: 12px;
     }
 
     .balance-card {
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
+      padding: 17px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
     }
 
     .balance-currency {
-      color: var(--muted);
-      font: 700 9px 'IBM Plex Mono', monospace;
-      letter-spacing: .08em;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
     .balance-value {
-      margin-top: 9px;
-      font: 600 23px Fraunces, serif;
+      font-size: 22px;
+      font-weight: 800;
       word-break: break-word;
     }
 
-    .balance-symbol {
-      color: var(--muted);
-      font: 500 9px 'IBM Plex Mono', monospace;
-    }
-
-    /* =========================
-       ADJUSTMENT
-    ========================= */
+    /* ADJUSTMENT */
 
     .adjustment {
-      margin-top: 22px;
-      border-top: 1px solid var(--line);
-      padding-top: 22px;
+      margin-top: 25px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
     }
 
     .adjustment h3 {
-      margin: 0 0 5px;
-      font: 600 22px Fraunces, serif;
-    }
-
-    .adjustment-description {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
+      margin: 0 0 16px;
+      font-size: 15px;
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 13px;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .field {
-      margin-bottom: 13px;
+    .form-group {
+      margin-bottom: 14px;
     }
 
-    .field.full {
+    .form-group.full {
       grid-column: 1 / -1;
     }
 
-    .field label {
+    label {
       display: block;
-      margin-bottom: 7px;
-      color: var(--muted);
-      font-size: 9px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: .08em;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    .result {
+      display: none;
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .result.success {
+      display: block;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .result.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* ESIM */
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 13px 15px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      color: #6b7280;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
       text-transform: uppercase;
     }
 
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #fff;
-      color: var(--ink);
-      padding: 12px;
-      outline: none;
-      font-size: 11px;
+    .badge.pending {
+      background: #fef3c7;
+      color: #92400e;
     }
 
-    .field textarea {
-      min-height: 85px;
-      resize: vertical;
+    .badge.completed {
+      background: #dcfce7;
+      color: #166534;
     }
 
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(34,145,117,.08);
+    .badge.failed,
+    .badge.cancelled {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
-    .adjust-button {
-      width: 100%;
-      padding: 13px;
-      border: 0;
-      border-radius: 7px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
+    .badge.processing {
+      background: #dbeafe;
+      color: #1e40af;
     }
 
-    .adjust-button:hover {
-      background: var(--teal);
+    .empty {
+      padding: 35px 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
     }
 
-    .adjust-button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
+    .loading {
+      padding: 25px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
     }
 
-    /* =========================
-       NOTICE
-    ========================= */
+    /* TOAST */
 
-    .notice {
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      max-width: 360px;
+      background: #111827;
+      color: #ffffff;
+      padding: 14px 17px;
+      border-radius: 11px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
       display: none;
-      margin-bottom: 15px;
-      padding: 12px 14px;
-      border-radius: 7px;
-      font-size: 11px;
-      line-height: 1.6;
+      z-index: 999;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    .notice.show {
+    .toast.show {
       display: block;
     }
 
-    .notice.error {
-      color: #fff;
-      background: var(--danger);
-    }
+    /* MOBILE */
 
-    .notice.success {
-      color: #fff;
-      background: var(--success);
-    }
+    @media (max-width: 800px) {
 
-    .notice.warning {
-      color: #fff;
-      background: var(--warning);
-    }
-
-    /* =========================
-       TRANSACTION RESULT
-    ========================= */
-
-    .result-box {
-      display: none;
-      margin-top: 15px;
-      padding: 14px;
-      border-radius: 9px;
-      background: #fff;
-      border: 1px solid var(--line);
-    }
-
-    .result-box.show {
-      display: block;
-    }
-
-    .result-title {
-      color: var(--success);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding-top: 8px;
-      font-size: 10px;
-    }
-
-    .result-row span:first-child {
-      color: var(--muted);
-    }
-
-    .result-row span:last-child {
-      font-weight: 700;
-      text-align: right;
-      word-break: break-word;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer {
-      width: min(1400px, 100%);
-      margin: auto;
-      padding: 20px 28px 30px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 16px;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: var(--muted);
-    }
-
-    .footer-links a:hover {
-      color: var(--teal);
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 950px) {
-      .grid {
-        grid-template-columns: 1fr;
+      .sidebar {
+        width: 220px;
       }
 
-      .customer-list {
-        max-height: 400px;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .topbar-inner,
-      .content,
-      footer {
-        padding-left: 17px;
-        padding-right: 17px;
+      .main {
+        margin-left: 220px;
       }
 
-      .topbar-inner {
-        align-items: flex-start;
-      }
-
-      .admin-identity {
-        display: none;
-      }
-
-      .page-header {
-        display: block;
-      }
-
-      .security-pill {
-        margin-top: 15px;
+      .content {
+        padding: 18px;
       }
 
       .form-grid {
         grid-template-columns: 1fr;
       }
 
-      .field.full {
+      .form-group.full {
         grid-column: auto;
       }
 
-      .search-wrap {
-        flex-direction: column;
+    }
+
+    @media (max-width: 650px) {
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
       }
 
-      .search-button {
-        padding: 12px;
-      }
-
-      .footer-inner {
+      .app {
         display: block;
       }
 
-      .footer-links {
-        margin-top: 10px;
+      .main {
+        margin-left: 0;
       }
+
+      .topbar {
+        position: static;
+      }
+
+      .search-row {
+        flex-direction: column;
+      }
+
+      .customer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .customer-actions {
+        width: 100%;
+      }
+
+      .customer-actions .btn {
+        width: 100%;
+      }
+
     }
+
   </style>
 
 </head>
@@ -676,105 +589,120 @@
 
 <div class="app">
 
-  <!-- =========================
-       TOP BAR
-  ========================= -->
+  <!-- SIDEBAR -->
 
-  <header class="topbar">
+  <aside class="sidebar">
 
 ```
-<div class="topbar-inner">
-
-  <a
-    class="brand"
-    href="./adminindex.html"
-  >
-    <span class="brand-dot"></span>
-    WAKALA
-  </a>
-
-  <div class="topbar-right">
-
-    <div class="admin-identity">
-
-      <div
-        class="admin-email"
-        id="adminEmail"
-      >
-        Administrator
-      </div>
-
-      <div
-        class="admin-role"
-        id="adminRole"
-      >
-        Verifying access...
-      </div>
-
-    </div>
-
-    <button
-      type="button"
-      class="logout-button"
-      id="logoutButton"
-    >
-      Sign out
-    </button>
-
-  </div>
-
-</div>
-```
-
-  </header>
-
-  <!-- =========================
-       CONTENT
-  ========================= -->
-
-  <main class="content">
-
-```
-<div class="page-header">
-
-  <div>
-
-    <div class="kicker">
-      Wakala administration
-    </div>
-
-    <h1>
-      Customer balances
-    </h1>
-
-    <p>
-      View customer wallet balances and make controlled administrative
-      balance adjustments. All balance operations are performed through
-      protected server-side functions.
-    </p>
-
-  </div>
-
-  <div class="security-pill">
-    <span></span>
-    Protected admin area
-  </div>
-
+<div class="brand">
+  <div class="brand-mark">W</div>
+  <span>Wakala Admin</span>
 </div>
 
+<div class="nav-title">
+  Main
+</div>
 
-<div
-  class="notice"
-  id="globalNotice"
-  role="alert"
-></div>
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">⌂</span>
+  Overview
+</a>
+
+<a
+  class="nav-link"
+  href="./balances.html"
+>
+  <span class="nav-icon">₦</span>
+  Balances
+</a>
+
+<a
+  class="nav-link"
+  href="./creators.html"
+>
+  <span class="nav-icon">★</span>
+  Creators
+</a>
+
+<a
+  class="nav-link"
+  href="./view-creators.html"
+>
+  <span class="nav-icon">♙</span>
+  Creator Users
+</a>
+
+<div class="nav-title">
+  Management
+</div>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">▣</span>
+  Transactions
+</a>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">◎</span>
+  eSIM Orders
+</a>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">⚙</span>
+  Settings
+</a>
+
+<div class="nav-title">
+  Account
+</div>
+
+<a
+  class="nav-link"
+  href="#"
+  id="logoutLink"
+>
+  <span class="nav-icon">↪</span>
+  Sign Out
+</a>
+```
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+```
+<header class="topbar">
+
+  <h1>
+    Customer Balances
+  </h1>
+
+  <div class="admin-status">
+    <span class="status-dot"></span>
+    <span id="adminRoleText">
+      Verifying admin...
+    </span>
+  </div>
+
+</header>
 
 
-<div class="grid">
+<div class="content">
 
-  <!-- =========================
-       CUSTOMER LIST
-  ========================= -->
+  <!-- CUSTOMER CARD -->
 
   <section class="card">
 
@@ -785,169 +713,119 @@
       </h2>
 
       <p>
-        Search for a Wakala customer by name, email, phone or account
-        information.
+        Search customers and manage their wallet balances.
       </p>
 
     </div>
 
     <div class="card-body">
 
-      <div class="search-wrap">
+      <div class="search-row">
 
         <input
-          type="search"
           id="customerSearch"
-          class="search-input"
-          placeholder="Search customers..."
+          type="search"
+          placeholder="Search by name, email, phone or account number..."
           autocomplete="off"
         >
 
         <button
-          type="button"
-          class="search-button"
-          id="searchButton"
+          id="searchBtn"
+          class="btn btn-primary"
         >
           Search
         </button>
 
       </div>
 
-
       <div
-        class="customer-list"
-        id="customerList"
+        id="customerLoading"
+        class="loading"
+        style="display:none;"
       >
-        <div class="loading">
-          Loading customers...
-        </div>
+        Loading customers...
       </div>
 
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       BALANCES
-  ========================= -->
-
-  <section class="card">
-
-    <div class="card-header">
-
-      <h2>
-        Wallet balances
-      </h2>
-
-      <p>
-        Select a customer to view all available wallet balances.
-      </p>
-
-    </div>
-
-    <div class="card-body">
+      <div
+        id="customerList"
+        class="customer-list"
+      ></div>
 
       <div
-        id="selectedCustomer"
+        id="customerEmpty"
+        class="empty"
         style="display:none;"
+      >
+        No customers found.
+      </div>
+
+
+      <!-- BALANCE PANEL -->
+
+      <div
+        id="balancePanel"
+        class="balance-panel"
       >
 
         <div class="selected-customer">
 
-          <div class="selected-label">
-            Selected customer
-          </div>
+          <strong id="selectedCustomerName">
+            Customer
+          </strong>
 
-          <div
-            class="selected-name"
-            id="selectedCustomerName"
-          >
+          <span id="selectedCustomerMeta">
             —
-          </div>
-
-          <div
-            class="selected-email"
-            id="selectedCustomerEmail"
-          >
-            —
-          </div>
+          </span>
 
         </div>
 
-      </div>
-
-
-      <div
-        id="balanceEmpty"
-        class="empty"
-      >
-        Select a customer to view their balances.
-      </div>
-
-
-      <div
-        class="balance-grid"
-        id="balanceGrid"
-        style="display:none;"
-      ></div>
-
-
-      <!-- =========================
-           BALANCE ADJUSTMENT
-      ========================= -->
-
-      <div
-        class="adjustment"
-        id="adjustmentPanel"
-        style="display:none;"
-      >
 
         <h3>
-          Adjust balance
+          Wallet Balances
         </h3>
 
-        <p class="adjustment-description">
-          Use this only for authorized administrative adjustments.
-          The adjustment is performed server-side and should be
-          accompanied by a reason.
-        </p>
+        <div
+          id="balanceGrid"
+          class="balance-grid"
+        ></div>
 
 
-        <form id="adjustmentForm">
+        <!-- BALANCE ADJUSTMENT -->
+
+        <div class="adjustment">
+
+          <h3>
+            Adjust Wallet Balance
+          </h3>
 
           <div class="form-grid">
 
-            <div class="field">
+            <div class="form-group">
 
               <label for="currency">
                 Currency
               </label>
 
-              <select id="currency" required>
-
-                <option value="">
-                  Select currency
-                </option>
+              <select id="currency">
 
                 <option value="NGN">
-                  NGN — Nigerian Naira
+                  NGN
                 </option>
 
                 <option value="USD">
-                  USD — US Dollar
+                  USD
                 </option>
 
                 <option value="KES">
-                  KES — Kenyan Shilling
+                  KES
                 </option>
 
                 <option value="TZS">
-                  TZS — Tanzanian Shilling
+                  TZS
                 </option>
 
                 <option value="RWF">
-                  RWF — Rwandan Franc
+                  RWF
                 </option>
 
                 <option value="USDC">
@@ -959,7 +837,7 @@
                 </option>
 
                 <option value="BTC">
-                  BTC — Bitcoin
+                  BTC
                 </option>
 
               </select>
@@ -967,24 +845,20 @@
             </div>
 
 
-            <div class="field">
+            <div class="form-group">
 
               <label for="direction">
-                Adjustment type
+                Adjustment
               </label>
 
-              <select id="direction" required>
-
-                <option value="">
-                  Select action
-                </option>
+              <select id="direction">
 
                 <option value="credit">
-                  Credit balance
+                  Credit / Add
                 </option>
 
                 <option value="debit">
-                  Debit balance
+                  Debit / Remove
                 </option>
 
               </select>
@@ -992,7 +866,7 @@
             </div>
 
 
-            <div class="field">
+            <div class="form-group">
 
               <label for="amount">
                 Amount
@@ -1001,16 +875,15 @@
               <input
                 id="amount"
                 type="number"
-                min="0.00000001"
+                min="0"
                 step="any"
                 placeholder="0.00"
-                required
               >
 
             </div>
 
 
-            <div class="field">
+            <div class="form-group">
 
               <label for="reason">
                 Reason
@@ -1019,61 +892,120 @@
               <input
                 id="reason"
                 type="text"
-                maxlength="500"
-                placeholder="e.g. Manual correction"
-                required
+                placeholder="Reason for adjustment"
+                maxlength="250"
               >
 
             </div>
 
 
-            <div class="field full">
+            <div class="form-group full">
 
               <button
-                type="submit"
-                class="adjust-button"
-                id="adjustButton"
+                id="adjustBtn"
+                class="btn btn-primary"
               >
-                Apply balance adjustment
+                Apply Balance Adjustment
               </button>
 
             </div>
 
           </div>
 
-        </form>
-
-
-        <div
-          class="result-box"
-          id="resultBox"
-        >
-
-          <div class="result-title">
-            Balance adjustment completed
-          </div>
-
-          <div class="result-row">
-            <span>Currency</span>
-            <span id="resultCurrency">—</span>
-          </div>
-
-          <div class="result-row">
-            <span>Before</span>
-            <span id="resultBefore">—</span>
-          </div>
-
-          <div class="result-row">
-            <span>After</span>
-            <span id="resultAfter">—</span>
-          </div>
-
-          <div class="result-row">
-            <span>Reference</span>
-            <span id="resultReference">—</span>
-          </div>
+          <div
+            id="adjustResult"
+            class="result"
+          ></div>
 
         </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ESIM ORDERS -->
+
+  <section class="card section">
+
+    <div class="card-header">
+
+      <h2>
+        eSIM Orders
+      </h2>
+
+      <p>
+        Recent eSIM orders associated with Wakala customers.
+      </p>
+
+    </div>
+
+    <div class="card-body">
+
+      <div
+        id="esimLoading"
+        class="loading"
+      >
+        Loading eSIM orders...
+      </div>
+
+      <div
+        id="esimEmpty"
+        class="empty"
+        style="display:none;"
+      >
+        No eSIM orders found.
+      </div>
+
+      <div
+        id="esimTableContainer"
+        class="table-wrap"
+        style="display:none;"
+      >
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Customer
+              </th>
+
+              <th>
+                Email
+              </th>
+
+              <th>
+                Country
+              </th>
+
+              <th>
+                Plan
+              </th>
+
+              <th>
+                Device
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Date
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="esimOrdersBody"></tbody>
+
+        </table>
 
       </div>
 
@@ -1086,216 +1018,221 @@
 
   </main>
 
-  <!-- =========================
-       FOOTER
-  ========================= -->
-
-  <footer>
-
-```
-<div class="footer-inner">
-
-  <div>
-    © <span id="year"></span> Wakala Administration
-  </div>
-
-  <div class="footer-links">
-
-    <a href="./adminindex.html">
-      Overview
-    </a>
-
-    <a href="./creators.html">
-      Creators
-    </a>
-
-    <a href="./access.html">
-      Admin login
-    </a>
-
-  </div>
-
-</div>
-```
-
-  </footer>
-
 </div>
 
-<!-- =========================
-     SUPABASE
-========================= -->
+<div
+  id="toast"
+  class="toast"
+></div>
 
 <script type="module">
 
   import {
     createClient
-  } from 'https://esm.sh/@supabase/supabase-js@2';
+  } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
 
   import {
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
-  } from '../supabase-config.js';
+  } from "../supabase-config.js";
 
-
-  /* =========================
-     SUPABASE CLIENT
-  ========================= */
 
   const supabase = createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    }
+    SUPABASE_PUBLISHABLE_KEY
   );
 
 
-  /* =========================
-     STATE
-  ========================= */
-
-  let currentUser = null;
-  let currentAdmin = null;
-  let selectedCustomer = null;
-
-
-  /* =========================
+  /* -------------------------------------------------
      ELEMENTS
-  ========================= */
-
-  const customerList =
-    document.getElementById('customerList');
+  ------------------------------------------------- */
 
   const customerSearch =
-    document.getElementById('customerSearch');
+    document.getElementById(
+      "customerSearch"
+    );
 
-  const searchButton =
-    document.getElementById('searchButton');
+  const searchBtn =
+    document.getElementById(
+      "searchBtn"
+    );
+
+  const customerList =
+    document.getElementById(
+      "customerList"
+    );
+
+  const customerLoading =
+    document.getElementById(
+      "customerLoading"
+    );
+
+  const customerEmpty =
+    document.getElementById(
+      "customerEmpty"
+    );
+
+  const balancePanel =
+    document.getElementById(
+      "balancePanel"
+    );
 
   const balanceGrid =
-    document.getElementById('balanceGrid');
-
-  const balanceEmpty =
-    document.getElementById('balanceEmpty');
-
-  const selectedCustomerBox =
-    document.getElementById('selectedCustomer');
+    document.getElementById(
+      "balanceGrid"
+    );
 
   const selectedCustomerName =
-    document.getElementById('selectedCustomerName');
+    document.getElementById(
+      "selectedCustomerName"
+    );
 
-  const selectedCustomerEmail =
-    document.getElementById('selectedCustomerEmail');
+  const selectedCustomerMeta =
+    document.getElementById(
+      "selectedCustomerMeta"
+    );
 
-  const adjustmentPanel =
-    document.getElementById('adjustmentPanel');
+  const currency =
+    document.getElementById(
+      "currency"
+    );
 
-  const adjustmentForm =
-    document.getElementById('adjustmentForm');
+  const direction =
+    document.getElementById(
+      "direction"
+    );
 
-  const adjustButton =
-    document.getElementById('adjustButton');
+  const amount =
+    document.getElementById(
+      "amount"
+    );
 
-  const currencyInput =
-    document.getElementById('currency');
+  const reason =
+    document.getElementById(
+      "reason"
+    );
 
-  const directionInput =
-    document.getElementById('direction');
+  const adjustBtn =
+    document.getElementById(
+      "adjustBtn"
+    );
 
-  const amountInput =
-    document.getElementById('amount');
+  const adjustResult =
+    document.getElementById(
+      "adjustResult"
+    );
 
-  const reasonInput =
-    document.getElementById('reason');
+  const adminRoleText =
+    document.getElementById(
+      "adminRoleText"
+    );
 
-  const resultBox =
-    document.getElementById('resultBox');
+  const logoutLink =
+    document.getElementById(
+      "logoutLink"
+    );
 
-  const resultCurrency =
-    document.getElementById('resultCurrency');
+  const esimLoading =
+    document.getElementById(
+      "esimLoading"
+    );
 
-  const resultBefore =
-    document.getElementById('resultBefore');
+  const esimEmpty =
+    document.getElementById(
+      "esimEmpty"
+    );
 
-  const resultAfter =
-    document.getElementById('resultAfter');
+  const esimTableContainer =
+    document.getElementById(
+      "esimTableContainer"
+    );
 
-  const resultReference =
-    document.getElementById('resultReference');
+  const esimOrdersBody =
+    document.getElementById(
+      "esimOrdersBody"
+    );
 
-  const globalNotice =
-    document.getElementById('globalNotice');
-
-  const adminEmail =
-    document.getElementById('adminEmail');
-
-  const adminRole =
-    document.getElementById('adminRole');
-
-  const logoutButton =
-    document.getElementById('logoutButton');
-
-
-  document.getElementById('year').textContent =
-    new Date().getFullYear();
+  const toast =
+    document.getElementById(
+      "toast"
+    );
 
 
-  /* =========================
+  let selectedUserId = null;
+
+
+  /* -------------------------------------------------
      HELPERS
-  ========================= */
+  ------------------------------------------------- */
 
   function escapeHtml(value) {
 
-    return String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
 
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
 
-  function showNotice(
-    message,
-    type = 'error'
+  function showToast(message) {
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3500);
+  }
+
+
+  function showAdjustmentResult(
+    type,
+    message
   ) {
 
-    globalNotice.textContent =
+    adjustResult.className =
+      "result " + type;
+
+    adjustResult.textContent =
       message;
-
-    globalNotice.className =
-      `notice show ${type}`;
-
   }
 
 
-  function clearNotice() {
+  function clearAdjustmentResult() {
 
-    globalNotice.textContent = '';
+    adjustResult.className =
+      "result";
 
-    globalNotice.className =
-      'notice';
-
+    adjustResult.textContent =
+      "";
   }
 
 
-  function formatAmount(
-    amount,
-    currency
+  function formatNumber(
+    value,
+    currencyCode = ""
   ) {
 
-    const numeric =
-      Number(amount || 0);
+    const number =
+      Number(value || 0);
 
-    if (currency === 'BTC') {
+    if (
+      currencyCode === "BTC"
+    ) {
 
-      return numeric.toLocaleString(
+      return number.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 0,
@@ -1305,223 +1242,225 @@
 
     }
 
-    return numeric.toLocaleString(
+    return number.toLocaleString(
       undefined,
       {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }
     );
-
   }
 
 
-  function getCurrencySymbol(currency) {
+  function getOrderStatusClass(
+    status
+  ) {
 
-    const symbols = {
-      NGN: '₦',
-      USD: '$',
-      KES: 'KSh',
-      TZS: 'TSh',
-      RWF: 'FRw',
-      USDC: '$',
-      USDT: '$',
-      BTC: '₿'
-    };
+    const normalized =
+      String(
+        status || "pending"
+      ).toLowerCase();
 
-    return symbols[currency] || '';
+    if (
+      normalized === "completed" ||
+      normalized === "success" ||
+      normalized === "successful"
+    ) {
+      return "completed";
+    }
 
+    if (
+      normalized === "failed"
+    ) {
+      return "failed";
+    }
+
+    if (
+      normalized === "cancelled" ||
+      normalized === "canceled"
+    ) {
+      return "cancelled";
+    }
+
+    if (
+      normalized === "processing"
+    ) {
+      return "processing";
+    }
+
+    return "pending";
   }
 
 
-  /* =========================
-     ADMIN AUTHENTICATION
-  ========================= */
+  /* -------------------------------------------------
+     AUTHENTICATION
+  ------------------------------------------------- */
 
   async function authenticate() {
 
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase.auth.getSession();
-
-
-      if (error) {
-
-        console.error(
-          'Session error:',
-          error
-        );
-
-        throw new Error(
-          'Unable to verify your session.'
-        );
-
+    const {
+      data: {
+        session
       }
+    } = await supabase.auth.getSession();
 
 
-      const session =
-        data?.session;
+    if (!session) {
 
-
-      const user =
-        session?.user;
-
-
-      if (!session || !user) {
-
-        window.location.replace(
-          './access.html'
-        );
-
-        return false;
-
-      }
-
-
-      currentUser =
-        user;
-
-
-      console.log(
-        'Balance page session:',
-        user.id,
-        user.email
-      );
-
-
-      /*
-       * IMPORTANT:
-       *
-       * Do NOT query admin_users directly.
-       *
-       * The RPC checks auth.uid()
-       * server-side.
-       */
-
-      const {
-        data: adminData,
-        error: adminError
-      } = await supabase.rpc(
-        'verify_admin_access'
-      );
-
-
-      if (adminError) {
-
-        console.error(
-          'Admin verification RPC error:',
-          adminError
-        );
-
-        throw new Error(
-          'Unable to verify administrator access.'
-        );
-
-      }
-
-
-      console.log(
-        'Admin verification result:',
-        adminData
-      );
-
-
-      const admin =
-        Array.isArray(adminData)
-          ? adminData[0]
-          : adminData;
-
-
-      if (
-        !admin ||
-        admin.is_admin !== true
-      ) {
-
-        console.warn(
-          'User is not an active administrator:',
-          user.id
-        );
-
-        await supabase.auth.signOut();
-
-        window.location.replace(
-          './access.html'
-        );
-
-        return false;
-
-      }
-
-
-      currentAdmin =
-        admin;
-
-
-      adminEmail.textContent =
-        user.email || 'Administrator';
-
-
-      adminRole.textContent =
-        admin.role_name || 'administrator';
-
-
-      console.log(
-        'Balance access granted:',
-        {
-          user_id: user.id,
-          email: user.email,
-          role: admin.role_name
-        }
-      );
-
-
-      return true;
-
-    } catch (error) {
-
-      console.error(
-        'Balance authentication failed:',
-        error
-      );
-
-      showNotice(
-        error?.message ||
-        'Unable to authenticate administrator.'
-      );
-
-      setTimeout(
-        () => {
-          window.location.replace(
-            './access.html'
-          );
-        },
-        1200
-      );
+      window.location.href =
+        "../login.html";
 
       return false;
-
     }
 
+
+    /*
+     * Secure administrator verification.
+     *
+     * We intentionally do NOT do:
+     *
+     * supabase
+     *   .from("admin_users")
+     *
+     * because admin_users has protected RLS
+     * and direct browser access can cause
+     * recursive-policy problems.
+     */
+
+    const {
+      data: role,
+      error
+    } = await supabase.rpc(
+      "get_admin_role"
+    );
+
+
+    if (error) {
+
+      console.error(
+        "Admin role error:",
+        error
+      );
+
+      document.body.innerHTML = `
+        <div style="
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:25px;
+          font-family:system-ui;
+          background:#f5f7fb;
+        ">
+          <div style="
+            max-width:500px;
+            width:100%;
+            background:white;
+            border:1px solid #e5e7eb;
+            border-radius:16px;
+            padding:30px;
+          ">
+            <h2>Administrator Verification Failed</h2>
+
+            <p style="color:#6b7280;line-height:1.6;">
+              The administrator role could not be verified.
+              Please check that the get_admin_role()
+              database function exists and that your
+              account is an active administrator.
+            </p>
+
+            <button
+              onclick="location.href='../login.html'"
+              style="
+                width:100%;
+                padding:13px;
+                border:0;
+                border-radius:10px;
+                background:#111827;
+                color:white;
+                font-weight:700;
+              "
+            >
+              Return to Login
+            </button>
+          </div>
+        </div>
+      `;
+
+      return false;
+    }
+
+
+    if (!role) {
+
+      alert(
+        "Administrator access denied."
+      );
+
+      window.location.href =
+        "../dashboard.html";
+
+      return false;
+    }
+
+
+    const normalizedRole =
+      String(role)
+        .trim()
+        .toLowerCase();
+
+
+    const allowedRoles = [
+      "super_admin",
+      "admin",
+      "moderator"
+    ];
+
+
+    if (
+      !allowedRoles.includes(
+        normalizedRole
+      )
+    ) {
+
+      alert(
+        "Your administrator role does not have access to this page."
+      );
+
+      window.location.href =
+        "../dashboard.html";
+
+      return false;
+    }
+
+
+    adminRoleText.textContent =
+      normalizedRole.replace(
+        "_",
+        " "
+      );
+
+
+    return true;
   }
 
 
-  /* =========================
-     LOAD CUSTOMERS
-  ========================= */
+  /* -------------------------------------------------
+     CUSTOMERS
+  ------------------------------------------------- */
 
   async function loadCustomers(
-    searchTerm = ''
+    searchTerm = ""
   ) {
 
+    customerLoading.style.display =
+      "block";
+
+    customerEmpty.style.display =
+      "none";
+
     customerList.innerHTML =
-      '<div class="loading">Loading customers...</div>';
-
-
-    clearNotice();
-
+      "";
 
     try {
 
@@ -1529,7 +1468,7 @@
         data,
         error
       } = await supabase.rpc(
-        'admin_list_customers',
+        "admin_list_customers",
         {
           search_term:
             searchTerm.trim()
@@ -1538,645 +1477,751 @@
 
 
       if (error) {
-
-        console.error(
-          'Customer RPC error:',
-          error
-        );
-
         throw error;
-
       }
 
 
-      console.log(
-        'Customers:',
-        data
-      );
+      const customers =
+        Array.isArray(data)
+          ? data
+          : [];
 
 
-      if (!data || data.length === 0) {
+      customerLoading.style.display =
+        "none";
 
-        customerList.innerHTML =
-          '<div class="empty">No customers found.</div>';
+
+      if (
+        customers.length === 0
+      ) {
+
+        customerEmpty.style.display =
+          "block";
 
         return;
-
       }
 
 
       customerList.innerHTML =
-        data.map(
+        customers.map(
           customer => {
-
-            const id =
-              customer.user_id ||
-              customer.id;
 
             const name =
               customer.full_name ||
               customer.name ||
-              'Unnamed customer';
+              "Customer";
+
 
             const email =
               customer.email ||
-              customer.delivery_email ||
-              'No email';
+              "No email";
+
 
             const phone =
               customer.phone ||
-              '';
+              "";
+
+
+            const accountNumber =
+              customer.account_number ||
+              customer.account_no ||
+              "";
 
 
             return `
-
-              <button
-                type="button"
-                class="customer-item"
-                data-user-id="${escapeHtml(id)}"
+              <div
+                class="customer"
               >
 
-                <div class="customer-name">
-                  ${escapeHtml(name)}
+                <div
+                  class="customer-main"
+                >
+
+                  <div
+                    class="customer-name"
+                  >
+                    ${escapeHtml(name)}
+                  </div>
+
+                  <div
+                    class="customer-meta"
+                  >
+                    ${escapeHtml(email)}
+                    ${phone
+                      ? " · " +
+                        escapeHtml(phone)
+                      : ""}
+                    ${accountNumber
+                      ? " · Account: " +
+                        escapeHtml(accountNumber)
+                      : ""}
+                  </div>
+
                 </div>
 
-                <div class="customer-meta">
-                  ${escapeHtml(email)}
-                  ${phone ? ` · ${escapeHtml(phone)}` : ''}
+                <div
+                  class="customer-actions"
+                >
+
+                  <button
+                    class="btn btn-secondary"
+                    data-user-id="${escapeHtml(
+                      customer.user_id ||
+                      customer.id
+                    )}"
+                    data-name="${escapeHtml(name)}"
+                    data-email="${escapeHtml(email)}"
+                  >
+                    View Balance
+                  </button>
+
                 </div>
 
-                <div class="customer-id">
-                  ${escapeHtml(id)}
-                </div>
-
-              </button>
-
+              </div>
             `;
-
           }
-        ).join('');
+        ).join("");
 
 
       customerList
-        .querySelectorAll('.customer-item')
-        .forEach(
-          button => {
+        .querySelectorAll(
+          "[data-user-id]"
+        )
+        .forEach(button => {
 
-            button.addEventListener(
-              'click',
-              () => {
+          button.addEventListener(
+            "click",
+            () => {
 
-                const userId =
-                  button.dataset.userId;
+              selectCustomer(
+                button.dataset.userId,
+                button.dataset.name,
+                button.dataset.email
+              );
 
-                const customer =
-                  data.find(
-                    item =>
-                      String(
-                        item.user_id ||
-                        item.id
-                      ) === String(userId)
-                  );
+            }
+          );
 
-
-                selectCustomer(
-                  customer,
-                  button
-                );
-
-              }
-            );
-
-          }
-        );
+        });
 
 
     } catch (error) {
 
       console.error(
-        'Failed to load customers:',
+        "Customer loading error:",
         error
       );
 
+      customerLoading.style.display =
+        "none";
 
-      customerList.innerHTML =
-        '<div class="empty">Unable to load customers.</div>';
+      customerEmpty.style.display =
+        "block";
 
-
-      showNotice(
-        error?.message ||
-        'Unable to load customers.'
-      );
-
+      customerEmpty.textContent =
+        "Unable to load customers: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
     }
-
   }
 
 
-  /* =========================
+  /* -------------------------------------------------
      SELECT CUSTOMER
-  ========================= */
+  ------------------------------------------------- */
 
   async function selectCustomer(
-    customer,
-    button
+    userId,
+    name,
+    email
   ) {
 
-    if (!customer) {
-      return;
-    }
-
-
-    customerList
-      .querySelectorAll('.customer-item')
-      .forEach(
-        item => item.classList.remove('active')
-      );
-
-
-    if (button) {
-      button.classList.add('active');
-    }
-
-
-    const userId =
-      customer.user_id ||
-      customer.id;
-
-
-    selectedCustomer = {
-      ...customer,
-      user_id: userId
-    };
-
-
-    const name =
-      customer.full_name ||
-      customer.name ||
-      'Unnamed customer';
-
-
-    const email =
-      customer.email ||
-      customer.delivery_email ||
-      'No email';
-
-
-    selectedCustomerBox.style.display =
-      'block';
+    selectedUserId =
+      userId;
 
 
     selectedCustomerName.textContent =
-      name;
+      name || "Customer";
 
 
-    selectedCustomerEmail.textContent =
-      email;
+    selectedCustomerMeta.textContent =
+      email || userId || "—";
 
 
-    balanceEmpty.style.display =
-      'none';
-
-
-    balanceGrid.style.display =
-      'grid';
-
-
-    adjustmentPanel.style.display =
-      'block';
-
-
-    balanceGrid.innerHTML =
-      '<div class="loading">Loading balances...</div>';
-
-
-    resultBox.classList.remove(
-      'show'
+    balancePanel.classList.add(
+      "visible"
     );
+
+
+    balanceGrid.innerHTML = `
+      <div class="loading">
+        Loading balances...
+      </div>
+    `;
+
+
+    clearAdjustmentResult();
 
 
     try {
 
-      await loadBalances(
-        userId
+      const {
+        data,
+        error
+      } = await supabase.rpc(
+        "admin_get_customer_balances",
+        {
+          target_user_id:
+            userId
+        }
       );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      renderBalances(data);
+
 
     } catch (error) {
 
       console.error(
-        'Balance loading error:',
+        "Balance loading error:",
         error
       );
 
-      balanceGrid.innerHTML =
-        '<div class="empty">Unable to load balances.</div>';
 
-      showNotice(
-        error?.message ||
-        'Unable to load customer balances.'
-      );
-
+      balanceGrid.innerHTML = `
+        <div class="empty">
+          Unable to load balances:
+          ${escapeHtml(
+            error.message ||
+            "Unknown error"
+          )}
+        </div>
+      `;
     }
-
   }
 
 
-  /* =========================
-     LOAD BALANCES
-  ========================= */
+  /* -------------------------------------------------
+     BALANCE RENDERING
+  ------------------------------------------------- */
 
-  async function loadBalances(
-    userId
+  function renderBalances(
+    data
   ) {
 
-    const {
-      data,
-      error
-    } = await supabase.rpc(
-      'admin_get_customer_balances',
-      {
-        target_user_id:
-          userId
-      }
-    );
-
-
-    if (error) {
-
-      console.error(
-        'Balance RPC error:',
-        error
-      );
-
-      throw error;
-
-    }
-
-
-    console.log(
-      'Customer balances:',
-      data
-    );
-
-
-    let balances = data;
-
-
-    /*
-     * Support both:
-     *
-     * [
-     *   { currency: 'NGN', balance: 1000 }
-     * ]
-     *
-     * and a wrapped response.
-     */
-
-    if (
-      balances &&
-      !Array.isArray(balances) &&
-      Array.isArray(balances.balances)
-    ) {
-
-      balances =
-        balances.balances;
-
-    }
+    const rows =
+      Array.isArray(data)
+        ? data
+        : [];
 
 
     if (
-      !Array.isArray(balances) ||
-      balances.length === 0
+      rows.length === 0
     ) {
 
-      balanceGrid.innerHTML =
-        '<div class="empty">No wallet balances found for this customer.</div>';
+      balanceGrid.innerHTML = `
+        <div class="empty">
+          No wallet balances found.
+        </div>
+      `;
 
       return;
-
     }
 
 
     balanceGrid.innerHTML =
-      balances.map(
-        balance => {
+      rows.map(row => {
 
-          const currency =
-            balance.currency ||
-            balance.code ||
-            '—';
-
-          const amount =
-            balance.balance ??
-            balance.amount ??
-            balance.available_balance ??
-            0;
+        const code =
+          row.currency ||
+          "—";
 
 
-          return `
+        const value =
+          row.balance ??
+          row.available_balance ??
+          row.amount ??
+          0;
 
-            <div class="balance-card">
 
-              <div class="balance-currency">
-                ${escapeHtml(currency)}
-              </div>
+        return `
+          <div class="balance-card">
 
-              <div class="balance-value">
-                <span class="balance-symbol">
-                  ${escapeHtml(
-                    getCurrencySymbol(currency)
-                  )}
-                </span>
-                ${escapeHtml(
-                  formatAmount(
-                    amount,
-                    currency
-                  )
-                )}
-              </div>
-
+            <div
+              class="balance-currency"
+            >
+              ${escapeHtml(code)}
             </div>
 
-          `;
+            <div
+              class="balance-value"
+            >
+              ${escapeHtml(
+                formatNumber(
+                  value,
+                  code
+                )
+              )}
+            </div>
 
-        }
-      ).join('');
+          </div>
+        `;
 
+      }).join("");
   }
 
 
-  /* =========================
-     BALANCE ADJUSTMENT
-  ========================= */
+  /* -------------------------------------------------
+     ADJUST BALANCE
+  ------------------------------------------------- */
 
-  adjustmentForm.addEventListener(
-    'submit',
-    async event => {
+  async function adjustBalance() {
 
-      event.preventDefault();
+    clearAdjustmentResult();
 
 
-      if (!selectedCustomer) {
+    if (!selectedUserId) {
 
-        showNotice(
-          'Select a customer first.'
-        );
+      showAdjustmentResult(
+        "error",
+        "Select a customer first."
+      );
 
-        return;
+      return;
+    }
 
+
+    const value =
+      Number(
+        amount.value
+      );
+
+
+    if (
+      !Number.isFinite(value) ||
+      value <= 0
+    ) {
+
+      showAdjustmentResult(
+        "error",
+        "Enter a valid amount greater than zero."
+      );
+
+      return;
+    }
+
+
+    const adjustmentReason =
+      reason.value.trim();
+
+
+    if (
+      !adjustmentReason
+    ) {
+
+      showAdjustmentResult(
+        "error",
+        "A reason is required for every balance adjustment."
+      );
+
+      return;
+    }
+
+
+    adjustBtn.disabled =
+      true;
+
+    adjustBtn.textContent =
+      "Processing...";
+
+
+    try {
+
+      const {
+        data,
+        error
+      } = await supabase.rpc(
+        "admin_adjust_wallet_balance",
+        {
+          target_user_id:
+            selectedUserId,
+
+          target_currency:
+            currency.value,
+
+          adjustment_amount:
+            value,
+
+          adjustment_direction:
+            direction.value,
+
+          adjustment_reason:
+            adjustmentReason
+        }
+      );
+
+
+      if (error) {
+        throw error;
       }
 
 
-      const currency =
-        currencyInput.value;
-
-      const direction =
-        directionInput.value;
-
-      const amount =
-        Number(
-          amountInput.value
-        );
-
-      const reason =
-        reasonInput.value.trim();
+      console.log(
+        "Balance adjustment result:",
+        data
+      );
 
 
-      if (!currency) {
-
-        showNotice(
-          'Select a currency.'
-        );
-
-        return;
-
-      }
+      let resultRow =
+        Array.isArray(data)
+          ? data[0]
+          : data;
 
 
-      if (!direction) {
+      const before =
+        resultRow?.balance_before;
 
-        showNotice(
-          'Select an adjustment type.'
-        );
 
-        return;
+      const after =
+        resultRow?.balance_after;
 
-      }
+
+      const resultCurrency =
+        resultRow?.currency ||
+        currency.value;
+
+
+      const reference =
+        resultRow?.reference;
+
+
+      let message =
+        "Balance adjustment completed successfully.";
 
 
       if (
-        !Number.isFinite(amount) ||
-        amount <= 0
+        before !== undefined &&
+        after !== undefined
       ) {
 
-        showNotice(
-          'Enter a valid amount greater than zero.'
-        );
-
-        return;
-
+        message +=
+          ` Balance: ${
+            formatNumber(
+              before,
+              resultCurrency
+            )
+          } → ${
+            formatNumber(
+              after,
+              resultCurrency
+            )
+          } ${
+            resultCurrency
+          }.`;
       }
 
 
-      if (!reason) {
+      if (reference) {
 
-        showNotice(
-          'Enter a reason for the adjustment.'
-        );
-
-        return;
-
+        message +=
+          ` Reference: ${reference}`;
       }
 
 
-      const confirmed =
-        window.confirm(
-          `Confirm ${direction} of ${formatAmount(
-            amount,
-            currency
-          )} ${currency} for ${
-            selectedCustomer.full_name ||
-            selectedCustomer.name ||
-            selectedCustomer.email ||
-            'this customer'
-          }?`
-        );
+      showAdjustmentResult(
+        "success",
+        message
+      );
 
 
-      if (!confirmed) {
-        return;
-      }
+      showToast(
+        "Wallet balance updated successfully."
+      );
 
 
-      adjustButton.disabled =
-        true;
+      amount.value =
+        "";
 
-      adjustButton.textContent =
-        'Applying adjustment...';
-
-
-      clearNotice();
+      reason.value =
+        "";
 
 
-      try {
-
-        const {
-          data,
-          error
-        } = await supabase.rpc(
-          'admin_adjust_wallet_balance',
-          {
-            target_user_id:
-              selectedCustomer.user_id,
-
-            target_currency:
-              currency,
-
-            adjustment_amount:
-              amount,
-
-            adjustment_direction:
-              direction,
-
-            adjustment_reason:
-              reason
-          }
-        );
+      await selectCustomer(
+        selectedUserId,
+        selectedCustomerName.textContent,
+        selectedCustomerMeta.textContent
+      );
 
 
-        if (error) {
+    } catch (error) {
 
-          console.error(
-            'Balance adjustment RPC error:',
-            error
-          );
-
-          throw error;
-
-        }
+      console.error(
+        "Balance adjustment error:",
+        error
+      );
 
 
-        console.log(
-          'Balance adjustment result:',
-          data
-        );
+      showAdjustmentResult(
+        "error",
+        error.message ||
+        "Unable to adjust wallet balance."
+      );
 
+    } finally {
 
-        /*
-         * The existing RPC is expected
-         * to return:
-         *
-         * balance_before
-         * balance_after
-         * currency
-         * reference
-         */
+      adjustBtn.disabled =
+        false;
 
-        const result =
-          Array.isArray(data)
-            ? data[0]
-            : data;
-
-
-        resultBox.classList.add(
-          'show'
-        );
-
-
-        resultCurrency.textContent =
-          result?.currency ||
-          currency;
-
-
-        resultBefore.textContent =
-          result?.balance_before != null
-            ? formatAmount(
-                result.balance_before,
-                result?.currency || currency
-              )
-            : '—';
-
-
-        resultAfter.textContent =
-          result?.balance_after != null
-            ? formatAmount(
-                result.balance_after,
-                result?.currency || currency
-              )
-            : '—';
-
-
-        resultReference.textContent =
-          result?.reference ||
-          'Completed';
-
-
-        showNotice(
-          'Balance adjustment completed successfully.',
-          'success'
-        );
-
-
-        /*
-         * Reload balances so the
-         * displayed amount is current.
-         */
-
-        await loadBalances(
-          selectedCustomer.user_id
-        );
-
-
-        /*
-         * Clear adjustment fields.
-         */
-
-        amountInput.value =
-          '';
-
-        reasonInput.value =
-          '';
-
-        currencyInput.value =
-          '';
-
-        directionInput.value =
-          '';
-
-
-      } catch (error) {
-
-        console.error(
-          'Balance adjustment failed:',
-          error
-        );
-
-
-        showNotice(
-          error?.message ||
-          'Unable to adjust this balance.'
-        );
-
-      } finally {
-
-        adjustButton.disabled =
-          false;
-
-        adjustButton.textContent =
-          'Apply balance adjustment';
-
-      }
-
+      adjustBtn.textContent =
+        "Apply Balance Adjustment";
     }
-  );
+  }
 
 
-  /* =========================
-     SEARCH
-  ========================= */
+  /* -------------------------------------------------
+     ESIM ORDERS
+  ------------------------------------------------- */
 
-  searchButton.addEventListener(
-    'click',
+  async function loadEsimOrders() {
+
+    esimLoading.style.display =
+      "block";
+
+    esimEmpty.style.display =
+      "none";
+
+    esimTableContainer.style.display =
+      "none";
+
+    esimOrdersBody.innerHTML =
+      "";
+
+
+    try {
+
+      /*
+       * Select * deliberately.
+       *
+       * The eSIM schema can evolve and this prevents
+       * the admin dashboard from breaking merely
+       * because an optional column is unavailable.
+       */
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from("esim_orders")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(100);
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      const orders =
+        Array.isArray(data)
+          ? data
+          : [];
+
+
+      esimLoading.style.display =
+        "none";
+
+
+      if (
+        orders.length === 0
+      ) {
+
+        esimEmpty.style.display =
+          "block";
+
+        return;
+      }
+
+
+      esimTableContainer.style.display =
+        "block";
+
+
+      esimOrdersBody.innerHTML =
+        orders.map(
+          order => {
+
+            const customer =
+              order.customer_name ||
+              order.full_name ||
+              order.name ||
+              order.delivery_name ||
+              order.user_id ||
+              "Customer";
+
+
+            const email =
+              order.delivery_email ||
+              order.email ||
+              "—";
+
+
+            const country =
+              order.country_name ||
+              order.country_code ||
+              order.country ||
+              "—";
+
+
+            const plan =
+              order.plan_data ||
+              order.plan_name ||
+              order.package_name ||
+              order.plan_id ||
+              "—";
+
+
+            const validity =
+              order.validity_days;
+
+
+            const planText =
+              validity
+                ? `${plan} · ${validity}d`
+                : plan;
+
+
+            const device =
+              order.device ||
+              order.device_model ||
+              "—";
+
+
+            const status =
+              order.status ||
+              order.order_status ||
+              "pending";
+
+
+            const statusClass =
+              getOrderStatusClass(
+                status
+              );
+
+
+            const created =
+              order.created_at ||
+              order.createdAt;
+
+
+            let formattedDate =
+              "—";
+
+
+            if (created) {
+
+              const date =
+                new Date(created);
+
+
+              if (
+                !Number.isNaN(
+                  date.getTime()
+                )
+              ) {
+
+                formattedDate =
+                  date.toLocaleString();
+              }
+            }
+
+
+            return `
+              <tr>
+
+                <td>
+                  <strong>
+                    ${escapeHtml(customer)}
+                  </strong>
+                </td>
+
+                <td>
+                  ${escapeHtml(email)}
+                </td>
+
+                <td>
+                  ${escapeHtml(country)}
+                </td>
+
+                <td>
+                  ${escapeHtml(planText)}
+                </td>
+
+                <td>
+                  ${escapeHtml(device)}
+                </td>
+
+                <td>
+                  <span
+                    class="badge ${statusClass}"
+                  >
+                    ${escapeHtml(status)}
+                  </span>
+                </td>
+
+                <td>
+                  ${escapeHtml(formattedDate)}
+                </td>
+
+              </tr>
+            `;
+
+          }
+        ).join("");
+
+
+    } catch (error) {
+
+      console.error(
+        "eSIM order loading error:",
+        error
+      );
+
+
+      esimLoading.style.display =
+        "none";
+
+      esimEmpty.style.display =
+        "block";
+
+      esimEmpty.textContent =
+        "Unable to load eSIM orders: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+    }
+  }
+
+
+  /* -------------------------------------------------
+     EVENTS
+  ------------------------------------------------- */
+
+  searchBtn.addEventListener(
+    "click",
     () => {
 
       loadCustomers(
@@ -2188,11 +2233,11 @@
 
 
   customerSearch.addEventListener(
-    'keydown',
+    "keydown",
     event => {
 
       if (
-        event.key === 'Enter'
+        event.key === "Enter"
       ) {
 
         event.preventDefault();
@@ -2200,27 +2245,23 @@
         loadCustomers(
           customerSearch.value
         );
-
       }
 
     }
   );
 
 
-  /* =========================
-     LOGOUT
-  ========================= */
+  adjustBtn.addEventListener(
+    "click",
+    adjustBalance
+  );
 
-  logoutButton.addEventListener(
-    'click',
-    async () => {
 
-      logoutButton.disabled =
-        true;
+  logoutLink.addEventListener(
+    "click",
+    async event => {
 
-      logoutButton.textContent =
-        'Signing out...';
-
+      event.preventDefault();
 
       try {
 
@@ -2228,38 +2269,37 @@
 
       } finally {
 
-        window.location.replace(
-          './access.html'
-        );
-
+        window.location.href =
+          "../login.html";
       }
 
     }
   );
 
 
-  /* =========================
+  /* -------------------------------------------------
      AUTH STATE
-  ========================= */
+  ------------------------------------------------- */
 
   supabase.auth.onAuthStateChange(
-    (event, session) => {
+    async (
+      event,
+      session
+    ) => {
 
       console.log(
-        'Balance auth state:',
+        "Auth state:",
         event,
-        session?.user?.id ||
-        'No user'
+        session?.user?.id
       );
 
 
       if (
-        event === 'SIGNED_OUT'
+        event === "SIGNED_OUT"
       ) {
 
-        window.location.replace(
-          './access.html'
-        );
+        window.location.href =
+          "../login.html";
 
       }
 
@@ -2267,11 +2307,11 @@
   );
 
 
-  /* =========================
+  /* -------------------------------------------------
      INITIALIZE
-  ========================= */
+  ------------------------------------------------- */
 
-  async function init() {
+  async function initialize() {
 
     const authenticated =
       await authenticate();
@@ -2284,10 +2324,18 @@
 
     await loadCustomers();
 
+
+    /*
+     * eSIM orders are loaded separately so a problem
+     * with eSIM RLS/schema does not prevent the
+     * customer balance dashboard from loading.
+     */
+
+    await loadEsimOrders();
   }
 
 
-  init();
+  initialize();
 
 </script>
 
