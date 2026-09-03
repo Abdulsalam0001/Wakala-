@@ -1082,7 +1082,7 @@ await supabase.auth.getSession();
 if(!session){
 
 window.location.href =
-'../login.html';
+'access.html';
 
 return false;
 
@@ -1124,25 +1124,8 @@ session.user.id
 
 if(error || !admin){
 
-document.body.innerHTML = `
-<div style="
-display:grid;
-place-items:center;
-min-height:100vh;
-font-family:Arial;
-background:#f5f3ee
-">
-<div style="
-background:white;
-padding:40px;
-border-radius:14px;
-text-align:center
-">
-<h2>Access denied</h2>
-<p>This account does not have active administrator access.</p>
-</div>
-</div>
-`;
+window.location.href =
+'access.html';
 
 return false;
 
