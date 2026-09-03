@@ -1298,7 +1298,7 @@ import { createClient }
 import {
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
-} from './supabase-config.js';
+} from '../supabase-config.js';
 
 
 const supabase =
@@ -1434,7 +1434,7 @@ async function initialise() {
       setTimeout(
         () => {
           window.location.href =
-            'admin-login.html';
+            '../login.html';
         },
         1000
       );
@@ -1449,16 +1449,33 @@ async function initialise() {
 
 
     /*
-     * IMPORTANT:
-     *
-     * We deliberately do NOT query admin_users here.
-     *
-     * The previous implementation could get stuck before
-     * creator_submissions was ever queried if the admin_users
-     * RLS/function chain failed.
-     *
-     * The actual authorization must be enforced by Supabase RLS.
+     * Confirm the role before loading administrator data.
      */
+
+    const {
+      data: role,
+      error: roleError
+    } = await supabase.rpc('get_admin_role');
+
+
+    const allowedRoles = [
+      'super_admin',
+      'admin',
+      'moderator'
+    ];
+
+
+    if (
+      roleError ||
+      !allowedRoles.includes(
+        String(role || '').trim().toLowerCase()
+      )
+    ) {
+
+      throw new Error(
+        'Your account is not authorized to access the Wakala admin panel.'
+      );
+    }
 
 
     await loadSubmissions();
@@ -3192,7 +3209,7 @@ supabase.auth.onAuthStateChange(
     ) {
 
       window.location.href =
-        'admin-login.html';
+        '../login.html';
 
     }
 

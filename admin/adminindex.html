@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
 
   <script src="../auth-links.js" defer></script>
 
+  <meta charset="UTF-8">
   <meta
-    http-equiv="refresh"
-    content="0; url=./balances.html"
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
   >
 
-  <script>
-    window.location.replace("./balances.html");
-  </script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Balances | Wakala Admin</title>
+  <title>Admin Overview | Wakala</title>
 
   <style>
 
@@ -42,10 +37,13 @@
       color: #111827;
     }
 
+    body {
+      overflow-x: hidden;
+    }
+
     button,
     input,
-    select,
-    textarea {
+    select {
       font: inherit;
     }
 
@@ -54,22 +52,30 @@
     }
 
     .app {
-      display: flex;
       min-height: 100vh;
+      display: flex;
     }
 
-    /* SIDEBAR */
+
+    /* ---------------------------------------------
+       SIDEBAR
+    --------------------------------------------- */
 
     .sidebar {
-      width: 250px;
-      background: #111827;
-      color: #ffffff;
       position: fixed;
       top: 0;
-      bottom: 0;
       left: 0;
+      bottom: 0;
+
+      width: 250px;
+
+      background: #111827;
+      color: #fff;
+
       padding: 22px 16px;
+
       overflow-y: auto;
+
       z-index: 100;
     }
 
@@ -77,48 +83,65 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      padding: 10px 10px 25px;
-      font-weight: 800;
+
+      padding: 10px 10px 26px;
+
       font-size: 20px;
+      font-weight: 800;
     }
 
     .brand-mark {
       width: 36px;
       height: 36px;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #ffffff;
-      color: #111827;
+
       border-radius: 10px;
+
+      background: #fff;
+      color: #111827;
+
       font-weight: 900;
     }
 
     .nav-title {
+      padding: 15px 10px 8px;
+
       color: #9ca3af;
-      font-size: 11px;
+
+      font-size: 10px;
+      font-weight: 800;
+
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 15px 10px 8px;
     }
 
     .nav-link {
       display: flex;
       align-items: center;
       gap: 10px;
+
       padding: 11px 12px;
+
       border-radius: 10px;
+
       color: #d1d5db;
+
       text-decoration: none;
+
       font-size: 14px;
+
       margin-bottom: 3px;
-      transition: 0.2s;
+
+      transition: .2s;
     }
 
     .nav-link:hover,
     .nav-link.active {
       background: #1f2937;
-      color: #ffffff;
+      color: #fff;
     }
 
     .nav-icon {
@@ -126,352 +149,397 @@
       text-align: center;
     }
 
-    /* MAIN */
+
+    /* ---------------------------------------------
+       MAIN
+    --------------------------------------------- */
 
     .main {
       flex: 1;
-      margin-left: 250px;
       min-width: 0;
+
+      margin-left: 250px;
     }
 
     .topbar {
       height: 72px;
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       padding: 0 28px;
+
+      background: #fff;
+
+      border-bottom: 1px solid #e5e7eb;
+
       position: sticky;
       top: 0;
+
       z-index: 50;
     }
 
     .topbar h1 {
       margin: 0;
+
       font-size: 20px;
+      letter-spacing: -.3px;
     }
 
     .admin-status {
       display: flex;
       align-items: center;
       gap: 8px;
+
       color: #6b7280;
+
       font-size: 13px;
+
+      text-transform: capitalize;
     }
 
     .status-dot {
       width: 8px;
       height: 8px;
+
       border-radius: 50%;
+
       background: #16a34a;
     }
+
+
+    /* ---------------------------------------------
+       CONTENT
+    --------------------------------------------- */
 
     .content {
       padding: 28px;
     }
 
-    /* CARDS */
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+    .welcome {
+      margin-bottom: 25px;
     }
 
-    .card-header {
-      padding: 20px 22px;
-      border-bottom: 1px solid #e5e7eb;
+    .welcome h2 {
+      margin: 0 0 6px;
+
+      font-size: 25px;
+      letter-spacing: -.6px;
     }
 
-    .card-header h2 {
+    .welcome p {
       margin: 0;
-      font-size: 17px;
-    }
 
-    .card-header p {
-      margin: 5px 0 0;
       color: #6b7280;
-      font-size: 13px;
+
+      font-size: 14px;
     }
 
-    .card-body {
-      padding: 22px;
-    }
 
-    /* CUSTOMER SEARCH */
+    /* ---------------------------------------------
+       STAT CARDS
+    --------------------------------------------- */
 
-    .search-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .search-row input {
-      flex: 1;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      outline: none;
-      background: #ffffff;
-      color: #111827;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #6b7280;
-      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 12px 17px;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .btn-primary {
-      background: #111827;
-      color: #ffffff;
-    }
-
-    .btn-primary:hover {
-      background: #1f2937;
-    }
-
-    .btn-secondary {
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .btn-danger {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* CUSTOMER LIST */
-
-    .customer-list {
+    .stats {
       display: grid;
-      gap: 8px;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 15px;
+
+      margin-bottom: 25px;
     }
 
-    .customer {
+    .stat {
+      background: #fff;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 15px;
+
+      padding: 20px;
+
+      box-shadow:
+        0 5px 20px
+        rgba(15, 23, 42, .04);
+    }
+
+    .stat-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      padding: 15px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      transition: 0.2s;
+
+      margin-bottom: 14px;
     }
 
-    .customer:hover {
-      background: #f9fafb;
-    }
+    .stat-label {
+      color: #6b7280;
 
-    .customer-main {
-      min-width: 0;
-    }
-
-    .customer-name {
+      font-size: 12px;
       font-weight: 700;
-      margin-bottom: 4px;
     }
 
-    .customer-meta {
-      color: #6b7280;
-      font-size: 12px;
-      word-break: break-all;
+    .stat-icon {
+      width: 34px;
+      height: 34px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 9px;
+
+      background: #f3f4f6;
+
+      font-size: 16px;
     }
 
-    .customer-actions {
-      flex-shrink: 0;
+    .stat-value {
+      font-size: 26px;
+      font-weight: 850;
+
+      letter-spacing: -.7px;
     }
 
-    /* BALANCE */
+    .stat-sub {
+      margin-top: 5px;
 
-    .balance-panel {
-      display: none;
-      margin-top: 25px;
+      color: #9ca3af;
+
+      font-size: 11px;
     }
 
-    .balance-panel.visible {
-      display: block;
+
+    /* ---------------------------------------------
+       GRID
+    --------------------------------------------- */
+
+    .grid {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(320px, .9fr);
+
+      gap: 20px;
+
+      margin-bottom: 20px;
     }
 
-    .selected-customer {
-      padding: 17px;
-      background: #f9fafb;
+    .card {
+      background: #fff;
+
       border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      margin-bottom: 18px;
+
+      border-radius: 16px;
+
+      box-shadow:
+        0 5px 20px
+        rgba(15, 23, 42, .04);
+
+      overflow: hidden;
     }
 
-    .selected-customer strong {
-      display: block;
-      margin-bottom: 4px;
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 18px 20px;
+
+      border-bottom: 1px solid #e5e7eb;
     }
 
-    .selected-customer span {
+    .card-title {
+      margin: 0;
+
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .card-subtitle {
+      margin: 4px 0 0;
+
       color: #6b7280;
+
       font-size: 12px;
     }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .view-link {
+      color: #111827;
+
+      text-decoration: none;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .view-link:hover {
+      text-decoration: underline;
+    }
+
+
+    /* ---------------------------------------------
+       BALANCES
+    --------------------------------------------- */
 
     .balance-grid {
       display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(170px, 1fr)
-      );
-      gap: 12px;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
     }
 
-    .balance-card {
-      padding: 17px;
+    .balance-item {
+      padding: 15px;
+
       border: 1px solid #e5e7eb;
+
       border-radius: 12px;
-      background: #ffffff;
     }
 
     .balance-currency {
       color: #6b7280;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 8px;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      margin-bottom: 7px;
     }
 
     .balance-value {
-      font-size: 22px;
-      font-weight: 800;
+      font-size: 19px;
+      font-weight: 850;
+
       word-break: break-word;
     }
 
-    /* ADJUSTMENT */
 
-    .adjustment {
-      margin-top: 25px;
-      padding: 20px;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-    }
+    /* ---------------------------------------------
+       USERS
+    --------------------------------------------- */
 
-    .adjustment h3 {
-      margin: 0 0 16px;
-      font-size: 15px;
-    }
-
-    .form-grid {
+    .list {
       display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 2px;
     }
 
-    .form-group {
-      margin-bottom: 14px;
+    .list-item {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 13px 0;
+
+      border-bottom: 1px solid #f0f0f0;
     }
 
-    .form-group.full {
-      grid-column: 1 / -1;
+    .list-item:last-child {
+      border-bottom: 0;
     }
 
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #374151;
+    .list-main {
+      min-width: 0;
     }
 
-    .result {
-      display: none;
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 10px;
+    .list-name {
+      font-weight: 750;
+
       font-size: 13px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .result.success {
-      display: block;
-      background: #f0fdf4;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
+    .list-meta {
+      margin-top: 3px;
 
-    .result.error {
-      display: block;
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
+      color: #9ca3af;
 
-    /* ESIM */
-
-    .section {
-      margin-top: 28px;
-    }
-
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    th,
-    td {
-      text-align: left;
-      padding: 13px 15px;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 13px;
-      vertical-align: top;
-    }
-
-    th {
-      background: #f9fafb;
-      color: #6b7280;
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    }
+
+    .date {
+      flex-shrink: 0;
+
+      color: #9ca3af;
+
+      font-size: 10px;
+    }
+
+
+    /* ---------------------------------------------
+       ESIM
+    --------------------------------------------- */
+
+    .esim-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .esim-item {
+      padding: 14px;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+    }
+
+    .esim-row {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+    }
+
+    .esim-name {
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .esim-meta {
+      margin-top: 5px;
+
+      color: #6b7280;
+
+      font-size: 11px;
     }
 
     .badge {
       display: inline-flex;
+
       padding: 5px 8px;
+
       border-radius: 999px;
-      font-size: 10px;
-      font-weight: 800;
+
+      font-size: 9px;
+      font-weight: 850;
+
       text-transform: uppercase;
     }
 
     .badge.pending {
       background: #fef3c7;
       color: #92400e;
+    }
+
+    .badge.processing {
+      background: #dbeafe;
+      color: #1e40af;
     }
 
     .badge.completed {
@@ -485,78 +553,157 @@
       color: #991b1b;
     }
 
-    .badge.processing {
-      background: #dbeafe;
-      color: #1e40af;
+
+    /* ---------------------------------------------
+       QUICK ACTIONS
+    --------------------------------------------- */
+
+    .actions {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 10px;
     }
 
-    .empty {
-      padding: 35px 20px;
-      text-align: center;
-      color: #6b7280;
-      font-size: 13px;
+    .action {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-height: 75px;
+
+      padding: 12px;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      background: #fff;
+
+      color: #111827;
+
+      text-decoration: none;
+
+      font-size: 12px;
+      font-weight: 800;
+
+      transition: .2s;
     }
+
+    .action:hover {
+      background: #f9fafb;
+
+      transform: translateY(-1px);
+    }
+
+
+    /* ---------------------------------------------
+       TRANSACTIONS
+    --------------------------------------------- */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 13px 15px;
+
+      text-align: left;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      font-size: 12px;
+    }
+
+    th {
+      color: #6b7280;
+
+      background: #f9fafb;
+
+      font-size: 10px;
+
+      text-transform: uppercase;
+
+      letter-spacing: .5px;
+    }
+
+
+    /* ---------------------------------------------
+       LOADING / EMPTY
+    --------------------------------------------- */
 
     .loading {
       padding: 25px;
+
       text-align: center;
-      color: #6b7280;
-      font-size: 13px;
+
+      color: #9ca3af;
+
+      font-size: 12px;
     }
 
-    /* TOAST */
+    .empty {
+      padding: 25px;
 
-    .toast {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      max-width: 360px;
-      background: #111827;
-      color: #ffffff;
-      padding: 14px 17px;
-      border-radius: 11px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      display: none;
-      z-index: 999;
-      font-size: 13px;
-      line-height: 1.5;
+      text-align: center;
+
+      color: #9ca3af;
+
+      font-size: 12px;
     }
 
-    .toast.show {
-      display: block;
+    .error {
+      padding: 15px;
+
+      background: #fef2f2;
+
+      border: 1px solid #fecaca;
+
+      color: #991b1b;
+
+      border-radius: 10px;
+
+      font-size: 12px;
     }
 
-    /* MOBILE */
 
-    @media (max-width: 800px) {
+    /* ---------------------------------------------
+       RESPONSIVE
+    --------------------------------------------- */
 
-      .sidebar {
-        width: 220px;
+    @media (max-width: 1100px) {
+
+      .stats {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
-      .main {
-        margin-left: 220px;
-      }
-
-      .content {
-        padding: 18px;
-      }
-
-      .form-grid {
+      .grid {
         grid-template-columns: 1fr;
       }
 
-      .form-group.full {
-        grid-column: auto;
-      }
-
     }
 
-    @media (max-width: 650px) {
+
+    @media (max-width: 700px) {
 
       .sidebar {
         position: static;
+
         width: 100%;
+
         min-height: auto;
       }
 
@@ -570,23 +717,25 @@
 
       .topbar {
         position: static;
+
+        padding: 0 18px;
       }
 
-      .search-row {
-        flex-direction: column;
+      .content {
+        padding: 18px;
       }
 
-      .customer {
-        align-items: flex-start;
-        flex-direction: column;
+      .stats {
+        grid-template-columns: 1fr;
       }
 
-      .customer-actions {
-        width: 100%;
+      .actions {
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
-      .customer-actions .btn {
-        width: 100%;
+      .balance-grid {
+        grid-template-columns: 1fr;
       }
 
     }
@@ -599,97 +748,131 @@
 
 <div class="app">
 
-  <!-- SIDEBAR -->
+  <!-- ============================================
+       SIDEBAR
+  ============================================= -->
 
   <aside class="sidebar">
 
 ```
 <div class="brand">
-  <div class="brand-mark">W</div>
-  <span>Wakala Admin</span>
+
+  <div class="brand-mark">
+    W
+  </div>
+
+  <span>
+    Wakala Admin
+  </span>
+
 </div>
+
 
 <div class="nav-title">
   Main
 </div>
 
+
 <a
-  class="nav-link"
+  class="nav-link active"
   href="./adminindex.html"
 >
-  <span class="nav-icon">⌂</span>
+  <span class="nav-icon">
+    ⌂
+  </span>
+
   Overview
 </a>
+
 
 <a
   class="nav-link"
   href="./balances.html"
 >
-  <span class="nav-icon">₦</span>
+  <span class="nav-icon">
+    ₦
+  </span>
+
   Balances
 </a>
+
 
 <a
   class="nav-link"
   href="./creators.html"
 >
-  <span class="nav-icon">★</span>
+  <span class="nav-icon">
+    ★
+  </span>
+
   Creators
 </a>
+
 
 <a
   class="nav-link"
   href="./view-creators.html"
 >
-  <span class="nav-icon">♙</span>
+  <span class="nav-icon">
+    ♙
+  </span>
+
   Creator Users
 </a>
+
 
 <div class="nav-title">
   Management
 </div>
 
+
 <a
   class="nav-link"
-  href="./adminindex.html"
+  href="#transactions"
 >
-  <span class="nav-icon">▣</span>
+  <span class="nav-icon">
+    ▣
+  </span>
+
   Transactions
 </a>
 
-<a
-  class="nav-link"
-  href="./adminindex.html"
->
-  <span class="nav-icon">◎</span>
-  eSIM Orders
-</a>
 
 <a
   class="nav-link"
-  href="./adminindex.html"
+  href="#esim-orders"
 >
-  <span class="nav-icon">⚙</span>
-  Settings
+  <span class="nav-icon">
+    ◎
+  </span>
+
+  eSIM Requests
 </a>
+
 
 <div class="nav-title">
   Account
 </div>
+
 
 <a
   class="nav-link"
   href="#"
   id="logoutLink"
 >
-  <span class="nav-icon">↪</span>
+  <span class="nav-icon">
+    ↪
+  </span>
+
   Sign Out
 </a>
 ```
 
   </aside>
 
-  <!-- MAIN -->
+  <!-- ============================================
+       MAIN
+  ============================================= -->
 
   <main class="main">
 
@@ -697,14 +880,18 @@
 <header class="topbar">
 
   <h1>
-    Customer Balances
+    Admin Overview
   </h1>
 
+
   <div class="admin-status">
+
     <span class="status-dot"></span>
-    <span id="adminRoleText">
-      Verifying admin...
+
+    <span id="adminRole">
+      Verifying...
     </span>
+
   </div>
 
 </header>
@@ -712,221 +899,347 @@
 
 <div class="content">
 
-  <!-- CUSTOMER CARD -->
 
-  <section class="card">
+  <!-- WELCOME -->
 
-    <div class="card-header">
+  <div class="welcome">
 
-      <h2>
-        Customers
-      </h2>
+    <h2>
+      Dashboard
+    </h2>
 
-      <p>
-        Search customers and manage their wallet balances.
-      </p>
+    <p>
+      Monitor Wakala users, wallets, transactions
+      and eSIM requests from one place.
+    </p>
+
+  </div>
+
+
+  <!-- ========================================
+       STATISTICS
+  ========================================= -->
+
+  <div class="stats">
+
+
+    <div class="stat">
+
+      <div class="stat-top">
+
+        <span class="stat-label">
+          TOTAL USERS
+        </span>
+
+        <span class="stat-icon">
+          👥
+        </span>
+
+      </div>
+
+      <div
+        id="totalUsers"
+        class="stat-value"
+      >
+        —
+      </div>
+
+      <div class="stat-sub">
+        Registered Wakala customers
+      </div>
 
     </div>
 
-    <div class="card-body">
 
-      <div class="search-row">
+    <div class="stat">
 
-        <input
-          id="customerSearch"
-          type="search"
-          placeholder="Search by name, email, phone or account number..."
-          autocomplete="off"
-        >
+      <div class="stat-top">
 
-        <button
-          id="searchBtn"
-          class="btn btn-primary"
-        >
-          Search
-        </button>
+        <span class="stat-label">
+          eSIM REQUESTS
+        </span>
+
+        <span class="stat-icon">
+          📱
+        </span>
 
       </div>
 
       <div
-        id="customerLoading"
-        class="loading"
-        style="display:none;"
+        id="totalEsim"
+        class="stat-value"
       >
-        Loading customers...
+        —
+      </div>
+
+      <div class="stat-sub">
+        Total eSIM orders
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-top">
+
+        <span class="stat-label">
+          PENDING eSIM
+        </span>
+
+        <span class="stat-icon">
+          ⏳
+        </span>
+
       </div>
 
       <div
-        id="customerList"
-        class="customer-list"
-      ></div>
-
-      <div
-        id="customerEmpty"
-        class="empty"
-        style="display:none;"
+        id="pendingEsim"
+        class="stat-value"
       >
-        No customers found.
+        —
       </div>
 
+      <div class="stat-sub">
+        Requests requiring attention
+      </div>
 
-      <!-- BALANCE PANEL -->
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-top">
+
+        <span class="stat-label">
+          ADMIN ROLE
+        </span>
+
+        <span class="stat-icon">
+          🛡
+        </span>
+
+      </div>
 
       <div
-        id="balancePanel"
-        class="balance-panel"
+        id="roleCard"
+        class="stat-value"
+        style="font-size:20px;"
       >
+        —
+      </div>
 
-        <div class="selected-customer">
+      <div class="stat-sub">
+        Current administrator permission
+      </div>
 
-          <strong id="selectedCustomerName">
-            Customer
-          </strong>
+    </div>
 
-          <span id="selectedCustomerMeta">
-            —
-          </span>
+
+  </div>
+
+
+  <!-- ========================================
+       BALANCES + RECENT USERS
+  ========================================= -->
+
+  <div class="grid">
+
+
+    <!-- BALANCES -->
+
+    <section class="card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h3 class="card-title">
+            Wallet Balances
+          </h3>
+
+          <p class="card-subtitle">
+            Current balances across Wakala wallets
+          </p>
 
         </div>
 
 
-        <h3>
-          Wallet Balances
-        </h3>
+        <a
+          class="view-link"
+          href="./balances.html"
+        >
+          Manage
+        </a>
+
+      </div>
+
+
+      <div class="card-body">
 
         <div
           id="balanceGrid"
           class="balance-grid"
-        ></div>
+        >
 
-
-        <!-- BALANCE ADJUSTMENT -->
-
-        <div class="adjustment">
-
-          <h3>
-            Adjust Wallet Balance
-          </h3>
-
-          <div class="form-grid">
-
-            <div class="form-group">
-
-              <label for="currency">
-                Currency
-              </label>
-
-              <select id="currency">
-
-                <option value="NGN">
-                  NGN
-                </option>
-
-                <option value="USD">
-                  USD
-                </option>
-
-                <option value="KES">
-                  KES
-                </option>
-
-                <option value="TZS">
-                  TZS
-                </option>
-
-                <option value="RWF">
-                  RWF
-                </option>
-
-                <option value="USDC">
-                  USDC
-                </option>
-
-                <option value="USDT">
-                  USDT
-                </option>
-
-                <option value="BTC">
-                  BTC
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="direction">
-                Adjustment
-              </label>
-
-              <select id="direction">
-
-                <option value="credit">
-                  Credit / Add
-                </option>
-
-                <option value="debit">
-                  Debit / Remove
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="amount">
-                Amount
-              </label>
-
-              <input
-                id="amount"
-                type="number"
-                min="0"
-                step="any"
-                placeholder="0.00"
-              >
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="reason">
-                Reason
-              </label>
-
-              <input
-                id="reason"
-                type="text"
-                placeholder="Reason for adjustment"
-                maxlength="250"
-              >
-
-            </div>
-
-
-            <div class="form-group full">
-
-              <button
-                id="adjustBtn"
-                class="btn btn-primary"
-              >
-                Apply Balance Adjustment
-              </button>
-
-            </div>
-
+          <div class="loading">
+            Loading balances...
           </div>
 
-          <div
-            id="adjustResult"
-            class="result"
-          ></div>
+        </div>
 
+      </div>
+
+    </section>
+
+
+    <!-- RECENT USERS -->
+
+    <section class="card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h3 class="card-title">
+            Recent Users
+          </h3>
+
+          <p class="card-subtitle">
+            Latest registered customers
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="card-body">
+
+        <div
+          id="recentUsers"
+          class="list"
+        >
+
+          <div class="loading">
+            Loading users...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </div>
+
+
+  <!-- ========================================
+       QUICK ACTIONS
+  ========================================= -->
+
+  <section class="card" style="margin-bottom:20px;">
+
+    <div class="card-header">
+
+      <div>
+
+        <h3 class="card-title">
+          Quick Actions
+        </h3>
+
+        <p class="card-subtitle">
+          Common administrator actions
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+      <div class="actions">
+
+        <a
+          class="action"
+          href="./balances.html"
+        >
+          💰<br>
+          Manage Balances
+        </a>
+
+
+        <a
+          class="action"
+          href="./balances.html"
+        >
+          👥<br>
+          View Customers
+        </a>
+
+
+        <a
+          class="action"
+          href="#esim-orders"
+        >
+          📱<br>
+          eSIM Requests
+        </a>
+
+
+        <a
+          class="action"
+          href="./creators.html"
+        >
+          ★<br>
+          Creator Submissions
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================================
+       ESIM REQUESTS
+  ========================================= -->
+
+  <section
+    id="esim-orders"
+    class="card"
+    style="margin-bottom:20px;"
+  >
+
+    <div class="card-header">
+
+      <div>
+
+        <h3 class="card-title">
+          eSIM Requests
+        </h3>
+
+        <p class="card-subtitle">
+          Latest eSIM customer requests
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+      <div
+        id="esimList"
+        class="esim-list"
+      >
+
+        <div class="loading">
+          Loading eSIM requests...
         </div>
 
       </div>
@@ -936,92 +1249,86 @@
   </section>
 
 
-  <!-- ESIM ORDERS -->
+  <!-- ========================================
+       TRANSACTIONS
+  ========================================= -->
 
-  <section class="card section">
+  <section
+    id="transactions"
+    class="card"
+  >
 
     <div class="card-header">
 
-      <h2>
-        eSIM Orders
-      </h2>
+      <div>
 
-      <p>
-        Recent eSIM orders associated with Wakala customers.
-      </p>
+        <h3 class="card-title">
+          Recent Transactions
+        </h3>
+
+        <p class="card-subtitle">
+          Latest wallet activity
+        </p>
+
+      </div>
 
     </div>
 
-    <div class="card-body">
 
-      <div
-        id="esimLoading"
-        class="loading"
-      >
-        Loading eSIM orders...
-      </div>
+    <div class="table-wrap">
 
-      <div
-        id="esimEmpty"
-        class="empty"
-        style="display:none;"
-      >
-        No eSIM orders found.
-      </div>
+      <table>
 
-      <div
-        id="esimTableContainer"
-        class="table-wrap"
-        style="display:none;"
-      >
+        <thead>
 
-        <table>
+          <tr>
 
-          <thead>
+            <th>
+              Type
+            </th>
 
-            <tr>
+            <th>
+              Amount
+            </th>
 
-              <th>
-                Customer
-              </th>
+            <th>
+              Currency
+            </th>
 
-              <th>
-                Email
-              </th>
+            <th>
+              Status
+            </th>
 
-              <th>
-                Country
-              </th>
+            <th>
+              Date
+            </th>
 
-              <th>
-                Plan
-              </th>
+          </tr>
 
-              <th>
-                Device
-              </th>
+        </thead>
 
-              <th>
-                Status
-              </th>
 
-              <th>
-                Date
-              </th>
+        <tbody id="transactionBody">
 
-            </tr>
+          <tr>
 
-          </thead>
+            <td
+              colspan="5"
+              class="loading"
+            >
+              Loading transactions...
+            </td>
 
-          <tbody id="esimOrdersBody"></tbody>
+          </tr>
 
-        </table>
+        </tbody>
 
-      </div>
+      </table>
 
     </div>
 
   </section>
+
 
 </div>
 ```
@@ -1029,11 +1336,6 @@
   </main>
 
 </div>
-
-<div
-  id="toast"
-  class="toast"
-></div>
 
 <script type="module">
 
@@ -1049,133 +1351,16 @@
   } from "../supabase-config.js";
 
 
-  const supabase = createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-
-  /* -------------------------------------------------
-     ELEMENTS
-  ------------------------------------------------- */
-
-  const customerSearch =
-    document.getElementById(
-      "customerSearch"
-    );
-
-  const searchBtn =
-    document.getElementById(
-      "searchBtn"
-    );
-
-  const customerList =
-    document.getElementById(
-      "customerList"
-    );
-
-  const customerLoading =
-    document.getElementById(
-      "customerLoading"
-    );
-
-  const customerEmpty =
-    document.getElementById(
-      "customerEmpty"
-    );
-
-  const balancePanel =
-    document.getElementById(
-      "balancePanel"
-    );
-
-  const balanceGrid =
-    document.getElementById(
-      "balanceGrid"
-    );
-
-  const selectedCustomerName =
-    document.getElementById(
-      "selectedCustomerName"
-    );
-
-  const selectedCustomerMeta =
-    document.getElementById(
-      "selectedCustomerMeta"
-    );
-
-  const currency =
-    document.getElementById(
-      "currency"
-    );
-
-  const direction =
-    document.getElementById(
-      "direction"
-    );
-
-  const amount =
-    document.getElementById(
-      "amount"
-    );
-
-  const reason =
-    document.getElementById(
-      "reason"
-    );
-
-  const adjustBtn =
-    document.getElementById(
-      "adjustBtn"
-    );
-
-  const adjustResult =
-    document.getElementById(
-      "adjustResult"
-    );
-
-  const adminRoleText =
-    document.getElementById(
-      "adminRoleText"
-    );
-
-  const logoutLink =
-    document.getElementById(
-      "logoutLink"
-    );
-
-  const esimLoading =
-    document.getElementById(
-      "esimLoading"
-    );
-
-  const esimEmpty =
-    document.getElementById(
-      "esimEmpty"
-    );
-
-  const esimTableContainer =
-    document.getElementById(
-      "esimTableContainer"
-    );
-
-  const esimOrdersBody =
-    document.getElementById(
-      "esimOrdersBody"
-    );
-
-  const toast =
-    document.getElementById(
-      "toast"
+  const supabase =
+    createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
     );
 
 
-  let selectedUserId = null;
-
-
-  /* -------------------------------------------------
+  /* ============================================
      HELPERS
-  ------------------------------------------------- */
+  ============================================ */
 
   function escapeHtml(value) {
 
@@ -1195,116 +1380,88 @@
   }
 
 
-  function showToast(message) {
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3500);
-  }
-
-
-  function showAdjustmentResult(
-    type,
-    message
-  ) {
-
-    adjustResult.className =
-      "result " + type;
-
-    adjustResult.textContent =
-      message;
-  }
-
-
-  function clearAdjustmentResult() {
-
-    adjustResult.className =
-      "result";
-
-    adjustResult.textContent =
-      "";
-  }
-
-
-  function formatNumber(
-    value,
-    currencyCode = ""
-  ) {
+  function formatNumber(value) {
 
     const number =
       Number(value || 0);
-
-    if (
-      currencyCode === "BTC"
-    ) {
-
-      return number.toLocaleString(
-        undefined,
-        {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 8
-        }
-      );
-
-    }
 
     return number.toLocaleString(
       undefined,
       {
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 8
       }
     );
   }
 
 
-  function getOrderStatusClass(
-    status
-  ) {
+  function formatDate(value) {
 
-    const normalized =
+    if (!value) {
+      return "—";
+    }
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return "—";
+    }
+
+    return date.toLocaleString();
+  }
+
+
+  function statusClass(status) {
+
+    const value =
       String(
         status || "pending"
       ).toLowerCase();
 
+
     if (
-      normalized === "completed" ||
-      normalized === "success" ||
-      normalized === "successful"
+      value === "completed" ||
+      value === "success" ||
+      value === "successful"
     ) {
       return "completed";
     }
 
+
     if (
-      normalized === "failed"
+      value === "processing"
+    ) {
+      return "processing";
+    }
+
+
+    if (
+      value === "failed"
     ) {
       return "failed";
     }
 
+
     if (
-      normalized === "cancelled" ||
-      normalized === "canceled"
+      value === "cancelled" ||
+      value === "canceled"
     ) {
       return "cancelled";
     }
 
-    if (
-      normalized === "processing"
-    ) {
-      return "processing";
-    }
 
     return "pending";
   }
 
 
-  /* -------------------------------------------------
-     AUTHENTICATION
-  ------------------------------------------------- */
+  /* ============================================
+     AUTH
+  ============================================ */
 
   async function authenticate() {
 
@@ -1312,7 +1469,8 @@
       data: {
         session
       }
-    } = await supabase.auth.getSession();
+    } =
+      await supabase.auth.getSession();
 
 
     if (!session) {
@@ -1325,24 +1483,17 @@
 
 
     /*
-     * Secure administrator verification.
-     *
-     * We intentionally do NOT do:
-     *
-     * supabase
-     *   .from("admin_users")
-     *
-     * because admin_users has protected RLS
-     * and direct browser access can cause
-     * recursive-policy problems.
+     * Use the existing secure RPC.
+     * Never query admin_users directly.
      */
 
     const {
       data: role,
       error
-    } = await supabase.rpc(
-      "get_admin_role"
-    );
+    } =
+      await supabase.rpc(
+        "get_admin_role"
+      );
 
 
     if (error) {
@@ -1362,38 +1513,30 @@
           font-family:system-ui;
           background:#f5f7fb;
         ">
+
           <div style="
             max-width:500px;
             width:100%;
-            background:white;
+            padding:30px;
+            background:#fff;
             border:1px solid #e5e7eb;
             border-radius:16px;
-            padding:30px;
           ">
-            <h2>Administrator Verification Failed</h2>
 
-            <p style="color:#6b7280;line-height:1.6;">
-              The administrator role could not be verified.
-              Please check that the get_admin_role()
-              database function exists and that your
-              account is an active administrator.
+            <h2>
+              Administrator Verification Failed
+            </h2>
+
+            <p style="
+              color:#6b7280;
+              line-height:1.6;
+            ">
+              Unable to verify your administrator
+              permissions.
             </p>
 
-            <button
-              onclick="location.href='../login.html'"
-              style="
-                width:100%;
-                padding:13px;
-                border:0;
-                border-radius:10px;
-                background:#111827;
-                color:white;
-                font-weight:700;
-              "
-            >
-              Return to Login
-            </button>
           </div>
+
         </div>
       `;
 
@@ -1402,10 +1545,6 @@
 
 
     if (!role) {
-
-      alert(
-        "Administrator access denied."
-      );
 
       window.location.href =
         "../dashboard.html";
@@ -1433,10 +1572,6 @@
       )
     ) {
 
-      alert(
-        "Your administrator role does not have access to this page."
-      );
-
       window.location.href =
         "../dashboard.html";
 
@@ -1444,7 +1579,18 @@
     }
 
 
-    adminRoleText.textContent =
+    document.getElementById(
+      "adminRole"
+    ).textContent =
+      normalizedRole.replace(
+        "_",
+        " "
+      );
+
+
+    document.getElementById(
+      "roleCard"
+    ).textContent =
       normalizedRole.replace(
         "_",
         " "
@@ -1455,288 +1601,141 @@
   }
 
 
-  /* -------------------------------------------------
-     CUSTOMERS
-  ------------------------------------------------- */
+  /* ============================================
+     LOAD DASHBOARD
+  ============================================ */
 
-  async function loadCustomers(
-    searchTerm = ""
-  ) {
+  async function loadDashboard() {
 
-    customerLoading.style.display =
-      "block";
-
-    customerEmpty.style.display =
-      "none";
-
-    customerList.innerHTML =
-      "";
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase.rpc(
-        "admin_list_customers",
-        {
-          search_term:
-            searchTerm.trim()
-        }
+    const {
+      data,
+      error
+    } =
+      await supabase.rpc(
+        "admin_dashboard_overview"
       );
 
 
-      if (error) {
-        throw error;
-      }
-
-
-      const customers =
-        Array.isArray(data)
-          ? data
-          : [];
-
-
-      customerLoading.style.display =
-        "none";
-
-
-      if (
-        customers.length === 0
-      ) {
-
-        customerEmpty.style.display =
-          "block";
-
-        return;
-      }
-
-
-      customerList.innerHTML =
-        customers.map(
-          customer => {
-
-            const name =
-              customer.full_name ||
-              customer.name ||
-              "Customer";
-
-
-            const email =
-              customer.email ||
-              "No email";
-
-
-            const phone =
-              customer.phone ||
-              "";
-
-
-            const accountNumber =
-              customer.account_number ||
-              customer.account_no ||
-              "";
-
-
-            return `
-              <div
-                class="customer"
-              >
-
-                <div
-                  class="customer-main"
-                >
-
-                  <div
-                    class="customer-name"
-                  >
-                    ${escapeHtml(name)}
-                  </div>
-
-                  <div
-                    class="customer-meta"
-                  >
-                    ${escapeHtml(email)}
-                    ${phone
-                      ? " · " +
-                        escapeHtml(phone)
-                      : ""}
-                    ${accountNumber
-                      ? " · Account: " +
-                        escapeHtml(accountNumber)
-                      : ""}
-                  </div>
-
-                </div>
-
-                <div
-                  class="customer-actions"
-                >
-
-                  <button
-                    class="btn btn-secondary"
-                    data-user-id="${escapeHtml(
-                      customer.user_id ||
-                      customer.id
-                    )}"
-                    data-name="${escapeHtml(name)}"
-                    data-email="${escapeHtml(email)}"
-                  >
-                    View Balance
-                  </button>
-
-                </div>
-
-              </div>
-            `;
-          }
-        ).join("");
-
-
-      customerList
-        .querySelectorAll(
-          "[data-user-id]"
-        )
-        .forEach(button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              selectCustomer(
-                button.dataset.userId,
-                button.dataset.name,
-                button.dataset.email
-              );
-
-            }
-          );
-
-        });
-
-
-    } catch (error) {
+    if (error) {
 
       console.error(
-        "Customer loading error:",
+        "Dashboard RPC error:",
         error
       );
 
-      customerLoading.style.display =
-        "none";
+      showDashboardError(
+        error.message ||
+        "Unable to load dashboard."
+      );
 
-      customerEmpty.style.display =
-        "block";
-
-      customerEmpty.textContent =
-        "Unable to load customers: " +
-        (
-          error.message ||
-          "Unknown error"
-        );
+      return;
     }
-  }
 
 
-  /* -------------------------------------------------
-     SELECT CUSTOMER
-  ------------------------------------------------- */
-
-  async function selectCustomer(
-    userId,
-    name,
-    email
-  ) {
-
-    selectedUserId =
-      userId;
-
-
-    selectedCustomerName.textContent =
-      name || "Customer";
-
-
-    selectedCustomerMeta.textContent =
-      email || userId || "—";
-
-
-    balancePanel.classList.add(
-      "visible"
+    console.log(
+      "Admin dashboard:",
+      data
     );
 
 
-    balanceGrid.innerHTML = `
-      <div class="loading">
-        Loading balances...
-      </div>
-    `;
-
-
-    clearAdjustmentResult();
-
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase.rpc(
-        "admin_get_customer_balances",
-        {
-          target_user_id:
-            userId
-        }
-      );
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      renderBalances(data);
-
-
-    } catch (error) {
-
-      console.error(
-        "Balance loading error:",
-        error
-      );
-
-
-      balanceGrid.innerHTML = `
-        <div class="empty">
-          Unable to load balances:
-          ${escapeHtml(
-            error.message ||
-            "Unknown error"
-          )}
-        </div>
-      `;
-    }
+    renderDashboard(
+      data || {}
+    );
   }
 
 
-  /* -------------------------------------------------
-     BALANCE RENDERING
-  ------------------------------------------------- */
+  /* ============================================
+     RENDER
+  ============================================ */
 
-  function renderBalances(
-    data
-  ) {
+  function renderDashboard(data) {
 
-    const rows =
-      Array.isArray(data)
-        ? data
-        : [];
+    /*
+     * USERS
+     */
+
+    document.getElementById(
+      "totalUsers"
+    ).textContent =
+      Number(
+        data.total_users || 0
+      ).toLocaleString();
+
+
+    /*
+     * ESIM COUNTS
+     */
+
+    document.getElementById(
+      "totalEsim"
+    ).textContent =
+      Number(
+        data.total_esim_orders || 0
+      ).toLocaleString();
+
+
+    document.getElementById(
+      "pendingEsim"
+    ).textContent =
+      Number(
+        data.pending_esim_orders || 0
+      ).toLocaleString();
+
+
+    /*
+     * BALANCES
+     */
+
+    renderBalances(
+      data.balances || []
+    );
+
+
+    /*
+     * USERS
+     */
+
+    renderUsers(
+      data.recent_users || []
+    );
+
+
+    /*
+     * ESIM
+     */
+
+    renderEsim(
+      data.recent_esim_orders || []
+    );
+
+
+    /*
+     * TRANSACTIONS
+     */
+
+    renderTransactions(
+      data.recent_transactions || []
+    );
+  }
+
+
+  /* ============================================
+     BALANCES
+  ============================================ */
+
+  function renderBalances(rows) {
+
+    const container =
+      document.getElementById(
+        "balanceGrid"
+      );
 
 
     if (
-      rows.length === 0
+      !rows.length
     ) {
 
-      balanceGrid.innerHTML = `
+      container.innerHTML = `
         <div class="empty">
           No wallet balances found.
         </div>
@@ -1746,580 +1745,392 @@
     }
 
 
-    balanceGrid.innerHTML =
-      rows.map(row => {
+    container.innerHTML =
+      rows.map(
+        row => {
 
-        const code =
-          row.currency ||
-          "—";
+          return `
+            <div class="balance-item">
 
+              <div
+                class="balance-currency"
+              >
+                ${escapeHtml(
+                  row.currency || "—"
+                )}
+              </div>
 
-        const value =
-          row.balance ??
-          row.available_balance ??
-          row.amount ??
-          0;
+              <div
+                class="balance-value"
+              >
+                ${escapeHtml(
+                  formatNumber(
+                    row.balance
+                  )
+                )}
+              </div>
 
-
-        return `
-          <div class="balance-card">
-
-            <div
-              class="balance-currency"
-            >
-              ${escapeHtml(code)}
             </div>
+          `;
 
-            <div
-              class="balance-value"
-            >
-              ${escapeHtml(
-                formatNumber(
-                  value,
-                  code
-                )
-              )}
-            </div>
-
-          </div>
-        `;
-
-      }).join("");
-  }
-
-
-  /* -------------------------------------------------
-     ADJUST BALANCE
-  ------------------------------------------------- */
-
-  async function adjustBalance() {
-
-    clearAdjustmentResult();
-
-
-    if (!selectedUserId) {
-
-      showAdjustmentResult(
-        "error",
-        "Select a customer first."
-      );
-
-      return;
-    }
-
-
-    const value =
-      Number(
-        amount.value
-      );
-
-
-    if (
-      !Number.isFinite(value) ||
-      value <= 0
-    ) {
-
-      showAdjustmentResult(
-        "error",
-        "Enter a valid amount greater than zero."
-      );
-
-      return;
-    }
-
-
-    const adjustmentReason =
-      reason.value.trim();
-
-
-    if (
-      !adjustmentReason
-    ) {
-
-      showAdjustmentResult(
-        "error",
-        "A reason is required for every balance adjustment."
-      );
-
-      return;
-    }
-
-
-    adjustBtn.disabled =
-      true;
-
-    adjustBtn.textContent =
-      "Processing...";
-
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase.rpc(
-        "admin_adjust_wallet_balance",
-        {
-          target_user_id:
-            selectedUserId,
-
-          target_currency:
-            currency.value,
-
-          adjustment_amount:
-            value,
-
-          adjustment_direction:
-            direction.value,
-
-          adjustment_reason:
-            adjustmentReason
         }
-      );
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      console.log(
-        "Balance adjustment result:",
-        data
-      );
-
-
-      let resultRow =
-        Array.isArray(data)
-          ? data[0]
-          : data;
-
-
-      const before =
-        resultRow?.balance_before;
-
-
-      const after =
-        resultRow?.balance_after;
-
-
-      const resultCurrency =
-        resultRow?.currency ||
-        currency.value;
-
-
-      const reference =
-        resultRow?.reference;
-
-
-      let message =
-        "Balance adjustment completed successfully.";
-
-
-      if (
-        before !== undefined &&
-        after !== undefined
-      ) {
-
-        message +=
-          ` Balance: ${
-            formatNumber(
-              before,
-              resultCurrency
-            )
-          } → ${
-            formatNumber(
-              after,
-              resultCurrency
-            )
-          } ${
-            resultCurrency
-          }.`;
-      }
-
-
-      if (reference) {
-
-        message +=
-          ` Reference: ${reference}`;
-      }
-
-
-      showAdjustmentResult(
-        "success",
-        message
-      );
-
-
-      showToast(
-        "Wallet balance updated successfully."
-      );
-
-
-      amount.value =
-        "";
-
-      reason.value =
-        "";
-
-
-      await selectCustomer(
-        selectedUserId,
-        selectedCustomerName.textContent,
-        selectedCustomerMeta.textContent
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Balance adjustment error:",
-        error
-      );
-
-
-      showAdjustmentResult(
-        "error",
-        error.message ||
-        "Unable to adjust wallet balance."
-      );
-
-    } finally {
-
-      adjustBtn.disabled =
-        false;
-
-      adjustBtn.textContent =
-        "Apply Balance Adjustment";
-    }
+      ).join("");
   }
 
 
-  /* -------------------------------------------------
-     ESIM ORDERS
-  ------------------------------------------------- */
-
-  async function loadEsimOrders() {
-
-    esimLoading.style.display =
-      "block";
-
-    esimEmpty.style.display =
-      "none";
-
-    esimTableContainer.style.display =
-      "none";
-
-    esimOrdersBody.innerHTML =
-      "";
-
-
-    try {
-
-      /*
-       * Select * deliberately.
-       *
-       * The eSIM schema can evolve and this prevents
-       * the admin dashboard from breaking merely
-       * because an optional column is unavailable.
-       */
-
-      const {
-        data,
-        error
-      } = await supabase
-        .from("esim_orders")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        )
-        .limit(100);
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      const orders =
-        Array.isArray(data)
-          ? data
-          : [];
-
-
-      esimLoading.style.display =
-        "none";
-
-
-      if (
-        orders.length === 0
-      ) {
-
-        esimEmpty.style.display =
-          "block";
-
-        return;
-      }
-
-
-      esimTableContainer.style.display =
-        "block";
-
-
-      esimOrdersBody.innerHTML =
-        orders.map(
-          order => {
-
-            const customer =
-              order.customer_name ||
-              order.full_name ||
-              order.name ||
-              order.delivery_name ||
-              order.user_id ||
-              "Customer";
-
-
-            const email =
-              order.delivery_email ||
-              order.email ||
-              "—";
-
-
-            const country =
-              order.country_name ||
-              order.country_code ||
-              order.country ||
-              "—";
-
-
-            const plan =
-              order.plan_data ||
-              order.plan_name ||
-              order.package_name ||
-              order.plan_id ||
-              "—";
-
-
-            const validity =
-              order.validity_days;
-
-
-            const planText =
-              validity
-                ? `${plan} · ${validity}d`
-                : plan;
-
-
-            const device =
-              order.device ||
-              order.device_model ||
-              "—";
-
-
-            const status =
-              order.status ||
-              order.order_status ||
-              "pending";
-
-
-            const statusClass =
-              getOrderStatusClass(
-                status
-              );
-
-
-            const created =
-              order.created_at ||
-              order.createdAt;
-
-
-            let formattedDate =
-              "—";
-
-
-            if (created) {
-
-              const date =
-                new Date(created);
-
-
-              if (
-                !Number.isNaN(
-                  date.getTime()
-                )
-              ) {
-
-                formattedDate =
-                  date.toLocaleString();
-              }
-            }
-
-
-            return `
-              <tr>
-
-                <td>
-                  <strong>
-                    ${escapeHtml(customer)}
-                  </strong>
-                </td>
-
-                <td>
-                  ${escapeHtml(email)}
-                </td>
-
-                <td>
-                  ${escapeHtml(country)}
-                </td>
-
-                <td>
-                  ${escapeHtml(planText)}
-                </td>
-
-                <td>
-                  ${escapeHtml(device)}
-                </td>
-
-                <td>
-                  <span
-                    class="badge ${statusClass}"
-                  >
-                    ${escapeHtml(status)}
-                  </span>
-                </td>
-
-                <td>
-                  ${escapeHtml(formattedDate)}
-                </td>
-
-              </tr>
-            `;
-
-          }
-        ).join("");
-
-
-    } catch (error) {
-
-      console.error(
-        "eSIM order loading error:",
-        error
+  /* ============================================
+     USERS
+  ============================================ */
+
+  function renderUsers(users) {
+
+    const container =
+      document.getElementById(
+        "recentUsers"
       );
 
 
-      esimLoading.style.display =
-        "none";
+    if (
+      !users.length
+    ) {
 
-      esimEmpty.style.display =
-        "block";
+      container.innerHTML = `
+        <div class="empty">
+          No users found.
+        </div>
+      `;
 
-      esimEmpty.textContent =
-        "Unable to load eSIM orders: " +
-        (
-          error.message ||
-          "Unknown error"
-        );
+      return;
     }
+
+
+    container.innerHTML =
+      users.map(
+        user => {
+
+          const name =
+            user.full_name ||
+            "Customer";
+
+
+          return `
+            <div class="list-item">
+
+              <div class="list-main">
+
+                <div class="list-name">
+                  ${escapeHtml(name)}
+                </div>
+
+                <div class="list-meta">
+                  ${
+                    user.phone
+                      ? escapeHtml(user.phone)
+                      : "Customer account"
+                  }
+                </div>
+
+              </div>
+
+              <div class="date">
+                ${escapeHtml(
+                  formatDate(
+                    user.created_at
+                  )
+                )}
+              </div>
+
+            </div>
+          `;
+
+        }
+      ).join("");
   }
 
 
-  /* -------------------------------------------------
-     EVENTS
-  ------------------------------------------------- */
+  /* ============================================
+     ESIM
+  ============================================ */
 
-  searchBtn.addEventListener(
-    "click",
-    () => {
+  function renderEsim(orders) {
 
-      loadCustomers(
-        customerSearch.value
+    const container =
+      document.getElementById(
+        "esimList"
       );
 
+
+    if (
+      !orders.length
+    ) {
+
+      container.innerHTML = `
+        <div class="empty">
+          No eSIM requests found.
+        </div>
+      `;
+
+      return;
     }
-  );
 
 
-  customerSearch.addEventListener(
-    "keydown",
-    event => {
+    container.innerHTML =
+      orders.map(
+        order => {
 
-      if (
-        event.key === "Enter"
-      ) {
+          const customer =
+            order.customer_name ||
+            order.full_name ||
+            order.name ||
+            order.delivery_name ||
+            order.user_id ||
+            "Customer";
+
+
+          const country =
+            order.country_name ||
+            order.country_code ||
+            order.country ||
+            "—";
+
+
+          const plan =
+            order.plan_data ||
+            order.plan_name ||
+            order.package_name ||
+            order.plan_id ||
+            "eSIM";
+
+
+          const status =
+            order.status ||
+            order.order_status ||
+            "pending";
+
+
+          return `
+            <div class="esim-item">
+
+              <div class="esim-row">
+
+                <div>
+
+                  <div class="esim-name">
+                    ${escapeHtml(
+                      customer
+                    )}
+                  </div>
+
+                  <div class="esim-meta">
+                    ${escapeHtml(
+                      country
+                    )}
+                    ·
+                    ${escapeHtml(
+                      plan
+                    )}
+                    ·
+                    ${escapeHtml(
+                      formatDate(
+                        order.created_at
+                      )
+                    )}
+                  </div>
+
+                </div>
+
+                <span
+                  class="badge ${statusClass(status)}"
+                >
+                  ${escapeHtml(status)}
+                </span>
+
+              </div>
+
+            </div>
+          `;
+
+        }
+      ).join("");
+  }
+
+
+  /* ============================================
+     TRANSACTIONS
+  ============================================ */
+
+  function renderTransactions(
+    transactions
+  ) {
+
+    const body =
+      document.getElementById(
+        "transactionBody"
+      );
+
+
+    if (
+      !transactions.length
+    ) {
+
+      body.innerHTML = `
+        <tr>
+          <td
+            colspan="5"
+            class="empty"
+          >
+            No transactions found.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+
+    body.innerHTML =
+      transactions.map(
+        transaction => {
+
+          const type =
+            transaction.transaction_type ||
+            transaction.type ||
+            "—";
+
+
+          const amount =
+            transaction.amount ??
+            transaction.value ??
+            0;
+
+
+          const currency =
+            transaction.currency ||
+            "—";
+
+
+          const status =
+            transaction.status ||
+            "pending";
+
+
+          return `
+            <tr>
+
+              <td>
+                ${escapeHtml(type)}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  formatNumber(amount)
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(currency)}
+              </td>
+
+              <td>
+
+                <span
+                  class="badge ${statusClass(status)}"
+                >
+                  ${escapeHtml(status)}
+                </span>
+
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  formatDate(
+                    transaction.created_at
+                  )
+                )}
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
+  }
+
+
+  /* ============================================
+     ERROR
+  ============================================ */
+
+  function showDashboardError(
+    message
+  ) {
+
+    document.getElementById(
+      "balanceGrid"
+    ).innerHTML = `
+      <div class="error">
+        ${escapeHtml(message)}
+      </div>
+    `;
+
+
+    document.getElementById(
+      "recentUsers"
+    ).innerHTML = `
+      <div class="error">
+        Dashboard data could not be loaded.
+      </div>
+    `;
+
+
+    document.getElementById(
+      "esimList"
+    ).innerHTML = `
+      <div class="error">
+        Dashboard data could not be loaded.
+      </div>
+    `;
+
+
+    document.getElementById(
+      "transactionBody"
+    ).innerHTML = `
+      <tr>
+        <td
+          colspan="5"
+          class="error"
+        >
+          ${escapeHtml(message)}
+        </td>
+      </tr>
+    `;
+  }
+
+
+  /* ============================================
+     LOGOUT
+  ============================================ */
+
+  document
+    .getElementById("logoutLink")
+    .addEventListener(
+      "click",
+      async event => {
 
         event.preventDefault();
 
-        loadCustomers(
-          customerSearch.value
-        );
-      }
-
-    }
-  );
-
-
-  adjustBtn.addEventListener(
-    "click",
-    adjustBalance
-  );
-
-
-  logoutLink.addEventListener(
-    "click",
-    async event => {
-
-      event.preventDefault();
-
-      try {
-
         await supabase.auth.signOut();
 
-      } finally {
-
-        window.location.href =
-          "../login.html";
-      }
-
-    }
-  );
-
-
-  /* -------------------------------------------------
-     AUTH STATE
-  ------------------------------------------------- */
-
-  supabase.auth.onAuthStateChange(
-    async (
-      event,
-      session
-    ) => {
-
-      console.log(
-        "Auth state:",
-        event,
-        session?.user?.id
-      );
-
-
-      if (
-        event === "SIGNED_OUT"
-      ) {
-
         window.location.href =
           "../login.html";
 
       }
-
-    }
-  );
+    );
 
 
-  /* -------------------------------------------------
+  /* ============================================
      INITIALIZE
-  ------------------------------------------------- */
+  ============================================ */
 
   async function initialize() {
 
@@ -2332,16 +2143,7 @@
     }
 
 
-    await loadCustomers();
-
-
-    /*
-     * eSIM orders are loaded separately so a problem
-     * with eSIM RLS/schema does not prevent the
-     * customer balance dashboard from loading.
-     */
-
-    await loadEsimOrders();
+    await loadDashboard();
   }
 
 

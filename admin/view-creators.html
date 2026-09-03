@@ -1156,7 +1156,7 @@ import { createClient } from
 import {
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
-} from './supabase-config.js';
+} from '../supabase-config.js';
 
 
 /* =========================================================
@@ -1259,7 +1259,7 @@ async function initialise() {
     );
 
     setTimeout(() => {
-      window.location.href = 'login.html';
+      window.location.href = '../login.html';
     }, 1200);
 
     return;
@@ -1269,30 +1269,24 @@ async function initialise() {
   currentUser = session.user;
 
 
-  /*
-   * Check whether this authenticated user
-   * is registered as an admin.
-   */
-
   const {
-    data: admin,
-    error: adminError
-  } = await supabase
-    .from('admin_users')
-    .select(`
-      id,
-      user_id,
-      role_id,
-      status
-    `)
-    .eq('user_id', currentUser.id)
-    .eq('status', 'active')
-    .maybeSingle();
+    data: role,
+    error: roleError
+  } = await supabase.rpc('get_admin_role');
+
+
+  const allowedRoles = [
+    'super_admin',
+    'admin',
+    'moderator'
+  ];
 
 
   if (
-    adminError ||
-    !admin
+    roleError ||
+    !allowedRoles.includes(
+      String(role || '').trim().toLowerCase()
+    )
   ) {
 
     showNotice(
