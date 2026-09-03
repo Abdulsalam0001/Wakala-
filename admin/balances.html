@@ -794,8 +794,6 @@
 
 <script type="module">
 
-    import { supabase } from '../config.js';
-
     /*
      * ============================================================
      * SUPABASE CONFIG
@@ -804,6 +802,25 @@
      * These must match your existing Wakala Supabase project.
      *
      */
+// Supabase project configuration
+ 
+    const SUPABASE_URL =
+  'https://imbfmfzfpocebgvpdbrp.supabase.co';
+
+    const SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_FTP_t1uJFsgULSYzSBZbwg_TXPq54Zq';
+
+
+    const {
+        createClient
+    } = window.supabase;
+
+
+    const supabase = createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
 
     /*
      * ============================================================
