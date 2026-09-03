@@ -1,7 +1,7 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,51 +16,50 @@
   >
 
   <style>
-
     :root {
-      --ink:#0D1420;
-      --paper:#F6F2E9;
-      --panel:#FFFDF8;
-      --gold:#E4A445;
-      --teal:#229175;
-      --muted:#7A756A;
-      --line:rgba(13,20,32,.10);
-      --soft:#EAF5EF;
-      --success:#168447;
-      --danger:#B42318;
+      --ink: #0D1420;
+      --paper: #F6F2E9;
+      --panel: #FFFDF8;
+      --gold: #E4A445;
+      --teal: #229175;
+      --muted: #7A756A;
+      --line: rgba(13, 20, 32, .10);
+      --soft: #EAF5EF;
+      --success: #168447;
+      --danger: #B42318;
     }
 
     * {
-      box-sizing:border-box;
+      box-sizing: border-box;
     }
 
     html,
     body {
-      min-height:100%;
+      min-height: 100%;
     }
 
     body {
-      margin:0;
-      background:var(--paper);
-      color:var(--ink);
-      font-family:Inter,sans-serif;
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, sans-serif;
     }
 
     button,
     input {
-      font:inherit;
+      font: inherit;
     }
 
     .page {
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .shell {
-      width:min(1180px,100%);
-      margin:auto;
-      padding:0 28px;
+      width: min(1180px, 100%);
+      margin: auto;
+      padding: 0 28px;
     }
 
     /* =========================
@@ -68,47 +67,47 @@
     ========================= */
 
     .nav {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:25px 0;
-      border-bottom:1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 0;
+      border-bottom: 1px solid var(--line);
     }
 
     .brand {
-      color:var(--ink);
-      text-decoration:none;
-      font:600 25px Fraunces,serif;
+      color: var(--ink);
+      text-decoration: none;
+      font: 600 25px Fraunces, serif;
     }
 
     .dot {
-      display:inline-block;
-      width:9px;
-      height:9px;
-      margin-right:9px;
-      border-radius:50%;
-      background:var(--gold);
-      vertical-align:2px;
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin-right: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      vertical-align: 2px;
     }
 
     .nav-right {
-      display:flex;
-      align-items:center;
-      gap:18px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
     .nav-right a {
-      color:var(--teal);
-      text-decoration:none;
-      font-size:12px;
-      font-weight:700;
+      color: var(--teal);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .nav-button {
-      padding:10px 14px;
-      border-radius:7px;
-      background:var(--ink);
-      color:#fff !important;
+      padding: 10px 14px;
+      border-radius: 7px;
+      background: var(--ink);
+      color: #fff !important;
     }
 
     /* =========================
@@ -116,19 +115,19 @@
     ========================= */
 
     main {
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:70px 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 0;
     }
 
     .login-layout {
-      width:min(900px,100%);
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:35px;
-      align-items:stretch;
+      width: min(900px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+      align-items: stretch;
     }
 
     /* =========================
@@ -136,43 +135,43 @@
     ========================= */
 
     .intro {
-      padding:35px 10px;
+      padding: 35px 10px;
     }
 
     .kicker {
-      color:var(--teal);
-      font:700 11px 'IBM Plex Mono',monospace;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+      color: var(--teal);
+      font: 700 11px 'IBM Plex Mono', monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
     }
 
     .intro h1 {
-      max-width:500px;
-      margin:14px 0 18px;
-      font:600 clamp(42px,6vw,65px)/1 Fraunces,serif;
-      letter-spacing:-.035em;
+      max-width: 500px;
+      margin: 14px 0 18px;
+      font: 600 clamp(42px, 6vw, 65px)/1 Fraunces, serif;
+      letter-spacing: -.035em;
     }
 
     .intro p {
-      max-width:450px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
+      max-width: 450px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
     }
 
     .security-note {
-      max-width:450px;
-      margin-top:25px;
-      padding:15px;
-      border-left:3px solid var(--gold);
-      background:rgba(228,164,69,.09);
-      color:var(--muted);
-      font-size:11px;
-      line-height:1.7;
+      max-width: 450px;
+      margin-top: 25px;
+      padding: 15px;
+      border-left: 3px solid var(--gold);
+      background: rgba(228, 164, 69, .09);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
     }
 
     .security-note strong {
-      color:var(--ink);
+      color: var(--ink);
     }
 
     /* =========================
@@ -180,163 +179,172 @@
     ========================= */
 
     .login-card {
-      padding:32px;
-      border:1px solid var(--line);
-      border-radius:15px;
-      background:var(--panel);
-      box-shadow:0 20px 50px rgba(13,20,32,.08);
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--panel);
+      box-shadow: 0 20px 50px rgba(13, 20, 32, .08);
     }
 
     .login-card h2 {
-      margin:8px 0 8px;
-      font:600 30px Fraunces,serif;
+      margin: 8px 0 8px;
+      font: 600 30px Fraunces, serif;
     }
 
     .login-description {
-      margin:0 0 25px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.7;
+      margin: 0 0 25px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
     }
 
     .field {
-      margin-bottom:16px;
+      margin-bottom: 16px;
     }
 
     .field label {
-      display:block;
-      margin-bottom:7px;
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .field input {
-      width:100%;
-      padding:13px;
-      border:1px solid var(--line);
-      border-radius:7px;
-      background:#fff;
-      color:var(--ink);
-      font-size:12px;
-      outline:none;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 12px;
+      outline: none;
     }
 
     .field input:focus {
-      border-color:var(--teal);
-      box-shadow:0 0 0 3px rgba(34,145,117,.08);
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(34, 145, 117, .08);
     }
 
     .password-wrap {
-      position:relative;
+      position: relative;
     }
 
     .password-wrap input {
-      padding-right:70px;
+      padding-right: 70px;
     }
 
     .toggle-password {
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      border:0;
-      background:transparent;
-      color:var(--teal);
-      font-size:10px;
-      font-weight:700;
-      cursor:pointer;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .button {
-      width:100%;
-      padding:14px;
-      margin-top:5px;
-      border:0;
-      border-radius:7px;
-      background:var(--ink);
-      color:#fff;
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-      transition:.2s ease;
+      width: 100%;
+      padding: 14px;
+      margin-top: 5px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
     }
 
     .button:hover {
-      background:var(--teal);
+      background: var(--teal);
     }
 
     .button:disabled {
-      opacity:.6;
-      cursor:not-allowed;
+      opacity: .6;
+      cursor: not-allowed;
     }
 
+    /* =========================
+       STATUS
+    ========================= */
+
     .status {
-      min-height:auto;
-      margin:15px 0 0;
-      font-size:13px;
-      line-height:1.6;
-      padding:12px 14px;
-      border-radius:6px;
-      transition:all 0.3s ease;
-      opacity:0;
-      max-height:0;
-      overflow:hidden;
+      min-height: auto;
+      margin: 15px 0 0;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all .3s ease;
     }
 
     .status.error {
-      color:#fff;
-      background-color:rgba(220, 53, 69, 0.95);
-      border:1px solid rgba(220, 53, 69, 1);
-      opacity:1;
-      max-height:200px;
-      animation:slideDown 0.3s ease;
+      color: #fff;
+      background: rgba(180, 35, 24, .95);
+      border: 1px solid var(--danger);
+      opacity: 1;
+      max-height: 200px;
+      animation: slideDown .3s ease;
     }
 
     .status.success {
-      color:#fff;
-      background-color:rgba(22, 132, 71, 0.95);
-      border:1px solid rgba(22, 132, 71, 1);
-      font-weight:500;
-      opacity:1;
-      max-height:200px;
-      animation:slideDown 0.3s ease;
+      color: #fff;
+      background: rgba(22, 132, 71, .95);
+      border: 1px solid var(--success);
+      font-weight: 500;
+      opacity: 1;
+      max-height: 200px;
+      animation: slideDown .3s ease;
     }
 
     @keyframes slideDown {
       from {
-        opacity:0;
-        max-height:0;
-        transform:translateY(-10px);
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
       }
+
       to {
-        opacity:1;
-        max-height:200px;
-        transform:translateY(0);
+        opacity: 1;
+        max-height: 200px;
+        transform: translateY(0);
       }
     }
 
+    /* =========================
+       ADMIN BADGE
+    ========================= */
+
     .admin-badge {
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      margin-bottom:5px;
-      padding:6px 9px;
-      border-radius:5px;
-      background:var(--soft);
-      color:var(--teal);
-      font:600 9px 'IBM Plex Mono',monospace;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+      padding: 6px 9px;
+      border-radius: 5px;
+      background: var(--soft);
+      color: var(--teal);
+      font: 600 9px 'IBM Plex Mono', monospace;
+      letter-spacing: .05em;
+      text-transform: uppercase;
     }
 
     .admin-badge span {
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:var(--teal);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
     }
 
     /* =========================
@@ -344,98 +352,93 @@
     ========================= */
 
     footer {
-      padding:25px 0 35px;
-      border-top:1px solid var(--line);
+      padding: 25px 0 35px;
+      border-top: 1px solid var(--line);
     }
 
     .footer-bottom {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      color:var(--muted);
-      font-size:10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 10px;
     }
 
     .footer-links {
-      display:flex;
-      gap:16px;
+      display: flex;
+      gap: 16px;
     }
 
     .footer-links a {
-      color:var(--muted);
-      text-decoration:none;
+      color: var(--muted);
+      text-decoration: none;
     }
 
     .footer-links a:hover {
-      color:var(--teal);
+      color: var(--teal);
     }
 
     /* =========================
        RESPONSIVE
     ========================= */
 
-    @media(max-width:750px) {
-
+    @media (max-width: 750px) {
       .shell {
-        padding:0 17px;
+        padding: 0 17px;
       }
 
       .login-layout {
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
       }
 
       .intro {
-        padding:25px 0 0;
+        padding: 25px 0 0;
       }
 
       .intro h1 {
-        font-size:47px;
+        font-size: 47px;
       }
 
       main {
-        align-items:flex-start;
-        padding:45px 0;
+        align-items: flex-start;
+        padding: 45px 0;
       }
 
       .nav-right a:first-child {
-        display:none;
+        display: none;
       }
-
     }
 
-    @media(max-width:500px) {
-
+    @media (max-width: 500px) {
       .nav {
-        padding:20px 0;
+        padding: 20px 0;
       }
 
       .brand {
-        font-size:22px;
+        font-size: 22px;
       }
 
       .login-card {
-        padding:23px;
+        padding: 23px;
       }
 
       .intro {
-        padding-top:10px;
+        padding-top: 10px;
       }
 
       .intro h1 {
-        font-size:42px;
+        font-size: 42px;
       }
 
       .footer-bottom {
-        display:block;
+        display: block;
       }
 
       .footer-links {
-        margin-top:10px;
+        margin-top: 10px;
       }
-
     }
-
   </style>
 
 </head>
@@ -444,40 +447,37 @@
 
 <div class="page">
 
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
   <div class="shell">
-
-    <!-- =========================
-         NAVIGATION
-    ========================= -->
-
     <nav class="nav">
 
-      <a
-        class="brand"
-        href="index.html"
-      >
-        <span class="dot"></span>WAKALA
-      </a>
+```
+  <a class="brand" href="../index.html">
+    <span class="dot"></span>WAKALA
+  </a>
 
-      <div class="nav-right">
+  <div class="nav-right">
 
-        <a href="index.html">
-          Back to Wakala
-        </a>
+    <a href="../index.html">
+      Back to Wakala
+    </a>
 
-        <a
-          class="nav-button"
-          href="login.html"
-        >
-          User login
-        </a>
-
-      </div>
-
-    </nav>
+    <a
+      class="nav-button"
+      href="../login.html"
+    >
+      User login
+    </a>
 
   </div>
 
+</nav>
+```
+
+  </div>
 
   <!-- =========================
        MAIN
@@ -485,138 +485,139 @@
 
   <main>
 
-    <div class="shell">
+```
+<div class="shell">
 
-      <div class="login-layout">
+  <div class="login-layout">
 
-        <!-- INTRO -->
+    <!-- INTRO -->
 
-        <section class="intro">
+    <section class="intro">
 
-          <div class="kicker">
-            Wakala administration
-          </div>
+      <div class="kicker">
+        Wakala administration
+      </div>
 
-          <h1>
-            Welcome back, administrator.
-          </h1>
+      <h1>
+        Welcome back, administrator.
+      </h1>
 
-          <p>
-            Sign in to manage Wakala users, balances, creator campaigns,
-            creator submissions, eSIM products and other administrative
-            operations.
-          </p>
+      <p>
+        Sign in to manage Wakala users, balances, creator campaigns,
+        creator submissions, eSIM products and other administrative
+        operations.
+      </p>
 
-          <div class="security-note">
+      <div class="security-note">
 
-            <strong>
-              Protected administration area.
-            </strong>
+        <strong>
+          Protected administration area.
+        </strong>
 
-            <br>
+        <br>
 
-            Access is restricted to accounts that have been explicitly
-            registered as active administrators in the Wakala system.
-
-          </div>
-
-        </section>
-
-
-        <!-- LOGIN -->
-
-        <section class="login-card">
-
-          <div class="admin-badge">
-            <span></span>
-            Admin portal
-          </div>
-
-          <h2>
-            Admin login
-          </h2>
-
-          <p class="login-description">
-            Use your Wakala administrator account to continue.
-          </p>
-
-
-          <form id="adminLoginForm">
-
-            <div class="field">
-
-              <label for="email">
-                Admin email
-              </label>
-
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="username"
-                required
-                placeholder="admin@example.com"
-              >
-
-            </div>
-
-
-            <div class="field">
-
-              <label for="password">
-                Password
-              </label>
-
-              <div class="password-wrap">
-
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autocomplete="current-password"
-                  required
-                  placeholder="Enter your password"
-                >
-
-                <button
-                  type="button"
-                  class="toggle-password"
-                  id="togglePassword"
-                >
-                  Show
-                </button>
-
-              </div>
-
-            </div>
-
-
-            <button
-              type="submit"
-              class="button"
-              id="loginButton"
-            >
-              Sign in to admin
-            </button>
-
-
-            <p
-              class="status"
-              id="status"
-              role="status"
-              aria-live="polite"
-            ></p>
-
-          </form>
-
-        </section>
+        Access is restricted to accounts that have been explicitly
+        registered as active administrators in the Wakala system.
 
       </div>
 
-    </div>
+    </section>
+
+
+    <!-- LOGIN -->
+
+    <section class="login-card">
+
+      <div class="admin-badge">
+        <span></span>
+        Admin portal
+      </div>
+
+      <h2>
+        Admin login
+      </h2>
+
+      <p class="login-description">
+        Use your Wakala administrator account to continue.
+      </p>
+
+
+      <form id="adminLoginForm">
+
+        <div class="field">
+
+          <label for="email">
+            Admin email
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            required
+            placeholder="admin@example.com"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="password">
+            Password
+          </label>
+
+          <div class="password-wrap">
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Enter your password"
+            >
+
+            <button
+              type="button"
+              class="toggle-password"
+              id="togglePassword"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="button"
+          id="loginButton"
+        >
+          Sign in to admin
+        </button>
+
+
+        <p
+          class="status"
+          id="status"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+    </section>
+
+  </div>
+
+</div>
+```
 
   </main>
-
 
   <!-- =========================
        FOOTER
@@ -624,50 +625,54 @@
 
   <div class="shell">
 
-    <footer>
+```
+<footer>
 
-      <div class="footer-bottom">
+  <div class="footer-bottom">
 
-        <div>
-          © <span id="year"></span> Wakala. All rights reserved.
-        </div>
+    <div>
+      © <span id="year"></span> Wakala. All rights reserved.
+    </div>
 
-        <div class="footer-links">
+    <div class="footer-links">
 
-          <a href="index.html">
-            Home
-          </a>
+      <a href="../index.html">
+        Home
+      </a>
 
-          <a href="login.html">
-            User login
-          </a>
+      <a href="../login.html">
+        User login
+      </a>
 
-        </div>
+    </div>
 
-      </div>
+  </div>
 
-    </footer>
+</footer>
+```
 
   </div>
 
 </div>
 
-
 <!-- =========================
      SUPABASE
 ========================= -->
-```html
+
 <script type="module">
 
-  import {
-    createClient
-  } from 'https://esm.sh/@supabase/supabase-js@2';
+  import { createClient } from
+    'https://esm.sh/@supabase/supabase-js@2';
 
   import {
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   } from '../supabase-config.js';
 
+
+  /* =========================
+     SUPABASE CLIENT
+  ========================= */
 
   const supabase = createClient(
     SUPABASE_URL,
@@ -681,6 +686,10 @@
     }
   );
 
+
+  /* =========================
+     ELEMENTS
+  ========================= */
 
   const form =
     document.getElementById('adminLoginForm');
@@ -700,8 +709,11 @@
   const togglePassword =
     document.getElementById('togglePassword');
 
+  const year =
+    document.getElementById('year');
 
-  document.getElementById('year').textContent =
+
+  year.textContent =
     new Date().getFullYear();
 
 
@@ -734,6 +746,14 @@
      STATUS
   ========================= */
 
+  function clearStatus() {
+
+    status.className = 'status';
+    status.textContent = '';
+
+  }
+
+
   function showError(message) {
 
     status.className =
@@ -757,15 +777,15 @@
 
 
   /* =========================
-     CHECK ADMIN
+     VERIFY ADMIN
      
      IMPORTANT:
-     Do NOT query admin_users
-     directly from the browser.
+     
+     This does NOT query
+     admin_users directly.
      
      The RPC uses auth.uid()
-     server-side and avoids the
-     recursive RLS policy.
+     on the Supabase server.
   ========================= */
 
   async function checkAdmin() {
@@ -797,6 +817,14 @@
       data
     );
 
+
+    /*
+      PostgreSQL RETURNS TABLE functions
+      normally return an array.
+
+      We support both array and object
+      responses for safety.
+    */
 
     const admin =
       Array.isArray(data)
@@ -848,7 +876,6 @@
       const session =
         data?.session;
 
-
       const user =
         session?.user;
 
@@ -867,23 +894,50 @@
       );
 
 
+      /*
+        Verify the currently authenticated
+        user through auth.uid().
+      */
+
       const admin =
         await checkAdmin();
 
 
-      if (admin) {
+      if (!admin) {
 
-        console.log(
-          'Existing administrator verified:',
-          admin.role_name
+        /*
+          User has a valid Supabase session
+          but is not an administrator.
+
+          Leave the user signed out rather
+          than allowing the session to remain
+          on the admin portal.
+        */
+
+        console.warn(
+          'Existing session is not an active administrator.'
         );
 
+        await supabase.auth.signOut();
 
-        window.location.replace(
-          'adminindex.html'
-        );
+        return;
 
       }
+
+
+      console.log(
+        'Existing administrator verified:',
+        admin.role_name
+      );
+
+
+      /*
+        Already authenticated and verified.
+      */
+
+      window.location.replace(
+        './adminindex.html'
+      );
 
     } catch (error) {
 
@@ -907,12 +961,7 @@
 
       event.preventDefault();
 
-
-      status.className =
-        'status';
-
-      status.textContent =
-        '';
+      clearStatus();
 
 
       const email =
@@ -943,19 +992,18 @@
       try {
 
         /*
-         * Authenticate through
-         * Supabase Auth.
-         */
+          STEP 1
+          
+          Authenticate using Supabase Auth.
+        */
 
         const {
           data,
           error
         } =
           await supabase.auth.signInWithPassword({
-
             email,
             password
-
           });
 
 
@@ -975,7 +1023,6 @@
 
         const user =
           data?.user;
-
 
         const session =
           data?.session;
@@ -998,34 +1045,34 @@
 
 
         /*
-         * IMPORTANT:
-         *
-         * The UUID is now taken directly
-         * from the authenticated Supabase
-         * session.
-         *
-         * We do NOT send the UUID into
-         * the admin verification query.
-         *
-         * verify_admin_access() uses
-         * auth.uid() server-side.
-         */
+          STEP 2
+          
+          Verify administrator status.
 
+          We intentionally do NOT do:
+
+          .from('admin_users')
+
+          here.
+
+          The RPC determines the user
+          using auth.uid() server-side.
+        */
 
         const admin =
           await checkAdmin();
 
 
+        /*
+          STEP 3
+          
+          Authentication succeeded but
+          administrator authorization failed.
+        */
+
         if (!admin) {
 
-          /*
-           * Authentication succeeded,
-           * but this account is not an
-           * active Wakala administrator.
-           */
-
           await supabase.auth.signOut();
-
 
           throw new Error(
             'This account does not have active administrator access.'
@@ -1036,13 +1083,19 @@
 
         console.log(
           'Administrator verified:',
-          admin.role_name
+          {
+            user_id: user.id,
+            email: user.email,
+            role: admin.role_name
+          }
         );
 
 
         /*
-         * Everything is valid.
-         */
+          STEP 4
+          
+          Access granted.
+        */
 
         showSuccess(
           '✓ Administrator verified. Redirecting to dashboard...'
@@ -1060,12 +1113,13 @@
           () => {
 
             window.location.replace(
-              'adminindex.html'
+              './adminindex.html'
             );
 
           },
-          1000
+          700
         );
+
 
       } catch (error) {
 
@@ -1076,7 +1130,7 @@
 
 
         showError(
-          error.message ||
+          error?.message ||
           'Unable to sign in.'
         );
 
@@ -1117,8 +1171,6 @@
   checkExistingSession();
 
 </script>
-```
-
 
 </body>
 </html>
