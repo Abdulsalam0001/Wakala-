@@ -1,1948 +1,2342 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Balances | Wakala Admin</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
-
-<style>
-
-:root{
---ink:#101a2a;
---paper:#f5f3ee;
---panel:#fffefa;
---line:#e4e1d9;
---muted:#73756f;
---teal:#1f8b70;
---teal-soft:#e5f3ed;
---red:#b34d45;
---red-soft:#f8e9e7;
---gold:#d99a35;
---shadow:0 18px 45px rgba(16,26,42,.08);
-}
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-background:var(--paper);
-color:var(--ink);
-font-family:'DM Sans',sans-serif;
-}
-
-button,input,select,textarea{
-font:inherit;
-}
-
-.app{
-display:grid;
-grid-template-columns:240px 1fr;
-min-height:100vh;
-}
-
-.sidebar{
-background:var(--ink);
-color:#fff;
-padding:25px 18px;
-display:flex;
-flex-direction:column;
-}
-
-.brand{
-color:#fff;
-text-decoration:none;
-font:600 25px Fraunces,serif;
-padding:0 10px;
-}
-
-.brand-dot{
-display:inline-block;
-width:9px;
-height:9px;
-background:var(--gold);
-border-radius:50%;
-margin-right:8px;
-}
-
-.label{
-margin:55px 12px 12px;
-color:#718098;
-font-size:10px;
-font-weight:700;
-letter-spacing:.14em;
-text-transform:uppercase;
-}
-
-.nav{
-display:grid;
-gap:4px;
-}
-
-.nav a{
-padding:12px;
-border-radius:8px;
-color:#aeb9c9;
-text-decoration:none;
-font-size:13px;
-}
-
-.nav a:hover,
-.nav a.active{
-background:#223149;
-color:#fff;
-}
-
-.sidebar-bottom{
-margin-top:auto;
-padding:18px 12px 0;
-border-top:1px solid rgba(255,255,255,.12);
-}
-
-.logout{
-width:100%;
-padding:10px;
-background:transparent;
-border:1px solid rgba(255,255,255,.2);
-border-radius:7px;
-color:#fff;
-cursor:pointer;
-}
-
-.main{
-padding:35px clamp(20px,4vw,60px);
-max-width:1450px;
-width:100%;
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:40px;
-}
-
-.eyebrow{
-color:var(--teal);
-font:500 10px 'DM Mono',monospace;
-letter-spacing:.13em;
-text-transform:uppercase;
-}
-
-h1{
-margin:8px 0;
-font:600 clamp(38px,5vw,58px)/1 Fraunces,serif;
-}
-
-.subtitle{
-color:var(--muted);
-font-size:13px;
-}
-
-.admin{
-display:flex;
-align-items:center;
-gap:9px;
-font-size:12px;
-font-weight:600;
-}
-
-.admin-dot{
-width:8px;
-height:8px;
-background:var(--teal);
-border-radius:50%;
-box-shadow:0 0 0 4px var(--teal-soft);
-}
-
-.layout{
-display:grid;
-grid-template-columns:minmax(300px,.8fr) minmax(420px,1.2fr);
-gap:20px;
-}
-
-.dashboard-panel{
-grid-column:1 / -1;
-}
-
-.stats-grid{
-display:grid;
-grid-template-columns:repeat(4, minmax(160px, 1fr));
-gap:14px;
-margin-top:18px;
-}
-
-.stat-card{
-background:#fff;
-border:1px solid var(--line);
-border-radius:12px;
-padding:18px 16px;
-}
-
-.stat-label{
-font:500 10px 'DM Mono',monospace;
-text-transform:uppercase;
-letter-spacing:.12em;
-color:var(--muted);
-}
-
-.stat-card strong{
-display:block;
-margin-top:10px;
-font:600 30px Fraunces,serif;
-line-height:1;
-}
-
-.section-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px;
-}
-
-.overview-grid{
-display:grid;
-grid-template-columns:repeat(2, minmax(0, 1fr));
-gap:18px;
-margin-top:18px;
-}
-
-.list-panel{
-background:#fff;
-border:1px solid var(--line);
-border-radius:12px;
-padding:18px 16px;
-}
-
-.list-panel h3{
-margin:0 0 12px;
-font:600 18px Fraunces,serif;
-}
-
-.table-wrap{
-overflow:auto;
-max-height:280px;
-}
-
-.compact-table{
-width:100%;
-border-collapse:collapse;
-font-size:11px;
-}
-
-.compact-table th,
-.compact-table td{
-padding:10px 8px;
-text-align:left;
-border-bottom:1px solid var(--line);
-vertical-align:top;
-}
-
-.compact-table th{
-color:var(--muted);
-font:600 9px 'DM Mono',monospace;
-letter-spacing:.06em;
-text-transform:uppercase;
-}
-
-.compact-table tbody tr:hover{
-background:#fafaf8;
-}
-
-.badge{
-display:inline-flex;
-align-items:center;
-padding:4px 7px;
-border-radius:6px;
-font:600 9px 'DM Mono',monospace;
-text-transform:uppercase;
-letter-spacing:.04em;
-}
-
-.badge.pending_admin_review{
-background:rgba(217,154,53,.15);
-color:#d99a35;
-}
-
-.badge.approved,
-.badge.provisioned{
-background:rgba(31,139,112,.15);
-color:#1f8b70;
-}
-
-.badge.failed{
-background:rgba(179,77,69,.15);
-color:#b34d45;
-}
-
-.card{
-background:var(--panel);
-border:1px solid var(--line);
-border-radius:15px;
-box-shadow:var(--shadow);
-padding:25px;
-}
-
-.card h2{
-margin:0;
-font:600 23px Fraunces,serif;
-}
-
-.desc{
-margin:7px 0 20px;
-color:var(--muted);
-font-size:12px;
-line-height:1.6;
-}
-
-.search input{
-width:100%;
-padding:13px;
-border:1px solid var(--line);
-border-radius:8px;
-outline:none;
-background:#fff;
-}
-
-.search input:focus{
-border-color:var(--teal);
-}
-
-.users{
-display:grid;
-gap:7px;
-margin-top:15px;
-max-height:560px;
-overflow:auto;
-}
-
-.user{
-display:flex;
-align-items:center;
-gap:11px;
-padding:12px;
-border:1px solid var(--line);
-border-radius:9px;
-background:#fff;
-cursor:pointer;
-}
-
-.user:hover,
-.user.selected{
-border-color:var(--teal);
-background:var(--teal-soft);
-}
-
-.avatar{
-display:grid;
-place-items:center;
-width:38px;
-height:38px;
-border-radius:50%;
-background:var(--ink);
-color:#fff;
-font-size:11px;
-font-weight:700;
-flex:none;
-}
-
-.user-info{
-min-width:0;
-}
-
-.user-info strong{
-display:block;
-font-size:12px;
-}
-
-.user-info span{
-display:block;
-margin-top:3px;
-font-size:10px;
-color:var(--muted);
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-
-.empty{
-padding:25px;
-text-align:center;
-font-size:12px;
-color:var(--muted);
-}
-
-.selected{
-padding:14px;
-border-radius:9px;
-background:#eef0eb;
-margin:18px 0;
-}
-
-.selected strong{
-font-size:13px;
-}
-
-.selected span{
-display:block;
-margin-top:4px;
-color:var(--muted);
-font-size:10px;
-}
-
-.balances{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-bottom:22px;
-}
-
-.balance{
-padding:15px;
-border:1px solid var(--line);
-border-radius:9px;
-background:#fff;
-}
-
-.balance .currency{
-font:500 10px 'DM Mono',monospace;
-color:var(--muted);
-}
-
-.balance .amount{
-margin-top:7px;
-font:600 22px Fraunces,serif;
-}
-
-.balance.pending{
-background:#f8f6ef;
-}
-
-.field{
-margin-bottom:16px;
-}
-
-.field label{
-display:block;
-margin-bottom:7px;
-font-size:11px;
-font-weight:700;
-}
-
-.field input,
-.field select,
-.field textarea{
-width:100%;
-padding:12px;
-border:1px solid var(--line);
-border-radius:8px;
-background:#fff;
-outline:none;
-}
-
-.field textarea{
-min-height:80px;
-resize:vertical;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus{
-border-color:var(--teal);
-}
-
-.actions{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-
-.btn{
-padding:13px;
-border:0;
-border-radius:8px;
-cursor:pointer;
-font-size:12px;
-font-weight:700;
-}
-
-.credit{
-background:var(--teal);
-color:#fff;
-}
-
-.debit{
-background:var(--red-soft);
-color:var(--red);
-}
-
-.btn:disabled{
-opacity:.5;
-cursor:not-allowed;
-}
-
-.message{
-margin-top:15px;
-padding:12px;
-border-radius:8px;
-font-size:11px;
-display:none;
-line-height:1.5;
-}
-
-.message.success{
-display:block;
-background:var(--teal-soft);
-color:#176b55;
-}
-
-.message.error{
-display:block;
-background:var(--red-soft);
-color:var(--red);
-}
-
-.warning{
-margin-top:20px;
-padding:13px;
-border:1px solid #ead9af;
-border-radius:8px;
-background:#fff8e9;
-color:#695a3d;
-font-size:10px;
-line-height:1.6;
-}
-
-/* ============================================================
-   ESIM SECTION
-============================================================ */
-
-.esim-section{
-grid-column:1/-1;
-}
-
-.loader-message{
-padding:25px;
-text-align:center;
-font-size:12px;
-color:var(--muted);
-}
-
-.orders-table{
-width:100%;
-border-collapse:collapse;
-font-size:11px;
-}
-
-.orders-table thead{
-background:#f5f3ee;
-}
-
-.orders-table th{
-padding:11px 13px;
-border-bottom:1px solid var(--line);
-color:var(--muted);
-font:600 9px 'DM Mono',monospace;
-text-align:left;
-text-transform:uppercase;
-letter-spacing:.06em;
-white-space:nowrap;
-}
-
-.orders-table td{
-padding:13px;
-border-bottom:1px solid var(--line);
-color:var(--ink);
-}
-
-.orders-table tbody tr:hover{
-background:#fafaf8;
-}
-
-.order-status{
-display:inline-flex;
-align-items:center;
-gap:4px;
-padding:4px 7px;
-border-radius:4px;
-font:600 9px 'DM Mono',monospace;
-text-transform:uppercase;
-letter-spacing:.04em;
-}
-
-.order-status.pending_admin_review{
-background:rgba(217,154,53,.15);
-color:#d99a35;
-}
-
-.order-status.approved{
-background:rgba(31,139,112,.15);
-color:#1f8b70;
-}
-
-.order-status.provisioned{
-background:rgba(31,139,112,.15);
-color:#1f8b70;
-}
-
-.order-status.failed{
-background:rgba(179,77,69,.15);
-color:#b34d45;
-}
-
-@media(max-width:900px){
-
-.app{
-grid-template-columns:1fr;
-}
-
-.sidebar{
-display:none;
-}
-
-.layout{
-grid-template-columns:1fr;
-}
-
-}
-
-@media(max-width:500px){
-
-.main{
-padding:22px 15px 40px;
-}
-
-.balances{
-grid-template-columns:1fr;
-}
-
-.actions{
-grid-template-columns:1fr;
-}
-
-.topbar{
-align-items:flex-start;
-gap:15px;
-}
-
-}
-
-</style>
+
+  <script src="../auth-links.js" defer></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Balances | Wakala Admin</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 250px;
+      background: #111827;
+      color: #ffffff;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: 22px 16px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 10px 25px;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      border-radius: 10px;
+      font-weight: 900;
+    }
+
+    .nav-title {
+      color: #9ca3af;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 15px 10px 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 3px;
+      transition: 0.2s;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1f2937;
+      color: #ffffff;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 72px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .admin-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #16a34a;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    /* CARDS */
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .card-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .card-header p {
+      margin: 5px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .card-body {
+      padding: 22px;
+    }
+
+    /* CUSTOMER SEARCH */
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-row input {
+      flex: 1;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      outline: none;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6b7280;
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 17px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .btn-primary {
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #1f2937;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* CUSTOMER LIST */
+
+    .customer-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .customer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .customer:hover {
+      background: #f9fafb;
+    }
+
+    .customer-main {
+      min-width: 0;
+    }
+
+    .customer-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .customer-meta {
+      color: #6b7280;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .customer-actions {
+      flex-shrink: 0;
+    }
+
+    /* BALANCE */
+
+    .balance-panel {
+      display: none;
+      margin-top: 25px;
+    }
+
+    .balance-panel.visible {
+      display: block;
+    }
+
+    .selected-customer {
+      padding: 17px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+
+    .selected-customer strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .selected-customer span {
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(170px, 1fr)
+      );
+      gap: 12px;
+    }
+
+    .balance-card {
+      padding: 17px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .balance-currency {
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .balance-value {
+      font-size: 22px;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    /* ADJUSTMENT */
+
+    .adjustment {
+      margin-top: 25px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+    }
+
+    .adjustment h3 {
+      margin: 0 0 16px;
+      font-size: 15px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    .result {
+      display: none;
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .result.success {
+      display: block;
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .result.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* ESIM */
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 13px 15px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      color: #6b7280;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.failed,
+    .badge.cancelled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge.processing {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .empty {
+      padding: 35px 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .loading {
+      padding: 25px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      max-width: 360px;
+      background: #111827;
+      color: #ffffff;
+      padding: 14px 17px;
+      border-radius: 11px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 999;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 800px) {
+
+      .sidebar {
+        width: 220px;
+      }
+
+      .main {
+        margin-left: 220px;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+    }
+
+    @media (max-width: 650px) {
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        position: static;
+      }
+
+      .search-row {
+        flex-direction: column;
+      }
+
+      .customer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .customer-actions {
+        width: 100%;
+      }
+
+      .customer-actions .btn {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+
 </head>
 
 <body>
 
 <div class="app">
 
-<aside class="sidebar">
+  <!-- SIDEBAR -->
 
-<a class="brand" href="index.html">
-<span class="brand-dot"></span>WAKALA
+  <aside class="sidebar">
+
+```
+<div class="brand">
+  <div class="brand-mark">W</div>
+  <span>Wakala Admin</span>
+</div>
+
+<div class="nav-title">
+  Main
+</div>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">⌂</span>
+  Overview
 </a>
 
-<div class="label">Administration</div>
-
-<nav class="nav">
-
-<a href="index.html">Overview</a>
-<a href="users.html">Users</a>
-<a href="balances.html" class="active">Balances</a>
-<a href="transactions.html">Transactions</a>
-<a href="esims.html">eSIM</a>
-<a href="admins.html">Administrators</a>
-<a href="audit.html">Audit log</a>
-<a href="settings.html">Settings</a>
-
-</nav>
-
-<div class="sidebar-bottom">
-
-<button class="logout" id="logout">
-Log out
-</button>
-
-</div>
-
-</aside>
-
-
-<main class="main">
-
-<div class="topbar">
-
-<div>
-
-<div class="eyebrow">
-Financial controls
-</div>
-
-<h1>Balances</h1>
-
-<div class="subtitle">
-Manage customer wallet balances and record authorised adjustments.
-</div>
-
-</div>
-
-<div class="admin">
-
-<span class="admin-dot"></span>
-
-<span id="adminEmail">
-Checking session...
-</span>
-
-</div>
-
-</div>
-
-
-<section class="card dashboard-panel">
-
-<div class="section-head">
-
-<h2>Dashboard</h2>
-
-</div>
-
-<div class="stats-grid">
-
-<div class="stat-card">
-<span class="stat-label">Total users</span>
-<strong id="totalUsers">0</strong>
-</div>
-
-<div class="stat-card">
-<span class="stat-label">eSIM requests</span>
-<strong id="totalEsimRequests">0</strong>
-</div>
-
-<div class="stat-card">
-<span class="stat-label">Pending review</span>
-<strong id="pendingEsimRequests">0</strong>
-</div>
-
-<div class="stat-card">
-<span class="stat-label">Approved</span>
-<strong id="approvedEsimRequests">0</strong>
-</div>
-
-</div>
-
-<div class="overview-grid">
-
-<div class="list-panel">
-<h3>Users</h3>
-<div class="table-wrap">
-<table class="compact-table">
-<thead>
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Joined</th>
-</tr>
-</thead>
-<tbody id="dashboardUsersBody">
-<tr><td colspan="3">Loading users...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="list-panel">
-<h3>eSIM requests</h3>
-<div class="table-wrap">
-<table class="compact-table">
-<thead>
-<tr>
-<th>Customer</th>
-<th>Country</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody id="dashboardEsimBody">
-<tr><td colspan="3">Loading eSIM requests...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</section>
-
-<div class="layout">
-
-
-<section class="card">
-
-<h2>Customers</h2>
-
-<p class="desc">
-Search for a registered customer by name or email.
-</p>
-
-<div class="search">
-
-<input
-id="search"
-type="search"
-placeholder="Search customers..."
-autocomplete="off"
+<a
+  class="nav-link"
+  href="./balances.html"
 >
+  <span class="nav-icon">₦</span>
+  Balances
+</a>
 
-</div>
-
-<div class="users" id="users">
-
-<div class="empty">
-Loading customers...
-</div>
-
-</div>
-
-</section>
-
-
-<section class="card">
-
-<h2>Wallet control</h2>
-
-<p class="desc">
-Select a customer to view their real wallet balances.
-</p>
-
-<div id="emptyState">
-
-<div class="empty">
-Select a customer to begin.
-</div>
-
-</div>
-
-
-<div id="walletControl" style="display:none">
-
-<div class="selected">
-
-<strong id="customerName"></strong>
-
-<span id="customerEmail"></span>
-
-</div>
-
-
-<div class="balances" id="balances"></div>
-
-
-<div class="field">
-
-<label for="currency">
-Currency
-</label>
-
-<select id="currency">
-
-<option>NGN</option>
-<option>USD</option>
-<option>KES</option>
-<option>TZS</option>
-<option>RWF</option>
-<option>USDC</option>
-<option>USDT</option>
-<option>BTC</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label for="amount">
-Amount
-</label>
-
-<input
-id="amount"
-type="number"
-min="0"
-step="0.00000001"
-placeholder="0.00"
+<a
+  class="nav-link"
+  href="./creators.html"
 >
+  <span class="nav-icon">★</span>
+  Creators
+</a>
 
-</div>
-
-
-<div class="field">
-
-<label for="reason">
-Reason
-</label>
-
-<textarea
-id="reason"
-placeholder="Example: Manual test funding"
-></textarea>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn credit"
-id="credit"
+<a
+  class="nav-link"
+  href="./view-creators.html"
 >
-+ Add balance
-</button>
+  <span class="nav-icon">♙</span>
+  Creator Users
+</a>
 
-<button
-class="btn debit"
-id="debit"
->
-− Remove balance
-</button>
-
+<div class="nav-title">
+  Management
 </div>
 
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">▣</span>
+  Transactions
+</a>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">◎</span>
+  eSIM Orders
+</a>
+
+<a
+  class="nav-link"
+  href="./adminindex.html"
+>
+  <span class="nav-icon">⚙</span>
+  Settings
+</a>
+
+<div class="nav-title">
+  Account
+</div>
+
+<a
+  class="nav-link"
+  href="#"
+  id="logoutLink"
+>
+  <span class="nav-icon">↪</span>
+  Sign Out
+</a>
+```
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+```
+<header class="topbar">
+
+  <h1>
+    Customer Balances
+  </h1>
+
+  <div class="admin-status">
+    <span class="status-dot"></span>
+    <span id="adminRoleText">
+      Verifying admin...
+    </span>
+  </div>
+
+</header>
+
+
+<div class="content">
+
+  <!-- CUSTOMER CARD -->
+
+  <section class="card">
+
+    <div class="card-header">
+
+      <h2>
+        Customers
+      </h2>
+
+      <p>
+        Search customers and manage their wallet balances.
+      </p>
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="search-row">
+
+        <input
+          id="customerSearch"
+          type="search"
+          placeholder="Search by name, email, phone or account number..."
+          autocomplete="off"
+        >
+
+        <button
+          id="searchBtn"
+          class="btn btn-primary"
+        >
+          Search
+        </button>
+
+      </div>
+
+      <div
+        id="customerLoading"
+        class="loading"
+        style="display:none;"
+      >
+        Loading customers...
+      </div>
+
+      <div
+        id="customerList"
+        class="customer-list"
+      ></div>
+
+      <div
+        id="customerEmpty"
+        class="empty"
+        style="display:none;"
+      >
+        No customers found.
+      </div>
+
+
+      <!-- BALANCE PANEL -->
+
+      <div
+        id="balancePanel"
+        class="balance-panel"
+      >
+
+        <div class="selected-customer">
+
+          <strong id="selectedCustomerName">
+            Customer
+          </strong>
+
+          <span id="selectedCustomerMeta">
+            —
+          </span>
+
+        </div>
+
+
+        <h3>
+          Wallet Balances
+        </h3>
+
+        <div
+          id="balanceGrid"
+          class="balance-grid"
+        ></div>
+
+
+        <!-- BALANCE ADJUSTMENT -->
+
+        <div class="adjustment">
+
+          <h3>
+            Adjust Wallet Balance
+          </h3>
+
+          <div class="form-grid">
+
+            <div class="form-group">
+
+              <label for="currency">
+                Currency
+              </label>
+
+              <select id="currency">
+
+                <option value="NGN">
+                  NGN
+                </option>
+
+                <option value="USD">
+                  USD
+                </option>
+
+                <option value="KES">
+                  KES
+                </option>
+
+                <option value="TZS">
+                  TZS
+                </option>
+
+                <option value="RWF">
+                  RWF
+                </option>
+
+                <option value="USDC">
+                  USDC
+                </option>
+
+                <option value="USDT">
+                  USDT
+                </option>
+
+                <option value="BTC">
+                  BTC
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="direction">
+                Adjustment
+              </label>
+
+              <select id="direction">
+
+                <option value="credit">
+                  Credit / Add
+                </option>
+
+                <option value="debit">
+                  Debit / Remove
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="amount">
+                Amount
+              </label>
+
+              <input
+                id="amount"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="0.00"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="reason">
+                Reason
+              </label>
+
+              <input
+                id="reason"
+                type="text"
+                placeholder="Reason for adjustment"
+                maxlength="250"
+              >
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <button
+                id="adjustBtn"
+                class="btn btn-primary"
+              >
+                Apply Balance Adjustment
+              </button>
+
+            </div>
+
+          </div>
+
+          <div
+            id="adjustResult"
+            class="result"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ESIM ORDERS -->
+
+  <section class="card section">
+
+    <div class="card-header">
+
+      <h2>
+        eSIM Orders
+      </h2>
+
+      <p>
+        Recent eSIM orders associated with Wakala customers.
+      </p>
+
+    </div>
+
+    <div class="card-body">
+
+      <div
+        id="esimLoading"
+        class="loading"
+      >
+        Loading eSIM orders...
+      </div>
+
+      <div
+        id="esimEmpty"
+        class="empty"
+        style="display:none;"
+      >
+        No eSIM orders found.
+      </div>
+
+      <div
+        id="esimTableContainer"
+        class="table-wrap"
+        style="display:none;"
+      >
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Customer
+              </th>
+
+              <th>
+                Email
+              </th>
+
+              <th>
+                Country
+              </th>
+
+              <th>
+                Plan
+              </th>
+
+              <th>
+                Device
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Date
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="esimOrdersBody"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+```
+
+  </main>
+
+</div>
 
 <div
-id="message"
-class="message"
+  id="toast"
+  class="toast"
 ></div>
-
-
-<div class="warning">
-
-<strong>Financial control.</strong>
-Every adjustment changes the customer's real available wallet balance and creates a completed adjustment transaction plus an audit record.
-
-</div>
-
-</div>
-
-</section>
-
-</div>
-
-</main>
-
-</div>
-
-
-<section class="card esim-section">
-
-<h2>eSIM Orders</h2>
-
-<p class="desc">
-Monitor all customer eSIM orders and their fulfillment status.
-</p>
-
-<div id="esimOrdersLoader" class="loader-message">
-Loading eSIM orders...
-</div>
-
-<div id="esimOrdersContainer" style="display:none; overflow-x:auto;">
-
-<table class="orders-table">
-
-<thead>
-
-<tr>
-<th>Customer</th>
-<th>Email</th>
-<th>Country</th>
-<th>Plan</th>
-<th>Device</th>
-<th>Status</th>
-<th>Requested</th>
-</tr>
-
-</thead>
-
-<tbody id="esimOrdersBody">
-</tbody>
-
-</table>
-
-</div>
-
-<div id="esimOrdersEmpty" style="display:none;" class="empty">
-No eSIM orders yet.
-</div>
-
-</section>
-
-</div>
-
-</main>
-
-</div>
-
 
 <script type="module">
 
-import {
-createClient
-}
-from
-'https://esm.sh/@supabase/supabase-js@2';
+  import {
+    createClient
+  } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+
+  import {
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  } from "../supabase-config.js";
+
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  /* -------------------------------------------------
+     ELEMENTS
+  ------------------------------------------------- */
+
+  const customerSearch =
+    document.getElementById(
+      "customerSearch"
+    );
+
+  const searchBtn =
+    document.getElementById(
+      "searchBtn"
+    );
+
+  const customerList =
+    document.getElementById(
+      "customerList"
+    );
+
+  const customerLoading =
+    document.getElementById(
+      "customerLoading"
+    );
+
+  const customerEmpty =
+    document.getElementById(
+      "customerEmpty"
+    );
+
+  const balancePanel =
+    document.getElementById(
+      "balancePanel"
+    );
+
+  const balanceGrid =
+    document.getElementById(
+      "balanceGrid"
+    );
+
+  const selectedCustomerName =
+    document.getElementById(
+      "selectedCustomerName"
+    );
+
+  const selectedCustomerMeta =
+    document.getElementById(
+      "selectedCustomerMeta"
+    );
+
+  const currency =
+    document.getElementById(
+      "currency"
+    );
+
+  const direction =
+    document.getElementById(
+      "direction"
+    );
+
+  const amount =
+    document.getElementById(
+      "amount"
+    );
+
+  const reason =
+    document.getElementById(
+      "reason"
+    );
 
-import {
-SUPABASE_URL,
-SUPABASE_PUBLISHABLE_KEY
-}
-from
-'../supabase-config.js';
+  const adjustBtn =
+    document.getElementById(
+      "adjustBtn"
+    );
 
+  const adjustResult =
+    document.getElementById(
+      "adjustResult"
+    );
 
-const supabase =
-createClient(
-SUPABASE_URL,
-SUPABASE_PUBLISHABLE_KEY
-);
+  const adminRoleText =
+    document.getElementById(
+      "adminRoleText"
+    );
 
+  const logoutLink =
+    document.getElementById(
+      "logoutLink"
+    );
 
-let selectedUser = null;
-let users = [];
+  const esimLoading =
+    document.getElementById(
+      "esimLoading"
+    );
 
+  const esimEmpty =
+    document.getElementById(
+      "esimEmpty"
+    );
 
-const usersEl =
-document.getElementById('users');
+  const esimTableContainer =
+    document.getElementById(
+      "esimTableContainer"
+    );
 
-const searchEl =
-document.getElementById('search');
+  const esimOrdersBody =
+    document.getElementById(
+      "esimOrdersBody"
+    );
 
-const walletControl =
-document.getElementById('walletControl');
+  const toast =
+    document.getElementById(
+      "toast"
+    );
 
-const emptyState =
-document.getElementById('emptyState');
 
-const customerName =
-document.getElementById('customerName');
+  let selectedUserId = null;
 
-const customerEmail =
-document.getElementById('customerEmail');
 
-const balancesEl =
-document.getElementById('balances');
+  /* -------------------------------------------------
+     HELPERS
+  ------------------------------------------------- */
 
-const currencyEl =
-document.getElementById('currency');
+  function escapeHtml(value) {
 
-const amountEl =
-document.getElementById('amount');
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
 
-const reasonEl =
-document.getElementById('reason');
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-const messageEl =
-document.getElementById('message');
 
-const adminEmail =
-document.getElementById('adminEmail');
+  function showToast(message) {
 
-const totalUsersEl =
-document.getElementById('totalUsers');
-const totalEsimRequestsEl =
-document.getElementById('totalEsimRequests');
-const pendingEsimRequestsEl =
-document.getElementById('pendingEsimRequests');
-const approvedEsimRequestsEl =
-document.getElementById('approvedEsimRequests');
-const dashboardUsersBody =
-document.getElementById('dashboardUsersBody');
-const dashboardEsimBody =
-document.getElementById('dashboardEsimBody');
+    toast.textContent = message;
 
+    toast.classList.add("show");
 
-/* ============================================================
-   AUTH
-============================================================ */
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3500);
+  }
 
-async function authenticate(){
 
-const {
-data:{
-session
-}
-} =
-await supabase.auth.getSession();
+  function showAdjustmentResult(
+    type,
+    message
+  ) {
 
+    adjustResult.className =
+      "result " + type;
 
-if(!session){
+    adjustResult.textContent =
+      message;
+  }
 
-window.location.href =
-'access.html';
 
-return false;
+  function clearAdjustmentResult() {
 
-}
+    adjustResult.className =
+      "result";
 
+    adjustResult.textContent =
+      "";
+  }
 
-adminEmail.textContent =
-session.user.email || 'Administrator';
 
+  function formatNumber(
+    value,
+    currencyCode = ""
+  ) {
 
-const {
-data:admin,
-error
-} =
-await supabase
+    const number =
+      Number(value || 0);
 
-.from('admin_users')
+    if (
+      currencyCode === "BTC"
+    ) {
 
-.select(`
-id,
-status,
-admin_roles (
-name
-)
-`)
+      return number.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 8
+        }
+      );
 
-.eq(
-'user_id',
-session.user.id
-)
+    }
 
-.eq(
-'status',
-'active'
-)
+    return number.toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+  }
 
-.maybeSingle();
 
+  function getOrderStatusClass(
+    status
+  ) {
+
+    const normalized =
+      String(
+        status || "pending"
+      ).toLowerCase();
+
+    if (
+      normalized === "completed" ||
+      normalized === "success" ||
+      normalized === "successful"
+    ) {
+      return "completed";
+    }
+
+    if (
+      normalized === "failed"
+    ) {
+      return "failed";
+    }
+
+    if (
+      normalized === "cancelled" ||
+      normalized === "canceled"
+    ) {
+      return "cancelled";
+    }
+
+    if (
+      normalized === "processing"
+    ) {
+      return "processing";
+    }
+
+    return "pending";
+  }
+
+
+  /* -------------------------------------------------
+     AUTHENTICATION
+  ------------------------------------------------- */
+
+  async function authenticate() {
+
+    const {
+      data: {
+        session
+      }
+    } = await supabase.auth.getSession();
+
+
+    if (!session) {
+
+      window.location.href =
+        "../login.html";
+
+      return false;
+    }
+
+
+    /*
+     * Secure administrator verification.
+     *
+     * We intentionally do NOT do:
+     *
+     * supabase
+     *   .from("admin_users")
+     *
+     * because admin_users has protected RLS
+     * and direct browser access can cause
+     * recursive-policy problems.
+     */
+
+    const {
+      data: role,
+      error
+    } = await supabase.rpc(
+      "get_admin_role"
+    );
+
+
+    if (error) {
+
+      console.error(
+        "Admin role error:",
+        error
+      );
+
+      document.body.innerHTML = `
+        <div style="
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:25px;
+          font-family:system-ui;
+          background:#f5f7fb;
+        ">
+          <div style="
+            max-width:500px;
+            width:100%;
+            background:white;
+            border:1px solid #e5e7eb;
+            border-radius:16px;
+            padding:30px;
+          ">
+            <h2>Administrator Verification Failed</h2>
+
+            <p style="color:#6b7280;line-height:1.6;">
+              The administrator role could not be verified.
+              Please check that the get_admin_role()
+              database function exists and that your
+              account is an active administrator.
+            </p>
+
+            <button
+              onclick="location.href='../login.html'"
+              style="
+                width:100%;
+                padding:13px;
+                border:0;
+                border-radius:10px;
+                background:#111827;
+                color:white;
+                font-weight:700;
+              "
+            >
+              Return to Login
+            </button>
+          </div>
+        </div>
+      `;
 
-if(error || !admin){
+      return false;
+    }
 
-window.location.href =
-'access.html';
 
-return false;
+    if (!role) {
 
-}
+      alert(
+        "Administrator access denied."
+      );
 
+      window.location.href =
+        "../dashboard.html";
 
-return true;
+      return false;
+    }
 
-}
 
+    const normalizedRole =
+      String(role)
+        .trim()
+        .toLowerCase();
 
-/* ============================================================
-   LOAD CUSTOMERS
-============================================================ */
 
-async function loadCustomers(){
+    const allowedRoles = [
+      "super_admin",
+      "admin",
+      "moderator"
+    ];
 
-const {
-data,
-error
-} =
-await supabase.rpc(
-'admin_list_customers',
-{
-search_term:
-searchEl.value.trim()
-}
-);
 
+    if (
+      !allowedRoles.includes(
+        normalizedRole
+      )
+    ) {
 
-if(error){
+      alert(
+        "Your administrator role does not have access to this page."
+      );
 
-console.error(error);
+      window.location.href =
+        "../dashboard.html";
 
-usersEl.innerHTML =
-`
-<div class="empty">
-Unable to load customers.
-</div>
-`;
+      return false;
+    }
 
-return;
 
-}
+    adminRoleText.textContent =
+      normalizedRole.replace(
+        "_",
+        " "
+      );
 
 
-users = data || [];
+    return true;
+  }
 
-renderCustomers();
 
-}
+  /* -------------------------------------------------
+     CUSTOMERS
+  ------------------------------------------------- */
 
+  async function loadCustomers(
+    searchTerm = ""
+  ) {
 
-/* ============================================================
-   RENDER
-============================================================ */
+    customerLoading.style.display =
+      "block";
 
-function renderCustomers(){
+    customerEmpty.style.display =
+      "none";
 
-if(!users.length){
+    customerList.innerHTML =
+      "";
 
-usersEl.innerHTML =
-`
-<div class="empty">
-No customers found.
-</div>
-`;
+    try {
 
-return;
+      const {
+        data,
+        error
+      } = await supabase.rpc(
+        "admin_list_customers",
+        {
+          search_term:
+            searchTerm.trim()
+        }
+      );
 
-}
 
+      if (error) {
+        throw error;
+      }
 
-usersEl.innerHTML =
-users.map(user => {
 
-const displayName =
-user.full_name ||
-user.email ||
-'Customer';
+      const customers =
+        Array.isArray(data)
+          ? data
+          : [];
 
-const initials =
-displayName
-.split(/\s+/)
-.map(x => x[0])
-.join('')
-.slice(0,2)
-.toUpperCase();
 
+      customerLoading.style.display =
+        "none";
 
-return `
 
-<div
-class="user ${
-selectedUser?.user_id === user.user_id
-? 'selected'
-: ''
-}"
-data-user="${user.user_id}"
->
+      if (
+        customers.length === 0
+      ) {
 
-<div class="avatar">
-${escapeHtml(initials)}
-</div>
+        customerEmpty.style.display =
+          "block";
 
-<div class="user-info">
+        return;
+      }
 
-<strong>
-${escapeHtml(displayName)}
-</strong>
 
-<span>
-${escapeHtml(user.email || '')}
-</span>
+      customerList.innerHTML =
+        customers.map(
+          customer => {
 
-</div>
+            const name =
+              customer.full_name ||
+              customer.name ||
+              "Customer";
 
-</div>
 
-`;
+            const email =
+              customer.email ||
+              "No email";
 
-}).join('');
 
+            const phone =
+              customer.phone ||
+              "";
 
-document
-.querySelectorAll('.user')
-.forEach(element => {
 
-element.addEventListener(
-'click',
-() => {
+            const accountNumber =
+              customer.account_number ||
+              customer.account_no ||
+              "";
 
-const user =
-users.find(
-x =>
-x.user_id ===
-element.dataset.user
-);
 
-selectUser(user);
+            return `
+              <div
+                class="customer"
+              >
 
-});
+                <div
+                  class="customer-main"
+                >
 
-});
+                  <div
+                    class="customer-name"
+                  >
+                    ${escapeHtml(name)}
+                  </div>
 
-}
+                  <div
+                    class="customer-meta"
+                  >
+                    ${escapeHtml(email)}
+                    ${phone
+                      ? " · " +
+                        escapeHtml(phone)
+                      : ""}
+                    ${accountNumber
+                      ? " · Account: " +
+                        escapeHtml(accountNumber)
+                      : ""}
+                  </div>
 
+                </div>
 
-/* ============================================================
-   SELECT CUSTOMER
-============================================================ */
+                <div
+                  class="customer-actions"
+                >
 
-async function selectUser(user){
+                  <button
+                    class="btn btn-secondary"
+                    data-user-id="${escapeHtml(
+                      customer.user_id ||
+                      customer.id
+                    )}"
+                    data-name="${escapeHtml(name)}"
+                    data-email="${escapeHtml(email)}"
+                  >
+                    View Balance
+                  </button>
 
-selectedUser = user;
+                </div>
 
-emptyState.style.display =
-'none';
+              </div>
+            `;
+          }
+        ).join("");
 
-walletControl.style.display =
-'block';
 
-customerName.textContent =
-user.full_name ||
-'Customer';
+      customerList
+        .querySelectorAll(
+          "[data-user-id]"
+        )
+        .forEach(button => {
 
-customerEmail.textContent =
-user.email ||
-user.user_id;
+          button.addEventListener(
+            "click",
+            () => {
 
-renderCustomers();
+              selectCustomer(
+                button.dataset.userId,
+                button.dataset.name,
+                button.dataset.email
+              );
 
-await loadBalances();
+            }
+          );
 
-}
+        });
 
 
-/* ============================================================
-   LOAD REAL BALANCES
-============================================================ */
+    } catch (error) {
 
-async function loadBalances(){
+      console.error(
+        "Customer loading error:",
+        error
+      );
 
-if(!selectedUser)
-return;
+      customerLoading.style.display =
+        "none";
 
+      customerEmpty.style.display =
+        "block";
 
-const {
-data,
-error
-} =
-await supabase.rpc(
-'admin_get_customer_balances',
-{
-target_user_id:
-selectedUser.user_id
-}
-);
+      customerEmpty.textContent =
+        "Unable to load customers: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+    }
+  }
 
 
-if(error){
+  /* -------------------------------------------------
+     SELECT CUSTOMER
+  ------------------------------------------------- */
 
-console.error(error);
+  async function selectCustomer(
+    userId,
+    name,
+    email
+  ) {
 
-balancesEl.innerHTML =
-`
-<div class="empty">
-Unable to load wallet balances.
-</div>
-`;
+    selectedUserId =
+      userId;
 
-return;
 
-}
+    selectedCustomerName.textContent =
+      name || "Customer";
 
 
-const balances =
-data || [];
+    selectedCustomerMeta.textContent =
+      email || userId || "—";
 
 
-if(!balances.length){
+    balancePanel.classList.add(
+      "visible"
+    );
 
-balancesEl.innerHTML =
-`
-<div class="empty">
-No currency balances have been created yet.
-</div>
-`;
 
-return;
+    balanceGrid.innerHTML = `
+      <div class="loading">
+        Loading balances...
+      </div>
+    `;
 
-}
 
+    clearAdjustmentResult();
 
-balancesEl.innerHTML =
-balances.map(balance => `
 
-<div class="balance">
+    try {
 
-<div class="currency">
-${escapeHtml(balance.currency)}
-</div>
+      const {
+        data,
+        error
+      } = await supabase.rpc(
+        "admin_get_customer_balances",
+        {
+          target_user_id:
+            userId
+        }
+      );
 
-<div class="amount">
-${formatAmount(
-balance.available,
-balance.currency
-)}
-</div>
 
-</div>
+      if (error) {
+        throw error;
+      }
 
-`).join('');
 
-}
+      renderBalances(data);
 
 
-/* ============================================================
-   SEARCH
-============================================================ */
+    } catch (error) {
 
-let searchTimer;
+      console.error(
+        "Balance loading error:",
+        error
+      );
 
-searchEl.addEventListener(
-'input',
-() => {
 
-clearTimeout(searchTimer);
+      balanceGrid.innerHTML = `
+        <div class="empty">
+          Unable to load balances:
+          ${escapeHtml(
+            error.message ||
+            "Unknown error"
+          )}
+        </div>
+      `;
+    }
+  }
 
-searchTimer =
-setTimeout(
-loadCustomers,
-300
-);
 
-});
+  /* -------------------------------------------------
+     BALANCE RENDERING
+  ------------------------------------------------- */
 
+  function renderBalances(
+    data
+  ) {
 
-/* ============================================================
-   BALANCE CHANGE
-============================================================ */
+    const rows =
+      Array.isArray(data)
+        ? data
+        : [];
 
-currencyEl.addEventListener(
-'change',
-loadBalances
-);
 
+    if (
+      rows.length === 0
+    ) {
 
-async function adjust(direction){
+      balanceGrid.innerHTML = `
+        <div class="empty">
+          No wallet balances found.
+        </div>
+      `;
 
-if(!selectedUser){
+      return;
+    }
 
-showMessage(
-'Select a customer first.',
-'error'
-);
 
-return;
+    balanceGrid.innerHTML =
+      rows.map(row => {
 
-}
+        const code =
+          row.currency ||
+          "—";
 
 
-const amount =
-Number(amountEl.value);
+        const value =
+          row.balance ??
+          row.available_balance ??
+          row.amount ??
+          0;
 
 
-const reason =
-reasonEl.value.trim();
+        return `
+          <div class="balance-card">
 
+            <div
+              class="balance-currency"
+            >
+              ${escapeHtml(code)}
+            </div>
 
-if(!amount || amount <= 0){
+            <div
+              class="balance-value"
+            >
+              ${escapeHtml(
+                formatNumber(
+                  value,
+                  code
+                )
+              )}
+            </div>
 
-showMessage(
-'Enter a valid amount.',
-'error'
-);
+          </div>
+        `;
 
-return;
+      }).join("");
+  }
 
-}
 
+  /* -------------------------------------------------
+     ADJUST BALANCE
+  ------------------------------------------------- */
 
-if(!reason){
+  async function adjustBalance() {
 
-showMessage(
-'A reason is required.',
-'error'
-);
+    clearAdjustmentResult();
 
-return;
 
-}
+    if (!selectedUserId) {
 
+      showAdjustmentResult(
+        "error",
+        "Select a customer first."
+      );
 
-setButtons(true);
+      return;
+    }
 
 
-try{
+    const value =
+      Number(
+        amount.value
+      );
 
-const {
-data,
-error
-} =
-await supabase.rpc(
-'admin_adjust_wallet_balance',
-{
-target_user_id:
-selectedUser.user_id,
 
-target_currency:
-currencyEl.value,
+    if (
+      !Number.isFinite(value) ||
+      value <= 0
+    ) {
 
-adjustment_amount:
-amount,
+      showAdjustmentResult(
+        "error",
+        "Enter a valid amount greater than zero."
+      );
 
-adjustment_direction:
-direction,
+      return;
+    }
 
-adjustment_reason:
-reason
-}
-);
 
+    const adjustmentReason =
+      reason.value.trim();
 
-if(error)
-throw error;
 
+    if (
+      !adjustmentReason
+    ) {
 
-await loadBalances();
+      showAdjustmentResult(
+        "error",
+        "A reason is required for every balance adjustment."
+      );
 
+      return;
+    }
 
-showMessage(
-`Adjustment completed. ${formatAmount(data.balance_before,data.currency)} → ${formatAmount(data.balance_after,data.currency)}. Reference: ${data.reference}`,
-'success'
-);
 
+    adjustBtn.disabled =
+      true;
 
-amountEl.value = '';
-reasonEl.value = '';
+    adjustBtn.textContent =
+      "Processing...";
 
 
-}catch(error){
+    try {
 
-console.error(error);
+      const {
+        data,
+        error
+      } = await supabase.rpc(
+        "admin_adjust_wallet_balance",
+        {
+          target_user_id:
+            selectedUserId,
 
-showMessage(
-error.message ||
-'Balance adjustment failed.',
-'error'
-);
+          target_currency:
+            currency.value,
 
-}finally{
+          adjustment_amount:
+            value,
 
-setButtons(false);
+          adjustment_direction:
+            direction.value,
 
-}
+          adjustment_reason:
+            adjustmentReason
+        }
+      );
 
-}
 
+      if (error) {
+        throw error;
+      }
 
-/* ============================================================
-   BUTTONS
-============================================================ */
 
-document
-.getElementById('credit')
-.addEventListener(
-'click',
-() => adjust('credit')
-);
+      console.log(
+        "Balance adjustment result:",
+        data
+      );
 
 
-document
-.getElementById('debit')
-.addEventListener(
-'click',
-() => adjust('debit')
-);
+      let resultRow =
+        Array.isArray(data)
+          ? data[0]
+          : data;
 
 
-/* ============================================================
-   UI HELPERS
-============================================================ */
+      const before =
+        resultRow?.balance_before;
 
-function setButtons(disabled){
 
-document
-.querySelectorAll('.btn')
-.forEach(
-button =>
-button.disabled =
-disabled
-);
+      const after =
+        resultRow?.balance_after;
 
-}
 
+      const resultCurrency =
+        resultRow?.currency ||
+        currency.value;
 
-function showMessage(text,type){
 
-messageEl.textContent =
-text;
+      const reference =
+        resultRow?.reference;
 
-messageEl.className =
-`message ${type}`;
 
-}
+      let message =
+        "Balance adjustment completed successfully.";
 
 
-function formatAmount(value,currency){
+      if (
+        before !== undefined &&
+        after !== undefined
+      ) {
 
-const decimals =
-currency === 'BTC'
-? 8
-: 2;
+        message +=
+          ` Balance: ${
+            formatNumber(
+              before,
+              resultCurrency
+            )
+          } → ${
+            formatNumber(
+              after,
+              resultCurrency
+            )
+          } ${
+            resultCurrency
+          }.`;
+      }
 
-return Number(value)
-.toLocaleString(
-undefined,
-{
-minimumFractionDigits:
-decimals,
 
-maximumFractionDigits:
-decimals
-}
-)
-+
-' '
-+
-currency;
+      if (reference) {
 
-}
+        message +=
+          ` Reference: ${reference}`;
+      }
 
 
-function escapeHtml(value){
+      showAdjustmentResult(
+        "success",
+        message
+      );
 
-return String(value)
-.replaceAll('&','&amp;')
-.replaceAll('<','&lt;')
-.replaceAll('>','&gt;')
-.replaceAll('"','&quot;')
-.replaceAll("'","&#039;");
 
-}
+      showToast(
+        "Wallet balance updated successfully."
+      );
 
 
-/* ============================================================
-   DASHBOARD
-============================================================ */
+      amount.value =
+        "";
 
-function renderDashboardUsers(users){
+      reason.value =
+        "";
 
-if(!users.length){
 
-dashboardUsersBody.innerHTML = `
-<tr>
-<td colspan="3">No users yet.</td>
-</tr>
-`;
-return;
-}
+      await selectCustomer(
+        selectedUserId,
+        selectedCustomerName.textContent,
+        selectedCustomerMeta.textContent
+      );
 
-const rows = users
-.map(user => {
-const displayName = user.full_name || user.email || 'Customer';
-const joinedDate = user.created_at ? new Intl.DateTimeFormat(undefined, {
-month: 'short',
-day: 'numeric',
-year: 'numeric'
-}).format(new Date(user.created_at)) : '—';
 
-return `
-<tr>
-<td>${escapeHtml(displayName)}</td>
-<td>${escapeHtml(user.email || '—')}</td>
-<td>${escapeHtml(joinedDate)}</td>
-</tr>
-`;
-})
-.join('');
+    } catch (error) {
 
-dashboardUsersBody.innerHTML = rows;
+      console.error(
+        "Balance adjustment error:",
+        error
+      );
 
-}
 
-function renderDashboardEsimOrders(orders){
+      showAdjustmentResult(
+        "error",
+        error.message ||
+        "Unable to adjust wallet balance."
+      );
 
-if(!orders.length){
+    } finally {
 
-dashboardEsimBody.innerHTML = `
-<tr>
-<td colspan="3">No eSIM requests yet.</td>
-</tr>
-`;
-return;
-}
+      adjustBtn.disabled =
+        false;
 
-const rows = orders
-.map(order => {
-const customerName = order.full_name || order.email || order.delivery_email || 'Customer';
-const statusText = (order.status || 'pending_admin_review')
-.replace(/_/g, ' ')
-.replace(/\b\w/g, letter => letter.toUpperCase());
+      adjustBtn.textContent =
+        "Apply Balance Adjustment";
+    }
+  }
 
-return `
-<tr>
-<td>${escapeHtml(customerName)}</td>
-<td>${escapeHtml(order.country_name || order.country_code || '—')}</td>
-<td><span class="badge ${order.status || 'pending_admin_review'}">${escapeHtml(statusText)}</span></td>
-</tr>
-`;
-})
-.join('');
 
-dashboardEsimBody.innerHTML = rows;
+  /* -------------------------------------------------
+     ESIM ORDERS
+  ------------------------------------------------- */
 
-}
+  async function loadEsimOrders() {
 
-async function loadDashboardData(){
+    esimLoading.style.display =
+      "block";
 
-try{
+    esimEmpty.style.display =
+      "none";
 
-const customerResult = await supabase.rpc('admin_list_customers', {
-search_term: ''
-});
+    esimTableContainer.style.display =
+      "none";
 
-if(customerResult.error){
-throw customerResult.error;
-}
+    esimOrdersBody.innerHTML =
+      "";
 
-const customers = customerResult.data || [];
 
-const totalUsers = customers.length;
-const totalEsimResult = await supabase
-.from('esim_orders')
-.select('id', { count: 'exact', head: true });
+    try {
 
-const pendingEsimResult = await supabase
-.from('esim_orders')
-.select('id', { count: 'exact', head: true })
-.eq('status', 'pending_admin_review');
+      /*
+       * Select * deliberately.
+       *
+       * The eSIM schema can evolve and this prevents
+       * the admin dashboard from breaking merely
+       * because an optional column is unavailable.
+       */
 
-const approvedEsimResult = await supabase
-.from('esim_orders')
-.select('id', { count: 'exact', head: true })
-.in('status', ['approved', 'provisioned']);
+      const {
+        data,
+        error
+      } = await supabase
+        .from("esim_orders")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(100);
 
-if(totalEsimResult.error) throw totalEsimResult.error;
-if(pendingEsimResult.error) throw pendingEsimResult.error;
-if(approvedEsimResult.error) throw approvedEsimResult.error;
 
-renderDashboardUsers(customers);
+      if (error) {
+        throw error;
+      }
 
-totalUsersEl.textContent = totalUsers.toLocaleString();
-totalEsimRequestsEl.textContent = (totalEsimResult.count || 0).toLocaleString();
-pendingEsimRequestsEl.textContent = (pendingEsimResult.count || 0).toLocaleString();
-approvedEsimRequestsEl.textContent = (approvedEsimResult.count || 0).toLocaleString();
 
-const { data: esimOrders, error: esimOrdersError } = await supabase
-.from('esim_orders')
-.select('*')
-.order('created_at', { ascending: false })
-.limit(50);
+      const orders =
+        Array.isArray(data)
+          ? data
+          : [];
 
-if(esimOrdersError) throw esimOrdersError;
 
-const mappedOrders = (esimOrders || []).map(order => ({
-...order,
-full_name: order.delivery_email || 'Customer',
-email: order.delivery_email || ''
-}));
+      esimLoading.style.display =
+        "none";
 
-renderDashboardEsimOrders(mappedOrders);
 
-}catch(error){
-console.error('Dashboard load failed:', error);
+      if (
+        orders.length === 0
+      ) {
 
-dashboardUsersBody.innerHTML = `
-<tr>
-<td colspan="3">Unable to load users.</td>
-</tr>
-`;
-dashboardEsimBody.innerHTML = `
-<tr>
-<td colspan="3">Unable to load eSIM requests.</td>
-</tr>
-`;
-}
+        esimEmpty.style.display =
+          "block";
 
-}
+        return;
+      }
 
 
-/* ============================================================
-   ESIM ORDERS
-============================================================ */
+      esimTableContainer.style.display =
+        "block";
 
-async function loadEsimOrders(){
 
-const loader =
-document.getElementById('esimOrdersLoader');
+      esimOrdersBody.innerHTML =
+        orders.map(
+          order => {
 
-const container =
-document.getElementById('esimOrdersContainer');
+            const customer =
+              order.customer_name ||
+              order.full_name ||
+              order.name ||
+              order.delivery_name ||
+              order.user_id ||
+              "Customer";
 
-const empty =
-document.getElementById('esimOrdersEmpty');
 
-const body =
-document.getElementById('esimOrdersBody');
+            const email =
+              order.delivery_email ||
+              order.email ||
+              "—";
 
 
-try{
+            const country =
+              order.country_name ||
+              order.country_code ||
+              order.country ||
+              "—";
 
-const { data, error } =
-await supabase
-.from('esim_orders')
-.select('*')
-.order('created_at', {
-ascending: false
-})
-.limit(100);
 
+            const plan =
+              order.plan_data ||
+              order.plan_name ||
+              order.package_name ||
+              order.plan_id ||
+              "—";
 
-if(error){
 
-console.error(
-'Failed to load eSIM orders:',
-error
-);
+            const validity =
+              order.validity_days;
 
-loader.textContent =
-'Unable to load eSIM orders.';
 
-return;
+            const planText =
+              validity
+                ? `${plan} · ${validity}d`
+                : plan;
 
-}
 
+            const device =
+              order.device ||
+              order.device_model ||
+              "—";
 
-if(!data || data.length === 0){
 
-loader.style.display = 'none';
-empty.style.display = 'block';
-container.style.display = 'none';
+            const status =
+              order.status ||
+              order.order_status ||
+              "pending";
 
-return;
 
-}
+            const statusClass =
+              getOrderStatusClass(
+                status
+              );
 
 
-loader.style.display = 'none';
-empty.style.display = 'none';
-container.style.display = 'block';
+            const created =
+              order.created_at ||
+              order.createdAt;
 
 
-body.innerHTML = '';
+            let formattedDate =
+              "—";
 
 
-data.forEach(order => {
+            if (created) {
 
-const row =
-document.createElement('tr');
+              const date =
+                new Date(created);
 
 
-const statusClass =
-`order-status ${order.status}`;
+              if (
+                !Number.isNaN(
+                  date.getTime()
+                )
+              ) {
 
+                formattedDate =
+                  date.toLocaleString();
+              }
+            }
 
-const statusText =
-order.status
-.replace(/_/g, ' ')
-.replace(/\b\w/g, l => l.toUpperCase());
 
+            return `
+              <tr>
 
-const createdDate =
-new Intl.DateTimeFormat(
-undefined,
-{
-day: 'numeric',
-month: 'short',
-year: 'numeric'
-}
-).format(new Date(order.created_at));
+                <td>
+                  <strong>
+                    ${escapeHtml(customer)}
+                  </strong>
+                </td>
 
+                <td>
+                  ${escapeHtml(email)}
+                </td>
 
-row.innerHTML = `
+                <td>
+                  ${escapeHtml(country)}
+                </td>
 
-<td>
-${order.country_name}
-</td>
+                <td>
+                  ${escapeHtml(planText)}
+                </td>
 
-<td>
-${order.delivery_email}
-</td>
+                <td>
+                  ${escapeHtml(device)}
+                </td>
 
-<td>
-${order.country_name}
-</td>
+                <td>
+                  <span
+                    class="badge ${statusClass}"
+                  >
+                    ${escapeHtml(status)}
+                  </span>
+                </td>
 
-<td>
-${order.plan_data} · ${order.validity_days}d
-</td>
+                <td>
+                  ${escapeHtml(formattedDate)}
+                </td>
 
-<td>
-${order.device}
-</td>
+              </tr>
+            `;
 
-<td>
-<span class="${statusClass}">
-${statusText}
-</span>
-</td>
+          }
+        ).join("");
 
-<td>
-${createdDate}
-</td>
 
-`;
+    } catch (error) {
 
+      console.error(
+        "eSIM order loading error:",
+        error
+      );
 
-body.appendChild(row);
 
-});
+      esimLoading.style.display =
+        "none";
 
-const dashboardOrders = data.map(order => ({
-...order,
-full_name: order.full_name || order.delivery_email || 'Customer'
-}));
+      esimEmpty.style.display =
+        "block";
 
-renderDashboardEsimOrders(dashboardOrders);
+      esimEmpty.textContent =
+        "Unable to load eSIM orders: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+    }
+  }
 
 
-}catch(err){
+  /* -------------------------------------------------
+     EVENTS
+  ------------------------------------------------- */
 
-console.error(
-'eSIM orders error:',
-err
-);
+  searchBtn.addEventListener(
+    "click",
+    () => {
 
-loader.textContent =
-'Error loading eSIM orders.';
+      loadCustomers(
+        customerSearch.value
+      );
 
-}
+    }
+  );
 
-}
 
+  customerSearch.addEventListener(
+    "keydown",
+    event => {
 
-/* ============================================================
-   LOGOUT
-============================================================ */
+      if (
+        event.key === "Enter"
+      ) {
 
-document
-.getElementById('logout')
-.addEventListener(
-'click',
-async () => {
+        event.preventDefault();
 
-await supabase.auth.signOut();
+        loadCustomers(
+          customerSearch.value
+        );
+      }
 
-window.location.href =
-'../login.html';
+    }
+  );
 
-});
 
+  adjustBtn.addEventListener(
+    "click",
+    adjustBalance
+  );
 
-/* ============================================================
-   START
-============================================================ */
 
-if(
-await authenticate()
-){
+  logoutLink.addEventListener(
+    "click",
+    async event => {
 
-await loadCustomers();
-await loadDashboardData();
-await loadEsimOrders();
+      event.preventDefault();
 
-}
+      try {
+
+        await supabase.auth.signOut();
+
+      } finally {
+
+        window.location.href =
+          "../login.html";
+      }
+
+    }
+  );
+
+
+  /* -------------------------------------------------
+     AUTH STATE
+  ------------------------------------------------- */
+
+  supabase.auth.onAuthStateChange(
+    async (
+      event,
+      session
+    ) => {
+
+      console.log(
+        "Auth state:",
+        event,
+        session?.user?.id
+      );
+
+
+      if (
+        event === "SIGNED_OUT"
+      ) {
+
+        window.location.href =
+          "../login.html";
+
+      }
+
+    }
+  );
+
+
+  /* -------------------------------------------------
+     INITIALIZE
+  ------------------------------------------------- */
+
+  async function initialize() {
+
+    const authenticated =
+      await authenticate();
+
+
+    if (!authenticated) {
+      return;
+    }
+
+
+    await loadCustomers();
+
+
+    /*
+     * eSIM orders are loaded separately so a problem
+     * with eSIM RLS/schema does not prevent the
+     * customer balance dashboard from loading.
+     */
+
+    await loadEsimOrders();
+  }
+
+
+  initialize();
 
 </script>
 
