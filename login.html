@@ -89,7 +89,7 @@
 			button.textContent = 'Logging in...';
 
 			const { error } = await supabase.auth.signInWithPassword({
-				email: form.email.value.trim(),
+				email: form.email.value.trim().toLowerCase(),
 				password: form.password.value
 			});
 
@@ -114,7 +114,11 @@
         return;
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+	const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+	const { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } = await import('./supabase-config.js');
+	const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+	const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: "https://wakala.cfd/reset-password.html"
     });
 
