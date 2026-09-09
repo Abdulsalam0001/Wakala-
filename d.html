@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Overview | Wakala</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+
+<body>
+
+  <!-- ======================================
+       AUTH LOADER
+  ======================================= -->
+
+  <div
+    class="loader"
+    id="pageLoader"
+    aria-live="polite"
+  >
+
+    <div class="loader-content">
+
+      <span class="loader-dot"></span>
+
+      Securing your session…
+
+    </div>
+
+  </div>
+
+
+  <div class="app">
+
+    <!-- ====================================
+         SIDEBAR
+    ===================================== -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+
+        <a
+          href="index.html"
+          class="brand"
+        >
+
+          <span class="brand-dot"></span>
+
+          WAKALA
+
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-expanded="false"
+        >
+          Menu
+        </button>
+
+      </div>
+
+
+      <div class="sidebar-label">
+        Workspace
+      </div>
+
+
+      <nav
+        class="nav"
+        id="mainNavigation"
+        aria-label="Dashboard navigation"
+      >
+
+        <a
+          href="dashboard.html"
+          class="active"
+        >
+          <span class="nav-icon">◈</span>
+          Overview
+        </a>
+
+        <a href="#wallet">
+          <span class="nav-icon">◌</span>
+          Wallet
+        </a>
+
+        <a href="transfer.html">
+          <span class="nav-icon">↗</span>
+          Transfers
+        </a>
+
+        <a href="deposit.html">
+          <span class="nav-icon">＋</span>
+          Add funds
+        </a>
+
+        <a href="esim-plans.html">
+          <span class="nav-icon">▣</span>
+          Travel eSIM
+        </a>
+
+        <a href="staking.html">
+          <span class="nav-icon">◒</span>
+          Earn with wakala
+        </a>
+
+        <a href="#activity">
+          <span class="nav-icon">◷</span>
+          Activity
+        </a>
+
+      </nav>
+
+
+      <div class="sidebar-footer">
+
+        <div class="account-status">
+
+          <span class="status-dot"></span>
+
+          Account connected
+
+        </div>
+
+
+        <button
+          class="logout"
+          id="logoutButton"
+          type="button"
+        >
+          Log out
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- ====================================
+         MAIN
+    ===================================== -->
+
+    <main class="main">
+
+      <div class="main-inner">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+          <p
+            class="date"
+            id="currentDate"
+          >
+            Loading date…
+          </p>
+
+
+          <div class="topbar-right">
+
+            <span class="secure">
+              Secure session
+            </span>
+
+
+            <div class="profile">
+
+              <div
+                class="avatar"
+                id="avatar"
+              >
+                WK
+              </div>
+
+              <span
+                class="profile-name"
+                id="profileName"
+              >
+                Account
+              </span>
+
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <!-- INTRO -->
+
+        <section class="intro">
+
+          <div class="eyebrow">
+            Personal workspace
+          </div>
+
+          <h1 id="welcome">
+            Welcome back.
+          </h1>
+
+          <p>
+            One account for your money across the markets you move through.
+          </p>
+
+        </section>
+
+
+        <!-- BALANCE + QUICK ACTIONS -->
+
+        <div class="dashboard-grid">
+
+
+          <!-- BALANCE -->
+
+          <section class="card balance-card">
+
+            <div class="balance-content">
+
+              <div class="balance-header">
+
+                <span class="balance-label">
+                  Total balance
+                </span>
+
+
+                <select
+                  class="currency-select"
+                  id="balanceCurrency"
+                  aria-label="Display currency"
+                >
+
+                  <option value="TZS">
+                    TZS
+                  </option>
+
+                  <option value="KES">
+                    KES
+                  </option>
+
+                  <option value="RWF">
+                    RWF
+                  </option>
+
+                  <option value="NGN">
+                    NGN
+                  </option>
+
+                  <option value="USDC">
+                    USDC
+                  </option>
+
+                  <option value="USDT">
+                    USDT
+                  </option>
+
+                  <option value="BTC">
+                    BTC
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div
+                class="balance-value"
+                id="balanceValue"
+              >
+                0.00 TZS
+              </div>
+
+
+              <div class="balance-subtitle">
+                Available balance
+              </div>
+
+
+              <div
+                class="account-number"
+                id="accountNumber"
+              >
+                WAKALA ACCOUNT ···· 0000
+              </div>
+
+            </div>
+
+
+            <div class="balance-footer">
+
+              <span>
+                Account status
+              </span>
+
+              <strong class="connected">
+                Connected
+              </strong>
+
+            </div>
+
+          </section>
+
+
+          <!-- QUICK ACTIONS -->
+
+          <section class="card quick-card">
+
+            <h2>
+              Move money
+            </h2>
+
+            <p>
+              Send, receive and manage your money from one place.
+            </p>
+
+
+            <div class="actions">
+
+              <a
+                class="action"
+                href="transfer.html"
+              >
+
+                <span class="action-icon">
+                  ↗
+                </span>
+
+                Send money
+
+              </a>
+
+
+              <a
+                class="action"
+                href="deposit.html"
+              >
+
+                <span class="action-icon">
+                  ＋
+                </span>
+
+                Add funds
+
+              </a>
+
+
+              <a
+                class="action"
+                href="#wallet"
+              >
+
+                <span class="action-icon">
+                  ⇄
+                </span>
+
+                Convert
+
+              </a>
+
+
+              <a
+                class="action"
+                href="#activity"
+              >
+
+                <span class="action-icon">
+                  ?
+                </span>
+
+                Get help
+
+              </a>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+        <!-- LOWER CONTENT -->
+
+        <div class="lower-grid">
+
+
+          <!-- CURRENCIES -->
+
+          <section
+            class="card section-card"
+            id="wallet"
+          >
+
+            <div class="section-head">
+
+              <h2 class="section-title">
+                Your currencies
+              </h2>
+
+
+              <button
+                class="text-button"
+                id="visibilityToggle"
+                type="button"
+              >
+                Hide balances
+              </button>
+
+            </div>
+
+
+            <!-- TZS -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="TZS"
+            >
+
+              <div class="currency-mark">
+                TZS
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Tanzanian Shilling
+                </strong>
+
+                <span>
+                  Primary wallet
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  TZS
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- KES -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="KES"
+            >
+
+              <div class="currency-mark">
+                KES
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Kenyan Shilling
+                </strong>
+
+                <span>
+                  Ready to activate
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  KES
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- RWF -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="RWF"
+            >
+
+              <div class="currency-mark">
+                RWF
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Rwandan Franc
+                </strong>
+
+                <span>
+                  Ready to activate
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  RWF
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- NGN -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="NGN"
+            >
+
+              <div class="currency-mark">
+                ₦
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Nigerian Naira
+                </strong>
+
+                <span>
+                  Wallet balance
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  NGN
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- USDC -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="USDC"
+            >
+
+              <div class="currency-mark">
+                $
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  USD Coin
+                </strong>
+
+                <span>
+                  Digital asset
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  USDC
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- USDT -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="USDT"
+            >
+
+              <div class="currency-mark">
+                $
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Tether
+                </strong>
+
+                <span>
+                  Digital asset
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  USDT
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <!-- BTC -->
+
+            <div
+              class="currency-row"
+              data-balance-row
+              data-currency="BTC"
+            >
+
+              <div class="currency-mark">
+                ₿
+              </div>
+
+
+              <div class="row-main">
+
+                <strong>
+                  Bitcoin
+                </strong>
+
+                <span>
+                  Digital asset
+                </span>
+
+              </div>
+
+
+              <div class="row-amount">
+
+                <span
+                  class="balance-amount"
+                  data-value="0"
+                >
+                  0.00
+                </span>
+
+                <small>
+                  BTC
+                </small>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- ACTIVITY -->
+
+          <section
+            class="card section-card"
+            id="activity"
+          >
+
+            <div class="section-head">
+
+              <h2 class="section-title">
+                Recent activity
+              </h2>
+
+              <a
+                class="section-link"
+                href="#activity"
+              >
+                View all
+              </a>
+
+            </div>
+
+
+            <div
+              id="transactions"
+            >
+
+              <div class="transaction">
+
+                <div class="transaction-icon">
+                  —
+                </div>
+
+                <div class="row-main">
+
+                  <strong>
+                    Loading activity
+                  </strong>
+
+                  <span>
+                    Please wait
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="insight">
+
+              <div class="eyebrow">
+                Recommended
+              </div>
+
+              <h3>
+                Fund your wallet before you travel.
+              </h3>
+
+              <p>
+                Add money through your available funding methods.
+                Your applicable rate and fees should always be shown
+                before you confirm.
+              </p>
+
+              <a
+                class="primary-button"
+                href="deposit.html"
+              >
+                Add funds
+              </a>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+        <!-- ESIM -->
+
+        <section class="esim-card">
+
+          <div>
+
+            <div
+              class="eyebrow"
+              style="color:#d9f3e6"
+            >
+              Travel connectivity
+            </div>
+
+
+            <h2>
+              Stay connected when you cross the next border.
+            </h2>
+
+
+            <p>
+              Activate mobile data before you leave, keep your wallet
+              online, and land connected across the markets you move through.
+            </p>
+
+
+            <a
+              class="esim-button"
+              href="esim-plans.html"
+            >
+              Explore eSIM plans
+            </a>
+
+          </div>
+
+
+          <div
+            class="sim-preview"
+            aria-hidden="true"
+          >
+
+            <div class="sim-card">
+
+              WAKALA
+
+              <div class="sim-lines">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- ======================================
+       SUPABASE
+  ======================================= -->
+
+  <script type="module">
+
+    import {
+      createClient
+    } from "https://esm.sh/@supabase/supabase-js@2";
+
+
+    import {
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    } from "./supabase-config.js";
+
+
+    const supabase =
+      createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+
+    /* ======================================
+       ELEMENTS
+    ======================================= */
+
+    const loader =
+      document.getElementById("pageLoader");
+
+    const welcome =
+      document.getElementById("welcome");
+
+    const avatar =
+      document.getElementById("avatar");
+
+    const profileName =
+      document.getElementById("profileName");
+
+    const accountNumber =
+      document.getElementById("accountNumber");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    const menuToggle =
+      document.getElementById("menuToggle");
+
+    const navigation =
+      document.getElementById("mainNavigation");
+
+    const currentDate =
+      document.getElementById("currentDate");
+
+    const balanceCurrency =
+      document.getElementById("balanceCurrency");
+
+    const balanceValue =
+      document.getElementById("balanceValue");
+
+    const visibilityToggle =
+      document.getElementById("visibilityToggle");
+
+    const transactions =
+      document.getElementById("transactions");
+
+
+    /* ======================================
+       STATE
+    ======================================= */
+
+    let walletData = null;
+
+    let balancesHidden =
+      localStorage.getItem(
+        "wakala-hide-balances"
+      ) === "true";
+
+
+    /* ======================================
+       DATE
+    ======================================= */
+
+    currentDate.textContent =
+      new Intl.DateTimeFormat(
+        undefined,
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      ).format(new Date());
+
+
+    /* ======================================
+       FORMATTERS
+    ======================================= */
+
+    function formatAmount(
+      value,
+      currency
+    ) {
+
+      const number =
+        Number(value || 0);
+
+      const maximumFractionDigits =
+        currency === "BTC"
+          ? 8
+          : 4;
+
+      return number.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits
+        }
+      );
+
+    }
+
+
+    function formatDate(value) {
+
+      if (!value) {
+        return "";
+      }
+
+      return new Intl.DateTimeFormat(
+        undefined,
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        }
+      ).format(
+        new Date(value)
+      );
+
+    }
+
+
+    function initials(name) {
+
+      if (!name) {
+        return "WK";
+      }
+
+      return name
+        .trim()
+        .split(/\s+/)
+        .map(
+          part => part[0]
+        )
+        .join("")
+        .slice(0,2)
+        .toUpperCase();
+
+    }
+
+
+    /* ======================================
+       UPDATE BALANCE CARD
+    ====================================== */
+
+    function updateMainBalance() {
+
+      if (!walletData) {
+        return;
+      }
+
+      const currency =
+        balanceCurrency.value;
+
+      const balance =
+        walletData.balances.find(
+          item =>
+            item.currency === currency
+        );
+
+
+      const amount =
+        balance?.available || 0;
+
+
+      if (balancesHidden) {
+
+        balanceValue.textContent =
+          `•••• ${currency}`;
+
+        return;
+
+      }
+
+
+      balanceValue.textContent =
+        `${formatAmount(
+          amount,
+          currency
+        )} ${currency}`;
+
+    }
+
+
+    /* ======================================
+       UPDATE CURRENCY ROWS
+    ====================================== */
+
+    function updateCurrencyRows() {
+
+      if (!walletData) {
+        return;
+      }
+
+
+      document
+        .querySelectorAll(
+          "[data-balance-row]"
+        )
+        .forEach(row => {
+
+          const currency =
+            row.dataset.currency;
+
+
+          const balance =
+            walletData.balances.find(
+              item =>
+                item.currency === currency
+            );
+
+
+          const amountElement =
+            row.querySelector(
+              ".balance-amount"
+            );
+
+
+          if (!amountElement) {
+            return;
+          }
+
+
+          const amount =
+            balance?.available || 0;
+
+
+          amountElement.dataset.value =
+            amount;
+
+
+          amountElement.textContent =
+            balancesHidden
+              ? "••••"
+              : formatAmount(
+                  amount,
+                  currency
+                );
+
+        });
+
+    }
+
+
+    /* ======================================
+       VISIBILITY
+    ====================================== */
+
+    function updateVisibility() {
+
+      visibilityToggle.textContent =
+        balancesHidden
+          ? "Show balances"
+          : "Hide balances";
+
+
+      updateCurrencyRows();
+
+      updateMainBalance();
+
+      localStorage.setItem(
+        "wakala-hide-balances",
+        String(balancesHidden)
+      );
+
+    }
+
+
+    visibilityToggle.addEventListener(
+      "click",
+      () => {
+
+        balancesHidden =
+          !balancesHidden;
+
+        updateVisibility();
+
+      }
+    );
+
+
+    balanceCurrency.addEventListener(
+      "change",
+      () => {
+
+        localStorage.setItem(
+          "wakala-display-currency",
+          balanceCurrency.value
+        );
+
+        updateMainBalance();
+
+      }
+    );
+
+
+    /* ======================================
+       LOAD WALLET
+    ====================================== */
+
+    async function loadWallet() {
+
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke(
+        "wallet-overview"
+      );
+
+
+      if (error) {
+
+        console.error(
+          "wallet-overview:",
+          error
+        );
+
+        transactions.innerHTML = `
+          <div class="transaction">
+            <div class="transaction-icon">!</div>
+            <div class="row-main">
+              <strong>Unable to load wallet</strong>
+              <span>Please refresh the page.</span>
+            </div>
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      if (!data) {
+        return;
+      }
+
+
+      walletData = data;
+
+      // First-time users must complete their profile before using the dashboard.
+      const profile = data.profile || {};
+      if (!profile.onboarding_completed) {
+        window.location.replace("onboarding.html");
+        return;
+      }
+
+
+      /* PROFILE */
+
+      const fullName =
+        data.profile?.full_name;
+
+
+      if (fullName) {
+
+        const firstName =
+          fullName
+            .trim()
+            .split(/\s+/)[0];
+
+
+        welcome.textContent =
+          `Welcome back, ${firstName}.`;
+
+
+        avatar.textContent =
+          initials(fullName);
+
+
+        profileName.textContent =
+          fullName;
+
+      }
+
+
+      /* WALLET */
+
+      if (data.wallet?.account_number) {
+
+        const number =
+          data.wallet.account_number;
+
+        accountNumber.textContent =
+          `WAKALA ACCOUNT ···· ${number.slice(-4)}`;
+
+      }
+
+
+      /* BALANCES */
+
+      updateCurrencyRows();
+
+      updateMainBalance();
+
+
+      /* ACTIVITY */
+
+      renderTransactions(
+        data.transactions || []
+      );
+
+    }
+
+
+    /* ======================================
+       ACTIVITY
+    ====================================== */
+
+    function renderTransactions(items) {
+
+      if (!items.length) {
+
+        transactions.innerHTML = `
+          <div class="transaction">
+            <div class="transaction-icon">—</div>
+            <div class="row-main">
+              <strong>No transactions yet</strong>
+              <span>Your activity will appear here.</span>
+            </div>
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      transactions.innerHTML =
+        items.map(item => {
+
+          const amount =
+            formatAmount(
+              item.amount,
+              item.currency
+            );
+
+
+          const label =
+            item.description ||
+            item.type
+              .charAt(0)
+              .toUpperCase() +
+            item.type.slice(1);
+
+
+          const status =
+            item.status
+              .charAt(0)
+              .toUpperCase() +
+            item.status.slice(1);
+
+
+          return `
+            <div class="transaction">
+
+              <div class="transaction-icon">
+                ${
+                  item.type === "deposit"
+                    ? "+"
+                    : item.type === "transfer"
+                      ? "↗"
+                      : "•"
+                }
+              </div>
+
+              <div class="row-main">
+
+                <strong>
+                  ${escapeHtml(label)}
+                </strong>
+
+                <span>
+                  ${formatDate(item.created_at)}
+                </span>
+
+              </div>
+
+              <div
+                class="transaction-status
+                  ${
+                    item.status === "completed"
+                      ? "ready"
+                      : "live"
+                  }"
+              >
+                ${
+                  item.status === "completed"
+                    ? `+ ${amount} ${item.currency}`
+                    : escapeHtml(status)
+                }
+              </div>
+
+            </div>
+          `;
+
+        }).join("");
+
+    }
+
+
+    /* ======================================
+       SECURITY
+       Prevent transaction descriptions
+       from becoming HTML.
+    ====================================== */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* ======================================
+       AUTHENTICATION
+    ====================================== */
+
+    async function initialise() {
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabase.auth.getSession();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        if (!data.session) {
+
+          window.location.replace(
+            "login.html"
+          );
+
+          return;
+
+        }
+
+
+        /* Restore currency */
+
+        const savedCurrency =
+          localStorage.getItem(
+            "wakala-display-currency"
+          );
+
+
+        if (
+          savedCurrency &&
+          [
+            "TZS",
+            "KES",
+            "RWF",
+            "NGN",
+            "USDC",
+            "USDT",
+            "BTC"
+          ].includes(savedCurrency)
+        ) {
+
+          balanceCurrency.value =
+            savedCurrency;
+
+        }
+
+
+        /* Load actual wallet */
+
+        await loadWallet();
+
+
+        /* Apply visibility */
+
+        updateVisibility();
+
+
+        /* Remove loader */
+
+        loader.style.display =
+          "none";
+
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard initialisation failed:",
+          error
+        );
+
+        window.location.replace(
+          "login.html"
+        );
+
+      }
+
+    }
+
+
+    await initialise();
+
+
+    /* ======================================
+       AUTH STATE
+    ====================================== */
+
+    supabase.auth.onAuthStateChange(
+      (event, session) => {
+
+        if (
+          event === "SIGNED_OUT" ||
+          !session
+        ) {
+
+          window.location.replace(
+            "login.html"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ======================================
+       LOGOUT
+    ====================================== */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        logoutButton.disabled =
+          true;
+
+        logoutButton.textContent =
+          "Signing out…";
+
+
+        const {
+          error
+        } =
+          await supabase.auth.signOut();
+
+
+        if (error) {
+
+          console.error(
+            "Logout failed:",
+            error
+          );
+
+          logoutButton.disabled =
+            false;
+
+          logoutButton.textContent =
+            "Log out";
+
+          return;
+
+        }
+
+
+        window.location.replace(
+          "login.html"
+        );
+
+      }
+    );
+
+
+    /* ======================================
+       MOBILE MENU
+    ====================================== */
+
+    menuToggle.addEventListener(
+      "click",
+      () => {
+
+        const open =
+          navigation.classList.toggle(
+            "open"
+          );
+
+
+        menuToggle.setAttribute(
+          "aria-expanded",
+          String(open)
+        );
+
+
+        menuToggle.textContent =
+          open
+            ? "Close"
+            : "Menu";
+
+      }
+    );
+
+
+    navigation
+      .querySelectorAll("a")
+      .forEach(link => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            if (
+              window.innerWidth <= 720
+            ) {
+
+              navigation.classList.remove(
+                "open"
+              );
+
+              menuToggle.setAttribute(
+                "aria-expanded",
+                "false"
+              );
+
+              menuToggle.textContent =
+                "Menu";
+
+            }
+
+          }
+        );
+
+      });
+
+  </script>
+
+</body>
+</html>
