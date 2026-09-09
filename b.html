@@ -3859,578 +3859,334 @@
     ========================================================== */
 
     .wallet-section {
-
-      padding:
-        130px 0;
-
-      background:
-        var(--paper);
+      background: var(--paper-2);
     }
-
 
     .wallet-grid {
-
-      display:
-        grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap:
-        80px;
-
-      align-items:
-        center;
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 80px;
+      align-items: center;
     }
 
-
-    .wallet-copy h2 {
-
-      margin:
-        17px 0;
-
-      font-family:
-        var(--serif);
-
-      font-size:
-        clamp(44px,5vw,70px);
-
-      font-weight:
-        500;
-
-      line-height:
-        .96;
-
-      letter-spacing:
-        -.05em;
+    .wallet-copy {
+      position: relative;
+      z-index: 2;
     }
 
-
-    .wallet-copy > p {
-
-      max-width:
-        510px;
-
-      color:
-        var(--muted);
-
-      font-size:
-        16px;
-
-      line-height:
-        1.75;
+    .wallet-copy .big-copy {
+      max-width: 10ch;
+      margin-top: 20px;
     }
 
-
-    .feature-list {
-
-      display:
-        grid;
-
-      gap:
-        12px;
-
-      margin-top:
-        27px;
+    .wallet-copy .muted-copy {
+      max-width: 48ch;
+      margin-top: 21px;
     }
 
-
-    .feature {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        10px;
-
-      color:
-        #5D574D;
-
-      font-size:
-        12px;
+    .wallet-points {
+      display: grid;
+      gap: 10px;
+      margin-top: 28px;
     }
 
-
-    .check {
-
-      width:
-        20px;
-
-      height:
-        20px;
-
-      display:
-        grid;
-
-      place-items:
-        center;
-
-      flex:
-        0 0 20px;
-
-      border-radius:
-        50%;
-
-      color:
-        var(--green);
-
-      background:
-        var(--green-soft);
-
-      font-size:
-        11px;
+    .wallet-point {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
     }
 
-
-    .wallet-demo {
-
-      position:
-        relative;
-
-      min-height:
-        620px;
-
-      display:
-        grid;
-
-      place-items:
-        center;
-
-      border:
-        1px solid var(--line);
-
-      border-radius:
-        35px;
-
-      overflow:
-        hidden;
-
-      background:
-        radial-gradient(
-          circle at 50% 35%,
-          rgba(29,137,104,.11),
-          transparent 45%
-        ),
-        var(--paper-2);
+    .wallet-point i {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(33,135,102,.1);
+      color: var(--green);
+      font-style: normal;
+      font-size: 10px;
     }
 
+    /* PAYMENT METHODS */
 
-    .wallet-demo::before {
-
-      content:
-        "";
-
-      position:
-        absolute;
-
-      width:
-        420px;
-
-      height:
-        420px;
-
-      border:
-        1px dashed rgba(29,137,104,.2);
-
-      border-radius:
-        50%;
-
-      animation:
-        orbitRotate
-        30s
-        linear
-        infinite;
+    .payment-methods {
+      margin-top: 36px;
+      padding-top: 25px;
+      border-top: 1px solid var(--line);
     }
 
+    .payment-heading {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 13px;
+    }
+
+    .payment-method-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .payment-method {
+      min-height: 62px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255,255,255,.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .visa-logo {
+      font-style: italic;
+      font-size: 19px;
+      letter-spacing: -.08em;
+      color: #172b85;
+    }
+
+    .master-logo {
+      position: relative;
+      width: 34px;
+      height: 21px;
+    }
+
+    .master-logo::before,
+    .master-logo::after {
+      content: "";
+      position: absolute;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      top: 0;
+    }
+
+    .master-logo::before {
+      left: 0;
+      background: #d94d42;
+    }
+
+    .master-logo::after {
+      right: 0;
+      background: #e7a22e;
+      opacity: .9;
+    }
+
+    .pesa-logo {
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .bank-logo {
+      width: 21px;
+      height: 21px;
+      border: 1px solid var(--ink);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 8px;
+    }
+
+    /* PHONE */
+
+    .phone-stage {
+      position: relative;
+      min-height: 650px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+    }
+
+    .phone-stage::before {
+      content: "";
+      position: absolute;
+      width: 460px;
+      height: 460px;
+      border-radius: 50%;
+      background: rgba(33,135,102,.1);
+    }
 
     .phone {
-
-      position:
-        relative;
-
-      z-index:
-        3;
-
-      width:
-        300px;
-
-      height:
-        590px;
-
-      padding:
-        9px;
-
-      border:
-        4px solid #202A31;
-
-      border-radius:
-        40px;
-
-      background:
-        #101820;
-
+      width: 295px;
+      height: 590px;
+      background: #101722;
+      border: 7px solid #171e29;
+      border-radius: 43px;
+      padding: 11px;
+      position: relative;
+      z-index: 2;
       box-shadow:
-        0 35px 80px rgba(16,26,35,.25);
+        0 40px 90px rgba(16,23,34,.22),
+        0 0 0 1px rgba(0,0,0,.15);
+      transform: rotate(2deg);
     }
-
 
     .phone-screen {
-
-      position:
-        relative;
-
-      height:
-        100%;
-
-      padding:
-        23px 18px;
-
-      overflow:
-        hidden;
-
-      border-radius:
-        29px;
-
-      background:
-        #F8F4EA;
+      height: 100%;
+      border-radius: 32px;
+      background: var(--cream);
+      overflow: hidden;
+      position: relative;
     }
-
 
     .phone-notch {
-
-      position:
-        absolute;
-
-      top:
-        7px;
-
-      left:
-        50%;
-
-      width:
-        92px;
-
-      height:
-        20px;
-
-      transform:
-        translateX(-50%);
-
-      border-radius:
-        0 0 15px 15px;
-
-      background:
-        #101820;
+      width: 100px;
+      height: 23px;
+      background: #101722;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      border-radius: 0 0 16px 16px;
+      z-index: 4;
     }
 
-
-    .phone-top {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        space-between;
-
-      margin-top:
-        10px;
+    .phone-content {
+      padding: 45px 19px 20px;
     }
 
-
-    .phone-top span {
-
-      color:
-        var(--muted);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        8px;
+    .phone-small {
+      font-family: var(--mono);
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
     }
-
-
-    .phone-greeting {
-
-      margin-top:
-        27px;
-
-      color:
-        var(--muted);
-
-      font-size:
-        10px;
-    }
-
 
     .phone-balance {
-
-      margin-top:
-        4px;
-
-      font-family:
-        var(--serif);
-
-      font-size:
-        31px;
-
-      line-height:
-        1;
+      font-family: var(--serif);
+      font-size: 39px;
+      letter-spacing: -.05em;
+      margin-top: 5px;
     }
-
 
     .phone-currency {
-
-      color:
-        var(--green);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        9px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--green);
     }
-
 
     .phone-actions {
-
-      display:
-        grid;
-
-      grid-template-columns:
-        repeat(3,1fr);
-
-      gap:
-        7px;
-
-      margin-top:
-        22px;
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 7px;
+      margin-top: 23px;
     }
-
 
     .phone-action {
-
-      padding:
-        10px 5px;
-
-      border:
-        1px solid var(--line);
-
-      border-radius:
-        10px;
-
-      background:
-        white;
-
-      text-align:
-        center;
-
-      color:
-        var(--muted);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        7px;
+      background: var(--paper-2);
+      padding: 11px 5px;
+      border-radius: 11px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 7px;
+      text-transform: uppercase;
     }
-
 
     .phone-card {
-
-      margin-top:
-        22px;
-
-      padding:
-        17px;
-
-      border-radius:
-        16px;
-
-      color:
-        white;
-
-      background:
-        var(--ink);
+      background: var(--ink);
+      color: white;
+      border-radius: 17px;
+      padding: 17px;
+      margin-top: 22px;
     }
-
 
     .phone-card-label {
-
-      color:
-        rgba(255,255,255,.5);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        7px;
-
-      text-transform:
-        uppercase;
+      font-family: var(--mono);
+      font-size: 7px;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
     }
 
-
-    .phone-card-number {
-
-      margin-top:
-        12px;
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        12px;
-
-      letter-spacing:
-        .08em;
+    .phone-card-amount {
+      font-family: var(--serif);
+      font-size: 28px;
+      margin-top: 5px;
     }
 
-
-    .phone-card-bottom {
-
-      display:
-        flex;
-
-      justify-content:
-        space-between;
-
-      margin-top:
-        18px;
-
-      color:
-        rgba(255,255,255,.58);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        7px;
+    .phone-list {
+      margin-top: 20px;
     }
 
-
-    .activity {
-
-      margin-top:
-        22px;
+    .phone-list-title {
+      font-family: var(--mono);
+      font-size: 7px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
     }
 
-
-    .activity-title {
-
-      color:
-        var(--muted);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        7px;
-
-      letter-spacing:
-        .1em;
-
-      text-transform:
-        uppercase;
+    .phone-transaction {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
     }
 
-
-    .activity-row {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        space-between;
-
-      padding:
-        12px 0;
-
-      border-bottom:
-        1px solid var(--line);
+    .transaction-name {
+      font-size: 9px;
+      font-weight: 600;
     }
 
-
-    .activity-left {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        9px;
+    .transaction-date {
+      color: var(--muted);
+      font-size: 7px;
+      margin-top: 2px;
     }
 
-
-    .activity-icon {
-
-      width:
-        28px;
-
-      height:
-        28px;
-
-      display:
-        grid;
-
-      place-items:
-        center;
-
-      border-radius:
-        9px;
-
-      color:
-        var(--green);
-
-      background:
-        var(--green-soft);
-
-      font-size:
-        10px;
+    .transaction-amount {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--green);
     }
 
-
-    .activity-name {
-
-      font-size:
-        8px;
-
-      font-weight:
-        600;
+    .wallet-float {
+      position: absolute;
+      z-index: 4;
+      padding: 13px 15px;
+      background: rgba(255,253,248,.92);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
 
-
-    .activity-date {
-
-      color:
-        var(--muted-2);
-
-      font-size:
-        7px;
+    .wallet-float span {
+      display: block;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      font-size: 7px;
+      letter-spacing: .1em;
+      color: var(--muted);
     }
 
+    .wallet-float strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+    }
 
-    .activity-amount {
+    .float-one {
+      left: 5%;
+      top: 24%;
+    }
 
-      color:
-        var(--green);
-
-      font-family:
-        var(--mono);
-
-      font-size:
-        8px;
+    .float-two {
+      right: 2%;
+      bottom: 22%;
     }
 
 
@@ -8266,65 +8022,7 @@
       </div>
 
     </section>
-    <syle>
-}
-.wallet-section {
-    background: var(--paper-2);
-}
-.section {
-    padding: 125px 0;
-}
-section {
-    position: relative;
-}
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-user agent stylesheet
-section {
-    display: block;
-    unicode-bidi: isolate;
-}
-body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    line-height: 1.6;
-    overflow-x: hidden;
-}
-:root {
-    --ink: #101722;
-    --ink-2: #26303c;
-    --paper: #faf7ef;
-    --paper-2: #f1eadb;
-    --paper-3: #e9dfcd;
-    --green: #218766;
-    --green-dark: #176b50;
-    --gold: #d99b39;
-    --cream: #fffdf8;
-    --muted: #716b60;
-    --line: rgba(16, 23, 34, .12);
-    --line-dark: rgba(255, 255, 255, .14);
-    --white: #ffffff;
-    --serif: "Fraunces", Georgia, serif;
-    --sans: "DM Sans", Arial, sans-serif;
-    --mono: "DM Mono", monospace;
-    --container: 1240px;
-    --radius: 24px;
-    --radius-sm: 14px;
-    --shadow: 0 25px 70px rgba(31, 35, 29, .08);
-}
-<style>
-@font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://fonts.gstatic.com/s/dmsans/v17/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu6-K6h9Q.woff2) format('woff2');
-    unicode-range: U +0100 -02BA, U +02BD -02C5, U +02C7 -02CC, U +02CE -02D7, U +02DD -02FF, U +0304, U +0308, U +0329, U +1D00 -1DBF, U +1E00 -1E9F, U +1EF2 -1EFF, U +2020, U +20A0 -20AB, U +20AD -20C0, U +2113, U +2C60 -2C7F, U + A720-A7FF;}
-</style>
+    
 <!-- =========================================================
      WALLET + ESIM
 ========================================================== -->
