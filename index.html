@@ -1,30 +1,22 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <html lang="en">
-<head>
-  <script src="./auth-links.js" defer></script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Wakala — Building Africa's payment rail</title>
-
-  <meta
-    name="description"
-    content="Wakala connects local currencies, wallets and payment methods across Africa, making domestic and cross-border payments simpler."
-  >
-
-  <meta name="theme-color" content="#f8f4ea">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
-    rel="stylesheet"
-  >
-
+ <head>
+  <script defer="" src="./auth-links.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Wakala — Building Africa's payment rail
+  </title>
+  <meta content="Wakala connects local currencies, wallets and payment methods across Africa, making domestic and cross-border payments simpler." name="description"/>
+  <meta content="#f8f4ea" name="theme-color"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;display=swap" rel="stylesheet"/>
   <style>
-    :root {
+   :root {
       --ink: #101722;
       --ink-2: #26303c;
       --paper: #faf7ef;
@@ -104,109 +96,453 @@
     ========================================= */
 
     #loader {
+
       position: fixed;
       inset: 0;
-      z-index: 9999;
-      background: var(--paper);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
+      z-index: 99999;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(29,137,104,.09),
+          transparent 34%
+        ),
+        var(--paper);
+
+      opacity:
+        1;
+
+      visibility:
+        visible;
+
       transition:
-        opacity .7s ease,
-        visibility .7s ease;
+        opacity .7s var(--ease),
+        visibility .7s var(--ease);
     }
+
 
     #loader.hide {
-      opacity: 0;
-      visibility: hidden;
+
+      opacity:
+        0;
+
+      visibility:
+        hidden;
+
+      pointer-events:
+        none;
     }
+
 
     .loader-inner {
-      width: min(420px, calc(100% - 48px));
-      text-align: center;
+
+      width:
+        min(360px,84vw);
+
+      display:
+        flex;
+
+      flex-direction:
+        column;
+
+      align-items:
+        center;
+
+      text-align:
+        center;
     }
 
-    .loader-mark {
-      width: 66px;
-      height: 66px;
-      margin: 0 auto 26px;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: var(--cream);
-      box-shadow: var(--shadow);
+
+    .loader-visual {
+
+      position:
+        relative;
+
+      width:
+        105px;
+
+      height:
+        105px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      margin-bottom:
+        28px;
     }
 
-    .loader-mark span {
-      width: 16px;
-      height: 16px;
-      background: var(--green);
-      border-radius: 50%;
-      position: relative;
+
+    .loader-gif {
+
+      position:
+        absolute;
+
+      inset:
+        20px;
+
+      width:
+        65px;
+
+      height:
+        65px;
+
+      object-fit:
+        contain;
+
+      border-radius:
+        18px;
+
+      z-index:
+        4;
     }
 
-    .loader-mark span::after {
-      content: "";
-      position: absolute;
-      width: 36px;
-      height: 36px;
-      border: 1px solid rgba(33,135,102,.25);
-      border-radius: 50%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      animation: pulse 1.8s infinite;
+
+    .loader-gif.hidden {
+      display:
+        none;
     }
 
-    .loader-title {
-      font-family: var(--serif);
-      font-size: 36px;
-      letter-spacing: -.04em;
+
+    .loader-core {
+
+      position:
+        relative;
+
+      z-index:
+        4;
+
+      width:
+        64px;
+
+      height:
+        64px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border-radius:
+        20px;
+
+      color:
+        white;
+
+      background:
+        var(--ink);
+
+      box-shadow:
+        0 18px 45px rgba(16,26,35,.18),
+        0 0 0 8px rgba(29,137,104,.07);
+
+      animation:
+        loaderCorePulse
+        2.2s
+        ease-in-out
+        infinite;
     }
+
+
+    .loader-core span {
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        30px;
+
+      font-weight:
+        600;
+
+      line-height:
+        1;
+    }
+
+
+    .loader-ring {
+
+      position:
+        absolute;
+
+      border:
+        1px solid rgba(29,137,104,.22);
+
+      border-radius:
+        50%;
+    }
+
+
+    .loader-ring-1 {
+      inset:
+        10px;
+
+      animation:
+        loaderPulse
+        2.2s
+        ease-in-out
+        infinite;
+    }
+
+
+    .loader-ring-2 {
+      inset:
+        0;
+
+      border-color:
+        rgba(217,154,56,.22);
+
+      animation:
+        loaderPulse
+        2.2s
+        .3s
+        ease-in-out
+        infinite;
+    }
+
+
+    .loader-orbit {
+
+      position:
+        absolute;
+
+      width:
+        8px;
+
+      height:
+        8px;
+
+      border-radius:
+        50%;
+    }
+
+
+    .loader-orbit.one {
+
+      top:
+        8px;
+
+      left:
+        50%;
+
+      background:
+        var(--green);
+
+      transform-origin:
+        0 44px;
+
+      animation:
+        loaderOrbit
+        2.8s
+        linear
+        infinite;
+    }
+
+
+    .loader-orbit.two {
+
+      bottom:
+        8px;
+
+      left:
+        50%;
+
+      background:
+        var(--gold);
+
+      transform-origin:
+        0 -44px;
+
+      animation:
+        loaderOrbitReverse
+        3.4s
+        linear
+        infinite;
+    }
+
+
+    .loader-brand {
+
+      margin-left:
+        .27em;
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        13px;
+
+      font-weight:
+        500;
+
+      letter-spacing:
+        .28em;
+    }
+
 
     .loader-copy {
-      color: var(--muted);
-      margin-top: 8px;
-      font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .13em;
+
+      margin-top:
+        12px;
+
+      color:
+        var(--muted);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        9px;
+
+      letter-spacing:
+        .12em;
+
+      text-transform:
+        uppercase;
     }
 
-    .loader-line {
-      width: 100%;
-      height: 2px;
-      margin-top: 30px;
-      background: var(--paper-3);
-      overflow: hidden;
+
+    .loader-bar {
+
+      width:
+        155px;
+
+      height:
+        2px;
+
+      margin-top:
+        23px;
+
+      overflow:
+        hidden;
+
+      border-radius:
+        99px;
+
+      background:
+        rgba(16,26,35,.08);
     }
 
-    .loader-progress {
-      height: 100%;
-      width: 0;
-      background: var(--green);
-      animation: loaderProgress 1.5s ease forwards;
+
+    .loader-bar span {
+
+      display:
+        block;
+
+      width:
+        42%;
+
+      height:
+        100%;
+
+      border-radius:
+        inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--green),
+          var(--gold)
+        );
+
+      transform:
+        translateX(-130%);
+
+      animation:
+        loaderProgress
+        1.6s
+        cubic-bezier(.65,0,.35,1)
+        infinite;
     }
 
-    @keyframes loaderProgress {
-      to {
-        width: 100%;
-      }
-    }
 
-    @keyframes pulse {
+    @keyframes loaderPulse {
+
       0%,
       100% {
-        transform: translate(-50%, -50%) scale(.7);
-        opacity: .9;
+        transform:
+          scale(.82);
+
+        opacity:
+          .35;
       }
 
       50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: .2;
+        transform:
+          scale(1);
+
+        opacity:
+          1;
       }
     }
+
+
+    @keyframes loaderCorePulse {
+
+      0%,
+      100% {
+        transform:
+          scale(.97);
+      }
+
+      50% {
+        transform:
+          scale(1.03);
+      }
+    }
+
+
+    @keyframes loaderOrbit {
+
+      from {
+        transform:
+          rotate(0deg);
+      }
+
+      to {
+        transform:
+          rotate(360deg);
+      }
+    }
+
+
+    @keyframes loaderOrbitReverse {
+
+      from {
+        transform:
+          rotate(360deg);
+      }
+
+      to {
+        transform:
+          rotate(0deg);
+      }
+    }
+
+
+    @keyframes loaderProgress {
+
+      0% {
+        transform:
+          translateX(-130%);
+      }
+
+      100% {
+        transform:
+          translateX(350%);
+      }
+    }
+
 
     /* =========================================
        NAVIGATION
@@ -2077,1530 +2413,2719 @@
       }
     }
   </style>
+  <style id="wakala-merged-component-styles">
+   :root {
+  --line-dark: rgba(255,255,255,.13);
+  --shadow-sm: 0 8px 25px rgba(16,26,35,.07);
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+/* =========================================================
+       NAVIGATION
+    ========================================================== */
+
+    .nav-wrap {
+
+      position:
+        fixed;
+
+      top:
+        0;
+
+      left:
+        0;
+
+      right:
+        0;
+
+      z-index:
+        1000;
+
+      padding:
+        15px 0;
+
+      transition:
+        padding .35s var(--ease);
+    }
+
+
+    .nav-wrap.scrolled {
+      padding:
+        9px 0;
+    }
+
+
+    .nav {
+
+      width:
+        min(
+          1180px,
+          calc(100% - 48px)
+        );
+
+      height:
+        62px;
+
+      margin:
+        0 auto;
+
+      padding:
+        0 8px 0 20px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      gap:
+        18px;
+
+      border:
+        1px solid rgba(16,26,35,.08);
+
+      border-radius:
+        999px;
+
+      background:
+        rgba(255,255,255,.68);
+
+      backdrop-filter:
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      transition:
+        background .3s ease,
+        box-shadow .3s ease;
+    }
+
+
+    .nav-wrap.scrolled .nav {
+
+      background:
+        rgba(251,247,239,.88);
+
+      box-shadow:
+        0 10px 35px rgba(16,26,35,.06);
+    }
+
+
+    .brand {
+
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      gap:
+        10px;
+
+      flex:
+        0 0 auto;
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        24px;
+
+      font-weight:
+        600;
+
+      letter-spacing:
+        -.045em;
+    }
+
+
+    .brand-mark {
+
+      width:
+        31px;
+
+      height:
+        31px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border-radius:
+        50%;
+
+      color:
+        white;
+
+      background:
+        var(--ink);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        10px;
+    }
+
+
+    .nav-links {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        25px;
+
+      color:
+        #5F594F;
+
+      font-size:
+        12px;
+
+      font-weight:
+        500;
+    }
+
+
+    .nav-links a {
+      transition:
+        color .2s ease;
+    }
+
+
+    .nav-links a:hover {
+      color:
+        var(--green);
+    }
+
+
+    .nav-actions {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        7px;
+    }
+
+
+    .nav-login,
+    .nav-signup {
+
+      min-height:
+        43px;
+
+      padding:
+        0 17px;
+
+      border-radius:
+        999px;
+
+      font-size:
+        12px;
+
+      font-weight:
+        600;
+
+      transition:
+        transform .2s var(--ease),
+        background .2s ease,
+        box-shadow .2s ease;
+    }
+
+
+    .nav-login {
+
+      border:
+        1px solid var(--line);
+
+      background:
+        rgba(255,255,255,.55);
+    }
+
+
+    .nav-signup {
+
+      color:
+        white;
+
+      background:
+        var(--ink);
+    }
+
+
+    .nav-login:hover,
+    .nav-signup:hover {
+      transform:
+        translateY(-2px);
+    }
+
+
+    .mobile-menu-btn {
+
+      display:
+        none;
+
+      width:
+        43px;
+
+      height:
+        43px;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      flex-direction:
+        column;
+
+      gap:
+        5px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        50%;
+
+      background:
+        white;
+    }
+
+
+    .mobile-menu-btn span {
+
+      width:
+        17px;
+
+      height:
+        1px;
+
+      background:
+        var(--ink);
+    }
+
+/* =========================================================
+       MOBILE MENU
+    ========================================================== */
+
+    .mobile-panel {
+
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        3000;
+
+      padding:
+        88px 24px 24px;
+
+      background:
+        rgba(251,247,239,.98);
+
+      opacity:
+        0;
+
+      visibility:
+        hidden;
+
+      transform:
+        translateY(-15px);
+
+      transition:
+        opacity .3s ease,
+        visibility .3s ease,
+        transform .3s var(--ease);
+    }
+
+
+    .mobile-panel.open {
+
+      opacity:
+        1;
+
+      visibility:
+        visible;
+
+      transform:
+        translateY(0);
+    }
+
+
+    .mobile-panel-head {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+    }
+
+
+    .mobile-close {
+
+      width:
+        43px;
+
+      height:
+        43px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        50%;
+
+      background:
+        white;
+
+      font-size:
+        20px;
+    }
+
+
+    .mobile-links {
+
+      display:
+        grid;
+
+      gap:
+        7px;
+
+      margin-top:
+        40px;
+    }
+
+
+    .mobile-links a {
+
+      padding:
+        17px 0;
+
+      border-bottom:
+        1px solid var(--line);
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        29px;
+
+      letter-spacing:
+        -.035em;
+    }
+
+
+    .mobile-actions {
+
+      display:
+        grid;
+
+      gap:
+        9px;
+
+      margin-top:
+        28px;
+    }
+
+/* =========================================================
+       HOW IT WORKS
+    ========================================================== */
+
+    .how {
+
+      background:
+        var(--ink);
+
+      color:
+        white;
+    }
+
+
+    .how .eyebrow {
+      color:
+        #8BD0B7;
+    }
+
+
+    .how .eyebrow::before {
+      background:
+        #8BD0B7;
+    }
+
+
+    .how .section-head p {
+      color:
+        #AEB8C0;
+    }
+
+
+    .how .section-head h2 {
+      color:
+        white;
+    }
+
+
+    .steps {
+
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      border-top:
+        1px solid var(--line-dark);
+    }
+
+
+    .step {
+
+      min-height:
+        360px;
+
+      padding:
+        30px;
+
+      border-right:
+        1px solid var(--line-dark);
+
+      border-bottom:
+        1px solid var(--line-dark);
+    }
+
+
+    .step:first-child {
+      border-left:
+        1px solid var(--line-dark);
+    }
+
+
+    .step-number {
+
+      color:
+        #8BD0B7;
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        10px;
+
+      letter-spacing:
+        .15em;
+    }
+
+
+    .step-icon {
+
+      width:
+        50px;
+
+      height:
+        50px;
+
+      margin-top:
+        70px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border:
+        1px solid var(--line-dark);
+
+      border-radius:
+        15px;
+
+      color:
+        #8BD0B7;
+
+      background:
+        rgba(255,255,255,.04);
+    }
+
+
+    .step h3 {
+
+      margin:
+        23px 0 10px;
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        29px;
+
+      font-weight:
+        500;
+
+      line-height:
+        1;
+
+      letter-spacing:
+        -.035em;
+    }
+
+
+    .step p {
+
+      max-width:
+        310px;
+
+      margin:
+        0;
+
+      color:
+        #AEB8C0;
+
+      font-size:
+        13px;
+
+      line-height:
+        1.7;
+    }
+
+/* =========================================================
+       ECOSYSTEM
+    ========================================================== */
+
+    .ecosystem {
+
+      padding-top:
+        130px;
+    }
+
+
+    .ecosystem-grid {
+
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(4,1fr);
+
+      gap:
+        12px;
+    }
+
+
+    .eco-card {
+
+      position:
+        relative;
+
+      min-height:
+        410px;
+
+      padding:
+        26px;
+
+      overflow:
+        hidden;
+
+      border:
+        1px solid var(--line-dark);
+
+      border-radius:
+        25px;
+
+      color:
+        white;
+
+      background:
+        #121E27;
+
+      transition:
+        transform .35s var(--ease),
+        box-shadow .35s var(--ease);
+    }
+
+
+    .eco-card:hover {
+
+      transform:
+        translateY(-6px);
+
+      box-shadow:
+        0 25px 55px rgba(16,26,35,.17);
+    }
+
+
+    .eco-card:nth-child(2) {
+      background:
+        #17352D;
+    }
+
+
+    .eco-card:nth-child(3) {
+      background:
+        #24323C;
+    }
+
+
+    .eco-card:nth-child(4) {
+      background:
+        #172C36;
+    }
+
+
+    .eco-tag {
+
+      color:
+        rgba(255,255,255,.55);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        9px;
+
+      letter-spacing:
+        .14em;
+
+      text-transform:
+        uppercase;
+    }
+
+
+    .eco-card h3 {
+
+      margin:
+        17px 0 10px;
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        31px;
+
+      font-weight:
+        500;
+
+      line-height:
+        1;
+
+      letter-spacing:
+        -.04em;
+    }
+
+
+    .eco-card p {
+
+      max-width:
+        230px;
+
+      margin:
+        0;
+
+      color:
+        rgba(255,255,255,.62);
+
+      font-size:
+        12px;
+
+      line-height:
+        1.7;
+    }
+
+
+    .eco-visual {
+
+      position:
+        absolute;
+
+      left:
+        22px;
+
+      right:
+        22px;
+
+      bottom:
+        22px;
+
+      height:
+        175px;
+
+      border:
+        1px solid rgba(255,255,255,.09);
+
+      border-radius:
+        20px;
+
+      background:
+        rgba(255,255,255,.035);
+
+      overflow:
+        hidden;
+    }
+
+
+    /* wallet mini visual */
+
+    .mini-wallet {
+
+      position:
+        absolute;
+
+      left:
+        22px;
+
+      right:
+        22px;
+
+      top:
+        25px;
+
+      padding:
+        16px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius:
+        14px;
+
+      background:
+        rgba(255,255,255,.07);
+    }
+
+
+    .mini-label {
+
+      color:
+        rgba(255,255,255,.42);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        7px;
+
+      text-transform:
+        uppercase;
+    }
+
+
+    .mini-balance {
+
+      margin-top:
+        8px;
+
+      font-family:
+        var(--serif);
+
+      font-size:
+        27px;
+    }
+
+
+    .mini-currency {
+
+      color:
+        #8BD0B7;
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        8px;
+    }
+
+
+    .mini-buttons {
+
+      display:
+        flex;
+
+      gap:
+        6px;
+
+      margin-top:
+        13px;
+    }
+
+
+    .mini-buttons span {
+
+      flex:
+        1;
+
+      padding:
+        7px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius:
+        7px;
+
+      text-align:
+        center;
+
+      color:
+        rgba(255,255,255,.6);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        7px;
+    }
+
+
+    /* transfer visual */
+
+    .transfer-line {
+
+      position:
+        absolute;
+
+      left:
+        35px;
+
+      right:
+        35px;
+
+      top:
+        85px;
+
+      height:
+        1px;
+
+      background:
+        rgba(255,255,255,.15);
+    }
+
+
+    .transfer-node {
+
+      position:
+        absolute;
+
+      top:
+        68px;
+
+      width:
+        35px;
+
+      height:
+        35px;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border:
+        1px solid rgba(255,255,255,.12);
+
+      border-radius:
+        50%;
+
+      color:
+        #8BD0B7;
+
+      background:
+        rgba(255,255,255,.05);
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        7px;
+    }
+
+
+    .transfer-node.a {
+      left:
+        18px;
+    }
+
+
+    .transfer-node.b {
+      right:
+        18px;
+    }
+
+
+    .transfer-dot {
+
+      position:
+        absolute;
+
+      top:
+        82px;
+
+      left:
+        30%;
+
+      width:
+        7px;
+
+      height:
+        7px;
+
+      border-radius:
+        50%;
+
+      background:
+        var(--gold);
+
+      box-shadow:
+        0 0 14px rgba(217,154,56,.7);
+
+      animation:
+        transferMove
+        2.8s
+        linear
+        infinite;
+    }
+
+
+    @keyframes transferMove {
+
+      from {
+        left:
+          25%;
+      }
+
+      to {
+        left:
+          74%;
+      }
+    }
+
+
+    /* agent visual */
+
+    .agent-ring {
+
+      position:
+        absolute;
+
+      left:
+        50%;
+
+      top:
+        50%;
+
+      width:
+        105px;
+
+      height:
+        105px;
+
+      transform:
+        translate(-50%,-50%);
+
+      border:
+        1px dashed rgba(139,208,183,.4);
+
+      border-radius:
+        50%;
+
+      animation:
+        orbitRotate
+        10s
+        linear
+        infinite;
+    }
+
+
+    .agent-core {
+
+      position:
+        absolute;
+
+      left:
+        50%;
+
+      top:
+        50%;
+
+      width:
+        42px;
+
+      height:
+        42px;
+
+      transform:
+        translate(-50%,-50%);
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      border-radius:
+        50%;
+
+      background:
+        #8BD0B7;
+
+      color:
+        #17352D;
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        9px;
+    }
+
+
+    .agent-dot {
+
+      position:
+        absolute;
+
+      top:
+        -4px;
+
+      left:
+        48px;
+
+      width:
+        8px;
+
+      height:
+        8px;
+
+      border-radius:
+        50%;
+
+      background:
+        var(--gold);
+    }
+
+
+    /* eSIM visual */
+
+    .mini-phone {
+
+      position:
+        absolute;
+
+      left:
+        50%;
+
+      top:
+        50%;
+
+      width:
+        78px;
+
+      height:
+        130px;
+
+      transform:
+        translate(-50%,-50%);
+
+      border:
+        3px solid rgba(255,255,255,.24);
+
+      border-radius:
+        15px;
+
+      background:
+        #0C171D;
+
+      box-shadow:
+        0 15px 30px rgba(0,0,0,.25);
+    }
+
+
+    .mini-phone-screen {
+
+      position:
+        absolute;
+
+      inset:
+        6px;
+
+      display:
+        flex;
+
+      flex-direction:
+        column;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap:
+        8px;
+
+      border-radius:
+        10px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #16382F,
+          #0D201D
+        );
+    }
+
+
+    .esim-chip {
+
+      width:
+        28px;
+
+      height:
+        21px;
+
+      border:
+        1px solid #8BD0B7;
+
+      border-radius:
+        5px;
+
+      background:
+        rgba(139,208,183,.1);
+    }
+
+
+    .esim-active {
+
+      color:
+        #8BD0B7;
+
+      font-family:
+        var(--mono);
+
+      font-size:
+        7px;
+
+      text-transform:
+        uppercase;
+    }
+
+/* Exact responsive behavior used by the source components. */
+@media (max-width: 850px) {
+  .nav-links,
+  .nav-actions { display: none; }
+  .mobile-menu-btn { display: flex; }
+  .steps { grid-template-columns: 1fr; }
+  .step { min-height: 270px; border-left: 1px solid var(--line-dark); }
+  .step-icon { margin-top: 40px; }
+}
+
+@media (max-width: 650px) {
+  .nav { width: calc(100% - 24px); height: 57px; padding: 0 7px 0 15px; }
+  .brand { font-size: 22px; }
+  .brand-mark { width: 28px; height: 28px; }
+  .ecosystem-grid { grid-template-columns: 1fr; }
+  .eco-card { min-height: 370px; }
+}
+  </style>
+ <style id="wakala-final-fixes">
+/* FINAL NAVIGATION FIX */
+.nav-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 15px 0;
+}
+
+.nav {
+  width: min(1180px, calc(100% - 32px));
+  min-height: 62px;
+  height: 62px;
+  margin: 0 auto;
+  padding: 0 8px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.nav-links {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+  gap: clamp(14px, 2vw, 25px);
+}
+
+.nav-links a {
+  white-space: nowrap;
+}
+
+.nav-actions {
+  flex: 0 0 auto;
+}
+
+.mobile-menu-btn {
+  display: none;
+  flex: 0 0 43px;
+}
+
+.mobile-panel {
+  display: none;
+}
+
+@media (max-width: 1050px) {
+  .nav-links,
+  .nav-actions {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .mobile-panel {
+    display: block;
+  }
+}
+
+/* FINAL HOW-IT-WORKS FIX */
+.how {
+  position: relative;
+  background: var(--ink);
+  color: #fff;
+  overflow: hidden;
+}
+
+.how .container {
+  position: relative;
+  z-index: 1;
+}
+
+.how .section-head {
+  margin-bottom: 55px;
+}
+
+.how .section-head h2 {
+  color: #fff;
+}
+
+.how .section-head p {
+  color: rgba(255,255,255,.68);
+}
+
+.how .steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid rgba(255,255,255,.13);
+  background: transparent;
+}
+
+.how .step {
+  min-width: 0;
+  min-height: 360px;
+  padding: 30px;
+  background: transparent;
+  color: #fff;
+  border-right: 1px solid rgba(255,255,255,.13);
+  border-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.how .step:last-child {
+  border-right: 0;
+}
+
+.how .step:first-child {
+  border-left: 0;
+}
+
+.how .step-number {
+  color: #8BD0B7;
+  border-color: rgba(139,208,183,.28);
+}
+
+.how .step-icon {
+  width: 50px;
+  height: 50px;
+  margin-top: 65px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 15px;
+  background: rgba(255,255,255,.035);
+  color: #fff;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+
+.how .step h3 {
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 22px 0 0;
+}
+
+.how .step p {
+  color: rgba(255,255,255,.60);
+  max-width: 310px;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 850px) {
+  .how .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .how .step {
+    min-height: 270px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.13);
+    border-left: 0;
+  }
+
+  .how .step:last-child {
+    border-bottom: 0;
+  }
+
+  .how .step-icon {
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 650px) {
+  .how .section-head {
+    margin-bottom: 38px;
+  }
+
+  .how .step {
+    padding: 25px 22px;
+  }
+
+  .how .step h3 {
+    font-size: 27px;
+  }
+}
+</style>
+<style id="wakala-loader-final">
+/* FINAL LOADER SAFETY */
+#loader {
+  pointer-events: auto;
+  transition: opacity .45s ease, visibility .45s ease;
+}
+#loader.hide {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+</style>
 </head>
-
-<body>
-
-  <!-- =========================================
+ <body>
+  <!-- =========================================================
        LOADER
-  ========================================= -->
-
-  <div id="loader">
+  ========================================================== -->
+  
+  <div
+    id="loader"
+    aria-hidden="true"
+  >
+  
     <div class="loader-inner">
-      <div class="loader-mark">
+  
+      <div class="loader-visual">
+  
+        <!-- Optional real GIF.
+             If missing, CSS W mark remains visible. -->
+  
+        <img
+          class="loader-gif"
+          src="./assets/wakala-loader.gif"
+          alt=""
+          loading="eager"
+          onerror="this.classList.add('hidden')"
+        >
+  
+        <div class="loader-core">
+          <span>W</span>
+        </div>
+  
+        <div class="loader-ring loader-ring-1"></div>
+        <div class="loader-ring loader-ring-2"></div>
+  
+        <div class="loader-orbit one"></div>
+        <div class="loader-orbit two"></div>
+  
+      </div>
+  
+  
+      <div class="loader-brand">
+        WAKALA
+      </div>
+  
+  
+      <div class="loader-copy">
+       The African Connecting payment rail
+      </div>
+  
+  
+      <div class="loader-bar">
         <span></span>
       </div>
-
-      <div class="loader-title">WAKALA</div>
-
-      <div class="loader-copy">
-        Building Africa's payment rail
-      </div>
-
-      <div class="loader-line">
-        <div class="loader-progress"></div>
-      </div>
+  
     </div>
+  
   </div>
-
-
-  <!-- =========================================
+  
+  
+    <!-- =========================================
        NAVIGATION
   ========================================= -->
-
-  <header class="nav" id="navbar">
-    <div class="container nav-inner">
-
-      <a href="./index.html" class="brand">
-        <span class="brand-dot"></span>
-        Wakala
-      </a>
-
-      <nav class="nav-links">
-        <a href="#how-it-works">How it works</a>
-        <a href="#coverage">Coverage</a>
-        <a href="#wallet">Wallet</a>
-        <a href="./esim-plans.html">Buy eSIM</a>
-        <a href="#earn">Earn with Wakala</a>
-      </nav>
-
-      <div class="nav-actions">
-        <a
-          href="./login.html"
-          class="nav-login"
-          data-auth="login"
-        >
-          Login
-        </a>
-
-        <a
-          href="./register.html"
-          class="nav-signup"
-          data-auth="register"
-        >
-          Sign up
-        </a>
-      </div>
-
-      <button
-        class="nav-menu"
-        id="mobileMenu"
-        aria-label="Open menu"
-        type="button"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
+  <header class="nav-wrap" id="site-nav">
+   <nav aria-label="Primary navigation" class="nav">
+    <a aria-label="Wakala home" class="brand" href="./index.html">
+     <span class="brand-mark">
+      W
+     </span>
+     <span>
+      Wakala
+     </span>
+    </a>
+    <div class="nav-links">
+     <a href="#how-it-works">
+      How it works
+     </a>
+     <a href="#coverage">
+      Coverage
+     </a>
+     <a href="#wallet">
+      Wallet
+     </a>
+     <a href="./esim-plans.html">
+      Buy eSIM
+     </a>
+     <a href="#earn">
+      Earn with Wakala
+     </a>
     </div>
+    <div class="nav-actions">
+     <a class="nav-login" href="./login.html">
+      Login
+     </a>
+     <a class="nav-signup" href="./register.html">
+      Sign up
+     </a>
+    </div>
+    <button aria-controls="mobile-panel" aria-expanded="false" aria-label="Open menu" class="mobile-menu-btn" id="mobile-menu-open" type="button">
+     <span>
+     </span>
+     <span>
+     </span>
+     <span>
+     </span>
+    </button>
+   </nav>
   </header>
-
-
+  <div aria-hidden="true" class="mobile-panel" id="mobile-panel">
+   <div class="mobile-panel-head">
+    <a class="brand" href="./index.html">
+     <span class="brand-mark">
+      W
+     </span>
+     Wakala
+    </a>
+    <button aria-label="Close menu" class="mobile-close" id="mobile-menu-close" type="button">
+     ×
+    </button>
+   </div>
+   <div class="mobile-links">
+    <a href="#how-it-works">
+     How it works
+    </a>
+    <a href="#coverage">
+     Coverage
+    </a>
+    <a href="#wallet">
+     Wallet
+    </a>
+    <a href="./esim-plans.html">
+     eSIM
+    </a>
+    <a href="#earn">
+     Earn with Wakala
+    </a>
+   </div>
+   <div class="mobile-actions">
+    <a class="btn btn-secondary" href="./login.html">
+     Login
+    </a>
+    <a class="btn btn-primary" href="./register.html">
+     Create account
+    </a>
+   </div>
+  </div>
   <!-- =========================================
        HERO
   ========================================= -->
-
   <main>
-
-    <section class="hero">
-
-      <div class="container hero-grid">
-
-        <div class="hero-content reveal">
-
-          <div class="eyebrow">
-            Building Africa's payment rail
-          </div>
-
-          <h1 class="hero-title">
-            send. receive .swap
-            <em>pay in your own localcurrency .</em>
-          </h1>
-
-          <p class="hero-copy">
-            Wakala enables you to send, receive, and swap money across Africa directly in your local currency.
-          </p>
-
-          <div class="hero-actions">
-
-            <a
-              href="./login.html"
-              class="btn btn-primary"
-              data-auth="register"
-            >
-              Open your wallet
-            </a>
-
-            <a
-              href="#how-it-works"
-              class="btn btn-secondary"
-            >
-              See how it works
-            </a>
-
-          </div>
-
-          <div class="hero-note">
-            Local currency · Cross-border access · One wallet
-          </div>
-
-        </div>
-
-
-        <!-- NETWORK -->
-
-        <div class="network-wrap reveal">
-
-          <div class="network-card">
-
-            <div class="network-grid"></div>
-
-            <div class="network-orbit"></div>
-
-            <svg
-              class="network-svg"
-              viewBox="0 0 680 680"
-              aria-hidden="true"
-            >
-
-              <path
-                class="network-line active"
-                d="M135 210 C230 165 340 340 525 180"
-              />
-
-              <path
-                class="network-line"
-                d="M105 420 C225 360 360 330 555 415"
-              />
-
-              <path
-                class="network-line active"
-                d="M155 525 C255 450 390 450 500 525"
-              />
-
-              <path
-                class="network-line"
-                d="M125 305 C250 320 380 215 590 300"
-              />
-
-              <path
-                class="network-line active"
-                d="M200 130 C315 270 385 380 505 545"
-              />
-
-              <path
-                class="network-line"
-                d="M525 145 C415 260 325 380 170 540"
-              />
-
-            </svg>
-
-
-            <div class="network-center">
-              <strong>WAKALA</strong>
-              <span>Payment rail</span>
-            </div>
-
-
-            <div class="network-node node-tz">
-              <div class="node-point"></div>
-              <div class="node-label">Tanzania · TZS</div>
-            </div>
-
-            <div class="network-node node-ke">
-              <div class="node-point"></div>
-              <div class="node-label">Kenya · KES</div>
-            </div>
-
-            <div class="network-node node-rw">
-              <div class="node-point"></div>
-              <div class="node-label">Rwanda · RWF</div>
-            </div>
-
-            <div class="network-node node-zz">
-              <div class="node-point"></div>
-              <div class="node-label">Zanzibar · TZS</div>
-            </div>
-
-            <div class="network-node node-ng">
-              <div class="node-point"></div>
-              <div class="node-label">Nigeria · NGN</div>
-            </div>
-
-            <div class="network-node node-gb">
-              <div class="node-point"></div>
-              <div class="node-label">United Kingdom</div>
-            </div>
-
-            <div class="network-node node-ae">
-              <div class="node-point"></div>
-              <div class="node-label">UAE</div>
-            </div>
-
-            <div class="network-node node-us">
-              <div class="node-point"></div>
-              <div class="node-label">United States</div>
-            </div>
-
-
-            <div class="flow-dot flow-1"></div>
-            <div class="flow-dot flow-2"></div>
-            <div class="flow-dot flow-3"></div>
-            <div class="flow-dot flow-4"></div>
-
-
-            <div class="network-caption">
-              <span>Supported corridors</span>
-              <strong>Local + international</strong>
-            </div>
-
-          </div>
-
-        </div>
-
+   <section class="hero">
+    <div class="container hero-grid">
+     <div class="hero-content reveal">
+      <div class="eyebrow">
+       Building Africa's payment rail
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <h1 class="hero-title">
+       send. receive .swap
+       <em>
+        pay in your own localcurrency .
+       </em>
+      </h1>
+      <p class="hero-copy">
+       Wakala enables you to send, receive, and swap money across Africa directly in your local currency.
+      </p>
+      <div class="hero-actions">
+       <a class="btn btn-primary" data-auth="register" href="./login.html">
+        Open your wallet
+       </a>
+       <a class="btn btn-secondary" href="#how-it-works">
+        See how it works
+       </a>
+      </div>
+      <div class="hero-note">
+       Local currency · Cross-border access · One wallet
+      </div>
+     </div>
+     <!-- NETWORK -->
+     <div class="network-wrap reveal">
+      <div class="network-card">
+       <div class="network-grid">
+       </div>
+       <div class="network-orbit">
+       </div>
+       <svg aria-hidden="true" class="network-svg" viewbox="0 0 680 680">
+        <path class="network-line active" d="M135 210 C230 165 340 340 525 180">
+        </path>
+        <path class="network-line" d="M105 420 C225 360 360 330 555 415">
+        </path>
+        <path class="network-line active" d="M155 525 C255 450 390 450 500 525">
+        </path>
+        <path class="network-line" d="M125 305 C250 320 380 215 590 300">
+        </path>
+        <path class="network-line active" d="M200 130 C315 270 385 380 505 545">
+        </path>
+        <path class="network-line" d="M525 145 C415 260 325 380 170 540">
+        </path>
+       </svg>
+       <div class="network-center">
+        <strong>
+         WAKALA
+        </strong>
+        <span>
+         Payment rail
+        </span>
+       </div>
+       <div class="network-node node-tz">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         Tanzania · TZS
+        </div>
+       </div>
+       <div class="network-node node-ke">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         Kenya · KES
+        </div>
+       </div>
+       <div class="network-node node-rw">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         Rwanda · RWF
+        </div>
+       </div>
+       <div class="network-node node-zz">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         Zanzibar · TZS
+        </div>
+       </div>
+       <div class="network-node node-ng">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         Nigeria · NGN
+        </div>
+       </div>
+       <div class="network-node node-gb">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         United Kingdom
+        </div>
+       </div>
+       <div class="network-node node-ae">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         UAE
+        </div>
+       </div>
+       <div class="network-node node-us">
+        <div class="node-point">
+        </div>
+        <div class="node-label">
+         United States
+        </div>
+       </div>
+       <div class="flow-dot flow-1">
+       </div>
+       <div class="flow-dot flow-2">
+       </div>
+       <div class="flow-dot flow-3">
+       </div>
+       <div class="flow-dot flow-4">
+       </div>
+       <div class="network-caption">
+        <span>
+         Supported corridors
+        </span>
+        <strong>
+         Local + international
+        </strong>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          TICKER
     ========================================= -->
-
-    <div class="ticker">
-
-      <div class="ticker-track">
-
-        <div class="ticker-item">
-          <b>TZS</b> Tanzania
-        </div>
-
-        <div class="ticker-item">
-          <b>KES</b> Kenya
-        </div>
-
-        <div class="ticker-item">
-          <b>RWF</b> Rwanda
-        </div>
-
-        <div class="ticker-item">
-          <b>NGN</b> Nigeria
-        </div>
-
-        <div class="ticker-item">
-          <b>TZS</b> Zanzibar
-        </div>
-
-        <div class="ticker-item">
-          <b>Visa</b> Cards
-        </div>
-
-        <div class="ticker-item">
-          <b>Mastercard</b> Cards
-        </div>
-
-        <div class="ticker-item">
-          <b>Momo</b> Airtel Pay
-        </div>
-
-        <div class="ticker-item">
-          <b>MTN</b> MoMo
-        </div>
-
-        <div class="ticker-item">
-          <b>OPay</b> Wallet
-        </div>
-
-        <div class="ticker-item">
-          <b>USDC</b> Stablecoins
-        </div>
-
-        <div class="ticker-item">
-          <b>Interswitch</b> Payments
-        </div>
-
-        <div class="ticker-item">
-          <b>Paystack</b> Checkout
-        </div>
-
-        <div class="ticker-item">
-          <b>Bank</b> Transfers
-        </div>
-
-        <!-- duplicate for continuous movement -->
-
-        <div class="ticker-item">
-          <b>TZS</b> Tanzania
-        </div>
-
-        <div class="ticker-item">
-          <b>KES</b> Kenya
-        </div>
-
-        <div class="ticker-item">
-          <b>RWF</b> Rwanda
-        </div>
-
-        <div class="ticker-item">
-          <b>NGN</b> Nigeria
-        </div>
-
-        <div class="ticker-item">
-          <b>TZS</b> Zanzibar
-        </div>
-
-        <div class="ticker-item">
-          <b>Visa</b> Cards
-        </div>
-
-        <div class="ticker-item">
-          <b>Mastercard</b> Cards
-        </div>
-
-        <div class="ticker-item">
-          <b>Momo</b> Airtel Pay
-        </div>
-
-        <div class="ticker-item">
-          <b>MTN</b> MoMo
-        </div>
-
-        <div class="ticker-item">
-          <b>OPay</b> Wallet
-        </div>
-
-        <div class="ticker-item">
-          <b>USDC</b> Stablecoins
-        </div>
-
-        <div class="ticker-item">
-          <b>Interswitch</b> Payments
-        </div>
-
-        <div class="ticker-item">
-          <b>Paystack</b> Checkout
-        </div>
-
-        <div class="ticker-item">
-          <b>Bank</b> Transfers
-        </div>
-
-      </div>
-
+   <div class="ticker">
+    <div class="ticker-track">
+     <div class="ticker-item">
+      <b>
+       TZS
+      </b>
+      Tanzania
+     </div>
+     <div class="ticker-item">
+      <b>
+       KES
+      </b>
+      Kenya
+     </div>
+     <div class="ticker-item">
+      <b>
+       RWF
+      </b>
+      Rwanda
+     </div>
+     <div class="ticker-item">
+      <b>
+       NGN
+      </b>
+      Nigeria
+     </div>
+     <div class="ticker-item">
+      <b>
+       TZS
+      </b>
+      Zanzibar
+     </div>
+     <div class="ticker-item">
+      <b>
+       Visa
+      </b>
+      Cards
+     </div>
+     <div class="ticker-item">
+      <b>
+       Mastercard
+      </b>
+      Cards
+     </div>
+     <div class="ticker-item">
+      <b>
+       Momo
+      </b>
+      Airtel Pay
+     </div>
+     <div class="ticker-item">
+      <b>
+       MTN
+      </b>
+      MoMo
+     </div>
+     <div class="ticker-item">
+      <b>
+       OPay
+      </b>
+      Wallet
+     </div>
+     <div class="ticker-item">
+      <b>
+       USDC
+      </b>
+      Stablecoins
+     </div>
+     <div class="ticker-item">
+      <b>
+       Interswitch
+      </b>
+      Payments
+     </div>
+     <div class="ticker-item">
+      <b>
+       Paystack
+      </b>
+      Checkout
+     </div>
+     <div class="ticker-item">
+      <b>
+       Bank
+      </b>
+      Transfers
+     </div>
+     <!-- duplicate for continuous movement -->
+     <div class="ticker-item">
+      <b>
+       TZS
+      </b>
+      Tanzania
+     </div>
+     <div class="ticker-item">
+      <b>
+       KES
+      </b>
+      Kenya
+     </div>
+     <div class="ticker-item">
+      <b>
+       RWF
+      </b>
+      Rwanda
+     </div>
+     <div class="ticker-item">
+      <b>
+       NGN
+      </b>
+      Nigeria
+     </div>
+     <div class="ticker-item">
+      <b>
+       TZS
+      </b>
+      Zanzibar
+     </div>
+     <div class="ticker-item">
+      <b>
+       Visa
+      </b>
+      Cards
+     </div>
+     <div class="ticker-item">
+      <b>
+       Mastercard
+      </b>
+      Cards
+     </div>
+     <div class="ticker-item">
+      <b>
+       Momo
+      </b>
+      Airtel Pay
+     </div>
+     <div class="ticker-item">
+      <b>
+       MTN
+      </b>
+      MoMo
+     </div>
+     <div class="ticker-item">
+      <b>
+       OPay
+      </b>
+      Wallet
+     </div>
+     <div class="ticker-item">
+      <b>
+       USDC
+      </b>
+      Stablecoins
+     </div>
+     <div class="ticker-item">
+      <b>
+       Interswitch
+      </b>
+      Payments
+     </div>
+     <div class="ticker-item">
+      <b>
+       Paystack
+      </b>
+      Checkout
+     </div>
+     <div class="ticker-item">
+      <b>
+       Bank
+      </b>
+      Transfers
+     </div>
     </div>
-
-
-    <!-- =========================================
+   </div>
+   <!-- =========================================
          PROBLEM
     ========================================= -->
-
-    <section class="section problem">
-
-      <div class="container problem-grid">
-
-        <div class="problem-statement reveal">
-
-          <div class="eyebrow">
-            The problem
-          </div>
-
-          <h2 class="section-title">
-            Africa doesn't need
+   <section class="section problem">
+    <div class="container problem-grid">
+     <div class="problem-statement reveal">
+      <div class="eyebrow">
+       The problem
+      </div>
+      <h2 class="section-title">
+       Africa doesn't need
             more complexity.
-          </h2>
-
-          <p>
-            Moving money between markets should feel as simple as
+      </h2>
+      <p>
+       Moving money between markets should feel as simple as
             sending money to someone next door. Wakala brings the
             pieces together around local currencies, familiar payment
             methods and a single wallet experience.
-          </p>
-
-        </div>
-
-
-        <div class="problem-list reveal">
-
-          <div class="problem-item">
-
-            <div class="problem-number">01</div>
-
-            <div>
-              <h3>Too many payment rails</h3>
-              <p>
-                Different markets use different banks, wallets,
+      </p>
+     </div>
+     <div class="problem-list reveal">
+      <div class="problem-item">
+       <div class="problem-number">
+        01
+       </div>
+       <div>
+        <h3>
+         Too many payment rails
+        </h3>
+        <p>
+         Different markets use different banks, wallets,
                 mobile money systems and card networks.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="problem-item">
-
-            <div class="problem-number">02</div>
-
-            <div>
-              <h3>Currency friction</h3>
-              <p>
-                People often need to navigate multiple conversions
-                before money reaches its destination.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="problem-item">
-
-            <div class="problem-number">03</div>
-
-            <div>
-              <h3>Disconnected experiences</h3>
-              <p>
-                Wallets, payments and connectivity often live in
-                separate products.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
+        </p>
+       </div>
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <div class="problem-item">
+       <div class="problem-number">
+        02
+       </div>
+       <div>
+        <h3>
+         Currency friction
+        </h3>
+        <p>
+         People often need to navigate multiple conversions
+                before money reaches its destination.
+        </p>
+       </div>
+      </div>
+      <div class="problem-item">
+       <div class="problem-number">
+        03
+       </div>
+       <div>
+        <h3>
+         Disconnected experiences
+        </h3>
+        <p>
+         Wallets, payments and connectivity often live in
+                separate products.
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          HOW IT WORKS
     ========================================= -->
-
-    <section
-      class="section"
-      id="how-it-works"
-    >
-
-      <div class="container">
-
-        <div class="section-head reveal">
-
-          <div>
-            <div class="eyebrow">
-              How it works
-            </div>
-
-            <h2 class="section-title" style="margin-top:18px;">
-              One experience.
-              Multiple markets.
-            </h2>
-          </div>
-
-          <p class="section-description">
-            Wakala puts the payment experience around the user,
-            connecting local payment methods and currencies through
-            a single account.
-          </p>
-
-        </div>
-
-
-        <div class="steps reveal">
-
-          <article class="step">
-
-            <div class="step-number">01</div>
-
-            <h3>Fund your wallet</h3>
-
-            <p>
-              Add money using supported cards, mobile money,
-              bank transfers and local payment methods.
-            </p>
-
-          </article>
-
-
-          <article class="step">
-
-            <div class="step-number">02</div>
-
-            <h3>Choose how to move it</h3>
-
-            <p>
-              Send, receive, convert and manage supported balances
-              from one wallet.
-            </p>
-
-          </article>
-
-
-          <article class="step">
-
-            <div class="step-number">03</div>
-
-            <h3>Reach another market</h3>
-
-            <p>
-              Use Wakala's payment connections to move funds across
-              supported African corridors.
-            </p>
-
-          </article>
-
-        </div>
-
+   <section class="section how" id="how-it-works">
+    <div class="container">
+     <div class="section-head">
+      <div class="eyebrow">
+       How it works
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <h2>
+       One experience.
+        Multiple markets.
+      </h2>
+      <p>
+       Wakala puts the payment experience around the user,
+        connecting local payment methods and currencies
+        through a single account.
+      </p>
+     </div>
+     <div class="steps">
+      <article class="step">
+       <div class="step-number">
+        01 / FUND
+       </div>
+       <div class="step-icon">
+        +
+       </div>
+       <h3>
+        Fund your wallet
+       </h3>
+       <p>
+        Add money using supported cards, mobile money,
+          bank transfers and local payment methods.
+       </p>
+      </article>
+      <article class="step">
+       <div class="step-number">
+        02 / MOVE
+       </div>
+       <div class="step-icon">
+        →
+       </div>
+       <h3>
+        Choose how to move it
+       </h3>
+       <p>
+        Send, receive, convert and manage supported
+          balances from one wallet.
+       </p>
+      </article>
+      <article class="step">
+       <div class="step-number">
+        03 / REACH
+       </div>
+       <div class="step-icon">
+        ◌
+       </div>
+       <h3>
+        Reach another market
+       </h3>
+       <p>
+        Use Wakala's payment connections to move funds
+          across supported African corridors.
+       </p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          ECOSYSTEM
     ========================================= -->
-
-    <section class="section ecosystem">
-
-      <div class="container ecosystem-grid">
-
-        <div class="reveal">
-
-          <div class="eyebrow">
-            The Wakala network
-          </div>
-
-          <h2 class="section-title" style="margin-top:18px;">
-            Payments should
-            move with people.
-          </h2>
-
-          <p class="ecosystem-description">
-            Wakala connects users with the payment infrastructure
-            they already understand while providing a unified
-            experience across supported markets.
-          </p>
-
-        </div>
-
-
-        <div class="ecosystem-list reveal">
-
-          <div class="ecosystem-item">
-
-            <div class="ecosystem-icon">01</div>
-
-            <div>
-              <h3>Local currency</h3>
-
-              <p>
-                Support for balances and payment flows in local
-                currencies across connected markets.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="ecosystem-item">
-
-            <div class="ecosystem-icon">02</div>
-
-            <div>
-              <h3>Mobile money</h3>
-
-              <p>
-                Connect familiar mobile-money payment experiences
-                to the wider Wakala wallet ecosystem.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="ecosystem-item">
-
-            <div class="ecosystem-icon">03</div>
-
-            <div>
-              <h3>Cards & banks</h3>
-
-              <p>
-                Card and bank payment methods provide additional
-                ways to fund and move money.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="ecosystem-item">
-
-            <div class="ecosystem-icon">04</div>
-
-            <div>
-              <h3>Cross-border corridors</h3>
-
-              <p>
-                Connect people and businesses across multiple
-                markets without making the payment experience
-                unnecessarily complicated.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
+   <section class="section ecosystem" id="ecosystem">
+    <div class="container">
+     <div class="section-head reveal">
+      <div class="eyebrow">
+       The Wakala ecosystem
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <h2>
+       More than a wallet.
+      </h2>
+      <p>
+       Payments, transfers, local agents and connectivity
+        come together around one Wakala experience.
+      </p>
+     </div>
+     <div class="ecosystem-grid">
+      <!-- Wallet -->
+      <article class="eco-card reveal">
+       <div class="eco-tag">
+        01 / Wallet
+       </div>
+       <h3>
+        Wallet
+       </h3>
+       <p>
+        Hold supported balances and manage your money
+          from one place.
+       </p>
+       <div class="eco-visual">
+        <div class="mini-wallet">
+         <div class="mini-label">
+          Available balance
+         </div>
+         <div class="mini-balance">
+          2.45M
+         </div>
+         <div class="mini-currency">
+          TZS
+         </div>
+         <div class="mini-buttons">
+          <span>
+           Send
+          </span>
+          <span>
+           Receive
+          </span>
+          <span>
+           Add
+          </span>
+         </div>
+        </div>
+       </div>
+      </article>
+      <!-- Transfers -->
+      <article class="eco-card reveal">
+       <div class="eco-tag">
+        02 / Transfers
+       </div>
+       <h3>
+        Transfers
+       </h3>
+       <p>
+        Move funds across connected markets through
+          familiar payment experiences.
+       </p>
+       <div class="eco-visual">
+        <div class="transfer-line">
+        </div>
+        <div class="transfer-node a">
+         TZS
+        </div>
+        <div class="transfer-node b">
+         KES
+        </div>
+        <div class="transfer-dot">
+        </div>
+       </div>
+      </article>
+      <!-- Agents -->
+      <article class="eco-card reveal">
+       <div class="eco-tag">
+        03 / Wakala agents
+       </div>
+       <h3>
+        Wakala Agents
+       </h3>
+       <p>
+        Connect people with local payment access through
+          a familiar agent network.
+       </p>
+       <div class="eco-visual">
+        <div class="agent-ring">
+         <div class="agent-dot">
+         </div>
+        </div>
+        <div class="agent-core">
+         W
+        </div>
+       </div>
+      </article>
+      <!-- eSIM -->
+      <article class="eco-card reveal">
+       <div class="eco-tag">
+        04 / Esim Connectivity
+       </div>
+       <h3>
+        eSIM
+       </h3>
+       <p>
+        Keep your connectivity close while moving between
+          supported destinations.
+       </p>
+       <div class="eco-visual">
+        <div class="mini-phone">
+         <div class="mini-phone-screen">
+          <div class="esim-chip">
+          </div>
+          <div class="esim-active">
+           eSIM active
+          </div>
+         </div>
+        </div>
+       </div>
+      </article>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          COVERAGE
     ========================================= -->
-
-    <section
-      class="section"
-      id="coverage"
-    >
-
-      <div class="container">
-
-        <div class="section-head reveal">
-
-          <div>
-
-            <div class="eyebrow">
-              Network coverage
-            </div>
-
-            <h2 class="section-title" style="margin-top:18px;">
-              Local where
+   <section class="section" id="coverage">
+    <div class="container">
+     <div class="section-head reveal">
+      <div>
+       <div class="eyebrow">
+        Network coverage
+       </div>
+       <h2 class="section-title" style="margin-top:18px;">
+        Local where
               it matters.
-            </h2>
-
-          </div>
-
-          <p class="section-description">
-            Wakala operates through a network of trusted partners,
+       </h2>
+      </div>
+      <p class="section-description">
+       Wakala operates through a network of trusted partners,
             agents and offices across multiple markets. Our physical
             presence spans key African locations while our payment
             connections extend across international corridors.
-          </p>
-
-        </div>
-
-
-        <div class="markets-grid reveal">
-
-          <!-- Tanzania -->
-
-          <article class="market-card">
-
-            <div class="market-code">
-              TZ
-            </div>
-
-            <h3>Tanzania</h3>
-
-            <p>
-              Tanzanian Shilling · TZS
-            </p>
-
-            <span class="market-tag">
-              Office / Partner
-            </span>
-
-          </article>
-
-
-          <!-- Kenya -->
-
-          <article class="market-card">
-
-            <div class="market-code">
-              KE
-            </div>
-
-            <h3>Kenya</h3>
-
-            <p>
-              Kenyan Shilling · KES
-            </p>
-
-            <span class="market-tag">
-              Office / Partner
-            </span>
-
-          </article>
-
-
-          <!-- Rwanda -->
-
-          <article class="market-card">
-
-            <div class="market-code">
-              RW
-            </div>
-
-            <h3>Rwanda</h3>
-
-            <p>
-              Rwandan Franc · RWF
-            </p>
-
-            <span class="market-tag">
-              Office / Partner
-            </span>
-
-          </article>
-
-
-          <!-- Zanzibar -->
-
-          <article class="market-card">
-
-            <div class="market-code">
-              ZZ
-            </div>
-
-            <h3>Zanzibar</h3>
-
-            <p>
-              Tanzanian Shilling · TZS
-            </p>
-
-            <span class="market-tag">
-              Office / Partner
-            </span>
-
-          </article>
-
-
-          <!-- Nigeria -->
-
-          <article class="market-card">
-
-            <div class="market-code">
-              NG
-            </div>
-
-            <h3>Nigeria</h3>
-
-            <p>
-              Nigerian Naira · NGN
-            </p>
-
-            <span class="market-tag">
-              Office / Partner
-            </span>
-
-          </article>
-
-
-          <!-- Broader network -->
-
-          <article class="market-card large">
-
-            <div class="market-code">
-              NETWORK
-            </div>
-
-            <h3>
-              Our network reaches further.
-            </h3>
-
-            <p>
-              International corridors and additional countries
+      </p>
+     </div>
+     <div class="markets-grid reveal">
+      <!-- Tanzania -->
+      <article class="market-card">
+       <div class="market-code">
+        TZ
+       </div>
+       <h3>
+        Tanzania
+       </h3>
+       <p>
+        Tanzanian Shilling · TZS
+       </p>
+       <span class="market-tag">
+        Office / Partner
+       </span>
+      </article>
+      <!-- Kenya -->
+      <article class="market-card">
+       <div class="market-code">
+        KE
+       </div>
+       <h3>
+        Kenya
+       </h3>
+       <p>
+        Kenyan Shilling · KES
+       </p>
+       <span class="market-tag">
+        Office / Partner
+       </span>
+      </article>
+      <!-- Rwanda -->
+      <article class="market-card">
+       <div class="market-code">
+        RW
+       </div>
+       <h3>
+        Rwanda
+       </h3>
+       <p>
+        Rwandan Franc · RWF
+       </p>
+       <span class="market-tag">
+        Office / Partner
+       </span>
+      </article>
+      <!-- Zanzibar -->
+      <article class="market-card">
+       <div class="market-code">
+        ZZ
+       </div>
+       <h3>
+        Zanzibar
+       </h3>
+       <p>
+        Tanzanian Shilling · TZS
+       </p>
+       <span class="market-tag">
+        Office / Partner
+       </span>
+      </article>
+      <!-- Nigeria -->
+      <article class="market-card">
+       <div class="market-code">
+        NG
+       </div>
+       <h3>
+        Nigeria
+       </h3>
+       <p>
+        Nigerian Naira · NGN
+       </p>
+       <span class="market-tag">
+        Office / Partner
+       </span>
+      </article>
+      <!-- Broader network -->
+      <article class="market-card large">
+       <div class="market-code">
+        NETWORK
+       </div>
+       <h3>
+        Our network reaches further.
+       </h3>
+       <p>
+        International corridors and additional countries
               are connected through trusted partners, agents and
               payment connections.
-            </p>
-
-            <span class="market-tag">
-              International corridors
-            </span>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
+       </p>
+       <span class="market-tag">
+        International corridors
+       </span>
+      </article>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          WALLET + PAYMENTS
     ========================================= -->
-
-    <section
-      class="section wallet-section"
-      id="wallet"
-    >
-
-      <div class="container wallet-grid">
-
-        <div class="wallet-copy reveal">
-
-          <div class="eyebrow">
-            Wallet + payments
-          </div>
-
-          <div class="big-copy">
-            Your money,
-            your way,
-            <em>one wallet.</em>
-          </div>
-
-          <p class="muted-copy">
-            Hold supported balances, send funds, receive funds and
-            manage your activity from one place.
-          </p>
-
-
-          <div class="wallet-points">
-
-            <div class="wallet-point">
-              <i>✓</i>
-              Multi-currency balances
-            </div>
-
-            <div class="wallet-point">
-              <i>✓</i>
-              Local and cross-border transfers
-            </div>
-
-            <div class="wallet-point">
-              <i>✓</i>
-              Transaction history and activity
-            </div>
-
-            <div class="wallet-point">
-              <i>✓</i>
-              Familiar payment methods
-            </div>
-
-          </div>
-
-
-          <!-- PAYMENT METHODS -->
-
-          <div class="payment-methods">
-
-            <div class="payment-heading">
-              Payment methods
-            </div>
-
-            <div class="payment-method-grid">
-
-              <div class="payment-method">
-                <span class="visa-logo">
-                  VISA
-                </span>
-              </div>
-
-
-              <div class="payment-method">
-
-                <span class="master-logo"></span>
-
-                <span>
-                  Mastercard
-                </span>
-
-              </div>
-
-
-              <div class="payment-method">
-
-                <span class="pesa-logo">
-                  Pesa
-                </span>
-
-              </div>
-
-
-              <div class="payment-method">
-
-                <span class="bank-logo">
-                  B
-                </span>
-
-                <span>
-                  Bank transfer
-                </span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div style="margin-top:25px;">
-
-            <a
-              href="./register.html"
-              class="btn btn-primary"
-              data-auth="register"
-            >
-              Create wallet
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <!-- PHONE -->
-
-        <div class="phone-stage reveal">
-
-          <div class="wallet-float float-one">
-
-            <span>
-              Available balance
-            </span>
-
-            <strong>
-              TZS 2,450,000
-            </strong>
-
-          </div>
-
-
-          <div class="wallet-float float-two">
-
-            <span>
-              Transfer
-            </span>
-
-            <strong>
-              Completed
-            </strong>
-
-          </div>
-
-
-          <div class="phone">
-
-            <div class="phone-screen">
-
-              <div class="phone-notch"></div>
-
-              <div class="phone-content">
-
-                <div class="phone-small">
-                  Total balance
-                </div>
-
-                <div class="phone-balance">
-                  2,450,000
-                </div>
-
-                <div class="phone-currency">
-                  TZS
-                </div>
-
-
-                <div class="phone-actions">
-
-                  <div class="phone-action">
-                    Send
-                  </div>
-
-                  <div class="phone-action">
-                    Receive
-                  </div>
-
-                  <div class="phone-action">
-                    Add
-                  </div>
-
-                </div>
-
-
-                <div class="phone-card">
-
-                  <div class="phone-card-label">
-                    Wallet balance
-                  </div>
-
-                  <div class="phone-card-amount">
-                    TZS 2.45M
-                  </div>
-
-                </div>
-
-
-                <div class="phone-list">
-
-                  <div class="phone-list-title">
-                    Recent activity
-                  </div>
-
-
-                  <div class="phone-transaction">
-
-                    <div>
-                      <div class="transaction-name">
-                        Received
-                      </div>
-
-                      <div class="transaction-date">
-                        Today · 10:42
-                      </div>
-                    </div>
-
-                    <div class="transaction-amount">
-                      +450,000
-                    </div>
-
-                  </div>
-
-
-                  <div class="phone-transaction">
-
-                    <div>
-                      <div class="transaction-name">
-                        Transfer
-                      </div>
-
-                      <div class="transaction-date">
-                        Yesterday
-                      </div>
-                    </div>
-
-                    <div class="transaction-amount">
-                      -120,000
-                    </div>
-
-                  </div>
-
-
-                  <div class="phone-transaction">
-
-                    <div>
-                      <div class="transaction-name">
-                        Wallet funding
-                      </div>
-
-                      <div class="transaction-date">
-                        Sep 06
-                      </div>
-                    </div>
-
-                    <div class="transaction-amount">
-                      +800,000
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
+   <section class="section wallet-section" id="wallet">
+    <div class="container wallet-grid">
+     <div class="wallet-copy reveal">
+      <div class="eyebrow">
+       Wallet + payments
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <div class="big-copy">
+       Your money,
+            your way,
+       <em>
+        one wallet.
+       </em>
+      </div>
+      <p class="muted-copy">
+       Hold supported balances, send funds, receive funds and
+            manage your activity from one place.
+      </p>
+      <div class="wallet-points">
+       <div class="wallet-point">
+        <i>
+         ✓
+        </i>
+        Multi-currency balances
+       </div>
+       <div class="wallet-point">
+        <i>
+         ✓
+        </i>
+        Local and cross-border transfers
+       </div>
+       <div class="wallet-point">
+        <i>
+         ✓
+        </i>
+        Transaction history and activity
+       </div>
+       <div class="wallet-point">
+        <i>
+         ✓
+        </i>
+        Familiar payment methods
+       </div>
+      </div>
+      <!-- PAYMENT METHODS -->
+      <div class="payment-methods">
+       <div class="payment-heading">
+        Payment methods
+       </div>
+       <div class="payment-method-grid">
+        <div class="payment-method">
+         <span class="visa-logo">
+          VISA
+         </span>
+        </div>
+        <div class="payment-method">
+         <span class="master-logo">
+         </span>
+         <span>
+          Mastercard
+         </span>
+        </div>
+        <div class="payment-method">
+         <span class="pesa-logo">
+          Pesa
+         </span>
+        </div>
+        <div class="payment-method">
+         <span class="bank-logo">
+          B
+         </span>
+         <span>
+          Bank transfer
+         </span>
+        </div>
+       </div>
+      </div>
+      <div style="margin-top:25px;">
+       <a class="btn btn-primary" data-auth="register" href="./register.html">
+        Create wallet
+       </a>
+      </div>
+     </div>
+     <!-- PHONE -->
+     <div class="phone-stage reveal">
+      <div class="wallet-float float-one">
+       <span>
+        Available balance
+       </span>
+       <strong>
+        TZS 2,450,000
+       </strong>
+      </div>
+      <div class="wallet-float float-two">
+       <span>
+        Transfer
+       </span>
+       <strong>
+        Completed
+       </strong>
+      </div>
+      <div class="phone">
+       <div class="phone-screen">
+        <div class="phone-notch">
+        </div>
+        <div class="phone-content">
+         <div class="phone-small">
+          Total balance
+         </div>
+         <div class="phone-balance">
+          2,450,000
+         </div>
+         <div class="phone-currency">
+          TZS
+         </div>
+         <div class="phone-actions">
+          <div class="phone-action">
+           Send
+          </div>
+          <div class="phone-action">
+           Receive
+          </div>
+          <div class="phone-action">
+           Add
+          </div>
+         </div>
+         <div class="phone-card">
+          <div class="phone-card-label">
+           Wallet balance
+          </div>
+          <div class="phone-card-amount">
+           TZS 2.45M
+          </div>
+         </div>
+         <div class="phone-list">
+          <div class="phone-list-title">
+           Recent activity
+          </div>
+          <div class="phone-transaction">
+           <div>
+            <div class="transaction-name">
+             Received
+            </div>
+            <div class="transaction-date">
+             Today · 10:42
+            </div>
+           </div>
+           <div class="transaction-amount">
+            +450,000
+           </div>
+          </div>
+          <div class="phone-transaction">
+           <div>
+            <div class="transaction-name">
+             Transfer
+            </div>
+            <div class="transaction-date">
+             Yesterday
+            </div>
+           </div>
+           <div class="transaction-amount">
+            -120,000
+           </div>
+          </div>
+          <div class="phone-transaction">
+           <div>
+            <div class="transaction-name">
+             Wallet funding
+            </div>
+            <div class="transaction-date">
+             Sep 06
+            </div>
+           </div>
+           <div class="transaction-amount">
+            +800,000
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          ESIM
     ========================================= -->
-
-    <section class="esim-section">
-
-      <div class="container esim-grid">
-
-        <div class="esim-visual reveal">
-
-          <div class="sim-card">
-
-            <div class="eyebrow" style="color:#79c7aa;">
-              WAKALA
-            </div>
-
-            <div class="sim-chip"></div>
-
-            <div class="sim-text">
-              eSIM
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="esim-copy reveal">
-
-          <div class="eyebrow">
-            Connectivity
-          </div>
-
-          <h2 class="section-title">
-            Stay connected
+   <section class="esim-section">
+    <div class="container esim-grid">
+     <div class="esim-visual reveal">
+      <div class="sim-card">
+       <div class="eyebrow" style="color:#79c7aa;">
+        WAKALA
+       </div>
+       <div class="sim-chip">
+       </div>
+       <div class="sim-text">
+        eSIM
+       </div>
+      </div>
+     </div>
+     <div class="esim-copy reveal">
+      <div class="eyebrow">
+       Connectivity
+      </div>
+      <h2 class="section-title">
+       Stay connected
             across borders.
-          </h2>
-
-          <p>
-            Wakala brings payment and connectivity closer together.
+      </h2>
+      <p>
+       Wakala brings payment and connectivity closer together.
             Purchase supported eSIM plans and keep access to mobile
             data while travelling between markets.
-          </p>
-
-          <div class="esim-points">
-
-            <div class="esim-point">
-              Browse available eSIM plans
-            </div>
-
-            <div class="esim-point">
-              Choose a destination and data package
-            </div>
-
-            <div class="esim-point">
-              Manage your connectivity alongside your wallet
-            </div>
-
-          </div>
-
-          <div style="margin-top:28px;">
-
-            <a
-              href="./esim-plans.html"
-              class="btn btn-primary"
-            >
-              Browse eSIM plans
-            </a>
-
-          </div>
-
-        </div>
-
+      </p>
+      <div class="esim-points">
+       <div class="esim-point">
+        Browse available eSIM plans
+       </div>
+       <div class="esim-point">
+        Choose a destination and data package
+       </div>
+       <div class="esim-point">
+        Manage your connectivity alongside your wallet
+       </div>
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+      <div style="margin-top:28px;">
+       <a class="btn btn-primary" href="./esim-plans.html">
+        Browse eSIM plans
+       </a>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          EARN
     ========================================= -->
-
-    <section
-      class="section creator"
-      id="earn"
-    >
-
-      <div class="container creator-grid">
-
-        <div class="creator-copy reveal">
-
-          <div class="eyebrow">
-            Earn with Wakala
-          </div>
-
-          <h2 class="section-title" style="margin-top:18px;">
-            Turn your
+   <section class="section creator" id="earn">
+    <div class="container creator-grid">
+     <div class="creator-copy reveal">
+      <div class="eyebrow">
+       Earn with Wakala
+      </div>
+      <h2 class="section-title" style="margin-top:18px;">
+       Turn your
             network into
             opportunity.
-          </h2>
-
-          <p>
-            Businesses, agents and creators can connect their audience
+      </h2>
+      <p>
+       Businesses, agents and creators can connect their audience
             to Wakala and participate in a growing payment ecosystem.
             Share useful financial services with people who need them.
-          </p>
-
-          <div style="margin-top:28px;">
-
-            <a
-              href="./register.html"
-              class="btn btn-primary"
-              data-auth="register"
-            >
-              Get started
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <div class="creator-card reveal">
-
-          <form id="creatorForm">
-
-            <label class="form-label">
-              Full name
-            </label>
-
-            <input
-              class="form-field"
-              type="text"
-              name="name"
-              placeholder="Your name"
-              required
-            >
-
-
-            <label class="form-label">
-              Email
-            </label>
-
-            <input
-              class="form-field"
-              type="email"
-              name="email"
-              placeholder="you@example.com"
-              required
-            >
-
-
-            <label class="form-label">
-              Tell us about your network
-            </label>
-
-            <textarea
-              class="form-field"
-              name="message"
-              placeholder="Audience, business, community or partnership..."
-              required
-            ></textarea>
-
-
-            <button
-              type="submit"
-              class="btn btn-primary"
-              style="width:100%;"
-            >
-              Submit interest
-            </button>
-
-            <div
-              class="form-message"
-              id="creatorMessage"
-            >
-              Thanks. Your interest has been received.
-            </div>
-
-          </form>
-
-        </div>
-
+      </p>
+      <div style="margin-top:28px;">
+       <a class="btn btn-primary" data-auth="register" href="./register.html">
+        Get started
+       </a>
       </div>
-
-    </section>
-
-
-    <!-- =========================================
+     </div>
+     <div class="creator-card reveal">
+      <form id="creatorForm">
+       <label class="form-label">
+        Full name
+       </label>
+       <input class="form-field" name="name" placeholder="Your name" required="" type="text"/>
+       <label class="form-label">
+        Email
+       </label>
+       <input class="form-field" name="email" placeholder="you\@example.com" required="" type="email"/>
+       <label class="form-label">
+        Tell us about your network
+       </label>
+       <textarea class="form-field" name="message" placeholder="Audience, business, community or partnership..." required=""></textarea>
+       <button class="btn btn-primary" style="width:100%;" type="submit">
+        Submit interest
+       </button>
+       <div class="form-message" id="creatorMessage">
+        Thanks. Your interest has been received.
+       </div>
+      </form>
+     </div>
+    </div>
+   </section>
+   <!-- =========================================
          FINAL CTA
     ========================================= -->
-
-    <section class="final-cta">
-
-      <div class="container cta-inner reveal">
-
-        <div class="eyebrow">
-          Building Africa's payment rail
-        </div>
-
-        <h2 class="cta-title">
-          Money should
+   <section class="final-cta">
+    <div class="container cta-inner reveal">
+     <div class="eyebrow">
+      Building Africa's payment rail
+     </div>
+     <h2 class="cta-title">
+      Money should
           move with you.
-        </h2>
-
-        <p class="cta-copy">
-          Open your Wakala wallet and experience a simpler way to
+     </h2>
+     <p class="cta-copy">
+      Open your Wakala wallet and experience a simpler way to
           manage money across connected markets.
-        </p>
-
-        <div class="cta-actions">
-
-          <a
-            href="./register.html"
-            class="btn btn-primary"
-            data-auth="register"
-          >
-            Open your wallet
-          </a>
-
-          <a
-            href="#coverage"
-            class="btn btn-secondary"
-          >
-            Explore coverage
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
+     </p>
+     <div class="cta-actions">
+      <a class="btn btn-primary" data-auth="register" href="./register.html">
+       Open your wallet
+      </a>
+      <a class="btn btn-secondary" href="#coverage">
+       Explore coverage
+      </a>
+     </div>
+    </div>
+   </section>
   </main>
-
-
   <!-- =========================================
        FOOTER
   ========================================= -->
-
   <footer>
-
-    <div class="container">
-
-      <div class="footer-top">
-
-        <div>
-
-          <div class="footer-brand">
-            Wakala
-          </div>
-
-          <p class="footer-description">
-            A payment network connecting people, currencies and
+   <div class="container">
+    <div class="footer-top">
+     <div>
+      <div class="footer-brand">
+       Wakala
+      </div>
+      <p class="footer-description">
+       A payment network connecting people, currencies and
             payment methods across African markets.
-          </p>
-
-        </div>
-
-
-        <div class="footer-column">
-
-          <h4>Explore</h4>
-
-          <a href="#how-it-works">
-            How it works
-          </a>
-
-          <a href="#coverage">
-            Coverage
-          </a>
-
-          <a href="#wallet">
-            Wallet
-          </a>
-
-          <a href="./esim-plans.html">
-            eSIM
-          </a>
-
-        </div>
-
-
-        <div class="footer-column">
-
-          <h4>Account</h4>
-
-          <a
-            href="./register.html"
-            data-auth="register"
-          >
-            Create account
-          </a>
-
-          <a
-            href="./login.html"
-            data-auth="login"
-          >
-            Login
-          </a>
-
-          <a href="#earn">
-            Earn with Wakala
-          </a>
-
-        </div>
-
-
-        <div class="footer-column">
-
-          <h4>Legal</h4>
-
-          <a href="./privacy.html">
-            Privacy
-          </a>
-
-          <a href="./terms.html">
-            Terms
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <div class="footer-bottom">
-
-        <span>
-          © 2026 Wakala
-        </span>
-
-        <span>
-          Building Africa's payment rail
-        </span>
-
-      </div>
-
+      </p>
+     </div>
+     <div class="footer-column">
+      <h4>
+       Explore
+      </h4>
+      <a href="#how-it-works">
+       How it works
+      </a>
+      <a href="#coverage">
+       Coverage
+      </a>
+      <a href="#wallet">
+       Wallet
+      </a>
+      <a href="./esim-plans.html">
+       eSIM
+      </a>
+     </div>
+     <div class="footer-column">
+      <h4>
+       Account
+      </h4>
+      <a data-auth="register" href="./register.html">
+       Create account
+      </a>
+      <a data-auth="login" href="./login.html">
+       Login
+      </a>
+      <a href="#earn">
+       Earn with Wakala
+      </a>
+     </div>
+     <div class="footer-column">
+      <h4>
+       Legal
+      </h4>
+      <a href="./privacy.html">
+       Privacy
+      </a>
+      <a href="./terms.html">
+       Terms
+      </a>
+     </div>
     </div>
-
+    <div class="footer-bottom">
+     <span>
+      © 2026 Wakala
+     </span>
+     <span>
+      Building Africa's payment rail
+     </span>
+    </div>
+   </div>
   </footer>
-
-
   <!-- =========================================
        AUTH MODAL
   ========================================= -->
-
-  <div
-    class="auth-overlay"
-    id="authOverlay"
-    aria-hidden="true"
-  >
-
-    <div class="auth-modal">
-
-      <button
-        class="auth-close"
-        id="authClose"
-        type="button"
-        aria-label="Close"
-      >
-        ×
-      </button>
-
-      <div class="eyebrow">
-        Wakala account
-      </div>
-
-      <h2 id="authTitle">
-        Welcome to Wakala
-      </h2>
-
-      <p id="authDescription">
-        Continue to your Wakala account.
-      </p>
-
-      <a
-        href="./login.html"
-        id="authLoginButton"
-        class="btn btn-primary"
-        style="width:100%;"
-      >
-        Login
-      </a>
-
-      <a
-        href="./register.html"
-        id="authRegisterButton"
-        class="btn btn-secondary"
-        style="width:100%;margin-top:9px;"
-      >
-        Create account
-      </a>
-
+  <div aria-hidden="true" class="auth-overlay" id="authOverlay">
+   <div class="auth-modal">
+    <button aria-label="Close" class="auth-close" id="authClose" type="button">
+     ×
+    </button>
+    <div class="eyebrow">
+     Wakala account
     </div>
-
+    <h2 id="authTitle">
+     Welcome to Wakala
+    </h2>
+    <p id="authDescription">
+     Continue to your Wakala account.
+    </p>
+    <a class="btn btn-primary" href="./login.html" id="authLoginButton" style="width:100%;">
+     Login
+    </a>
+    <a class="btn btn-secondary" href="./register.html" id="authRegisterButton" style="width:100%;margin-top:9px;">
+     Create account
+    </a>
+   </div>
   </div>
-
-
   <!-- =========================================
        JAVASCRIPT
   ========================================= -->
-
   <script>
+   
 
-    /* -----------------------------------------
-       LOADER
-    ----------------------------------------- */
+    (function () {
+      const loader = document.getElementById("loader");
+      if (!loader) return;
+      let hidden = false;
+      function hideLoader() {
+        if (hidden) return;
+        hidden = true;
+        loader.classList.add("hide");
+        loader.setAttribute("aria-hidden", "true");
+        setTimeout(function () {
+          if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+        }, 800);
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () { setTimeout(hideLoader, 1100); }, { once: true });
+      } else {
+        setTimeout(hideLoader, 1100);
+      }
+      window.addEventListener("load", function () { setTimeout(hideLoader, 350); }, { once: true });
+      setTimeout(hideLoader, 3000);
+    })();
 
-    window.addEventListener("load", function () {
 
-      setTimeout(function () {
+    
 
-        const loader = document.getElementById("loader");
-
-        if (loader) {
-          loader.classList.add("hide");
-        }
-
-      }, 900);
-
-    });
-
-
-    /* -----------------------------------------
-       NAV SCROLL
-    ----------------------------------------- */
-
-    const navbar = document.getElementById("navbar");
+    const navbar = document.getElementById("site-nav");
 
     function handleNavScroll() {
 
@@ -3623,9 +5148,7 @@
     handleNavScroll();
 
 
-    /* -----------------------------------------
-       SCROLL REVEAL
-    ----------------------------------------- */
+    
 
     const revealElements =
       document.querySelectorAll(".reveal");
@@ -3662,108 +5185,7 @@
     });
 
 
-    /* -----------------------------------------
-       MOBILE MENU
-    ----------------------------------------- */
-
-    const mobileMenu =
-      document.getElementById("mobileMenu");
-
-    if (mobileMenu) {
-
-      mobileMenu.addEventListener(
-        "click",
-        function () {
-
-          const navLinks =
-            document.querySelector(".nav-links");
-
-          if (!navLinks) return;
-
-          const currentlyVisible =
-            navLinks.dataset.mobileOpen === "true";
-
-          if (!currentlyVisible) {
-
-            navLinks.dataset.mobileOpen = "true";
-
-            navLinks.style.display = "flex";
-            navLinks.style.position = "absolute";
-            navLinks.style.left = "16px";
-            navLinks.style.right = "16px";
-            navLinks.style.top = "72px";
-            navLinks.style.flexDirection = "column";
-            navLinks.style.alignItems = "stretch";
-            navLinks.style.padding = "18px";
-            navLinks.style.background =
-              "rgba(255,253,248,.98)";
-            navLinks.style.border =
-              "1px solid rgba(16,23,34,.12)";
-            navLinks.style.borderRadius = "18px";
-            navLinks.style.boxShadow =
-              "0 20px 50px rgba(16,23,34,.12)";
-            navLinks.style.gap = "0";
-            navLinks.style.zIndex = "100";
-
-            navLinks
-              .querySelectorAll("a")
-              .forEach(function (link) {
-
-                link.style.padding = "12px 5px";
-
-              });
-
-          } else {
-
-            navLinks.dataset.mobileOpen = "false";
-            navLinks.removeAttribute("style");
-
-          }
-
-        }
-      );
-
-    }
-
-
-    /* -----------------------------------------
-       CLOSE MOBILE MENU AFTER LINK
-    ----------------------------------------- */
-
-    document
-      .querySelectorAll(".nav-links a")
-      .forEach(function (link) {
-
-        link.addEventListener(
-          "click",
-          function () {
-
-            const navLinks =
-              document.querySelector(".nav-links");
-
-            if (
-              window.innerWidth <= 850 &&
-              navLinks
-            ) {
-
-              navLinks.dataset.mobileOpen =
-                "false";
-
-              navLinks.removeAttribute(
-                "style"
-              );
-
-            }
-
-          }
-        );
-
-      });
-
-
-    /* -----------------------------------------
-       CREATOR FORM
-    ----------------------------------------- */
+    
 
     const creatorForm =
       document.getElementById("creatorForm");
@@ -3795,17 +5217,7 @@
     }
 
 
-    /* -----------------------------------------
-       AUTH MODAL
-       -----------------------------------------
-       The actual account pages remain:
-
-       ./login.html
-       ./register.html
-
-       Existing auth-links.js is loaded
-       separately above.
-    ----------------------------------------- */
+    
 
     const authOverlay =
       document.getElementById("authOverlay");
@@ -3983,9 +5395,7 @@
     );
 
 
-    /* -----------------------------------------
-       NETWORK NODE MICRO ANIMATION
-    ----------------------------------------- */
+    
 
     const nodes =
       document.querySelectorAll(
@@ -4025,9 +5435,7 @@
     document.head.appendChild(nodeStyle);
 
 
-    /* -----------------------------------------
-       PREVENT BROKEN INTERNAL LINKS
-    ----------------------------------------- */
+    
 
     document
       .querySelectorAll('a[href="#"]')
@@ -4043,8 +5451,49 @@
         );
 
       });
-
   </script>
+  <script crossorigin="anonymous" data-cf-beacon='{"version":"2024.11.0","token":"19f6aaa387604ff898d6532800740196","r":1,"spa":2}' integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" type="module">
+  </script>
+  <script id="wakala-merged-nav-behavior">
+   (function () {
+  const nav = document.getElementById("site-nav");
+  function updateNav() {
+    if (!nav) return;
+    if (window.scrollY > 25) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+  }
+  window.addEventListener("scroll", updateNav, { passive: true });
+  updateNav();
 
-</body>
+  const mobilePanel = document.getElementById("mobile-panel");
+  const mobileOpen = document.getElementById("mobile-menu-open");
+  const mobileClose = document.getElementById("mobile-menu-close");
+
+  function openMobileMenu() {
+    if (!mobilePanel) return;
+    mobilePanel.classList.add("open");
+    mobilePanel.setAttribute("aria-hidden", "false");
+    if (mobileOpen) mobileOpen.setAttribute("aria-expanded", "true");
+    document.body.classList.add("modal-open");
+  }
+  function closeMobileMenu() {
+    if (!mobilePanel) return;
+    mobilePanel.classList.remove("open");
+    mobilePanel.setAttribute("aria-hidden", "true");
+    if (mobileOpen) mobileOpen.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("modal-open");
+  }
+  if (mobileOpen) mobileOpen.addEventListener("click", openMobileMenu);
+  if (mobileClose) mobileClose.addEventListener("click", closeMobileMenu);
+  if (mobilePanel) {
+    mobilePanel.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", closeMobileMenu);
+    });
+  }
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeMobileMenu();
+  });
+})();
+  </script>
+ </body>
 </html>
