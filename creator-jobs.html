@@ -1331,68 +1331,59 @@ document.getElementById('year').textContent =
 
 async function initialise() {
 
-  const {
-    data,
-    error
-  } = await supabase.auth.getSession();
+  try {
+
+    const {
+      data,
+      error
+    } = await supabase.auth.getSession();
 
 
-  if (error) {
+    if (error) {
 
-    console.error(error);
+      console.warn(
+        'Session lookup skipped:',
+        error
+      );
 
-    Swal.fire({
-      icon:'error',
-      title:'Session error',
-      text:'Unable to verify your account session.',
-      confirmButtonColor:'#0D1420'
-    });
+    } else {
 
-    return;
-  }
+      currentUser =
+        data?.session?.user || null;
 
 
-  currentUser =
-    data?.session?.user || null;
+      if (currentUser) {
+
+        emailInput.value =
+          currentUser.email || '';
 
 
-  if (!currentUser) {
-
-    Swal.fire({
-      icon:'warning',
-      title:'Login required',
-      text:'Please log in before applying for a creator campaign.',
-      confirmButtonColor:'#229175'
-    }).then(() => {
-
-      window.location.href =
-        'login.html';
-
-    });
-
-    submitButton.disabled = true;
-
-    return;
-  }
+        const {
+          data: profile
+        } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', currentUser.id)
+          .maybeSingle();
 
 
-  emailInput.value =
-    currentUser.email || '';
+        if (profile?.full_name) {
 
+          nameInput.value =
+            profile.full_name;
 
-  const {
-    data: profile
-  } = await supabase
-    .from('profiles')
-    .select('full_name')
-    .eq('id', currentUser.id)
-    .maybeSingle();
+        }
 
+      }
 
-  if (profile?.full_name) {
+    }
 
-    nameInput.value =
-      profile.full_name;
+  } catch (error) {
+
+    console.warn(
+      'Unable to load session details:',
+      error
+    );
 
   }
 
@@ -1650,19 +1641,6 @@ form.addEventListener(
     event.preventDefault();
 
 
-    if (!currentUser) {
-
-      Swal.fire({
-        icon:'warning',
-        title:'Login required',
-        text:'Please log in first.',
-        confirmButtonColor:'#229175'
-      });
-
-      return;
-    }
-
-
     const campaignId =
       campaignSelect.value;
 
@@ -1747,7 +1725,7 @@ form.addEventListener(
           campaign.id,
 
         user_id:
-          currentUser.id,
+          currentUser?.id || null,
 
         platform_username:
           platformInput.value,
