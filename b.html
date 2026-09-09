@@ -7997,17 +7997,14 @@
 <!-- =========================================================
      WALLET
 ========================================================== -->
-   <section
-      class="section wallet-section"
-      id="wallet"
-    >
+<section class="section wallet-section" id="wallet">
 
       <div class="container wallet-grid">
 
-        <div class="wallet-copy reveal">
+        <div class="wallet-copy reveal visible">
 
           <div class="eyebrow">
-            All in one payment solution
+            Wallet + payments
           </div>
 
           <div class="big-copy">
@@ -8103,11 +8100,7 @@
 
           <div style="margin-top:25px;">
 
-            <a
-              href="./register.html"
-              class="btn btn-primary"
-              data-auth="register"
-            >
+            <a href="./register.html" class="btn btn-primary" data-auth="register">
               Create wallet
             </a>
 
@@ -8118,7 +8111,7 @@
 
         <!-- PHONE -->
 
-        <div class="phone-stage reveal">
+        <div class="phone-stage reveal visible">
 
           <div class="wallet-float float-one">
 
@@ -8273,365 +8266,69 @@
       </div>
 
     </section>
-
+    <syle>
+}
+.wallet-section {
+    background: var(--paper-2);
+}
+.section {
+    padding: 125px 0;
+}
+section {
+    position: relative;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+user agent stylesheet
+section {
+    display: block;
+    unicode-bidi: isolate;
+}
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+:root {
+    --ink: #101722;
+    --ink-2: #26303c;
+    --paper: #faf7ef;
+    --paper-2: #f1eadb;
+    --paper-3: #e9dfcd;
+    --green: #218766;
+    --green-dark: #176b50;
+    --gold: #d99b39;
+    --cream: #fffdf8;
+    --muted: #716b60;
+    --line: rgba(16, 23, 34, .12);
+    --line-dark: rgba(255, 255, 255, .14);
+    --white: #ffffff;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "DM Sans", Arial, sans-serif;
+    --mono: "DM Mono", monospace;
+    --container: 1240px;
+    --radius: 24px;
+    --radius-sm: 14px;
+    --shadow: 0 25px 70px rgba(31, 35, 29, .08);
+}
+<style>
+@font-face {
+    font-family: 'DM Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/dmsans/v17/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu6-K6h9Q.woff2) format('woff2');
+    unicode-range: U +0100 -02BA, U +02BD -02C5, U +02C7 -02CC, U +02CE -02D7, U +02DD -02FF, U +0304, U +0308, U +0329, U +1D00 -1DBF, U +1E00 -1E9F, U +1EF2 -1EFF, U +2020, U +20A0 -20AB, U +20AD -20C0, U +2113, U +2C60 -2C7F, U + A720-A7FF;}
+</style>
 <!-- =========================================================
      WALLET + ESIM
 ========================================================== -->
 
-<section
-  class="wallet-section"
-  id="wallet"
->
-
-  <div class="container wallet-grid">
-
-    <div class="wallet-copy reveal">
-
-      <div class="eyebrow">
-        Wallet + payments
-      </div>
-
-      <h2>
-        Your money,
-        your way,
-        one wallet.
-      </h2>
-
-      <p>
-        Hold supported balances, send funds, receive funds
-        and manage your activity from one place.
-      </p>
-
-
-      <div class="feature-list">
-
-        <div class="feature">
-
-          <span class="check">
-            ✓
-          </span>
-
-          Multi-currency balances
-
-        </div>
-
-
-        <div class="feature">
-
-          <span class="check">
-            ✓
-          </span>
-
-          Local and cross-border transfers
-
-        </div>
-
-
-        <div class="feature">
-
-          <span class="check">
-            ✓
-          </span>
-
-          Transaction history and activity
-
-        </div>
-
-
-        <div class="feature">
-
-          <span class="check">
-            ✓
-          </span>
-
-          Familiar payment methods
-
-        </div>
-
-      </div>
-
-
-      <div class="payment-brands">
-
-        <div class="payment-brand">
-
-          <img
-            src="./assets/payment/visa.svg"
-            alt="Visa"
-            loading="lazy"
-          >
-
-        </div>
-
-
-        <div class="payment-brand">
-
-          <img
-            src="./assets/payment/mastercard.svg"
-            alt="Mastercard"
-            loading="lazy"
-          >
-
-        </div>
-
-
-        <div class="payment-brand mpesa">
-
-          <img
-            src="./assets/payment/mpesa.svg"
-            alt="M-PESA"
-            loading="lazy"
-          >
-
-        </div>
-
-
-        <div class="payment-brand bank-brand">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-
-            <path
-              d="M3 10h18"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-
-            <path
-              d="M5 10v8M9 10v8M15 10v8M19 10v8"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-
-            <path
-              d="M2.5 19h19"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-
-            <path
-              d="M12 4l9 5H3l9-5Z"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-
-          </svg>
-
-          Bank transfer
-
-        </div>
-
-      </div>
-
-
-      <div class="hero-actions">
-
-        <a
-          class="btn btn-primary"
-          href="./register.html"
-        >
-          Create wallet
-          <span class="arrow">→</span>
-        </a>
-
-      </div>
-
-    </div>
-
-
-    <!-- PHONE -->
-
-    <div class="wallet-demo reveal">
-
-      <div class="phone">
-
-        <div class="phone-screen">
-
-          <div class="phone-notch"></div>
-
-
-          <div class="phone-top">
-
-            <span>
-              WAKALA
-            </span>
-
-            <span>
-              10:42
-            </span>
-
-          </div>
-
-
-          <div class="phone-greeting">
-            Available balance
-          </div>
-
-
-          <div class="phone-balance">
-            2,450,000
-          </div>
-
-          <div class="phone-currency">
-            TZS
-          </div>
-
-
-          <div class="phone-actions">
-
-            <div class="phone-action">
-              Send
-            </div>
-
-            <div class="phone-action">
-              Receive
-            </div>
-
-            <div class="phone-action">
-              Add
-            </div>
-
-          </div>
-
-
-          <div class="phone-card">
-
-            <div class="phone-card-label">
-              Wakala wallet
-            </div>
-
-            <div class="phone-card-number">
-              •••• 4821
-            </div>
-
-            <div class="phone-card-bottom">
-
-              <span>
-                ACTIVE
-              </span>
-
-              <span>
-                WAKALA
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <div class="activity">
-
-            <div class="activity-title">
-              Recent activity
-            </div>
-
-
-            <div class="activity-row">
-
-              <div class="activity-left">
-
-                <div class="activity-icon">
-                  ↓
-                </div>
-
-                <div>
-
-                  <div class="activity-name">
-                    Received
-                  </div>
-
-                  <div class="activity-date">
-                    Today · 10:42
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <div class="activity-amount">
-                +450,000
-              </div>
-
-            </div>
-
-
-            <div class="activity-row">
-
-              <div class="activity-left">
-
-                <div class="activity-icon">
-                  →
-                </div>
-
-                <div>
-
-                  <div class="activity-name">
-                    Transfer
-                  </div>
-
-                  <div class="activity-date">
-                    Yesterday
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <div
-                class="activity-amount"
-                style="color:#8B6A43"
-              >
-                -120,000
-              </div>
-
-            </div>
-
-
-            <div class="activity-row">
-
-              <div class="activity-left">
-
-                <div class="activity-icon">
-                  +
-                </div>
-
-                <div>
-
-                  <div class="activity-name">
-                    Wallet funding
-                  </div>
-
-                  <div class="activity-date">
-                    Sep 06
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <div class="activity-amount">
-                +800,000
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
 
 
 
