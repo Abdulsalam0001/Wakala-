@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complete your profile | Wakala</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="onboarding-shell" aria-labelledby="onboardingTitle">
+    <section class="onboarding-copy">
+      <a class="brand" href="index.html"><span class="brand-dot"></span>WAKALA</a>
+      <div class="copy-content">
+        <div class="eyebrow">Account setup</div>
+        <h1>Let's make your Wakala account yours.</h1>
+        <p>Your account is ready. Add your name and phone number so your wallet, transfers and account details can be associated with the right profile.</p>
+        <div class="benefits">
+          <div class="benefit"><span>✓</span> Your profile stays linked to your Wakala account</div>
+          <div class="benefit"><span>✓</span> Your details are saved securely in your profile</div>
+          <div class="benefit"><span>✓</span> You can update profile information later</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="onboarding-form">
+      <div class="step">Step 1 of 1 · Profile</div>
+      <h2 id="onboardingTitle">Complete your profile</h2>
+      <p class="description">This takes less than a minute. Your email is already connected to this account.</p>
+
+      <form id="onboardingForm" novalidate>
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Enter your full name" maxlength="120" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. +234 801 234 5678" maxlength="30" required>
+          <small>Use the number you can access for important account communication.</small>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" class="email-field" type="email" readonly aria-readonly="true">
+        </div>
+
+        <button class="submit" id="submitButton" type="submit">Continue to Wakala</button>
+        <div class="message" id="message" role="status" aria-live="polite"></div>
+      </form>
+
+      <div class="secure-note">Your information is saved to your authenticated Wakala profile.</div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./supabase-config.js";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const form = document.getElementById("onboardingForm");
+    const fullName = document.getElementById("fullName");
+    const phone = document.getElementById("phone");
+    const email = document.getElementById("email");
+    const button = document.getElementById("submitButton");
+    const message = document.getElementById("message");
+
+    function showMessage(text, type = "") {
+      message.textContent = text;
+      message.className = `message ${type}`.trim();
+    }
+
+    async function initialise() {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        window.location.replace("login.html");
+        return;
+      }
+
+      email.value = session.user.email || "";
+
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("full_name, phone, onboarding_completed")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Profile load failed:", error);
+        showMessage("We couldn't load your profile. Please refresh and try again.", "error");
+        return;
+      }
+
+      if (profile?.onboarding_completed) {
+        window.location.replace("dashboard.html");
+        return;
+      }
+
+      fullName.value = profile?.full_name || session.user.user_metadata?.full_name || "";
+      phone.value = profile?.phone || session.user.user_metadata?.phone || "";
+      fullName.focus();
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      showMessage("");
+
+      const name = fullName.value.trim().replace(/\s+/g, " ");
+      const phoneNumber = phone.value.trim();
+
+      if (name.length < 2) {
+        showMessage("Please enter your full name.", "error");
+        fullName.focus();
+        return;
+      }
+
+      if (phoneNumber.replace(/\D/g, "").length < 7) {
+        showMessage("Please enter a valid phone number.", "error");
+        phone.focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Saving your profile…";
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error("Your session has expired. Please log in again.");
+
+        const { error } = await supabase
+          .from("profiles")
+          .update({
+            full_name: name,
+            phone: phoneNumber,
+            onboarding_completed: true,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", session.user.id);
+
+        if (error) throw error;
+
+        await supabase.auth.updateUser({
+          data: { full_name: name, phone: phoneNumber }
+        });
+
+        showMessage("Profile saved. Taking you to your dashboard…", "success");
+        window.setTimeout(() => window.location.replace("dashboard.html"), 450);
+      } catch (error) {
+        console.error("Onboarding save failed:", error);
+        showMessage(error.message || "We couldn't save your profile. Please try again.", "error");
+        button.disabled = false;
+        button.textContent = "Continue to Wakala";
+      }
+    });
+
+    initialise();
+  </script>
+</body>
+</html>
