@@ -794,27 +794,14 @@
 
 <script type="module">
 
-    /*
-     * ============================================================
-     * SUPABASE CONFIG
-     * ============================================================
-     *
-     * These must match your existing Wakala Supabase project.
-     *
-     */
-// Supabase project configuration
- 
-    const SUPABASE_URL =
-  'https://imbfmfzfpocebgvpdbrp.supabase.co';
-
-    const SUPABASE_PUBLISHABLE_KEY =
-  'sb_publishable_FTP_t1uJFsgULSYzSBZbwg_TXPq54Zq';
-
-
-    const {
+    import {
         createClient
-    } = window.supabase;
+    } from 'https://esm.sh/@supabase/supabase-js@2';
 
+    import {
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    } from '../supabase-config.js';
 
     const supabase = createClient(
         SUPABASE_URL,
