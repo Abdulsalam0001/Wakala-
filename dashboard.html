@@ -957,6 +957,134 @@
         "wakala-hide-balances"
       ) === "true";
 
+    /*
+       TOTAL BALANCE CONVERSION
+       -------------------------
+       The balance card represents the combined available balance
+       across every wallet. Values are converted into the currency
+       selected by the user before the total is displayed.
+
+       Rates are fetched from a public market-rate endpoint and
+       cached briefly so changing the display currency does not
+       repeatedly hit the network. The individual wallet rows
+       remain in their native currencies.
+    */
+    const supportedBalanceCurrencies = [
+      "TZS",
+      "KES",
+      "RWF",
+      "NGN",
+      "USDC",
+      "USDT",
+      "BTC"
+    ];
+
+    let usdRates = null;
+    let ratesLoadedAt = 0;
+    let balanceCalculationId = 0;
+
+    async function getUsdRates() {
+      const now = Date.now();
+
+      if (usdRates && now - ratesLoadedAt < 60 * 1000) {
+        return usdRates;
+      }
+
+      const response = await fetch(
+        "https://api.coinbase.com/v2/exchange-rates?currency=USD",
+        {
+          headers: { Accept: "application/json" },
+          cache: "no-store"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Exchange-rate request failed: ${response.status}`);
+      }
+
+      const payload = await response.json();
+      const rates = payload?.data?.rates || {};
+
+      const missing = supportedBalanceCurrencies.filter(
+        currency => currency !== "USD" && !Number(rates[currency])
+      );
+
+      if (missing.length) {
+        throw new Error(`Missing exchange rates: ${missing.join(", ")}`);
+      }
+
+      usdRates = rates;
+      ratesLoadedAt = now;
+      return usdRates;
+    }
+
+    function convertFromUsd(value, currency, rates) {
+      const amount = Number(value || 0);
+
+      if (!amount) {
+        return 0;
+      }
+
+      if (currency === "USD") {
+        return amount;
+      }
+
+      const rate = Number(rates?.[currency]);
+
+      if (!rate) {
+        throw new Error(`No USD rate available for ${currency}`);
+      }
+
+      return amount * rate;
+    }
+
+    function convertBetweenCurrencies(value, fromCurrency, toCurrency, rates) {
+      if (fromCurrency === toCurrency) {
+        return Number(value || 0);
+      }
+
+      const sourceRate = fromCurrency === "USD"
+        ? 1
+        : Number(rates?.[fromCurrency]);
+
+      const targetRate = toCurrency === "USD"
+        ? 1
+        : Number(rates?.[toCurrency]);
+
+      if (!sourceRate || !targetRate) {
+        throw new Error(`Missing rate for ${fromCurrency} or ${toCurrency}`);
+      }
+
+      return Number(value || 0) * (targetRate / sourceRate);
+    }
+
+    async function calculateTotalBalance(targetCurrency) {
+      if (!walletData?.balances?.length) {
+        return 0;
+      }
+
+      const rates = await getUsdRates();
+
+      return walletData.balances.reduce(
+        (total, balance) => {
+          const sourceCurrency = String(balance?.currency || "").toUpperCase();
+          const available = Number(balance?.available || 0);
+
+          if (!available || !supportedBalanceCurrencies.includes(sourceCurrency)) {
+            return total;
+          }
+
+          return total + convertBetweenCurrencies(
+            available,
+            sourceCurrency,
+            targetCurrency,
+            rates
+          );
+        },
+        0
+      );
+    }
+
 
     /* ======================================
        DATE
@@ -1045,41 +1173,44 @@
        UPDATE BALANCE CARD
     ====================================== */
 
-    function updateMainBalance() {
+    async function updateMainBalance() {
 
       if (!walletData) {
         return;
       }
 
-      const currency =
-        balanceCurrency.value;
-
-      const balance =
-        walletData.balances.find(
-          item =>
-            item.currency === currency
-        );
-
-
-      const amount =
-        balance?.available || 0;
-
+      const currency = balanceCurrency.value;
+      const calculationId = ++balanceCalculationId;
 
       if (balancesHidden) {
-
         balanceValue.textContent =
           `•••• ${currency}`;
-
         return;
-
       }
 
-
       balanceValue.textContent =
-        `${formatAmount(
-          amount,
-          currency
-        )} ${currency}`;
+        `Calculating… ${currency}`;
+
+      try {
+        const total = await calculateTotalBalance(currency);
+
+        /* Ignore an older request if the user changed currency again. */
+        if (calculationId !== balanceCalculationId) {
+          return;
+        }
+
+        balanceValue.textContent =
+          `${formatAmount(total, currency)} ${currency}`;
+      } catch (error) {
+        console.error("Total balance conversion:", error);
+
+        if (calculationId !== balanceCalculationId) {
+          return;
+        }
+
+        balanceValue.textContent =
+          `— ${currency}`;
+      }
 
     }
 
@@ -1190,7 +1321,7 @@
           balanceCurrency.value
         );
 
-        updateMainBalance();
+        void updateMainBalance();
 
       }
     );
