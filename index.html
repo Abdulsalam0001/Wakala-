@@ -2736,6 +2736,9 @@
       background:
         rgba(251,247,239,.98);
 
+      text-align:
+        center;
+
       opacity:
         0;
 
@@ -2753,6 +2756,15 @@
 
 
     .mobile-panel.open {
+
+      display:
+        flex;
+
+      flex-direction:
+        column;
+
+      align-items:
+        center;
 
       opacity:
         1;
@@ -3695,22 +3707,16 @@
 
 .mobile-panel {
   display: none;
+  pointer-events: none;
 }
 
-@media (max-width: 1050px) {
-  .nav-links,
-  .nav-actions {
-    display: none;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-  }
-
-  .mobile-panel {
-    display: block;
-  }
+.mobile-panel.open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
 }
+
 
 /* FINAL HOW-IT-WORKS FIX */
 .how {
