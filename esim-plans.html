@@ -1510,24 +1510,17 @@ document
 /*
   FRONTEND ORDER HANDLER
 
-  This deliberately does NOT pretend to provision an eSIM.
+  The app stores the eSIM request as a record in the database.
+  This keeps the order visible to the user and the admin team
+  without relying on any third-party provisioning service.
 
-  The production version should call:
-
-      supabase.functions.invoke(
-        "esim-purchase",
-        { body: {...} }
-      )
-
-  The Edge Function will:
+  The customer-facing flow is:
     1. authenticate the user
-    2. validate the plan
-    3. calculate the server price
-    4. create the order
-    5. notify admin
-    6. send the order to the configured provider
-    7. store provider/ICCID/QR information
-    8. update the user's order status
+    2. validate the selected plan
+    3. calculate the local customer price
+    4. insert the order into public.esim_orders
+    5. show the confirmation reference
+    6. let admin review and manage the record from the admin dashboard
 */
 
 document
