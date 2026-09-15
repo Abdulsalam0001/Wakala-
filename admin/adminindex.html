@@ -13,6 +13,89 @@
   <title>Admin Overview | Wakala</title>
 
   <style>
+    /* =============================================
+   ADMIN NAVIGATION POLISH
+============================================= */
+
+.nav-link {
+  position: relative;
+  white-space: nowrap;
+}
+
+.nav-link.active {
+  background: #1f2937;
+  box-shadow: inset 3px 0 0 #22c55e;
+}
+
+.nav-link:hover {
+  background: #1b2534;
+}
+
+.nav-title {
+  margin-top: 8px;
+}
+
+
+/* Mobile admin navigation */
+@media (max-width: 700px) {
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+    min-height: auto;
+
+    padding: 12px 14px;
+
+    overflow: hidden;
+
+    border-bottom: 1px solid #263244;
+  }
+
+  .brand {
+    padding: 6px 8px 12px;
+  }
+
+  .nav-title {
+    padding: 8px 8px 6px;
+  }
+
+  .sidebar > .nav-title {
+    display: none;
+  }
+
+  .sidebar .nav-link {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 10px 12px;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .sidebar .brand {
+    width: 100%;
+  }
+
+  .sidebar .nav-title {
+    width: 100%;
+  }
+
+  .sidebar .nav-link {
+    width: auto;
+  }
+
+  .sidebar-footer {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+}
 
     * {
       box-sizing: border-box;
@@ -752,7 +835,7 @@
 
   <aside class="sidebar">
 
-```
+
 <div class="brand">
 
   <div class="brand-mark">
@@ -864,7 +947,7 @@
 
   Sign Out
 </a>
-```
+
 
   </aside>
 
@@ -874,7 +957,6 @@
 
   <main class="main">
 
-```
 <header class="topbar">
 
   <h1>
