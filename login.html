@@ -169,8 +169,22 @@
 					throw new Error('Login succeeded but no session was returned. Please refresh and try again.');
 				}
 
+				const { data: profile, error: profileError } = await supabase
+					.from('profiles')
+					.select('onboarding_completed')
+					.eq('id', session.user.id)
+					.maybeSingle();
+
+				if (profileError) {
+					throw profileError;
+				}
+
 				renderMessage('success', 'Login successful. Redirecting...');
-				window.location.replace('dashboard.html');
+				window.location.replace(
+					profile?.onboarding_completed === true
+						? 'dashboard.html'
+						: 'onboarding.html'
+				);
 			} catch (error) {
 				console.error('Login failed:', error);
 				renderMessage(

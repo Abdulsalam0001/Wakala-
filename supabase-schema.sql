@@ -12,6 +12,7 @@ create table if not exists public.profiles (
 
 alter table public.profiles add column if not exists email text;
 alter table public.profiles add column if not exists phone text;
+alter table public.profiles add column if not exists onboarding_completed boolean not null default false;
 
 alter table public.profiles enable row level security;
 
