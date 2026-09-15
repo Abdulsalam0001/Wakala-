@@ -184,7 +184,7 @@ svg {
 .app {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-columns: minmax(0, var(--sidebar-width)) minmax(0, 1fr);
   background:
     radial-gradient(circle at 90% 0%, rgba(33,135,102,.045), transparent 30%),
     var(--paper);
@@ -1381,6 +1381,20 @@ body:has(.onboarding-shell) {
 /* =========================================================
    RESPONSIVE
    ========================================================= */
+
+@media (max-width: 1000px) {
+  .app {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding-inline: 12px;
+  }
+
+  .main {
+    padding-inline: clamp(18px, 3vw, 34px);
+  }
+}
 
 @media (max-width: 1100px) {
   .dashboard-grid {
