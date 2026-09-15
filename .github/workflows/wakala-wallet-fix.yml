@@ -1,0 +1,64 @@
+name: Apply Wakala wallet visual fix
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[wallet-fix]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch b.html
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('b.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<style id="wakala-wallet-phone-fix">'
+          if marker not in s:
+              css = r'''<style id="wakala-wallet-phone-fix">
+/* Production wallet visual repair: CSS-only, scoped to Wallet + Payments. */
+.wallet-section { overflow: hidden; }
+.wallet-section .wallet-grid { align-items: center; }
+.wallet-section .phone-stage { min-height:700px; position:relative; display:flex; align-items:center; justify-content:center; isolation:isolate; overflow:visible; padding:36px 20px; }
+.wallet-section .phone-stage::before { content:""; position:absolute; width:min(560px,92%); aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.98) 0 22%,rgba(221,239,232,.72) 42%,rgba(221,239,232,.18) 68%,transparent 72%),radial-gradient(circle,rgba(29,137,104,.12),transparent 66%); z-index:-2; }
+.wallet-section .phone-stage::after { content:""; position:absolute; width:300px; height:80px; bottom:55px; left:50%; transform:translateX(-50%); border-radius:50%; background:rgba(16,26,35,.13); filter:blur(24px); z-index:-1; }
+.wallet-section .phone { width:306px; height:628px; flex:0 0 auto; padding:9px; border:7px solid #d8e5df; border-radius:46px; background:linear-gradient(145deg,#fff,#edf5f1); box-shadow:0 35px 80px rgba(16,26,35,.18),0 0 0 1px rgba(16,26,35,.08); transform:rotate(1.5deg); overflow:visible; z-index:3; }
+.wallet-section .phone-screen { width:100%; height:100%; min-height:0; border-radius:36px; background:linear-gradient(180deg,#fbfffd 0%,#f4faf7 100%); border:1px solid rgba(29,137,104,.08); overflow:hidden; position:relative; }
+.wallet-section .phone-notch { width:108px; height:25px; top:0; background:#dbe7e2; border-radius:0 0 18px 18px; box-shadow:inset 0 -1px rgba(16,26,35,.06); }
+.wallet-section .phone-content { height:100%; overflow:hidden; padding:47px 18px 18px; }
+.wallet-section .phone-balance { font-size:clamp(32px,3vw,39px); line-height:1; white-space:nowrap; }
+.wallet-section .phone-actions { margin-top:21px; }
+.wallet-section .phone-action { background:#edf7f3; border:1px solid rgba(29,137,104,.07); color:#173128; }
+.wallet-section .phone-card { margin-top:18px; background:linear-gradient(145deg,#15242d,#213942); box-shadow:0 12px 28px rgba(16,26,35,.12); }
+.wallet-section .phone-list { margin-top:16px; }
+.wallet-section .phone-transaction { padding:9px 0; }
+.wallet-section .wallet-float { background:rgba(255,255,255,.96); border-color:rgba(16,26,35,.09); box-shadow:0 20px 45px rgba(16,26,35,.12); z-index:5; }
+.wallet-section .float-one { left:0; top:24%; }
+.wallet-section .float-two { right:0; bottom:23%; }
+.payment-brand.image-fallback img { display:none; }
+.payment-brands .payment-brand.image-fallback:nth-child(1)::after,.payment-showcase .payment-brand.image-fallback:nth-child(1)::after { content:"VISA"; font-style:italic; font-weight:800; font-size:20px; letter-spacing:-.08em; color:#172b85; }
+.payment-brands .payment-brand.image-fallback:nth-child(2)::after,.payment-showcase .payment-brand.image-fallback:nth-child(2)::after { content:""; width:35px; height:22px; border-radius:50%; background:radial-gradient(circle at 32% 50%,#d94d42 0 48%,transparent 50%),radial-gradient(circle at 68% 50%,#e7a22e 0 48%,transparent 50%); }
+.payment-brands .payment-brand.image-fallback:nth-child(3)::after,.payment-showcase .payment-brand.image-fallback:nth-child(3)::after { content:"PESA"; color:var(--green); font-family:var(--mono); font-weight:600; font-size:12px; letter-spacing:.08em; }
+@media (max-width:850px){.wallet-section .phone-stage{min-height:650px;padding:28px 12px 40px}.wallet-section .float-one{left:1%;top:22%}.wallet-section .float-two{right:1%;bottom:18%}}
+@media (max-width:650px){.wallet-section .phone-stage{min-height:600px}.wallet-section .phone{width:272px;height:555px;border-radius:42px}.wallet-section .phone-screen{border-radius:33px}.wallet-section .phone-content{padding:43px 16px 15px}.wallet-section .phone-balance{font-size:34px}.wallet-section .wallet-float{padding:10px 12px}.wallet-section .wallet-float strong{font-size:10px}}
+@media (max-width:430px){.wallet-section .phone-stage{min-height:575px}.wallet-section .phone{width:248px;height:505px;padding:8px;border-width:6px;border-radius:38px}.wallet-section .phone-screen{border-radius:29px}.wallet-section .phone-notch{width:92px;height:21px}.wallet-section .phone-content{padding:39px 13px 12px}.wallet-section .phone-balance{font-size:30px}.wallet-section .phone-actions{gap:5px;margin-top:16px}.wallet-section .phone-action{padding:8px 3px}.wallet-section .phone-card{margin-top:13px;padding:13px}.wallet-section .phone-card-amount{font-size:23px}.wallet-section .phone-list{margin-top:11px}.wallet-section .phone-transaction{padding:7px 0}.wallet-section .float-one{left:-2px;top:18%}.wallet-section .float-two{right:-2px;bottom:16%}}
+</style>'''
+              s = s.replace('</head>', css + '\n</head>', 1)
+          needle = '''          image.addEventListener(\n        "error",\n        function () {\n\n          /*'''
+          replacement = '''          image.addEventListener(\n        "error",\n        function () {\n\n          const brand = image.closest(".payment-brand");\n          if (brand) brand.classList.add("image-fallback");\n\n          /*'''
+          if needle in s and 'brand.classList.add("image-fallback")' not in s:
+              s = s.replace(needle, replacement, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit fix and remove temporary workflow
+        run: |
+          git config user.name "Wakala UI Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add b.html
+          git commit -m "fix: repair wallet visual and CSS fallbacks [wallet-fix]"
+          git rm .github/workflows/wakala-wallet-fix.yml
+          git commit -m "chore: remove temporary wallet fix workflow [wallet-fix]"
+          git push
