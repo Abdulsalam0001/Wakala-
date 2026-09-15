@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./auth.css">
   <style>
     :root {
       --ink:#0D1420;
@@ -189,7 +190,18 @@
     }
   </style>
 </head>
-<body>
+<body class="auth-page">
+  <header class="auth-header">
+    <a class="auth-brand" href="index.html" aria-label="Wakala home">
+      <span class="auth-brand-mark">W</span>
+      <span>Wakala</span>
+    </a>
+    <nav class="auth-header-nav" aria-label="Account navigation">
+      <a href="index.html">Home</a>
+      <a class="auth-header-link" href="login.html">Log in</a>
+    </nav>
+  </header>
+  <div class="auth-main">
   <main class="shell">
     <section class="intro">
       <a class="brand" href="index.html">
@@ -229,6 +241,15 @@
       <a class="back" href="index.html">Back to Wakala</a>
     </section>
   </main>
+  </div>
+  <footer class="auth-footer">
+    <strong>Wakala</strong>
+    <span>Local currency, one connected wallet.</span>
+    <nav class="auth-footer-links" aria-label="Footer navigation">
+      <a href="index.html">Home</a>
+      <a href="login.html">Already a member?</a>
+    </nav>
+  </footer>
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';

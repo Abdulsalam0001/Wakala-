@@ -8,6 +8,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./auth.css">
 	<style>
 		:root { --ink:#0D1420; --paper:#FBF7EF; --gold:#E4A445; --teal:#229175; --muted:#726A58; --line:rgba(13,20,32,.14); }
 		* { box-sizing:border-box; }
@@ -40,7 +41,18 @@
 		@media (max-width:700px) { .shell { grid-template-columns:1fr; } .intro { padding:32px; } .intro-content { margin-top:72px; } .form-panel { padding:32px 26px 38px; } h2 { margin-top:8px; } }
 	</style>
 </head>
-<body>
+<body class="auth-page">
+	<header class="auth-header">
+		<a class="auth-brand" href="index.html" aria-label="Wakala home">
+			<span class="auth-brand-mark">W</span>
+			<span>Wakala</span>
+		</a>
+		<nav class="auth-header-nav" aria-label="Account navigation">
+			<a href="index.html">Home</a>
+			<a class="auth-header-link" href="register.html">Create account</a>
+		</nav>
+	</header>
+	<div class="auth-main">
 	<main class="shell">
 		<section class="intro" aria-label="About Wakala">
 			<a class="brand" href="index.html"><span class="dot"></span>WAKALA</a>
@@ -67,6 +79,15 @@
 			<a class="back" href="index.html">Back to Wakala</a>
 		</section>
 	</main>
+	</div>
+	<footer class="auth-footer">
+		<strong>Wakala</strong>
+		<span>Local currency, one connected wallet.</span>
+		<nav class="auth-footer-links" aria-label="Footer navigation">
+			<a href="index.html">Home</a>
+			<a href="forgot-password.html">Help with access</a>
+		</nav>
+	</footer>
 	<script type="module">
 		import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 		import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
