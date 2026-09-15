@@ -1331,9 +1331,49 @@
        LOAD WALLET
     ====================================== */
 
-    async function loadWallet() {
+    async function loadWalletFromTables() {
 
       const {
+        data: { user },
+        error: userError
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        throw userError || new Error("No authenticated user");
+      }
+
+      const [profileResult, walletResult] = await Promise.all([
+        supabase.from("profiles").select("id, full_name, phone").eq("id", user.id).maybeSingle(),
+        supabase.from("wallets").select("id, user_id, account_number").eq("user_id", user.id).maybeSingle()
+      ]);
+
+      if (profileResult.error) throw profileResult.error;
+      if (walletResult.error) throw walletResult.error;
+      if (!walletResult.data) throw new Error("Wallet not found");
+
+      const [balanceResult, transactionResult] = await Promise.all([
+        supabase.from("wallet_balances").select("currency, available").eq("wallet_id", walletResult.data.id).order("currency"),
+        supabase.from("transactions").select("id, amount, currency, type, status, description, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(10)
+      ]);
+
+      if (balanceResult.error) throw balanceResult.error;
+
+      return {
+        profile: {
+          id: user.id,
+          full_name: profileResult.data?.full_name ?? user.user_metadata?.full_name ?? user.user_metadata?.name ?? "",
+          phone: profileResult.data?.phone ?? user.phone ?? null,
+          email: user.email ?? null
+        },
+        wallet: walletResult.data,
+        balances: balanceResult.data ?? [],
+        transactions: transactionResult.error ? [] : transactionResult.data ?? []
+      };
+    }
+
+    async function loadWallet() {
+
+      let {
         data,
         error
       } = await supabase.functions.invoke(
@@ -1348,17 +1388,23 @@
           error
         );
 
-        transactions.innerHTML = `
-          <div class="transaction">
-            <div class="transaction-icon">!</div>
-            <div class="row-main">
-              <strong>Unable to load wallet</strong>
-              <span>Please refresh the page.</span>
-            </div>
-          </div>
-        `;
+        try {
+          data = await loadWalletFromTables();
+        } catch (fallbackError) {
+          console.error("wallet table fallback:", fallbackError);
 
-        return;
+          transactions.innerHTML = `
+            <div class="transaction">
+              <div class="transaction-icon">!</div>
+              <div class="row-main">
+                <strong>Unable to load wallet</strong>
+                <span>Please refresh the page.</span>
+              </div>
+            </div>
+          `;
+
+          return;
+        }
 
       }
 
