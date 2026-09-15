@@ -124,6 +124,14 @@
           Activity
         </a>
 
+        <button
+          class="logout mobile-logout"
+          id="mobileLogoutButton"
+          type="button"
+        >
+          Log out
+        </button>
+
       </nav>
 
 
@@ -923,6 +931,9 @@
 
     const logoutButton =
       document.getElementById("logoutButton");
+
+    const mobileLogoutButton =
+      document.getElementById("mobileLogoutButton");
 
     const menuToggle =
       document.getElementById("menuToggle");
@@ -1754,6 +1765,11 @@
         );
 
       }
+    );
+
+    mobileLogoutButton.addEventListener(
+      "click",
+      () => logoutButton.click()
     );
 
 

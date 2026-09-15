@@ -355,6 +355,10 @@ svg {
   transform: translateY(-1px);
 }
 
+.mobile-logout {
+  display: none;
+}
+
 /* =========================================================
    MAIN / TOPBAR
    ========================================================= */
@@ -1456,6 +1460,11 @@ body:has(.onboarding-shell) {
 
   .nav.open {
     display: grid;
+  }
+
+  .mobile-logout {
+    display: block;
+    margin-top: 8px;
   }
 
   .main {
