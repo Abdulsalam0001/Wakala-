@@ -11,7 +11,7 @@ git /* WAKALA SHARED VISUAL LANGUAGE
   --wk-line:rgba(16,23,34,.11);
   --wk-muted:#716b60;
 }
-.wk-page-shell{position:relative;min-height:100svh;overflow:hidden;background:var(--wk-paper);color:var(--wk-ink)}
+.wk-page-shell{position:relative;min-height:100svh;overflow-x:hidden;overflow-y:auto;background:var(--wk-paper);color:var(--wk-ink)}
 .wk-page-shell::before{content:"";position:absolute;width:620px;height:620px;right:-260px;top:-260px;border-radius:50%;background:radial-gradient(circle,rgba(25,184,137,.13),transparent 68%);pointer-events:none}
 .wk-page-shell::after{content:"";position:absolute;width:420px;height:420px;left:-250px;bottom:-220px;border-radius:50%;background:radial-gradient(circle,rgba(228,164,69,.09),transparent 70%);pointer-events:none}
 .wk-page-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,520px);gap:clamp(40px,7vw,100px);align-items:center;width:min(1180px,calc(100% - 48px));margin:0 auto;min-height:100svh;padding:110px 0 60px}
