@@ -1,0 +1,351 @@
+name: Rebuild index navigation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild-nav:
+    if: ${{ !contains(github.event.head_commit.message, 'Apply rebuilt index navigation') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Replace navigation and add navigation system
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          start = html.find('<header class="nav-wrap"')
+          if start == -1:
+              raise SystemExit('Existing index navigation was not found.')
+
+          end = html.find('</header>', start)
+          if end == -1:
+              raise SystemExit('Existing index navigation closing tag was not found.')
+          end += len('</header>')
+
+          nav = '''<header class="wakala-index-nav" id="wakalaIndexNav">
+            <nav class="wakala-index-nav__bar" aria-label="Primary navigation">
+              <a class="wakala-index-nav__brand" href="./index.html" aria-label="Wakala home">
+                <span class="wakala-index-nav__mark" aria-hidden="true">W</span>
+                <span class="wakala-index-nav__brand-name">Wakala</span>
+              </a>
+
+              <button class="wakala-index-nav__toggle" id="wakalaNavToggle" type="button" aria-expanded="false" aria-controls="wakalaNavPanel" aria-label="Open menu">
+                <span></span><span></span><span></span>
+              </button>
+
+              <div class="wakala-index-nav__panel" id="wakalaNavPanel">
+                <div class="wakala-index-nav__links">
+                  <a href="#how-it-works">How it works</a>
+                  <a href="#coverage">Coverage</a>
+                  <a href="#wallet">Wallet</a>
+                  <a href="./esim-plans.html">eSIM</a>
+                  <a href="./creator-jobs.html">Earn with Wakala</a>
+                </div>
+
+                <div class="wakala-index-nav__actions">
+                  <a class="wakala-index-nav__login" href="./login.html">Log in</a>
+                  <a class="wakala-index-nav__signup" href="./register.html">Create account</a>
+                </div>
+              </div>
+            </nav>
+          </header>'''
+
+          html = html[:start] + nav + html[end:]
+
+          css = r'''
+
+/* =========================================================
+   WAKALA INDEX NAVIGATION — REBUILT FROM SCRATCH
+   ========================================================= */
+.wakala-index-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  padding: 18px 0;
+  pointer-events: none;
+}
+
+.wakala-index-nav__bar {
+  width: min(1240px, calc(100% - 32px));
+  min-height: 72px;
+  margin: 0 auto;
+  padding: 8px 10px 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(16,23,34,.10);
+  border-radius: 22px;
+  background: rgba(255,253,248,.91);
+  box-shadow: 0 18px 55px rgba(16,23,34,.09);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events: auto;
+}
+
+.wakala-index-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  padding: 8px 12px 8px 4px;
+  font-family: var(--serif, Georgia, serif);
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.wakala-index-nav__mark {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--white, #fff);
+  background: var(--ink, #101722);
+  font-size: 22px;
+}
+
+.wakala-index-nav__panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.wakala-index-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wakala-index-nav__links a,
+.wakala-index-nav__login,
+.wakala-index-nav__signup {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 14px;
+  font-family: var(--sans, Arial, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.wakala-index-nav__links a:hover {
+  color: var(--green, #218766);
+  background: var(--green-soft, rgba(33,135,102,.10));
+}
+
+.wakala-index-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+
+.wakala-index-nav__login {
+  border: 1px solid var(--line, rgba(16,23,34,.12));
+  background: rgba(255,255,255,.60);
+}
+
+.wakala-index-nav__signup {
+  color: var(--white, #fff);
+  background: var(--green, #218766);
+  padding-inline: 21px;
+  box-shadow: 0 8px 20px rgba(33,135,102,.16);
+}
+
+.wakala-index-nav__login:hover,
+.wakala-index-nav__signup:hover {
+  transform: translateY(-2px);
+}
+
+.wakala-index-nav__signup:hover {
+  background: var(--green-dark, #176b50);
+}
+
+.wakala-index-nav__toggle {
+  display: none;
+  width: 48px;
+  height: 48px;
+  margin-left: auto;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--line, rgba(16,23,34,.12));
+  border-radius: 14px;
+  background: var(--cream, #fffdf8);
+}
+
+.wakala-index-nav__toggle span {
+  width: 19px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--ink, #101722);
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.wakala-index-nav.is-open .wakala-index-nav__toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.wakala-index-nav.is-open .wakala-index-nav__toggle span:nth-child(2) { opacity: 0; }
+.wakala-index-nav.is-open .wakala-index-nav__toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 1050px) {
+  .wakala-index-nav__links a,
+  .wakala-index-nav__login,
+  .wakala-index-nav__signup { padding-inline: 12px; }
+}
+
+@media (max-width: 900px) {
+  .wakala-index-nav { padding: 10px 0; }
+
+  .wakala-index-nav__bar {
+    width: min(100% - 20px, 680px);
+    min-height: 64px;
+    padding: 7px 9px 7px 13px;
+    border-radius: 18px;
+  }
+
+  .wakala-index-nav__toggle { display: flex; }
+
+  .wakala-index-nav__panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 11px;
+    border: 1px solid rgba(16,23,34,.10);
+    border-radius: 20px;
+    background: rgba(255,253,248,.98);
+    box-shadow: 0 24px 65px rgba(16,23,34,.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .wakala-index-nav.is-open .wakala-index-nav__panel { display: flex; }
+
+  .wakala-index-nav__links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .wakala-index-nav__links a {
+    width: 100%;
+    min-height: 58px;
+    justify-content: flex-start;
+    padding: 0 18px;
+    border: 1px solid rgba(16,23,34,.08);
+    border-radius: 14px;
+    background: rgba(255,255,255,.70);
+    font-size: 14px;
+  }
+
+  .wakala-index-nav__actions {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 7px;
+  }
+
+  .wakala-index-nav__login,
+  .wakala-index-nav__signup {
+    width: 100%;
+    min-height: 56px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 430px) {
+  .wakala-index-nav__bar { width: calc(100% - 14px); }
+  .wakala-index-nav__brand { font-size: 22px; }
+  .wakala-index-nav__mark { width: 37px; height: 37px; }
+  .wakala-index-nav__panel { padding: 9px; }
+  .wakala-index-nav__links a { min-height: 55px; }
+}
+'''
+
+          if 'WAKALA INDEX NAVIGATION — REBUILT FROM SCRATCH' not in html:
+              html = html.replace('</style>', css + '\n</style>', 1)
+
+          js = r'''
+
+<script id="wakala-index-navigation-script">
+(() => {
+  const nav = document.getElementById('wakalaIndexNav');
+  const toggle = document.getElementById('wakalaNavToggle');
+  const panel = document.getElementById('wakalaNavPanel');
+  if (!nav || !toggle || !panel) return;
+
+  const closeMenu = () => {
+    nav.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+  };
+
+  toggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const open = !nav.classList.contains('is-open');
+    nav.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+
+  panel.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!nav.contains(event.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) closeMenu();
+  });
+})();
+</script>
+'''
+
+          # Remove an earlier copy of this rebuilt script if one exists.
+          html = re.sub(r'\s*<script id="wakala-index-navigation-script">.*?</script>\s*', '\n', html, flags=re.S)
+          html = html.replace('</body>', js + '\n</body>', 1)
+
+          path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Commit rebuilt index
+        run: |
+          git config user.name "Wakala Team"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply rebuilt index navigation"
+          git push
