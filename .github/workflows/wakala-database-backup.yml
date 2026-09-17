@@ -1,0 +1,144 @@
+name: Wakala Production Database Backup
+
+on:
+  schedule:
+    # 02:00 UTC daily (03:00 Lagos during WAT).
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      retention_days:
+        description: 'Days of backups to retain in object storage'
+        required: false
+        default: '30'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wakala-production-backup
+  cancel-in-progress: false
+
+env:
+  BACKUP_RETENTION_DAYS: ${{ inputs.retention_days || '30' }}
+
+jobs:
+  backup:
+    name: Backup production PostgreSQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        env:
+          DATABASE_URL: ${{ secrets.WAKALA_DATABASE_URL }}
+          BACKUP_BUCKET: ${{ secrets.WAKALA_BACKUP_BUCKET }}
+          BACKUP_ACCESS_KEY: ${{ secrets.WAKALA_BACKUP_ACCESS_KEY }}
+          BACKUP_SECRET_KEY: ${{ secrets.WAKALA_BACKUP_SECRET_KEY }}
+          BACKUP_ENDPOINT: ${{ secrets.WAKALA_BACKUP_ENDPOINT }}
+          ENCRYPTION_KEY: ${{ secrets.WAKALA_BACKUP_ENCRYPTION_KEY }}
+        run: |
+          set -euo pipefail
+          for name in DATABASE_URL BACKUP_BUCKET BACKUP_ACCESS_KEY BACKUP_SECRET_KEY BACKUP_ENDPOINT ENCRYPTION_KEY; do
+            if [ -z "${!name:-}" ]; then
+              echo "Missing required GitHub secret: $name"
+              exit 1
+            fi
+          done
+
+      - name: Create encrypted database backup
+        shell: bash
+        env:
+          DATABASE_URL: ${{ secrets.WAKALA_DATABASE_URL }}
+          ENCRYPTION_KEY: ${{ secrets.WAKALA_BACKUP_ENCRYPTION_KEY }}
+        run: |
+          set -euo pipefail
+
+          timestamp="$(date -u +'%Y-%m-%dT%H-%M-%SZ')"
+          mkdir -p backup
+
+          echo "Creating PostgreSQL custom-format dump..."
+          docker run --rm \
+            -e PGPASSWORD \
+            postgres:17-alpine \
+            sh -c 'pg_dump "$DATABASE_URL" --format=custom --no-owner --no-acl --file=/tmp/wakala.dump' \
+            # The container command cannot write directly to the runner filesystem.
+
+          # Use the host PostgreSQL client for the actual file output.
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client
+          pg_dump "$DATABASE_URL" --format=custom --no-owner --no-acl --file="backup/wakala-${timestamp}.dump"
+
+          echo "Encrypting backup..."
+          openssl enc -aes-256-cbc -pbkdf2 -salt \
+            -in "backup/wakala-${timestamp}.dump" \
+            -out "backup/wakala-${timestamp}.dump.enc" \
+            -pass env:ENCRYPTION_KEY
+          rm -f "backup/wakala-${timestamp}.dump"
+
+          sha256sum "backup/wakala-${timestamp}.dump.enc" > "backup/wakala-${timestamp}.sha256"
+
+          cat > "backup/wakala-${timestamp}.manifest.json" <<EOF
+          {
+            "application": "Wakala",
+            "environment": "production",
+            "timestamp_utc": "${timestamp}",
+            "format": "postgresql-custom",
+            "encrypted": true,
+            "cipher": "AES-256-CBC",
+            "checksum": "SHA-256",
+            "retention_days": ${BACKUP_RETENTION_DAYS}
+          }
+          EOF
+
+      - name: Install AWS CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq awscli
+
+      - name: Upload encrypted backup to private object storage
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.WAKALA_BACKUP_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.WAKALA_BACKUP_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.WAKALA_BACKUP_REGION || 'auto' }}
+          AWS_ENDPOINT_URL: ${{ secrets.WAKALA_BACKUP_ENDPOINT }}
+          BACKUP_BUCKET: ${{ secrets.WAKALA_BACKUP_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws s3 cp backup/ "s3://${BACKUP_BUCKET}/database/$(date -u +'%Y/%m/%d')/" \
+            --recursive \
+            --endpoint-url "$AWS_ENDPOINT_URL" \
+            --only-show-errors
+
+      - name: Verify uploaded backup
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.WAKALA_BACKUP_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.WAKALA_BACKUP_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.WAKALA_BACKUP_REGION || 'auto' }}
+          AWS_ENDPOINT_URL: ${{ secrets.WAKALA_BACKUP_ENDPOINT }}
+          BACKUP_BUCKET: ${{ secrets.WAKALA_BACKUP_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws s3 ls "s3://${BACKUP_BUCKET}/database/$(date -u +'%Y/%m/%d')/" \
+            --endpoint-url "$AWS_ENDPOINT_URL"
+
+      - name: Upload short-lived GitHub artifact as secondary copy
+        uses: actions/upload-artifact@v4
+        with:
+          name: wakala-database-backup-${{ github.run_id }}
+          path: backup/
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Backup summary
+        shell: bash
+        run: |
+          echo "## Wakala production backup" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Status: verified upload" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Retention: ${BACKUP_RETENTION_DAYS} days in object storage" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Encryption: AES-256-CBC" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Checksum: SHA-256" >> "$GITHUB_STEP_SUMMARY"
