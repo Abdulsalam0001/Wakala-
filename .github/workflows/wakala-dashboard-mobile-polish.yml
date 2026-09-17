@@ -1,0 +1,404 @@
+name: Wakala dashboard mobile polish
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    if: ${{ !contains(github.event.head_commit.message, 'Polish Wakala user dashboard') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply dashboard redesign
+        shell: python
+        run: |
+          from pathlib import Path
+
+          dashboard = Path('dashboard.html')
+          css = Path('style.css')
+
+          html = dashboard.read_text(encoding='utf-8')
+          styles = css.read_text(encoding='utf-8')
+
+          old_actions = '''            <div class="actions">
+
+              <a
+                class="action"
+                href="transfer.html"
+              >
+
+                <span class="action-icon">
+                  ↗
+                </span>
+
+                Send money
+
+              </a>
+
+
+              <a
+                class="action"
+                href="deposit.html"
+              >
+
+                <span class="action-icon">
+                  ＋
+                </span>
+
+                Add funds
+
+              </a>
+
+
+              <a
+                class="action"
+                href="#wallet"
+              >
+
+                <span class="action-icon">
+                  ⇄
+                </span>
+
+                Convert
+
+              </a>
+
+
+              <a
+                class="action"
+                href="#activity"
+              >
+
+                <span class="action-icon">
+                  ?
+                </span>
+
+                Get help
+
+              </a>
+
+            </div>'''
+
+          new_actions = '''            <div class="actions" aria-label="Quick wallet actions">
+
+              <a class="action" href="transfer.html" aria-label="Send money">
+                <span class="action-icon" aria-hidden="true">↗</span>
+                <span class="action-label">Send</span>
+              </a>
+
+              <a class="action" href="deposit.html" aria-label="Receive money">
+                <span class="action-icon" aria-hidden="true">↓</span>
+                <span class="action-label">Receive</span>
+              </a>
+
+              <a class="action" href="#wallet" aria-label="Swap currencies">
+                <span class="action-icon" aria-hidden="true">⇄</span>
+                <span class="action-label">Swap</span>
+              </a>
+
+              <a class="action action-secondary" href="deposit.html" aria-label="Add funds">
+                <span class="action-icon" aria-hidden="true">＋</span>
+                <span class="action-label">Add</span>
+              </a>
+
+            </div>'''
+
+          if old_actions not in html:
+              raise SystemExit('Expected quick actions markup was not found; no dashboard changes made.')
+
+          html = html.replace(old_actions, new_actions, 1)
+          dashboard.write_text(html, encoding='utf-8')
+
+          override = r'''
+
+/* =========================================================
+   MOBILE-FIRST USER DASHBOARD POLISH
+   Uses the dashboard's existing Wakala palette as the source
+   of truth. Desktop structure stays familiar; mobile becomes
+   a focused wallet-first experience.
+   ========================================================= */
+
+.action-label {
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding: 14px 14px 40px;
+  }
+
+  .topbar {
+    min-height: 58px;
+    margin-bottom: 22px;
+    padding-block: 8px;
+  }
+
+  .date {
+    font-size: 8px;
+  }
+
+  .intro {
+    padding: 20px 2px 12px;
+  }
+
+  .intro .eyebrow,
+  .intro p {
+    display: none;
+  }
+
+  .intro h1 {
+    margin: 0;
+    font-size: 34px;
+    letter-spacing: -.045em;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .balance-card {
+    order: 1;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px 72px;
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .balance-content {
+    width: 100%;
+  }
+
+  .balance-header {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .balance-label {
+    font-size: 8px;
+  }
+
+  .currency-select {
+    min-height: 31px;
+    padding-inline: 10px;
+    font-size: 9px;
+  }
+
+  .balance-value {
+    margin-top: 27px;
+    font-size: clamp(39px, 12vw, 52px);
+    white-space: nowrap;
+  }
+
+  .balance-subtitle {
+    margin-top: 11px;
+  }
+
+  .account-number {
+    margin-top: 9px;
+  }
+
+  .balance-footer {
+    left: 20px;
+    right: 20px;
+    bottom: 19px;
+    justify-content: center;
+  }
+
+  .quick-card {
+    order: 2;
+    padding: 16px 14px 14px;
+    border-radius: 20px;
+    background: rgba(255,253,248,.94);
+  }
+
+  .quick-card h2,
+  .quick-card > p {
+    display: none;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .action,
+  .action.action-secondary {
+    min-height: 72px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 7px;
+    padding: 8px 4px;
+    border: 0;
+    border-radius: 15px;
+    background: rgba(33,135,102,.055);
+    color: var(--ink);
+    box-shadow: none;
+  }
+
+  .action-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 17px;
+    box-shadow: 0 8px 18px rgba(33,135,102,.16);
+  }
+
+  .action-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .lower-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  /* Wallets first, history immediately below it. */
+  .lower-grid > #wallet {
+    order: 1;
+  }
+
+  .lower-grid > #activity {
+    order: 2;
+  }
+
+  .section-card {
+    padding: 18px 16px;
+    border-radius: 20px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .section-head {
+    margin-bottom: 7px;
+  }
+
+  .currency-row,
+  .transaction {
+    min-height: 60px;
+    padding: 11px 0;
+    gap: 10px;
+  }
+
+  .currency-mark,
+  .transaction-icon {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+
+  .row-main strong {
+    font-size: 11px;
+  }
+
+  .row-main span {
+    font-size: 9px;
+  }
+
+  .row-amount {
+    font-size: 9px;
+  }
+
+  .insight {
+    margin-top: 12px;
+    padding: 16px;
+  }
+
+  .insight h3 {
+    font-size: 22px;
+  }
+
+  .esim-card {
+    margin-top: 12px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .esim-card h2 {
+    font-size: 31px;
+  }
+}
+
+@media (max-width: 420px) {
+  .main {
+    padding-inline: 11px;
+  }
+
+  .balance-card {
+    min-height: 285px;
+    padding-inline: 16px;
+  }
+
+  .balance-value {
+    font-size: 36px;
+  }
+
+  .actions {
+    gap: 5px;
+  }
+
+  .action,
+  .action.action-secondary {
+    min-height: 68px;
+  }
+
+  .action-icon {
+    width: 39px;
+    height: 39px;
+    font-size: 16px;
+  }
+
+  .section-card {
+    padding-inline: 14px;
+  }
+}
+'''
+
+          if 'MOBILE-FIRST USER DASHBOARD POLISH' not in styles:
+              css.write_text(styles + override, encoding='utf-8')
+
+      - name: Commit dashboard polish
+        shell: bash
+        run: |
+          git config user.name "Wakala Team"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dashboard.html style.css
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Polish Wakala user dashboard"
+          git push
+
+      - name: Remove temporary workflow
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          git rm .github/workflows/wakala-dashboard-mobile-polish.yml
+          git commit -m "Remove temporary dashboard polish workflow"
+          git push
