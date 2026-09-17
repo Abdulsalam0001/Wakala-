@@ -1,0 +1,366 @@
+name: Rebuild Wakala index navigation
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: ${{ !contains(github.event.head_commit.message, 'Rebuild Wakala index navigation') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild navigation
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+
+          start = html.find('<header class="nav-wrap" id="site-nav">')
+          hero = html.find('<!-- =========================================\n       HERO\n  ========================================= -->')
+          if start < 0 or hero < 0 or hero <= start:
+              raise SystemExit('Could not locate index navigation boundaries; stopping safely.')
+
+          nav = '''<header class="nav-wrap" id="site-nav">
+  <nav class="nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a href="./index.html" class="brand" aria-label="Wakala home">
+        <span class="brand-mark">W</span>
+        <span>Wakala</span>
+      </a>
+
+      <button class="nav-menu" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-panel" id="navPanel">
+        <div class="nav-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#wallet">Wallet</a>
+          <a href="./esim-plans.html">Buy eSIM</a>
+          <a href="./creator-jobs.html">Earn with Wakala</a>
+        </div>
+
+        <div class="nav-actions">
+          <a href="./login.html" class="nav-login">Log in</a>
+          <a href="./register.html" class="nav-signup">Create account</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+'''
+
+          html = html[:start] + nav + html[hero:]
+
+          css = r'''
+
+/* =========================================================
+   INDEX NAVIGATION REBUILD
+   Stable, self-contained navigation. Designed around the
+   Wakala/b.html navigation language with large touch targets.
+   ========================================================= */
+
+.nav-wrap {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 5000;
+  padding: 16px 0;
+  pointer-events: none;
+}
+
+.nav-wrap .nav {
+  position: relative;
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 10px 12px 10px 18px;
+  border: 1px solid rgba(16,23,34,.09);
+  border-radius: 20px;
+  background: rgba(250,247,239,.88);
+  box-shadow: 0 14px 40px rgba(16,23,34,.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events: auto;
+}
+
+.nav-wrap .nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-wrap .brand {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.nav-panel {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.nav-links a,
+.nav-login,
+.nav-signup {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.nav-links a:hover {
+  background: var(--green-soft, rgba(33,135,102,.09));
+  color: var(--green);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+
+.nav-login {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.48);
+}
+
+.nav-signup {
+  color: var(--white);
+  background: var(--ink);
+  padding-inline: 18px;
+}
+
+.nav-login:hover,
+.nav-signup:hover {
+  transform: translateY(-1px);
+}
+
+.nav-menu {
+  display: none;
+  width: 46px;
+  height: 46px;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--cream);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav-menu span {
+  width: 18px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.nav-wrap.menu-open .nav-menu span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-wrap.menu-open .nav-menu span:nth-child(2) { opacity: 0; }
+.nav-wrap.menu-open .nav-menu span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+@media (max-width: 1050px) {
+  .nav-links a {
+    padding-inline: 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 850px) {
+  .nav-wrap {
+    padding: 10px 0;
+  }
+
+  .nav-wrap .nav {
+    width: min(100% - 20px, 680px);
+    padding: 8px 10px;
+    border-radius: 17px;
+  }
+
+  .nav-menu {
+    display: flex;
+  }
+
+  .nav-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(16,23,34,.09);
+    border-radius: 18px;
+    background: rgba(250,247,239,.97);
+    box-shadow: 0 22px 55px rgba(16,23,34,.13);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .nav-wrap.menu-open .nav-panel {
+    display: flex;
+  }
+
+  .nav-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .nav-links a,
+  .nav-login,
+  .nav-signup {
+    width: 100%;
+    min-height: 52px;
+    justify-content: flex-start;
+    padding: 0 17px;
+    border-radius: 13px;
+    font-size: 13px;
+  }
+
+  .nav-links a {
+    border: 1px solid rgba(16,23,34,.07);
+    background: rgba(255,255,255,.55);
+  }
+
+  .nav-links a:hover {
+    background: var(--green-soft, rgba(33,135,102,.09));
+  }
+
+  .nav-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 7px;
+    padding-top: 3px;
+  }
+
+  .nav-login,
+  .nav-signup {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 430px) {
+  .nav-wrap .nav {
+    width: calc(100% - 14px);
+  }
+
+  .nav-wrap .brand {
+    font-size: 22px;
+  }
+
+  .nav-menu {
+    width: 43px;
+    height: 43px;
+  }
+
+  .nav-panel {
+    padding: 10px;
+  }
+
+  .nav-links a,
+  .nav-login,
+  .nav-signup {
+    min-height: 50px;
+    font-size: 12px;
+  }
+}
+'''
+
+          if 'INDEX NAVIGATION REBUILD' not in html:
+              html = html.replace('</style>', css + '\n  </style>', 1)
+
+          js = r'''
+
+<script>
+(() => {
+  const navWrap = document.getElementById('site-nav');
+  const toggle = document.getElementById('navToggle');
+  const panel = document.getElementById('navPanel');
+  if (!navWrap || !toggle || !panel) return;
+
+  const close = () => {
+    navWrap.classList.remove('menu-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open navigation');
+  };
+
+  toggle.addEventListener('click', (event) => {
+    event.preventDefault();
+    const open = navWrap.classList.toggle('menu-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  });
+
+  panel.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', close);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!navWrap.contains(event.target)) close();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') close();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 850) close();
+  }, { passive: true });
+})();
+</script>
+'''
+
+          if 'id="navToggle"' in html and 'const navWrap = document.getElementById' not in html:
+              html = html.replace('</body>', js + '\n</body>', 1)
+
+          p.write_text(html, encoding='utf-8')
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "Wakala Team"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Rebuild Wakala index navigation" || exit 0
+          git push
+
+      - name: Remove temporary workflow
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          git rm .github/workflows/wakala-index-nav-rebuild.yml
+          git commit -m "Remove temporary index nav workflow"
+          git push
