@@ -819,7 +819,7 @@
       <div>
 
         <div class="kicker">
-          Open campaigns
+          Active campaigns
         </div>
 
         <h2>
@@ -848,7 +848,7 @@
           id="campaignList"
           class="loading"
         >
-          Loading open campaigns...
+          Loading active campaigns...
         </div>
 
       </div>
@@ -1400,7 +1400,7 @@ async function initialise() {
 async function loadCampaigns() {
 
   campaignList.innerHTML =
-    'Loading open campaigns...';
+    'Loading active campaigns...';
 
 
   const {
@@ -1420,7 +1420,7 @@ async function loadCampaigns() {
       status,
       created_at
     `)
-    .eq('status','open')
+    .eq('status','active')
     .order('created_at',{
       ascending:false
     });
@@ -1458,7 +1458,7 @@ async function loadCampaigns() {
 
     campaignList.innerHTML = `
       <div class="empty">
-        There are currently no open creator campaigns.
+        There are currently no active creator campaigns.
       </div>
     `;
 
@@ -1662,7 +1662,7 @@ form.addEventListener(
 
     const campaign =
       campaigns.find(
-        item => item.id === campaignId
+        item => String(item.id) === String(campaignId)
       );
 
 
@@ -1725,9 +1725,9 @@ form.addEventListener(
           campaign.id,
 
         user_id:
-          currentUser?.id || null,
+          currentUser.id,
 
-        platform_username:
+        platform:
           platformInput.value,
 
         portfolio_url:
