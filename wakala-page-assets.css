@@ -37,3 +37,13 @@ git /* WAKALA SHARED VISUAL LANGUAGE
 .wk-page-card h1{font:600 clamp(38px,5vw,62px)/.98 Georgia,serif;letter-spacing:-.055em;margin-top:16px}.wk-page-card p{color:var(--wk-muted);line-height:1.8}.wk-page-card .wk-copy{margin-top:18px;max-width:580px}
 @media(max-width:850px){.wk-page-grid{grid-template-columns:1fr;padding-top:100px}.wk-visual{min-height:360px;order:2}.wk-page-card{order:1}.wk-network{width:min(390px,86vw)}}
 @media(max-width:520px){.wk-page-grid{width:min(100% - 28px,1180px)}.wk-rail-grid{grid-template-columns:1fr}.wk-sim-card{transform:none}}
+
+/* Dashboard desktop breathing room */
+@media (min-width: 721px){
+  .wk-page-shell .main{
+    padding-top: 18px;
+  }
+  .wk-page-shell .main-inner{
+    padding-top: 0;
+  }
+}
