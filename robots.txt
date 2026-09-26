@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /supabase/
+Disallow: /reset-password.html
+
+Sitemap: https://wakala.cfd/sitemap.xml
