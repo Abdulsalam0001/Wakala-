@@ -6,7 +6,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Creator Jobs | Wakala</title>
+  <title>Earn with Wakala | Creator Campaigns</title>
+
+  <meta name="description" content="Earn with Wakala by creating useful, entertaining content for active creator campaigns and earn USDC from verified performance.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://wakala.cfd/creator-jobs.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Earn with Wakala | Creator Campaigns">
+  <meta property="og:description" content="Join Wakala creator campaigns, create content and earn USDC from verified performance.">
+  <meta property="og:url" content="https://wakala.cfd/creator-jobs.html">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -673,6 +681,17 @@
 
   </style>
 
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name":"Earn with Wakala",
+    "url":"https://wakala.cfd/creator-jobs.html",
+    "description":"Wakala creator campaigns where eligible creators can earn USDC from verified performance."
+  }
+  </script>
+
 </head>
 
 <body>
@@ -1331,63 +1350,46 @@ document.getElementById('year').textContent =
 
 async function initialise() {
 
-  try {
+  const {
+    data,
+    error
+  } = await supabase.auth.getSession();
+
+
+  if (error) {
+    console.warn('Session lookup failed:', error);
+  }
+
+
+  currentUser =
+    data?.session?.user || null;
+
+
+  if (currentUser) {
+
+    emailInput.value =
+      currentUser.email || '';
+
 
     const {
-      data,
-      error
-    } = await supabase.auth.getSession();
+      data: profile
+    } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', currentUser.id)
+      .maybeSingle();
 
 
-    if (error) {
-
-      console.warn(
-        'Session lookup skipped:',
-        error
-      );
-
-    } else {
-
-      currentUser =
-        data?.session?.user || null;
-
-
-      if (currentUser) {
-
-        emailInput.value =
-          currentUser.email || '';
-
-
-        const {
-          data: profile
-        } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', currentUser.id)
-          .maybeSingle();
-
-
-        if (profile?.full_name) {
-
-          nameInput.value =
-            profile.full_name;
-
-        }
-
-      }
-
+    if (profile?.full_name) {
+      nameInput.value =
+        profile.full_name;
     }
-
-  } catch (error) {
-
-    console.warn(
-      'Unable to load session details:',
-      error
-    );
 
   }
 
 
+  // Campaigns are public so Google and visitors can discover them.
+  // Authentication is required only when submitting an application.
   await loadCampaigns();
 
 }
