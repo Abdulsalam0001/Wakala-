@@ -485,134 +485,70 @@
 
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-// Mobile menu toggle
+<script src="./api.js"></script>
+<script>
 const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const navigation = document.getElementById('mainNavigation');
 
 menuToggle.addEventListener('click', () => {
   sidebar.classList.toggle('open');
-  menuToggle.setAttribute('aria-expanded', sidebar.classList.contains('open'));
-  menuToggle.textContent = sidebar.classList.contains('open') ? 'Close' : 'Menu';
+  const open = sidebar.classList.contains('open');
+  menuToggle.setAttribute('aria-expanded', String(open));
+  menuToggle.textContent = open ? 'Close' : 'Menu';
 });
 
-navigation.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('open');
-      menuToggle.setAttribute('aria-expanded', false);
-      menuToggle.textContent = 'Menu';
-    }
-  });
-});
+navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.textContent = 'Menu';
+  }
+}));
 
-// Format date
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
+function formatDate(value) {
+  return new Date(value).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 }
-
-// Get status badge class
 function getStatusClass(status) {
-  switch (status) {
-    case 'pending_admin_review':
-      return 'status-pending';
-    case 'approved':
-      return 'status-approved';
-    case 'provisioned':
-      return 'status-provisioned';
-    case 'failed':
-      return 'status-failed';
-    default:
-      return 'status-pending';
-  }
+  return status === 'approved' ? 'status-approved' :
+    status === 'provisioned' ? 'status-provisioned' :
+    status === 'failed' ? 'status-failed' : 'status-pending';
 }
-
-// Format status text
 function formatStatusText(status) {
-  switch (status) {
-    case 'pending_admin_review':
-      return 'Pending Review';
-    case 'approved':
-      return 'Approved';
-    case 'provisioned':
-      return 'Provisioned';
-    case 'failed':
-      return 'Failed';
-    default:
-      return status;
-  }
+  return status === 'pending_admin_review' ? 'Pending Review' :
+    status === 'approved' ? 'Approved' :
+    status === 'provisioned' ? 'Provisioned' :
+    status === 'failed' ? 'Failed' : status;
 }
-
-// Load eSIM orders
 async function loadESIMOrders() {
   const loader = document.getElementById('ordersLoader');
   const container = document.getElementById('ordersContainer');
   const empty = document.getElementById('ordersEmpty');
   const body = document.getElementById('ordersBody');
-
   try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      window.location.href = 'login.html';
-      return;
-    }
-
-    const { data: orders, error } = await supabase
-      .from('esim_orders')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(100);
-
-    if (error) {
-      console.error('Error loading orders:', error);
-      loader.innerHTML = '<p style="color: #c8302d;">Failed to load orders. Please try again.</p>';
-      return;
-    }
-
+    const { orders } = await window.WAKALA_API.request('/api/esim/orders');
     loader.style.display = 'none';
-
-    if (!orders || orders.length === 0) {
-      empty.style.display = 'block';
-      return;
-    }
-
+    if (!orders?.length) { empty.style.display = 'block'; return; }
     container.style.display = 'block';
     body.innerHTML = '';
-
     orders.forEach(order => {
       const row = document.createElement('tr');
-      row.innerHTML = `
-        <td><strong>WKL-ESIM-${order.id}</strong></td>
-        <td>${order.country_name}</td>
-        <td>${order.plan_data}</td>
-        <td>${order.device || '—'}</td>
-        <td><span class="status-badge ${getStatusClass(order.status)}">${formatStatusText(order.status)}</span></td>
-        <td>${formatDate(order.created_at)}</td>
-        <td><small>${order.delivery_email}</small></td>
-      `;
+      row.innerHTML =
+        '<td><strong>WKL-ESIM-' + order.id + '</strong></td>' +
+        '<td>' + String(order.country_name || '—') + '</td>' +
+        '<td>' + String(order.plan_data || '—') + '</td>' +
+        '<td>' + String(order.device || '—') + '</td>' +
+        '<td><span class="status-badge ' + getStatusClass(order.status) + '">' + formatStatusText(order.status) + '</span></td>' +
+        '<td>' + formatDate(order.created_at) + '</td>' +
+        '<td><small>' + String(order.delivery_email || '—') + '</small></td>';
       body.appendChild(row);
     });
-
-  } catch (err) {
-    console.error('Error:', err);
-    loader.innerHTML = '<p style="color: #c8302d;">An error occurred. Please try again.</p>';
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    try { await window.WAKALA_API.me(); } catch { window.location.href = 'login.html'; return; }
+    loader.innerHTML = '<p style="color:#c8302d;">Failed to load orders. Please try again.</p>';
   }
 }
-
-// Load on page load
 loadESIMOrders();
 </script>
 
