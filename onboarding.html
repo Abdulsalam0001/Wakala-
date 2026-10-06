@@ -53,11 +53,8 @@
     </section>
   </main>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./supabase-config.js";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  <script src="./api.js"></script>
+  <script>
     const form = document.getElementById("onboardingForm");
     const fullName = document.getElementById("fullName");
     const phone = document.getElementById("phone");
@@ -67,38 +64,26 @@
 
     function showMessage(text, type = "") {
       message.textContent = text;
-      message.className = `message ${type}`.trim();
+      message.className = ("message " + type).trim();
     }
 
     async function initialise() {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session) {
+      try {
+        const [{ user }, { profile }] = await Promise.all([
+          window.WAKALA_API.me(),
+          window.WAKALA_API.profile()
+        ]);
+        email.value = user.email || profile?.email || "";
+        if (profile?.onboarding_completed) {
+          window.location.replace("dashboard.html");
+          return;
+        }
+        fullName.value = profile?.full_name || "";
+        phone.value = profile?.phone || "";
+        fullName.focus();
+      } catch {
         window.location.replace("login.html");
-        return;
       }
-
-      email.value = session.user.email || "";
-
-      const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("full_name, phone, onboarding_completed")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error("Profile load failed:", error);
-        showMessage("We couldn't load your profile. Please refresh and try again.", "error");
-        return;
-      }
-
-      if (profile?.onboarding_completed) {
-        window.location.replace("dashboard.html");
-        return;
-      }
-
-      fullName.value = profile?.full_name || session.user.user_metadata?.full_name || "";
-      phone.value = profile?.phone || session.user.user_metadata?.phone || "";
-      fullName.focus();
     }
 
     form.addEventListener("submit", async (event) => {
@@ -113,7 +98,6 @@
         fullName.focus();
         return;
       }
-
       if (phoneNumber.replace(/\D/g, "").length < 7) {
         showMessage("Please enter a valid phone number.", "error");
         phone.focus();
@@ -124,27 +108,9 @@
       button.textContent = "Saving your profile…";
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) throw new Error("Your session has expired. Please log in again.");
-
-        const { error } = await supabase
-          .from("profiles")
-          .update({
-            full_name: name,
-            phone: phoneNumber,
-            onboarding_completed: true,
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", session.user.id);
-
-        if (error) throw error;
-
-        await supabase.auth.updateUser({
-          data: { full_name: name, phone: phoneNumber }
-        });
-
+        await window.WAKALA_API.updateProfile(name, phoneNumber);
         showMessage("Profile saved. Taking you to your dashboard…", "success");
-        window.setTimeout(() => window.location.replace("dashboard.html"), 450);
+        window.setTimeout(() => window.location.replace("dashboard.html"), 350);
       } catch (error) {
         console.error("Onboarding save failed:", error);
         showMessage(error.message || "We couldn't save your profile. Please try again.", "error");
