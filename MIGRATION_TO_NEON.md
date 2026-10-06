@@ -90,3 +90,27 @@ Neon becomes the new source only after:
 - eSIM orders reconcile
 - admin access works
 - a complete registration/login/onboarding/dashboard test passes
+
+
+## Migration progress
+
+The original frontend now has a Neon API client at `/api.js`. The following flows have been moved off Supabase:
+
+- Registration
+- Login/session checks
+- Profile onboarding
+- Main dashboard wallet, balances, recent transactions and logout
+- eSIM order submission
+- eSIM order history
+
+The backend now also exposes:
+
+- `GET/POST /api/esim/orders`
+- `GET /api/admin/overview`
+- `GET /api/admin/customers`
+- `GET /api/admin/customers/:userId/balances`
+- `POST /api/admin/customers/:userId/adjust-balance`
+
+Creator tables are staged in `server/sql/002_creator_tables.sql`.
+
+The remaining Supabase-dependent pages are intentionally not removed yet. They should be migrated one flow at a time after their exact data requirements are mapped. Do not delete the Supabase project until migration reconciliation is complete.
