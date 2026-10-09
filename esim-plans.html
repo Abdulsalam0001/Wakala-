@@ -1525,194 +1525,84 @@ document
   .addEventListener("change",renderCountries);
 
 
-/*
-  FRONTEND ORDER HANDLER
+/* Neon backend order handler */
+document.getElementById("esimForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
-  The app stores the eSIM request as a record in the database.
-  This keeps the order visible to the user and the admin team
-  without relying on any third-party provisioning service.
+  const countryCode = document.getElementById("orderCountry").value;
+  const plan = document.getElementById("orderPlan").value;
+  const email = document.getElementById("deliveryEmail").value.trim();
+  const device = document.getElementById("device").value.trim();
+  const notes = document.getElementById("notes").value.trim();
+  const status = document.getElementById("status");
+  const button = document.getElementById("submitButton");
 
-  The customer-facing flow is:
-    1. authenticate the user
-    2. validate the selected plan
-    3. calculate the local customer price
-    4. insert the order into public.esim_orders
-    5. show the confirmation reference
-    6. let admin review and manage the record from the admin dashboard
-*/
+  if (!countryCode || !plan) {
+    status.textContent = "Please select a country and data plan.";
+    return;
+  }
 
-document
-  .getElementById("esimForm")
-  .addEventListener("submit",async event=>{
+  const country = countries.find(c => c.code === countryCode);
+  const selectedPlan = dataPlans.find(p => p.data === plan);
+  if (!country || !selectedPlan) {
+    status.textContent = "Invalid plan selection.";
+    return;
+  }
 
-    event.preventDefault();
+  button.disabled = true;
+  button.textContent = "Submitting order...";
+  status.textContent = "Sending your eSIM request to Wakala operations...";
 
-    const countryCode =
-      document.getElementById("orderCountry").value;
-
-    const plan =
-      document.getElementById("orderPlan").value;
-
-    const email =
-      document.getElementById("deliveryEmail").value.trim();
-
-    const device =
-      document.getElementById("device").value.trim();
-
-    const notes =
-      document.getElementById("notes").value.trim();
-
-    const status =
-      document.getElementById("status");
-
-    const button =
-      document.getElementById("submitButton");
-
-    if(!countryCode || !plan){
-
-      status.textContent=
-        "Please select a country and data plan.";
-
-      return;
-
-    }
-
-
-    const country =
-      countries.find(c=>c.code===countryCode);
-
-    const selectedPlan =
-      dataPlans.find(p=>p.data===plan);
-
-    if(!country || !selectedPlan){
-
-      status.textContent=
-        "Invalid plan selection.";
-
-      return;
-
-    }
-
-
-    button.disabled=true;
-
-    button.textContent=
-      "Submitting order...";
-
-    status.textContent=
-      "Sending your eSIM request to Wakala operations...";
-
+  try {
     try {
-      // Get Supabase client from global scope (initialized below)
-      const supabase = window.supabaseClient;
-      
-      if(!supabase){
-        status.textContent=
-          "Error: Database connection not initialized. Please refresh and try again.";
-        button.disabled=false;
-        button.textContent="Submit eSIM order";
-        return;
-      }
-
-      // Get current user
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if(authError || !user){
-        // Show auth modal instead of error
-        showAuthModal(() => {
-          // Automatically resubmit form after successful authentication
-          setTimeout(() => {
-            document.getElementById("esimForm").dispatchEvent(new Event("submit"));
-          }, 100);
-        });
-        button.disabled=false;
-        button.textContent="Submit eSIM order";
-        status.textContent="";
-        return;
-      }
-
-      const localPrice2=localPrice(
-        selectedPlan.usd,
-        country.currency
-      );
-
-      // Insert order into database
-      const { data, error } = await supabase
-        .from("esim_orders")
-        .insert({
-          user_id: user.id,
-          country_code: country.code,
-          country_name: country.name,
-          currency: country.currency,
-          plan_data: plan,
-          validity_days: selectedPlan.days,
-          price_usd: selectedPlan.usd,
-          customer_price: localPrice2,
-          delivery_email: email,
-          device: device,
-          notes: notes || null,
-          status: "pending_admin_review",
-          provisioning_target: "within_1_hour"
-        })
-        .select();
-
-      if(error){
-        console.error("Order insertion error:", error);
-        status.textContent=
-          "Error submitting order. Please try again.";
-        button.disabled=false;
-        button.textContent="Submit eSIM order";
-        return;
-      }
-
-      if(!data || data.length===0){
-        status.textContent=
-          "Order submitted but confirmation failed. Please check your dashboard.";
-        button.disabled=false;
-        button.textContent="Submit eSIM order";
-        return;
-      }
-
-      const orderId=`WKL-ESIM-${data[0].id}`;
-
-      document.getElementById(
-        "confirmationRef"
-      ).textContent=
-        `Order ${orderId} · ${country.name} · ${plan}`;
-
-      document
-        .getElementById("confirmation")
-        .classList.add("show");
-
-      status.textContent=
-        "Order received successfully.";
-
-      button.textContent=
-        "Order submitted";
-
-      // Reset form after a delay
-      setTimeout(()=>{
-        document.getElementById("esimForm").reset();
-        document.getElementById("orderPlan").innerHTML=
-          '<option value="">Select plan</option>';
-        button.disabled=false;
-        button.textContent="Submit eSIM order";
-        status.textContent="";
-        document
-          .getElementById("confirmation")
-          .classList.remove("show");
-      },5000);
-
-    }catch(err){
-      console.error("Order submission error:", err);
-      status.textContent=
-        "Unexpected error. Please try again.";
-      button.disabled=false;
-      button.textContent="Submit eSIM order";
+      await window.WAKALA_API.me();
+    } catch {
+      showAuthModal(() => document.getElementById("esimForm").dispatchEvent(new Event("submit")));
+      button.disabled = false;
+      button.textContent = "Submit eSIM order";
+      status.textContent = "";
+      return;
     }
 
-  });
+    const localPrice2 = localPrice(selectedPlan.usd, country.currency);
+    const { order } = await window.WAKALA_API.request("/api/esim/orders", {
+      method: "POST",
+      body: JSON.stringify({
+        country_code: country.code,
+        country_name: country.name,
+        currency: country.currency,
+        plan_data: plan,
+        validity_days: selectedPlan.days,
+        price_usd: selectedPlan.usd,
+        customer_price: localPrice2,
+        delivery_email: email,
+        device,
+        notes: notes || null
+      })
+    });
 
+    const orderId = "WKL-ESIM-" + order.id;
+    document.getElementById("confirmationRef").textContent =
+      "Order " + orderId + " · " + country.name + " · " + plan;
+    document.getElementById("confirmation").classList.add("show");
+    status.textContent = "Order received successfully.";
+    button.textContent = "Order submitted";
+
+    setTimeout(() => {
+      document.getElementById("esimForm").reset();
+      document.getElementById("orderPlan").innerHTML = '<option value="">Select plan</option>';
+      button.disabled = false;
+      button.textContent = "Submit eSIM order";
+      status.textContent = "";
+      document.getElementById("confirmation").classList.remove("show");
+    }, 5000);
+  } catch (err) {
+    console.error("Order submission error:", err);
+    status.textContent = err.message || "Unexpected error. Please try again.";
+    button.disabled = false;
+    button.textContent = "Submit eSIM order";
+  }
+});
 
 populateCountrySelect();
 
@@ -1722,21 +1612,14 @@ renderCountries();
 
 </script>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-
-// Initialize Supabase client globally so it's available in the form handler
-window.supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-// AUTH MODAL HANDLING
+<script src="./api.js"></script>
+<script>
 const authModal = document.getElementById('authModal');
 const loginTab = document.getElementById('loginTab');
 const signupTab = document.getElementById('signupTab');
 const loginForm = document.getElementById('authLoginForm');
 const signupForm = document.getElementById('authSignupForm');
 const authModalClose = document.getElementById('authModalClose');
-
 let authCallback = null;
 
 function showAuthModal(callback) {
@@ -1751,138 +1634,61 @@ function showAuthModal(callback) {
 
 function hideAuthModal() {
   authModal.classList.remove('show');
-  authCallback = null;
-  // Clear forms
   loginForm.reset();
   signupForm.reset();
   document.getElementById('authLoginStatus').textContent = '';
   document.getElementById('authSignupStatus').textContent = '';
 }
 
-// Tab switching
 loginTab.addEventListener('click', () => {
-  loginForm.style.display = 'block';
-  signupForm.style.display = 'none';
-  loginTab.classList.add('active');
-  signupTab.classList.remove('active');
-  document.getElementById('authLoginStatus').textContent = '';
-  document.getElementById('authLoginEmail').focus();
+  loginForm.style.display = 'block'; signupForm.style.display = 'none';
+  loginTab.classList.add('active'); signupTab.classList.remove('active');
 });
-
 signupTab.addEventListener('click', () => {
-  loginForm.style.display = 'none';
-  signupForm.style.display = 'block';
-  loginTab.classList.remove('active');
-  signupTab.classList.add('active');
-  document.getElementById('authSignupStatus').textContent = '';
-  document.getElementById('authSignupEmail').focus();
+  loginForm.style.display = 'none'; signupForm.style.display = 'block';
+  loginTab.classList.remove('active'); signupTab.classList.add('active');
 });
-
-// Close modal
 authModalClose.addEventListener('click', hideAuthModal);
-authModal.addEventListener('click', (e) => {
-  if (e.target === authModal) hideAuthModal();
-});
+authModal.addEventListener('click', e => { if (e.target === authModal) hideAuthModal(); });
 
-// Login form handler
-loginForm.addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', async e => {
   e.preventDefault();
-  
   const email = document.getElementById('authLoginEmail').value.trim();
   const password = document.getElementById('authLoginPassword').value;
   const statusEl = document.getElementById('authLoginStatus');
-  const loginBtn = document.getElementById('authLoginBtn');
-  
-  if (!email || !password) {
-    statusEl.className = 'auth-modal-status error';
-    statusEl.textContent = 'Please enter email and password';
-    return;
-  }
-  
-  loginBtn.disabled = true;
-  statusEl.className = 'auth-modal-status';
-  statusEl.textContent = 'Signing in...';
-  
+  const button = document.getElementById('authLoginBtn');
+  button.disabled = true; statusEl.className = 'auth-modal-status'; statusEl.textContent = 'Signing in...';
   try {
-    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-    
-    if (error) {
-      statusEl.className = 'auth-modal-status error';
-      statusEl.textContent = error.message || 'Sign in failed. Please check your credentials.';
-      loginBtn.disabled = false;
-      return;
-    }
-    
-    if (data?.user) {
-      statusEl.className = 'auth-modal-status success';
-      statusEl.textContent = '✓ Signed in successfully. Submitting your order...';
-      
-      // Immediately trigger the callback to resubmit the form
-      setTimeout(() => {
-        hideAuthModal();
-        if (authCallback) authCallback();
-      }, 300);
-    }
+    await window.WAKALA_API.login(email, password);
+    statusEl.className = 'auth-modal-status success';
+    statusEl.textContent = '✓ Signed in. Submitting your order...';
+    setTimeout(() => { hideAuthModal(); if (authCallback) authCallback(); }, 300);
   } catch (err) {
     statusEl.className = 'auth-modal-status error';
-    statusEl.textContent = 'An error occurred. Please try again.';
-    loginBtn.disabled = false;
+    statusEl.textContent = err.message || 'Sign in failed.';
+    button.disabled = false;
   }
 });
 
-// Signup form handler
-signupForm.addEventListener('submit', async (e) => {
+signupForm.addEventListener('submit', async e => {
   e.preventDefault();
-  
   const email = document.getElementById('authSignupEmail').value.trim();
   const password = document.getElementById('authSignupPassword').value;
   const statusEl = document.getElementById('authSignupStatus');
-  const signupBtn = document.getElementById('authSignupBtn');
-  
-  if (!email || !password || password.length < 8) {
-    statusEl.className = 'auth-modal-status error';
-    statusEl.textContent = 'Email and password (min 8 chars) required';
-    return;
-  }
-  
-  signupBtn.disabled = true;
-  statusEl.className = 'auth-modal-status';
-  statusEl.textContent = 'Creating account...';
-  
+  const button = document.getElementById('authSignupBtn');
+  if (password.length < 8) { statusEl.className = 'auth-modal-status error'; statusEl.textContent = 'Password must be at least 8 characters.'; return; }
+  button.disabled = true; statusEl.className = 'auth-modal-status'; statusEl.textContent = 'Creating account...';
   try {
-    const { data, error } = await window.supabaseClient.auth.signUp({
-      email,
-      password
-    });
-    
-    if (error) {
-      statusEl.className = 'auth-modal-status error';
-      statusEl.textContent = error.message || 'Account creation failed.';
-      signupBtn.disabled = false;
-      return;
-    }
-    
-    if (data?.user) {
-      statusEl.className = 'auth-modal-status success';
-      statusEl.textContent = '✓ Account created! Submitting your order...';
-      
-      // Auto submit after signup
-      setTimeout(() => {
-        hideAuthModal();
-        if (authCallback) authCallback();
-      }, 300);
-    }
+    await window.WAKALA_API.register(email, password);
+    statusEl.className = 'auth-modal-status success';
+    statusEl.textContent = '✓ Account created. Submitting your order...';
+    setTimeout(() => { hideAuthModal(); if (authCallback) authCallback(); }, 300);
   } catch (err) {
     statusEl.className = 'auth-modal-status error';
-    statusEl.textContent = 'An error occurred. Please try again.';
-    signupBtn.disabled = false;
+    statusEl.textContent = err.message || 'Account creation failed.';
+    button.disabled = false;
   }
 });
-
-// Make showAuthModal globally available
 window.showAuthModal = showAuthModal;
 </script>
 

@@ -248,56 +248,34 @@
     </nav>
   </footer>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import {
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    } from './supabase-config.js';
-
-    const supabase = createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
+  <script src="./api.js"></script>
+  <script>
     const form = document.getElementById('signupForm');
     const button = document.getElementById('submitButton');
     const message = document.getElementById('message');
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-
       message.className = 'message';
       message.textContent = '';
       button.disabled = true;
       button.textContent = 'Creating account...';
 
-      const { data, error } = await supabase.auth.signUp({
-        email: form.email.value.trim().toLowerCase(),
-        password: form.password.value,
-        options: {
-          emailRedirectTo:
-            `${window.location.origin}/login.html?confirmed=1`
-        }
-      });
-
-      if (error) {
+      try {
+        await window.WAKALA_API.register(
+          form.email.value.trim().toLowerCase(),
+          form.password.value
+        );
+        message.className = 'message success';
+        message.textContent = 'Account created. Continue to your profile setup.';
+        button.textContent = 'Account created';
+        window.setTimeout(() => window.location.replace('onboarding.html'), 350);
+      } catch (error) {
         message.className = 'message error';
-        message.textContent = error.message;
+        message.textContent = error.message || 'Registration failed. Please try again.';
         button.disabled = false;
         button.textContent = 'Create account';
-        return;
       }
-
-      if (data.session) {
-        window.location.href = 'onboarding.html';
-        return;
-      }
-
-      message.className = 'message success';
-      message.textContent =
-        'Account created. Check your email to confirm your account, then log in.';
-      button.textContent = 'Account created';
     });
   </script>
 </body>

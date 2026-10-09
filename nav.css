@@ -1,0 +1,58 @@
+/* Wakala home navigation — intentionally simple and dependency-free. */
+.nav-wrap { position: fixed; inset: 0 0 auto; z-index: 1000; }
+.nav {
+  width: min(1240px, calc(100% - 32px));
+  min-height: 72px;
+  margin: 14px auto 0;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 18px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 10px 35px rgba(0,0,0,.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.nav.scrolled { margin-top: 8px; box-shadow: 0 8px 25px rgba(0,0,0,.08); }
+.nav .brand { flex: 0 0 auto; color:#111; }
+.nav .nav-links { flex:1; justify-content:center; gap:24px; color:#222; }
+.nav .nav-links a { color:#222; }
+.nav .nav-actions { flex:0 0 auto; }
+.nav .nav-login { color:#111; background:#fff; border:1px solid #ddd; }
+.nav .nav-signup { color:#fff; background:#111; }
+.mobile-menu-btn {
+  display:none;
+  width:44px; height:44px; padding:0;
+  margin-left:auto; border:1px solid #ddd; border-radius:12px;
+  background:#fff; align-items:center; justify-content:center; flex-direction:column; gap:5px;
+}
+.mobile-menu-btn span { width:18px; height:2px; background:#111; display:block; }
+.mobile-panel {
+  position:fixed; inset:0; z-index:2000; display:none;
+  padding:22px 20px 30px; background:#fff; color:#111;
+}
+.mobile-panel.open { display:flex; flex-direction:column; }
+.mobile-panel-head { display:flex; align-items:center; justify-content:space-between; }
+.mobile-panel .brand { color:#111; }
+.mobile-close {
+  width:44px; height:44px; border:1px solid #ddd; border-radius:12px;
+  background:#fff; color:#111; font-size:28px; line-height:1;
+}
+.mobile-links { display:flex; flex-direction:column; margin-top:55px; }
+.mobile-links a {
+  padding:18px 0; border-bottom:1px solid #eee; color:#111;
+  font-size:20px; font-weight:600;
+}
+.mobile-actions { display:grid; gap:10px; margin-top:auto; }
+.mobile-actions .btn { width:100%; }
+body.nav-menu-open { overflow:hidden; }
+@media (max-width: 850px) {
+  .nav { min-height:64px; margin-top:8px; border-radius:14px; }
+  .nav .nav-links, .nav .nav-actions { display:none; }
+  .mobile-menu-btn { display:flex; }
+}
+@media (min-width: 851px) {
+  .mobile-panel { display:none !important; }
+}
