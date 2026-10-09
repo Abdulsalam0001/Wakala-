@@ -3,123 +3,249 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Complete your profile | Wakala</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./wakala-page-assets.css">
+  <meta name="theme-color" content="#f8f8f4">
+  <title>Set up your Wakala account</title>
+  <meta name="description" content="A quick, secure setup for your Wakala account.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light;--ink:#111713;--muted:#737b74;--green:#167653;--green-dark:#105c40;--paper:#f8f8f4;--line:#e5e9e2;--white:#fff;--lime:#d7f36b}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--paper)}
+    body{min-height:100vh;display:flex;flex-direction:column}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .topbar{width:min(1160px,calc(100% - 48px));margin:auto;min-height:82px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:inline-flex;align-items:center;gap:10px;font:800 21px Manrope,sans-serif;letter-spacing:-.07em}
+    .brand-mark{width:31px;height:31px;display:grid;place-items:center;background:var(--green);color:white;border-radius:10px;font-size:17px;letter-spacing:-.04em}
+    .secure{display:flex;align-items:center;gap:8px;color:#657168;font-size:12px;font-weight:600}
+    .secure svg{width:16px;height:16px;color:var(--green)}
+    main{flex:1;display:grid;place-items:center;padding:22px 24px 58px}
+    .onboard{width:min(100%,1000px);min-height:580px;display:grid;grid-template-columns:.92fr 1.08fr;background:var(--white);border:1px solid #e9ece6;border-radius:28px;overflow:hidden;box-shadow:0 24px 70px rgba(25,43,31,.07)}
+    .story{position:relative;isolation:isolate;overflow:hidden;padding:44px 42px;background:#102a20;color:#fff;display:flex;flex-direction:column}
+    .story:before,.story:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(255,255,255,.12);border-radius:50%;width:370px;height:370px;right:-205px;top:75px}
+    .story:after{width:270px;height:270px;right:-155px;top:125px;border-color:rgba(215,243,107,.24)}
+    .story-kicker{margin-top:auto;color:var(--lime);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+    .story h1{font:700 clamp(34px,4vw,49px)/1.08 Manrope,sans-serif;letter-spacing:-.055em;margin:15px 0 16px;max-width:390px}
+    .story-copy{max-width:330px;color:rgba(255,255,255,.69);font-size:14px;line-height:1.8;margin:0}
+    .route-card{margin-top:32px;padding:17px 18px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.055);border-radius:16px;max-width:340px}
+    .route-label{font-size:10px;color:rgba(255,255,255,.52);letter-spacing:.12em;text-transform:uppercase}
+    .route{display:flex;align-items:center;gap:8px;margin-top:13px;font-size:12px;font-weight:700}
+    .currency{display:grid;place-items:center;width:34px;height:34px;background:rgba(255,255,255,.1);border-radius:50%;font-size:10px}
+    .arrow{color:var(--lime);font-size:15px}
+    .story-foot{margin-top:34px;font-size:11px;color:rgba(255,255,255,.43)}
+    .form-panel{padding:48px clamp(28px,5vw,62px);display:flex;flex-direction:column;justify-content:center}
+    .progress-head{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#69736b;font-size:12px;font-weight:600}
+    .step-label{color:var(--green)}
+    .progress-track{height:4px;background:#edf0e9;border-radius:99px;margin:14px 0 35px;overflow:hidden}
+    .progress-value{height:100%;width:50%;background:var(--green);border-radius:99px;transition:width .25s ease}
+    .screen[hidden]{display:none}
+    .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:700}
+    h2{font:750 clamp(29px,3vw,36px)/1.15 Manrope,sans-serif;letter-spacing:-.05em;margin:12px 0 10px}
+    .description{font-size:14px;line-height:1.75;color:var(--muted);margin:0 0 28px;max-width:390px}
+    .field{margin:19px 0}
+    label{display:block;margin-bottom:8px;font-size:12px;font-weight:700;color:#3d4840}
+    input{display:block;width:100%;height:53px;border:1px solid #dfe5dc;border-radius:12px;padding:0 15px;background:#fff;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
+    input::placeholder{color:#a4aca5}
+    input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,118,83,.10)}
+    input[readonly]{background:#f7f8f5;color:#7a827b}
+    .hint{display:block;margin-top:8px;font-size:11px;line-height:1.6;color:#899189}
+    .primary,.secondary{min-height:52px;padding:0 18px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:transform .15s,background .15s}
+    .primary{width:100%;border:1px solid var(--green);background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
+    .primary:hover{background:var(--green-dark);transform:translateY(-1px)}
+    .primary:disabled{opacity:.6;cursor:wait;transform:none}
+    .secondary{border:1px solid var(--line);background:#fff;color:var(--ink);padding-inline:20px}
+    .actions{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:27px}
+    .actions .primary{grid-column:2}
+    .message{min-height:20px;margin:13px 0 0;font-size:12px;line-height:1.5;color:#b42318}
+    .message.success{color:var(--green)}
+    .trust-note{display:flex;gap:9px;align-items:flex-start;margin-top:26px;padding-top:19px;border-top:1px solid #edf0eb;color:#7a837b;font-size:11px;line-height:1.65}
+    .trust-note svg{flex:0 0 16px;width:16px;height:16px;color:var(--green);margin-top:1px}
+    .footer{padding:0 24px 24px;text-align:center;color:#939a93;font-size:11px}
+    @media(max-width:720px){.topbar{width:calc(100% - 36px);min-height:70px}.secure span{display:none}main{padding:10px 14px 28px;place-items:start center}.onboard{grid-template-columns:1fr;border-radius:22px;min-height:0}.story{padding:25px 25px 27px;min-height:230px}.story-kicker{margin-top:34px}.story h1{font-size:32px;max-width:420px;margin:10px 0}.story-copy{font-size:12px;line-height:1.6;max-width:400px}.route-card{display:none}.story-foot{display:none}.story:before{width:250px;height:250px;top:20px;right:-160px}.story:after{width:190px;height:190px;top:50px;right:-130px}.form-panel{padding:30px 24px 28px}.progress-track{margin-bottom:27px}.description{margin-bottom:22px}.footer{padding-bottom:18px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+  </style>
 </head>
 <body>
-  <main class="onboarding-shell wk-page-shell" aria-labelledby="onboardingTitle">
-    <section class="onboarding-copy">
-      <a class="brand" href="index.html"><span class="brand-dot"></span>WAKALA</a>
-      <div class="copy-content">
-        <div class="eyebrow">Account setup</div>
-        <h1>Let's make your Wakala account yours.</h1>
-        <p>Your account is ready. Add your name and phone number so your wallet, transfers and account details can be associated with the right profile.</p>
-        <div class="benefits">
-          <div class="benefit"><span>✓</span> Your profile stays linked to your Wakala account</div>
-          <div class="benefit"><span>✓</span> Your details are saved securely in your profile</div>
-          <div class="benefit"><span>✓</span> You can update profile information later</div>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Wakala home"><span class="brand-mark">w</span><span>wakala</span></a>
+    <div class="secure" aria-label="Secure account setup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span>Secure account setup</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="onboard">
+      <aside class="story">
+        <a class="brand" href="index.html" aria-label="Wakala home"><span class="brand-mark" style="background:#d7f36b;color:#102a20">w</span><span>wakala</span></a>
+        <div class="story-kicker">One account. More possibilities.</div>
+        <h1>Your money should move with you.</h1>
+        <p class="story-copy">A few quick details help us personalise your Wakala account, so you can get ready to manage money across borders.</p>
+        <div class="route-card" aria-label="Wakala currency corridors">
+          <div class="route-label">Built for a connected Africa</div>
+          <div class="route"><span class="currency">TZS</span><span class="arrow">↗</span><span class="currency">KES</span><span class="arrow">↗</span><span class="currency">RWF</span><span class="arrow">↗</span><span class="currency">NGN</span></div>
         </div>
-      </div>
-    </section>
+        <div class="story-foot">LOCAL CURRENCY. ONE CONNECTED WALLET.</div>
+      </aside>
 
-    <section class="onboarding-form">
-      <div class="step">Step 1 of 1 · Profile</div>
-      <h2 id="onboardingTitle">Complete your profile</h2>
-      <p class="description">This takes less than a minute. Your email is already connected to this account.</p>
+      <section class="form-panel" aria-labelledby="onboardingTitle">
+        <div class="progress-head"><span id="stepCaption">Let's get to know you</span><span class="step-label" id="stepCount">Step 1 of 2</span></div>
+        <div class="progress-track" role="progressbar" aria-label="Onboarding progress" aria-valuemin="1" aria-valuemax="2" aria-valuenow="1" id="progressTrack"><div class="progress-value" id="progressValue"></div></div>
 
-      <form id="onboardingForm" novalidate>
-        <div class="field">
-          <label for="fullName">Full name</label>
-          <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Enter your full name" maxlength="120" required>
+        <form id="onboardingForm" novalidate>
+          <section class="screen" id="screenOne">
+            <div class="eyebrow">Your profile</div>
+            <h2 id="onboardingTitle">First, what should we call you?</h2>
+            <p class="description">Add your name and check the email linked to your new Wakala account.</p>
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Enter your full name" maxlength="120" required>
+            </div>
+            <div class="field">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" readonly aria-readonly="true" placeholder="Loading your account email">
+              <span class="hint">This is the email you used to create your account.</span>
+            </div>
+            <button class="primary" type="button" id="continueButton">Continue <span aria-hidden="true">→</span></button>
+          </section>
+
+          <section class="screen" id="screenTwo" hidden>
+            <div class="eyebrow">One last detail</div>
+            <h2>How can we reach you?</h2>
+            <p class="description">Add a phone number you can access for important account updates. You can change it later in your profile.</p>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. +234 801 234 5678" maxlength="30" required>
+              <span class="hint">Include your country code, for example +234 for Nigeria.</span>
+            </div>
+            <div class="actions">
+              <button class="secondary" type="button" id="backButton">Back</button>
+              <button class="primary" type="submit" id="submitButton">Finish setup <span aria-hidden="true">→</span></button>
+            </div>
+          </section>
+          <p class="message" id="message" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="trust-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 19 6v5c0 4.5-3 7.8-7 10-4-2.2-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Your details are sent to your authenticated Wakala profile. We never ask for your password on this screen.</span>
         </div>
-
-        <div class="field">
-          <label for="phone">Phone number</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. +234 801 234 5678" maxlength="30" required>
-          <small>Use the number you can access for important account communication.</small>
-        </div>
-
-        <div class="field">
-          <label for="email">Email address</label>
-          <input id="email" class="email-field" type="email" readonly aria-readonly="true">
-        </div>
-
-        <button class="submit" id="submitButton" type="submit">Continue to Wakala</button>
-        <div class="message" id="message" role="status" aria-live="polite"></div>
-      </form>
-
-      <div class="secure-note">Your information is saved to your authenticated Wakala profile.</div>
-    </section>
+      </section>
+    </div>
   </main>
+  <footer class="footer">© <span id="year"></span> Wakala · Built for a connected Africa</footer>
 
   <script src="./api.js"></script>
   <script>
-    const form = document.getElementById("onboardingForm");
-    const fullName = document.getElementById("fullName");
-    const phone = document.getElementById("phone");
-    const email = document.getElementById("email");
-    const button = document.getElementById("submitButton");
-    const message = document.getElementById("message");
+    (() => {
+      const form = document.getElementById("onboardingForm");
+      const fullName = document.getElementById("fullName");
+      const phone = document.getElementById("phone");
+      const email = document.getElementById("email");
+      const continueButton = document.getElementById("continueButton");
+      const backButton = document.getElementById("backButton");
+      const submitButton = document.getElementById("submitButton");
+      const message = document.getElementById("message");
+      const screenOne = document.getElementById("screenOne");
+      const screenTwo = document.getElementById("screenTwo");
+      const stepCaption = document.getElementById("stepCaption");
+      const stepCount = document.getElementById("stepCount");
+      const progressTrack = document.getElementById("progressTrack");
+      const progressValue = document.getElementById("progressValue");
+      document.getElementById("year").textContent = new Date().getFullYear();
 
-    function showMessage(text, type = "") {
-      message.textContent = text;
-      message.className = ("message " + type).trim();
-    }
+      function showMessage(text, type = "") {
+        message.textContent = text;
+        message.className = ("message " + type).trim();
+      }
 
-    async function initialise() {
-      try {
-        const [{ user }, { profile }] = await Promise.all([
-          window.WAKALA_API.me(),
-          window.WAKALA_API.profile()
-        ]);
-        email.value = user.email || profile?.email || "";
-        if (profile?.onboarding_completed) {
-          window.location.replace("dashboard.html");
+      function showStep(step) {
+        const second = step === 2;
+        screenOne.hidden = second;
+        screenTwo.hidden = !second;
+        stepCaption.textContent = second ? "Contact details" : "Let's get to know you";
+        stepCount.textContent = "Step " + step + " of 2";
+        progressValue.style.width = second ? "100%" : "50%";
+        progressTrack.setAttribute("aria-valuenow", String(step));
+        showMessage("");
+        (second ? phone : fullName).focus();
+      }
+
+      continueButton.addEventListener("click", () => {
+        const name = fullName.value.trim().replace(/\s+/g, " ");
+        if (name.length < 2) {
+          showMessage("Please enter your full name.");
+          fullName.focus();
           return;
         }
-        fullName.value = profile?.full_name || "";
-        phone.value = profile?.phone || "";
-        fullName.focus();
-      } catch {
-        window.location.replace("login.html");
+        showStep(2);
+      });
+
+      backButton.addEventListener("click", () => showStep(1));
+
+      async function initialise() {
+        try {
+          const [{ user }, { profile }] = await Promise.all([
+            window.WAKALA_API.me(),
+            window.WAKALA_API.profile()
+          ]);
+          if (!user) {
+            window.location.replace("login.html");
+            return;
+          }
+          email.value = user.email || profile?.email || "";
+          if (profile?.onboarding_completed) {
+            window.location.replace("dashboard.html");
+            return;
+          }
+          fullName.value = profile?.full_name || "";
+          phone.value = profile?.phone || "";
+          if (fullName.value.trim().length >= 2) showStep(2);
+        } catch {
+          window.location.replace("login.html");
+        }
       }
-    }
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      showMessage("");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        showMessage("");
+        const name = fullName.value.trim().replace(/\s+/g, " ");
+        const phoneNumber = phone.value.trim();
 
-      const name = fullName.value.trim().replace(/\s+/g, " ");
-      const phoneNumber = phone.value.trim();
+        if (name.length < 2) {
+          showStep(1);
+          showMessage("Please enter your full name.");
+          fullName.focus();
+          return;
+        }
+        if (phoneNumber.replace(/\D/g, "").length < 7) {
+          showMessage("Please enter a valid phone number.");
+          phone.focus();
+          return;
+        }
 
-      if (name.length < 2) {
-        showMessage("Please enter your full name.", "error");
-        fullName.focus();
-        return;
-      }
-      if (phoneNumber.replace(/\D/g, "").length < 7) {
-        showMessage("Please enter a valid phone number.", "error");
-        phone.focus();
-        return;
-      }
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving your details…";
+        backButton.disabled = true;
 
-      button.disabled = true;
-      button.textContent = "Saving your profile…";
+        try {
+          await window.WAKALA_API.updateProfile(name, phoneNumber);
+          showMessage("Your profile is ready. Taking you to Wakala…", "success");
+          submitButton.textContent = "Setup complete";
+          window.setTimeout(() => window.location.replace("dashboard.html"), 450);
+        } catch (error) {
+          console.error("Onboarding save failed:", error);
+          showMessage(error.message || "We couldn't save your details. Please try again.");
+          submitButton.disabled = false;
+          submitButton.innerHTML = 'Finish setup <span aria-hidden="true">→</span>';
+          backButton.disabled = false;
+        }
+      });
 
-      try {
-        await window.WAKALA_API.updateProfile(name, phoneNumber);
-        showMessage("Profile saved. Taking you to your dashboard…", "success");
-        window.setTimeout(() => window.location.replace("dashboard.html"), 350);
-      } catch (error) {
-        console.error("Onboarding save failed:", error);
-        showMessage(error.message || "We couldn't save your profile. Please try again.", "error");
-        button.disabled = false;
-        button.textContent = "Continue to Wakala";
-      }
-    });
-
-    initialise();
+      initialise();
+    })();
   </script>
 </body>
 </html>
