@@ -19,8 +19,8 @@
   <style id="dashboard-layout-repair">
     /* Keep the dashboard inside the viewport at every breakpoint. */
     *, *::before, *::after { box-sizing: border-box; }
-    html { width: 100%; min-width: 0; overflow-x: clip; }
-    body.wk-page-shell { width: 100%; min-width: 0; overflow-x: clip; }
+    html { width: 100%; min-width: 0; overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body.wk-page-shell { width: 100%; min-width: 0; overflow-x: clip; overscroll-behavior-x: none; }
     .app, .main, .main-inner, .topbar, .dashboard-grid, .lower-grid,
     .card, .balance-content, .quick-card, .section-card, .esim-card {
       min-width: 0;
@@ -85,7 +85,7 @@
       .sim-preview { position: relative; inset: auto; width: 100%; margin: 12px 0 0; }
     }
     @media (max-width: 560px) {
-      .main { padding: 18px 12px 32px; }
+      .main { padding: 18px 12px max(32px, env(safe-area-inset-bottom)); }
       .topbar { align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
       .date { max-width: 65%; overflow-wrap: anywhere; }
       .topbar-right { margin-left: auto; }
@@ -2013,96 +2013,229 @@
   </script>
 
   
-  <!-- First-visit Wakala services overview -->
+  <!-- First-visit guided introduction: original Wakala experience inspired by fintech onboarding patterns -->
   <div class="services-modal-backdrop" id="servicesModal" hidden>
-    <section class="services-modal" role="dialog" aria-modal="true" aria-labelledby="servicesModalTitle" aria-describedby="servicesModalDescription">
-      <button class="services-modal-close" id="servicesModalClose" type="button" aria-label="Close services overview">×</button>
-      <div class="services-modal-kicker"><span class="services-modal-mark">W</span> WAKALA · YOUR FINANCIAL WORKSPACE</div>
-      <p class="services-modal-eyebrow">One account. More possibilities.</p>
-      <h2 id="servicesModalTitle">Meet what you can do with Wakala.</h2>
-      <p class="services-modal-description" id="servicesModalDescription">Move money, manage your wallets and explore services designed for life across borders. Available features can vary by country and account.</p>
-      <div class="services-modal-grid">
-        <a class="services-feature" href="wallet.html"><span class="services-feature-icon">◈</span><span><strong>Multi-currency wallets</strong><small>Keep track of supported balances in one place.</small></span><span class="services-feature-arrow">↗</span></a>
-        <a class="services-feature" href="transfer.html"><span class="services-feature-icon">⇄</span><span><strong>Send & receive</strong><small>Access transfer and receiving options available to you.</small></span><span class="services-feature-arrow">↗</span></a>
-        <a class="services-feature" href="payments.html"><span class="services-feature-icon">▤</span><span><strong>Payments & cards</strong><small>Explore bill-payment and card features.</small></span><span class="services-feature-arrow">↗</span></a>
-        <a class="services-feature" href="esim-plans.html"><span class="services-feature-icon">▣</span><span><strong>Travel eSIM</strong><small>Browse mobile data plans for your next trip.</small></span><span class="services-feature-arrow">↗</span></a>
-        <a class="services-feature" href="staking.html"><span class="services-feature-icon">↗</span><span><strong>Earn with Wakala</strong><small>See the current opportunities and eligibility details.</small></span><span class="services-feature-arrow">↗</span></a>
-        <a class="services-feature" href="profile.html"><span class="services-feature-icon">◎</span><span><strong>Account & security</strong><small>Review your profile and security settings.</small></span><span class="services-feature-arrow">↗</span></a>
+    <section class="services-modal" role="dialog" aria-modal="true" aria-labelledby="servicesModalTitle" aria-describedby="servicesModalDescription" aria-roledescription="onboarding">
+      <button class="services-modal-close" id="servicesModalClose" type="button" aria-label="Close introduction">×</button>
+      <div class="services-modal-kicker"><span class="services-modal-mark">W</span><span>WAKALA <span class="services-kicker-divider">/</span> A BETTER WAY TO MOVE</span></div>
+
+      <div class="services-story-progress" aria-label="Introduction progress">
+        <span class="services-progress-step is-active" data-progress="0"></span>
+        <span class="services-progress-step" data-progress="1"></span>
+        <span class="services-progress-step" data-progress="2"></span>
+        <span class="services-progress-step" data-progress="3"></span>
       </div>
-      <div class="services-modal-footer"><span class="services-modal-note">Review fees, availability and terms before confirming any transaction.</span><button class="services-modal-cta" id="servicesModalDone" type="button">Explore my dashboard <span aria-hidden="true">→</span></button></div>
+
+      <div class="services-story-viewport" id="servicesStoryViewport">
+        <div class="services-story-track" id="servicesStoryTrack">
+          <article class="services-story-slide is-active" data-slide="0" aria-hidden="false">
+            <div class="services-story-art art-wallet" aria-hidden="true">
+              <div class="story-orbit orbit-one"></div><div class="story-orbit orbit-two"></div>
+              <div class="story-wallet-card">
+                <div class="story-card-top"><span class="story-card-brand">W</span><span>WAKALA WALLET</span></div>
+                <div class="story-card-label">YOUR MONEY, IN YOUR CURRENCY</div>
+                <div class="story-currency-row"><span class="story-currency-dot">T</span><strong>TZS</strong><span class="story-currency-line"></span><b>•••</b></div>
+                <div class="story-currency-row"><span class="story-currency-dot dot-gold">K</span><strong>KES</strong><span class="story-currency-line"></span><b>•••</b></div>
+                <div class="story-currency-row"><span class="story-currency-dot dot-cream">N</span><strong>NGN</strong><span class="story-currency-line"></span><b>•••</b></div>
+              </div>
+              <span class="story-floating-pill pill-top">One connected account</span><span class="story-floating-pill pill-bottom">Across borders ↗</span>
+            </div>
+            <p class="services-modal-eyebrow">01 — YOUR MONEY, TOGETHER</p>
+            <h2 id="servicesModalTitle">More of your money life, in one place.</h2>
+            <p class="services-modal-description" id="servicesModalDescription">Keep an eye on supported currency balances from one workspace. Wakala is designed to make money across markets feel more connected, without making your dashboard feel complicated.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">↗</span><span><strong>Start with your wallet</strong><small>See balances and recent activity at a glance.</small></span></div>
+          </article>
+
+          <article class="services-story-slide" data-slide="1" aria-hidden="true">
+            <div class="services-story-art art-transfer" aria-hidden="true">
+              <div class="transfer-node node-left"><span>TZ</span><small>LOCAL</small></div><div class="transfer-node node-right"><span>KE</span><small>ACROSS BORDERS</small></div>
+              <div class="transfer-path"><span class="transfer-path-line"></span><span class="transfer-path-arrow">→</span><span class="transfer-path-spark">✦</span></div>
+              <div class="transfer-status"><span class="status-check">✓</span><span><strong>Move with clarity</strong><small>Review details before confirming</small></span></div>
+            </div>
+            <p class="services-modal-eyebrow">02 — MOVE WITH CLARITY</p>
+            <h2>When money needs to move, stay in control.</h2>
+            <p class="services-modal-description">Explore the transfer and payment options available to your account. Check the recipient, currency, fees and final details before you confirm any movement of money.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">⇄</span><span><strong>Your action, your confirmation</strong><small>Review every detail before you proceed.</small></span></div>
+          </article>
+
+          <article class="services-story-slide" data-slide="2" aria-hidden="true">
+            <div class="services-story-art art-travel" aria-hidden="true">
+              <div class="travel-sun"></div><div class="travel-route route-a"></div><div class="travel-route route-b"></div>
+              <div class="travel-phone"><div class="travel-phone-speaker"></div><div class="travel-phone-label">WAKALA eSIM</div><div class="travel-signal">▥</div><strong>Stay connected.</strong><small>Data for the journey ahead.</small><div class="travel-data-bar"><span></span></div><small>Choose a plan for your destination</small></div>
+              <span class="travel-stamp">GO FURTHER</span>
+            </div>
+            <p class="services-modal-eyebrow">03 — READY FOR THE JOURNEY</p>
+            <h2>Stay connected, wherever the road takes you.</h2>
+            <p class="services-modal-description">Discover travel eSIM plans for supported destinations, then explore Earn with Wakala for available campaigns and opportunities. Availability and eligibility depend on the service and your account.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">⌁</span><span><strong>Travel and discover</strong><small>Explore eSIM and Earn with Wakala when you need them.</small></span></div>
+          </article>
+
+          <article class="services-story-slide" data-slide="3" aria-hidden="true">
+            <div class="services-story-art art-control" aria-hidden="true">
+              <div class="control-halo halo-one"></div><div class="control-halo halo-two"></div>
+              <div class="control-shield"><span class="shield-check">✓</span></div>
+              <div class="control-info info-top"><span class="control-info-dot"></span><span><strong>Your profile</strong><small>Keep your details current</small></span></div>
+              <div class="control-info info-bottom"><span class="control-lock">⌑</span><span><strong>Your account, your control</strong><small>Review security settings</small></span></div>
+            </div>
+            <p class="services-modal-eyebrow">04 — BUILT AROUND YOU</p>
+            <h2>Your account should feel like yours.</h2>
+            <p class="services-modal-description">Keep your profile up to date and review your account settings. Before using a feature, check its availability, applicable fees and terms. We’ll keep the essentials close while you explore.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">◎</span><span><strong>You're ready to explore</strong><small>Your dashboard is the starting point.</small></span></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="services-story-controls">
+        <div class="services-story-count"><strong id="servicesStoryCurrent">01</strong><span>/</span><span>04</span></div>
+        <div class="services-story-hint" id="servicesStoryHint"><span class="story-swipe-arrow">↔</span> Swipe right to continue</div>
+        <div class="services-story-actions">
+          <button class="services-story-prev" id="servicesStoryPrev" type="button" aria-label="Previous introduction slide" disabled>←</button>
+          <button class="services-modal-cta" id="servicesStoryNext" type="button">Next <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+      <p class="services-modal-note">Features may vary by country and account. Always review transaction details before confirming.</p>
     </section>
   </div>
   <style id="services-modal-styles">
-    .services-modal-backdrop[hidden] { display: none !important; }
-    .services-modal-backdrop {
-      position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center;
-      padding: 20px; background: rgba(15, 24, 31, .64); backdrop-filter: blur(7px);
-      overflow-y: auto; overscroll-behavior: contain;
+    .services-modal-backdrop[hidden] { display:none !important; }
+    .services-modal-backdrop { position:fixed; inset:0; z-index:10000; display:grid; place-items:center; padding:18px; background:rgba(13,20,32,.72); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); overflow-y:auto; overscroll-behavior:contain; }
+    .services-modal { position:relative; width:min(590px,100%); max-height:min(92vh,820px); overflow:hidden; padding:clamp(22px,4vw,34px); border:1px solid rgba(255,255,255,.7); border-radius:28px; background:#fffdf8; color:#101722; box-shadow:0 34px 110px rgba(0,0,0,.3); }
+    .services-modal-close { position:absolute; top:18px; right:18px; z-index:4; display:grid; place-items:center; width:38px; height:38px; border:1px solid #e1e6df; border-radius:50%; background:#fff; color:#101722; font-size:24px; line-height:1; cursor:pointer; }
+    .services-modal-kicker { display:flex; align-items:center; gap:10px; padding-right:44px; color:#5f6c63; font-size:10px; font-weight:800; letter-spacing:.1em; }
+    .services-kicker-divider { padding:0 4px; color:#c6cabe; }
+    .services-modal-mark { display:grid; place-items:center; flex:0 0 30px; width:30px; height:30px; border-radius:10px; background:#101722; color:#fff; font:600 17px Georgia,serif; }
+    .services-story-progress { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; margin:23px 0 0; }
+    .services-progress-step { height:3px; border-radius:9px; background:#e6e9e1; transition:background .2s ease; }
+    .services-progress-step.is-active,.services-progress-step.is-complete { background:#218766; }
+    .services-story-viewport { overflow:hidden; margin:0 -2px; touch-action:pan-y; cursor:grab; }
+    .services-story-viewport.is-dragging { cursor:grabbing; user-select:none; }
+    .services-story-track { display:flex; align-items:stretch; transition:transform .38s cubic-bezier(.2,.75,.25,1); will-change:transform; }
+    .services-story-slide { flex:0 0 100%; min-width:0; padding:0 2px; }
+    .services-story-slide[aria-hidden="true"] { visibility:hidden; }
+    .services-story-art { position:relative; display:grid; place-items:center; height:220px; margin:20px 0 20px; overflow:hidden; border:1px solid rgba(16,23,34,.06); border-radius:22px; isolation:isolate; }
+    .art-wallet { background:radial-gradient(circle at 50% 45%,#f9e6b8 0,transparent 39%),linear-gradient(135deg,#edf5ed,#f9f5e9 60%,#e4efe8); }
+    .story-orbit { position:absolute; width:240px; height:240px; border:1px solid rgba(33,135,102,.15); border-radius:50%; }
+    .orbit-one { transform:rotate(-24deg) scaleX(1.35); }.orbit-two { transform:rotate(35deg) scaleX(1.15); width:290px;height:180px; }
+    .story-wallet-card { position:relative; z-index:1; width:min(285px,75%); padding:17px 18px; border:1px solid rgba(255,255,255,.65); border-radius:18px; background:linear-gradient(145deg,#111b27,#1d3b36); color:#fff; box-shadow:0 22px 42px rgba(16,23,34,.22); transform:rotate(-3deg); }
+    .story-card-top { display:flex; align-items:center; justify-content:space-between; color:#a6c9b7; font-size:8px; font-weight:800; letter-spacing:.12em; }.story-card-brand { display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:#e4a445;color:#101722;font:600 14px Georgia,serif; }
+    .story-card-label { margin:15px 0 10px; color:#b4c2b9; font-size:8px; letter-spacing:.13em; }
+    .story-currency-row { display:flex; align-items:center; gap:8px; margin-top:7px; font-size:10px; }.story-currency-row strong { font-size:9px; }.story-currency-row b { color:#fff; font-size:8px; letter-spacing:.1em; }.story-currency-dot { display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#218766;color:white;font-size:9px; }.dot-gold { background:#e4a445;color:#101722; }.dot-cream { background:#f7f2e6;color:#101722; }.story-currency-line { flex:1;height:1px;background:rgba(255,255,255,.17); }
+    .story-floating-pill { position:absolute; z-index:2; padding:9px 12px; border:1px solid rgba(255,255,255,.85); border-radius:999px; background:rgba(255,255,255,.88); color:#263a30; box-shadow:0 7px 25px rgba(16,23,34,.08); font-size:9px; font-weight:700; }.pill-top { top:24px; right:18px; }.pill-bottom { bottom:22px; left:18px; }
+    .art-transfer { background:linear-gradient(140deg,#edf4ec,#f9f4e8); }.transfer-node { position:absolute; top:54px; z-index:2; display:grid;place-items:center;gap:7px;width:70px;height:70px;border:1px solid #d6e4d8;border-radius:22px;background:#fffdf8;box-shadow:0 10px 25px rgba(16,23,34,.07); }.transfer-node span { color:#176b50;font:600 20px Georgia,serif; }.transfer-node small { color:#6b786e;font-size:7px;font-weight:800;letter-spacing:.08em; }.node-left { left:18%; }.node-right { right:18%; }.transfer-path { position:absolute;left:31%;right:31%;top:82px;display:flex;align-items:center;justify-content:center; }.transfer-path-line { position:absolute;left:0;right:0;height:2px;background:#9ec9b2; }.transfer-path-arrow { position:relative;display:grid;place-items:center;width:35px;height:35px;border-radius:50%;background:#218766;color:#fff;font-size:18px;box-shadow:0 0 0 7px rgba(33,135,102,.1); }.transfer-path-spark { position:absolute;top:-37px;right:15%;color:#d99b39;font-size:19px; }.transfer-status { position:absolute;bottom:24px;display:flex;align-items:center;gap:11px;width:min(310px,82%);padding:12px 15px;border:1px solid #e1e8df;border-radius:14px;background:rgba(255,253,248,.94);box-shadow:0 9px 22px rgba(16,23,34,.06); }.status-check { display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e5f3e9;color:#176b50;font-weight:800; }.transfer-status strong,.transfer-status small { display:block; }.transfer-status strong { font-size:10px; }.transfer-status small { margin-top:3px;color:#718075;font-size:9px; }
+    .art-travel { background:linear-gradient(140deg,#f5e7c7,#f7f1e4 48%,#e1eee5); }.travel-sun { position:absolute;top:20px;right:18%;width:68px;height:68px;border-radius:50%;background:#e4a445;opacity:.65; }.travel-route { position:absolute;width:140px;height:65px;border:1px dashed rgba(33,135,102,.55);border-color:rgba(33,135,102,.55) transparent transparent transparent;border-radius:50%; }.route-a { top:35px;left:6%;transform:rotate(15deg); }.route-b { right:5%;bottom:20px;transform:rotate(200deg); }.travel-phone { position:relative;z-index:1;display:flex;flex-direction:column;width:148px;min-height:174px;padding:15px 13px 12px;border:4px solid #101722;border-radius:23px;background:#fffdf8;box-shadow:0 18px 38px rgba(16,23,34,.2); }.travel-phone-speaker { width:34px;height:4px;margin:0 auto 10px;border-radius:4px;background:#101722; }.travel-phone-label { color:#218766;font-size:7px;font-weight:800;letter-spacing:.1em; }.travel-signal { margin:10px 0 4px;color:#d99b39;font-size:20px; }.travel-phone strong { font:600 15px/1.1 Georgia,serif; }.travel-phone small { margin-top:5px;color:#6b786e;font-size:7px;line-height:1.4; }.travel-data-bar { height:5px;margin-top:10px;border-radius:5px;background:#e4e9df; }.travel-data-bar span { display:block;width:72%;height:100%;border-radius:5px;background:#218766; }.travel-stamp { position:absolute;right:12%;bottom:25px;padding:7px 9px;border:1px solid rgba(16,23,34,.13);border-radius:9px;background:rgba(255,253,248,.8);color:#176b50;font-size:8px;font-weight:800;letter-spacing:.1em;transform:rotate(7deg); }
+    .art-control { background:radial-gradient(circle at 50% 48%,#fffdf8,#eaf3e9 68%); }.control-halo { position:absolute;width:170px;height:170px;border:1px solid rgba(33,135,102,.18);border-radius:50%; }.halo-two { width:220px;height:220px;border-style:dashed; }.control-shield { position:relative;z-index:1;display:grid;place-items:center;width:94px;height:106px;clip-path:polygon(50% 0,94% 18%,88% 65%,50% 100%,12% 65%,6% 18%);background:linear-gradient(145deg,#218766,#101722);color:white;filter:drop-shadow(0 15px 20px rgba(16,23,34,.15)); }.shield-check { display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.4);border-radius:50%;font-size:22px; }.control-info { position:absolute;z-index:2;display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid #e0e8de;border-radius:13px;background:rgba(255,253,248,.95);box-shadow:0 8px 25px rgba(16,23,34,.07); }.control-info strong,.control-info small { display:block; }.control-info strong { font-size:9px; }.control-info small { margin-top:3px;color:#718075;font-size:8px; }.info-top { top:26px;left:12%; }.info-bottom { right:7%;bottom:23px; }.control-info-dot { width:9px;height:9px;border-radius:50%;background:#218766;box-shadow:0 0 0 5px #e4f1e6; }.control-lock { display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#f7e9c9;color:#8b6120; }
+    .services-modal-eyebrow { margin:0 0 9px;color:#218766;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase; }.services-modal h2 { max-width:480px;margin:0;color:#101722;font-family:'Fraunces',Georgia,serif;font-size:clamp(30px,5vw,42px);font-weight:600;line-height:1.04;letter-spacing:-.045em; }.services-modal-description { max-width:500px;min-height:66px;margin:13px 0 17px;color:#657267;font-size:13px;line-height:1.7; }.services-story-callout { display:flex;align-items:center;gap:11px;padding:12px 14px;border:1px solid #e5e9e1;border-radius:14px;background:#f8faf5; }.story-callout-icon { display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:#e6f2e8;color:#176b50;font-size:17px; }.services-story-callout strong,.services-story-callout small { display:block; }.services-story-callout strong { font-size:10px; }.services-story-callout small { margin-top:3px;color:#758075;font-size:9px;line-height:1.5; }
+    .services-story-controls { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:17px;border-top:1px solid #e6e9e1; }.services-story-count { display:flex;align-items:center;gap:5px;color:#9aa39a;font-size:10px; }.services-story-count strong { color:#101722;font-size:12px; }.services-story-hint { display:flex;align-items:center;gap:6px;color:#6c796e;font-size:9px; }.story-swipe-arrow { color:#218766;font-size:16px; }.services-story-actions { display:flex;align-items:center;gap:8px; }.services-story-prev { display:grid;place-items:center;width:43px;height:43px;border:1px solid #dfe5dc;border-radius:13px;background:#fff;color:#101722;font-size:18px;cursor:pointer; }.services-story-prev:disabled { opacity:.35;cursor:default; }.services-modal-cta { display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:43px;padding:0 17px;border:0;border-radius:13px;background:#176b50;color:#fff;font-size:11px;font-weight:800;cursor:pointer; }.services-modal-cta:hover { background:#11543e; }.services-modal-cta:focus-visible,.services-story-prev:focus-visible,.services-modal-close:focus-visible { outline:3px solid rgba(33,135,102,.28);outline-offset:3px; }.services-modal-note { margin:12px 0 0;color:#8a9389;font-size:9px;line-height:1.5; }
+    body.services-modal-open { overflow:hidden; }
+    @media (max-width:560px) {
+      .services-modal-backdrop { align-items:start;padding:8px; }
+      .services-modal { max-height:calc(100dvh - 16px);padding:20px 15px 14px;border-radius:22px;overflow-y:auto; }
+      .services-modal-kicker { font-size:9px; }.services-modal-close { top:14px;right:14px;width:34px;height:34px; }
+      .services-story-progress { margin-top:18px; }.services-story-art { height:180px;margin:16px 0 18px; }
+      .services-modal h2 { font-size:clamp(29px,8vw,37px); }.services-modal-description { min-height:0;font-size:12px; }
+      .services-story-callout { padding:10px 11px; }.services-story-hint { max-width:100px;line-height:1.3; }
+      .services-story-controls { gap:7px; }.services-story-count { display:none; }.services-modal-cta { padding:0 13px; }
+      .story-wallet-card { width:76%; }.pill-top { right:8px;top:17px; }.pill-bottom { left:8px;bottom:15px; }
+      .node-left { left:9%; }.node-right { right:9%; }.transfer-path { left:25%;right:25%; }
+      .info-top { left:5%; }.info-bottom { right:3%; }.control-info { padding:8px 9px; }
     }
-    .services-modal {
-      position: relative; width: min(720px, 100%); max-height: min(90vh, 820px); overflow-y: auto;
-      padding: clamp(22px, 4vw, 38px); border: 1px solid rgba(255,255,255,.72);
-      border-radius: 25px; background: #fffefa; color: #17212b;
-      box-shadow: 0 30px 100px rgba(0,0,0,.28);
-    }
-    .services-modal-close {
-      position: absolute; top: 16px; right: 16px; display: grid; place-items: center;
-      width: 38px; height: 38px; border: 1px solid #e3e7e2; border-radius: 50%;
-      background: #fff; color: #17212b; font-size: 25px; cursor: pointer;
-    }
-    .services-modal-kicker { display: flex; align-items: center; gap: 9px; padding-right: 45px; color: #53645c; font-size: 10px; font-weight: 800; letter-spacing: .11em; }
-    .services-modal-mark { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 10px; background: #1b6b50; color: #fff; font-family: Georgia,serif; font-size: 17px; }
-    .services-modal-eyebrow { margin: 25px 0 8px; color: #237b5b; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-    .services-modal h2 { max-width: 540px; margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(29px, 5vw, 43px); font-weight: 600; line-height: 1.08; letter-spacing: -.035em; }
-    .services-modal-description { max-width: 590px; margin: 13px 0 23px; color: #63716a; font-size: 13px; line-height: 1.65; }
-    .services-modal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .services-feature { display: grid; grid-template-columns: 38px minmax(0,1fr) 14px; align-items: start; gap: 11px; min-width: 0; padding: 15px 13px; border: 1px solid #e6e9e3; border-radius: 15px; background: #fff; color: inherit; text-decoration: none; transition: border-color .18s, transform .18s, background .18s; }
-    .services-feature:hover { border-color: #a7c9b8; background: #f7fbf7; transform: translateY(-1px); }
-    .services-feature-icon { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 12px; background: #edf5ef; color: #1b6b50; font-size: 19px; }
-    .services-feature strong, .services-feature small { display: block; overflow-wrap: anywhere; }
-    .services-feature strong { margin: 2px 0 5px; font-size: 12px; line-height: 1.35; }
-    .services-feature small { color: #68756d; font-size: 10px; line-height: 1.55; }
-    .services-feature-arrow { padding-top: 3px; color: #779084; font-size: 14px; }
-    .services-modal-footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 21px; padding-top: 18px; border-top: 1px solid #e6e9e3; }
-    .services-modal-note { max-width: 300px; color: #78837c; font-size: 10px; line-height: 1.5; }
-    .services-modal-cta { display: inline-flex; align-items: center; justify-content: center; gap: 12px; flex: 0 0 auto; min-height: 45px; padding: 0 17px; border: 0; border-radius: 12px; background: #1b6b50; color: white; font-size: 11px; font-weight: 800; cursor: pointer; }
-    .services-modal-cta:hover { background: #14523d; }
-    body.services-modal-open { overflow: hidden; }
-    @media (max-width: 560px) {
-      .services-modal-backdrop { align-items: start; padding: 10px; }
-      .services-modal { max-height: calc(100dvh - 20px); padding: 22px 16px 17px; border-radius: 20px; }
-      .services-modal-kicker { font-size: 9px; }
-      .services-modal-eyebrow { margin-top: 22px; }
-      .services-modal-description { margin-bottom: 17px; font-size: 12px; }
-      .services-modal-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-      .services-feature { grid-template-columns: 35px minmax(0,1fr) 12px; padding: 11px; }
-      .services-feature-icon { width: 34px; height: 34px; }
-      .services-modal-footer { align-items: stretch; flex-direction: column; gap: 12px; }
-      .services-modal-note { max-width: none; }
-      .services-modal-cta { width: 100%; }
-    }
-    @media (prefers-reduced-motion: reduce) { .services-feature { transition: none; } }
+    @media (prefers-reduced-motion:reduce) { .services-story-track,.services-progress-step { transition:none !important; } }
   </style>
   <script>
     (() => {
       const modal = document.getElementById("servicesModal");
       const closeButton = document.getElementById("servicesModalClose");
-      const doneButton = document.getElementById("servicesModalDone");
-      if (!modal || !closeButton || !doneButton) return;
-      const storageKey = "wakala-services-overview-seen-v1";
+      const prevButton = document.getElementById("servicesStoryPrev");
+      const nextButton = document.getElementById("servicesStoryNext");
+      const track = document.getElementById("servicesStoryTrack");
+      const viewport = document.getElementById("servicesStoryViewport");
+      const currentLabel = document.getElementById("servicesStoryCurrent");
+      const hint = document.getElementById("servicesStoryHint");
+      const slides = Array.from(document.querySelectorAll(".services-story-slide"));
+      const progress = Array.from(document.querySelectorAll(".services-progress-step"));
+      if (!modal || !closeButton || !prevButton || !nextButton || !track || !viewport || !slides.length) return;
+
+      const storageKey = "wakala-services-overview-seen-v2";
+      let index = 0;
+      let startX = 0;
+      let startY = 0;
+      let dragging = false;
+      let pointerId = null;
       let alreadySeen = false;
       try { alreadySeen = localStorage.getItem(storageKey) === "yes"; } catch (_) {}
+
       const closeModal = () => {
         modal.hidden = true;
         document.body.classList.remove("services-modal-open");
         try { localStorage.setItem(storageKey, "yes"); } catch (_) {}
       };
+
+      const renderSlide = () => {
+        track.style.transform = `translate3d(-${index * 100}%,0,0)`;
+        slides.forEach((slide, i) => {
+          const active = i === index;
+          slide.classList.toggle("is-active", active);
+          slide.setAttribute("aria-hidden", String(!active));
+          if ("inert" in slide) slide.inert = !active;
+        });
+        progress.forEach((step, i) => {
+          step.classList.toggle("is-active", i === index);
+          step.classList.toggle("is-complete", i < index);
+        });
+        currentLabel.textContent = String(index + 1).padStart(2, "0");
+        prevButton.disabled = index === 0;
+        nextButton.innerHTML = index === slides.length - 1
+          ? 'Explore my dashboard <span aria-hidden="true">→</span>'
+          : 'Next <span aria-hidden="true">→</span>';
+        hint.innerHTML = index === slides.length - 1
+          ? '<span class="story-swipe-arrow">✓</span> All set'
+          : '<span class="story-swipe-arrow">↔</span> Swipe right to continue';
+      };
+
+      const move = (direction) => {
+        const nextIndex = index + direction;
+        if (nextIndex < 0) return;
+        if (nextIndex >= slides.length) { closeModal(); return; }
+        index = nextIndex;
+        renderSlide();
+      };
+
       closeButton.addEventListener("click", closeModal);
-      doneButton.addEventListener("click", closeModal);
+      prevButton.addEventListener("click", () => move(-1));
+      nextButton.addEventListener("click", () => move(1));
       modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
       document.addEventListener("keydown", event => {
-        if (event.key === "Escape" && !modal.hidden) closeModal();
+        if (modal.hidden) return;
+        if (event.key === "Escape") closeModal();
+        if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
+        if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
       });
+
+      viewport.addEventListener("pointerdown", event => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        startX = event.clientX;
+        startY = event.clientY;
+        dragging = true;
+        pointerId = event.pointerId;
+        viewport.classList.add("is-dragging");
+      });
+      viewport.addEventListener("pointerup", event => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        dragging = false;
+        pointerId = null;
+        viewport.classList.remove("is-dragging");
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+          move(dx > 0 ? 1 : -1);
+        }
+      });
+      const cancelDrag = () => { dragging = false; pointerId = null; viewport.classList.remove("is-dragging"); };
+      viewport.addEventListener("pointercancel", cancelDrag);
+      viewport.addEventListener("lostpointercapture", cancelDrag);
+      viewport.addEventListener("dragstart", event => event.preventDefault());
+
+      renderSlide();
       if (!alreadySeen) {
         modal.hidden = false;
         document.body.classList.add("services-modal-open");
