@@ -176,7 +176,7 @@
     }
 
     continueButton.addEventListener("click", () => {
-      const name = fullName.value.trim().replace(/\\s+/g, " ");
+      const name = fullName.value.trim().replace(/\s+/g, " ");
       if (name.length < 2) {
         showMessage("Please enter your full name.", "error");
         fullName.focus();
@@ -220,7 +220,7 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       showMessage("");
-      const name = fullName.value.trim().replace(/\\s+/g, " ");
+      const name = fullName.value.trim().replace(/\s+/g, " ");
       const phoneNumber = phone.value.trim();
 
       if (name.length < 2) {
@@ -229,7 +229,7 @@
         fullName.focus();
         return;
       }
-      if (phoneNumber.replace(/\\D/g, "").length < 7) {
+      if (phoneNumber.replace(/\D/g, "").length < 7) {
         showMessage("Please enter a valid phone number.", "error");
         phone.focus();
         return;
