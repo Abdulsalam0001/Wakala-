@@ -2038,10 +2038,10 @@
               </div>
               <span class="story-floating-pill pill-top">One connected account</span><span class="story-floating-pill pill-bottom">Across borders ↗</span>
             </div>
-            <p class="services-modal-eyebrow">01 — YOUR MONEY, TOGETHER</p>
-            <h2 id="servicesModalTitle">More of your money life, in one place.</h2>
-            <p class="services-modal-description" id="servicesModalDescription">Keep an eye on supported currency balances from one workspace. Wakala is designed to make money across markets feel more connected, without making your dashboard feel complicated.</p>
-            <div class="services-story-callout"><span class="story-callout-icon">↗</span><span><strong>Start with your wallet</strong><small>See balances and recent activity at a glance.</small></span></div>
+            <p class="services-modal-eyebrow">01 — GET STARTED WITH WAKALA</p>
+            <h2 id="servicesModalTitle">Get started with Wakala.</h2>
+            <p class="services-modal-description" id="servicesModalDescription">Move money with a more local feel. Explore supported ways to transfer in your local currency, with fees and details shown for you to review before confirming.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">↗</span><span><strong>Transfer in your local currency</strong><small>Check the available options for your country and account.</small></span></div>
           </article>
 
           <article class="services-story-slide" data-slide="1" aria-hidden="true">
@@ -2050,10 +2050,10 @@
               <div class="transfer-path"><span class="transfer-path-line"></span><span class="transfer-path-arrow">→</span><span class="transfer-path-spark">✦</span></div>
               <div class="transfer-status"><span class="status-check">✓</span><span><strong>Move with clarity</strong><small>Review details before confirming</small></span></div>
             </div>
-            <p class="services-modal-eyebrow">02 — MOVE WITH CLARITY</p>
-            <h2>When money needs to move, stay in control.</h2>
-            <p class="services-modal-description">Explore the transfer and payment options available to your account. Check the recipient, currency, fees and final details before you confirm any movement of money.</p>
-            <div class="services-story-callout"><span class="story-callout-icon">⇄</span><span><strong>Your action, your confirmation</strong><small>Review every detail before you proceed.</small></span></div>
+            <p class="services-modal-eyebrow">02 — ALWAYS CONNECTED</p>
+            <h2>eSIM, so you're always connected.</h2>
+            <p class="services-modal-description">Explore travel eSIM data plans for supported destinations and choose an option that fits your journey. Check device compatibility, coverage and plan details before purchase.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">⌁</span><span><strong>Stay connected as you travel</strong><small>Available plans and coverage vary by destination.</small></span></div>
           </article>
 
           <article class="services-story-slide" data-slide="2" aria-hidden="true">
@@ -2062,10 +2062,10 @@
               <div class="travel-phone"><div class="travel-phone-speaker"></div><div class="travel-phone-label">WAKALA eSIM</div><div class="travel-signal">▥</div><strong>Stay connected.</strong><small>Data for the journey ahead.</small><div class="travel-data-bar"><span></span></div><small>Choose a plan for your destination</small></div>
               <span class="travel-stamp">GO FURTHER</span>
             </div>
-            <p class="services-modal-eyebrow">03 — READY FOR THE JOURNEY</p>
-            <h2>Stay connected, wherever the road takes you.</h2>
-            <p class="services-modal-description">Discover travel eSIM plans for supported destinations, then explore Earn with Wakala for available campaigns and opportunities. Availability and eligibility depend on the service and your account.</p>
-            <div class="services-story-callout"><span class="story-callout-icon">⌁</span><span><strong>Travel and discover</strong><small>Explore eSIM and Earn with Wakala when you need them.</small></span></div>
+            <p class="services-modal-eyebrow">03 — WAKALA AGENTS NEAR YOU</p>
+            <h2>Find Wakala agents around you.</h2>
+            <p class="services-modal-description">Discover nearby Wakala agent locations where the service is available. Check the location and supported services before visiting; availability may vary by area.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">⌖</span><span><strong>Local help, closer to you</strong><small>Agent locations and services depend on your area.</small></span></div>
           </article>
 
           <article class="services-story-slide" data-slide="3" aria-hidden="true">
@@ -2075,10 +2075,10 @@
               <div class="control-info info-top"><span class="control-info-dot"></span><span><strong>Your profile</strong><small>Keep your details current</small></span></div>
               <div class="control-info info-bottom"><span class="control-lock">⌑</span><span><strong>Your account, your control</strong><small>Review security settings</small></span></div>
             </div>
-            <p class="services-modal-eyebrow">04 — BUILT AROUND YOU</p>
-            <h2>Your account should feel like yours.</h2>
-            <p class="services-modal-description">Keep your profile up to date and review your account settings. Before using a feature, check its availability, applicable fees and terms. We’ll keep the essentials close while you explore.</p>
-            <div class="services-story-callout"><span class="story-callout-icon">◎</span><span><strong>You're ready to explore</strong><small>Your dashboard is the starting point.</small></span></div>
+            <p class="services-modal-eyebrow">04 — YOUR WAKALA JOURNEY STARTS HERE</p>
+            <h2>Get started using Wakala.</h2>
+            <p class="services-modal-description">You're ready to explore your dashboard. Start with the services available to your account, keep your details secure, and review fees and transaction information before confirming actions.</p>
+            <div class="services-story-callout"><span class="story-callout-icon">◎</span><span><strong>Ready when you are</strong><small>Explore your Wakala dashboard to begin.</small></span></div>
           </article>
         </div>
       </div>
@@ -2199,29 +2199,32 @@
       .services-modal-note { display:none; }
     }
 
-    /* Let the onboarding panel sit high and use more of the phone screen. */
+    /* Keep the bottom edge in its previous position; grow upward on phones.
+       The panel itself scrolls if a small viewport cannot fit the full slide. */
     @media (max-width:560px) {
       .services-modal-backdrop {
-        align-items:start;
-        padding:5px 8px;
+        display:flex;
+        align-items:flex-end;
+        justify-content:center;
+        padding:5px 8px 8px;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
       }
       .services-modal {
+        flex:0 0 auto;
         min-height:min(86dvh, 760px);
-        max-height:calc(100dvh - 10px);
-        margin-top:0;
-        display:flex;
-        flex-direction:column;
-        justify-content:flex-start;
+        max-height:calc(100dvh - 13px);
+        margin:0;
+        display:block;
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        -webkit-overflow-scrolling:touch;
       }
-      .services-modal-kicker { flex-shrink:0; }
-      .services-story-progress { flex-shrink:0; }
-      .services-story-viewport { flex:1 1 auto; }
+      .services-story-viewport { flex:none; }
       .services-story-art { height:clamp(145px, 22dvh, 190px); }
-      .services-story-controls,
-      .services-modal-note { flex-shrink:0; }
     }
     @media (max-width:560px) and (max-height:740px) {
-      .services-modal { min-height:calc(100dvh - 10px); }
+      .services-modal { min-height:calc(100dvh - 13px); }
       .services-story-art { height:clamp(112px, 19dvh, 150px); }
     }
 
