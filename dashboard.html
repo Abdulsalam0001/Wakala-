@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="wk-dashboard-document">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,6 +21,12 @@
     *, *::before, *::after { box-sizing: border-box; }
     html { width: 100%; min-width: 0; overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body.wk-page-shell { width: 100%; min-width: 0; overflow-x: clip; overscroll-behavior-x: none; }
+    /* Keep the document itself scrollable on mobile and desktop. The shared
+       product polish stylesheet clips .main, which can trap dashboard content. */
+    html.wk-dashboard-document { height: auto; min-height: 100%; overflow-y: auto; }
+    body.wk-page-shell { height: auto; min-height: 100vh; overflow-y: auto; }
+    body.wk-page-shell .app { height: auto; min-height: 100vh; }
+    body.wk-page-shell .main { height: auto; min-height: 0; overflow: visible; }
     .app, .main, .main-inner, .topbar, .dashboard-grid, .lower-grid,
     .card, .balance-content, .quick-card, .section-card, .esim-card {
       min-width: 0;
