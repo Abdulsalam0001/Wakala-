@@ -110,6 +110,16 @@
       .esim-card p { max-width: 100%; font-size: 12px; }
       .sim-preview { min-height: 135px; transform: none; opacity: .9; }
     }
+    @media (max-width: 560px) {
+      /* iOS Safari zooms the page when controls use text smaller than 16px. */
+      .currency-select, input, select, textarea { font-size: 16px !important; }
+      .topbar-right { gap: 8px; }
+      .balance-header { flex-wrap: wrap; }
+      .balance-value { letter-spacing: -.035em; }
+      .currency-row { align-items: center; }
+      .row-main { flex: 1 1 auto; }
+      .transaction { align-items: flex-start; }
+    }
     @media (max-width: 360px) {
       .main { padding-inline: 9px; }
       .balance-card, .quick-card, .section-card { padding: 15px; }
@@ -1764,10 +1774,10 @@
       try {
 
         const {
-          data,
+          data: { user },
           error
         } =
-          await supabase.auth.getSession();
+          await supabase.auth.getUser();
 
 
         if (error) {
@@ -1775,7 +1785,7 @@
         }
 
 
-        if (!data.session) {
+        if (!user) {
 
           window.location.replace(
             "login.html"
@@ -1840,9 +1850,9 @@
         // no usable session. Network / Edge Function failures must not log
         // a valid user out of the dashboard.
         const { data: authCheck } =
-          await supabase.auth.getSession();
+          await supabase.auth.getUser();
 
-        if (!authCheck?.session) {
+        if (!authCheck?.user) {
           window.location.replace("login.html");
           return;
         }
