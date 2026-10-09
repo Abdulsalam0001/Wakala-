@@ -141,14 +141,18 @@
       overflow-x: clip !important;
       overflow-y: auto !important;
       -webkit-overflow-scrolling: touch;
+      scroll-behavior: auto;
     }
     body.wk-page-shell {
       height: auto !important;
       min-height: 100vh !important;
       overflow-x: clip !important;
-      overflow-y: auto !important;
+      /* Let the document (html) own vertical scrolling. A second body-level
+         scroll container can feel stuck on iOS Safari/Chrome. */
+      overflow-y: visible !important;
       overscroll-behavior-y: auto;
       touch-action: pan-y;
+      position: relative;
     }
     body.wk-page-shell .app {
       height: auto !important;
