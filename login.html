@@ -26,11 +26,13 @@
 		h2 { margin:40px 0 8px; font:600 34px Fraunces,serif; }
 		.subtext { margin:0 0 28px; color:var(--muted); font-size:14px; line-height:1.6; }
 		label { display:block; margin:16px 0 7px; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
-		input { width:100%; padding:14px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:14px Inter,sans-serif; }
+		input { width:100%; padding:14px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:16px Inter,sans-serif; }
 		input:focus { outline:2px solid rgba(34,145,117,.3); border-color:var(--teal); }
 		button { width:100%; margin-top:24px; padding:14px; border:0; border-radius:9px; background:var(--gold); color:var(--ink); font:700 14px Inter,sans-serif; cursor:pointer; }
 		button:disabled { cursor:wait; opacity:.65; }
 		.message { min-height:22px; margin-top:16px; font-size:13px; line-height:1.5; }
+		#continueSession[hidden] { display:none; }
+		#continueSession { margin-top:10px; }
 		.error { color:#b42318; }
 		.success { color:var(--teal); }
 		.signup-prompt { margin:22px 0 0; color:var(--muted); font-size:13px; text-align:center; }
@@ -73,6 +75,7 @@
 				<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
 				<button id="submitButton" type="submit">Log in to Wakala</button>
 				<p id="message" class="message" role="status" aria-live="polite"></p>
+				<a id="continueSession" class="forgot-link" href="dashboard.html" hidden>Continue to dashboard</a>
 			</form>
 			<p class="signup-prompt">New to Wakala? <a href="register.html" class="signup-link">Create an account</a></p>
 			<a class="forgot-link" href="forgot-password.html">Forgot your password?</a>
@@ -112,19 +115,23 @@
 			message.textContent = text;
 		}
 
-		async function redirectIfSession() {
+		async function checkExistingSession() {
+			const continueLink = document.getElementById('continueSession');
 			try {
-				const { data: { session }, error } = await supabase.auth.getSession();
+				const { data: { user }, error } = await supabase.auth.getUser();
 				if (error) {
-					console.error('Session check failed:', error);
+					console.warn('Existing session could not be verified:', error);
 					return;
 				}
-
-				if (session) {
-					window.location.replace('dashboard.html');
+				if (user) {
+					renderMessage(
+						'success',
+						`A session is already active for ${user.email || 'this account'}. Continue below, or enter credentials to switch accounts.`
+					);
+					if (continueLink) continueLink.hidden = false;
 				}
 			} catch (error) {
-				console.error('Session redirect check failed:', error);
+				console.warn('Existing session check failed:', error);
 			}
 		}
 
@@ -132,7 +139,7 @@
 			renderMessage('success', 'Your email is confirmed. You can now log in to Wakala.');
 		}
 
-		await redirectIfSession();
+		await checkExistingSession();
 
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
