@@ -31,8 +31,10 @@
 		button { width:100%; margin-top:24px; padding:14px; border:0; border-radius:9px; background:var(--gold); color:var(--ink); font:700 14px Inter,sans-serif; cursor:pointer; }
 		button:disabled { cursor:wait; opacity:.65; }
 		.message { min-height:22px; margin-top:16px; font-size:13px; line-height:1.5; }
-		#continueSession[hidden] { display:none; }
+		#continueSession[hidden], #switchAccountButton[hidden] { display:none; }
 		#continueSession { margin-top:10px; }
+		#switchAccountButton { margin-top:10px; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:transparent; color:var(--muted); font-size:12px; font-weight:600; cursor:pointer; }
+		#switchAccountButton:hover { border-color:var(--teal); color:var(--ink); }
 		.error { color:#b42318; }
 		.success { color:var(--teal); }
 		.signup-prompt { margin:22px 0 0; color:var(--muted); font-size:13px; text-align:center; }
@@ -76,6 +78,7 @@
 				<button id="submitButton" type="submit">Log in to Wakala</button>
 				<p id="message" class="message" role="status" aria-live="polite"></p>
 				<a id="continueSession" class="forgot-link" href="dashboard.html" hidden>Continue to dashboard</a>
+				<button id="switchAccountButton" type="button" class="switch-account-button" hidden>Sign out and use another account</button>
 			</form>
 			<p class="signup-prompt">New to Wakala? <a href="register.html" class="signup-link">Create an account</a></p>
 			<a class="forgot-link" href="forgot-password.html">Forgot your password?</a>
@@ -117,6 +120,7 @@
 
 		async function checkExistingSession() {
 			const continueLink = document.getElementById('continueSession');
+			const switchAccountButton = document.getElementById('switchAccountButton');
 			try {
 				const { data: { user }, error } = await supabase.auth.getUser();
 				if (error) {
@@ -129,6 +133,7 @@
 						`A session is already active for ${user.email || 'this account'}. Continue below, or enter credentials to switch accounts.`
 					);
 					if (continueLink) continueLink.hidden = false;
+					if (switchAccountButton) switchAccountButton.hidden = false;
 				}
 			} catch (error) {
 				console.warn('Existing session check failed:', error);
@@ -140,6 +145,25 @@
 		}
 
 		await checkExistingSession();
+
+		document.getElementById('switchAccountButton')?.addEventListener('click', async () => {
+			const switchButton = document.getElementById('switchAccountButton');
+			const continueLink = document.getElementById('continueSession');
+			switchButton.disabled = true;
+			switchButton.textContent = 'Signing out...';
+			try {
+				const { error } = await supabase.auth.signOut({ scope: 'local' });
+				if (error) throw error;
+				if (continueLink) continueLink.hidden = true;
+				switchButton.hidden = true;
+				renderMessage('', 'You are signed out. Enter your credentials to continue.');
+				switchButton.textContent = 'Sign out and use another account';
+			} catch (error) {
+				renderMessage('error', error?.message || 'Could not sign out this session. Please try again.');
+				switchButton.disabled = false;
+				switchButton.textContent = 'Sign out and use another account';
+			}
+		});
 
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
