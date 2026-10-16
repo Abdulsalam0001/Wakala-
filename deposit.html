@@ -421,7 +421,30 @@
         font-size: 12px;
       }
     }
-  </style>
+  
+    .deposit-account{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin:0 0 26px;box-shadow:0 10px 30px rgba(13,20,32,.045)}
+    .deposit-account .account-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--teal)}
+    .deposit-account h2{font:600 24px Fraunces,serif;margin:8px 0 5px;color:var(--ink)}
+    .deposit-account p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 16px}
+    .account-detail{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+    .account-detail span{font-size:13px;color:var(--muted)}.account-detail strong{font-size:16px;color:var(--ink);text-align:right}
+    .copy-account{border:0;border-radius:8px;padding:8px 11px;background:var(--ink);color:#fff;font:600 12px Inter,sans-serif;cursor:pointer}
+    .deposit-warning{padding:12px 14px;background:#fff7e7;border:1px solid #f1d8a5;border-radius:10px;color:#75521c;font-size:12px;line-height:1.6}
+    .abd-ai-launch{position:fixed;right:20px;bottom:20px;z-index:1000;border:0;border-radius:999px;padding:13px 17px;background:var(--ink);color:#fff;box-shadow:0 8px 28px #0d142033;font:600 13px Inter,sans-serif;cursor:pointer}
+    .abd-ai-panel{position:fixed;right:20px;bottom:78px;width:min(360px,calc(100vw - 28px));z-index:1001;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 55px #0d142033;overflow:hidden;display:none}
+    .abd-ai-panel.open{display:block}.abd-ai-head{background:var(--ink);color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between}
+    .abd-ai-head strong{font:600 17px Fraunces,serif}.abd-ai-head small{display:block;color:#d6dcd9;font:11px Inter,sans-serif;margin-top:3px}
+    .abd-ai-close{border:0;background:transparent;color:#fff;font-size:24px;cursor:pointer}
+    .abd-ai-messages{padding:14px;max-height:260px;overflow:auto;display:grid;gap:10px}
+    .abd-ai-message{font-size:12px;line-height:1.6;padding:10px 12px;border-radius:11px;background:#f3f5f4;color:var(--ink)}
+    .abd-ai-message.user{background:#e4f3ed;margin-left:22px}
+    .abd-ai-quick{display:flex;flex-wrap:wrap;gap:7px;padding:0 14px 12px}
+    .abd-ai-quick button{border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:#fff;font-size:11px;cursor:pointer}
+    .abd-ai-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+    .abd-ai-input input{min-width:0;flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;font:12px Inter,sans-serif}
+    .abd-ai-input button{border:0;border-radius:9px;padding:0 13px;background:var(--teal);color:#fff;font-weight:700}
+    @media(max-width:520px){.deposit-account{padding:17px}.account-detail strong{font-size:14px}.abd-ai-launch{right:14px;bottom:14px}.abd-ai-panel{right:14px;bottom:70px}}
+</style>
 </head>
 <body>
   <div class="container">
@@ -433,6 +456,17 @@
       <h1 class="page-title">Add funds</h1>
       <p class="page-subtitle">Deposit money to your Wakala account</p>
     </div>
+
+    <section class="deposit-account" aria-labelledby="depositAccountTitle">
+      <div class="account-eyebrow">Bank transfer deposit</div>
+      <h2 id="depositAccountTitle">Deposit to Wakala</h2>
+      <p>Use the OPay account details below for your deposit. Enter your Wakala account email or user ID in the transfer narration/reference where your banking app allows it, so the payment can be matched to you.</p>
+      <div class="account-detail"><span>Bank / provider</span><strong>OPay</strong></div>
+      <div class="account-detail"><span>Account number</span><strong>9132244444</strong></div>
+      <div class="account-detail"><span>Account name</span><strong>Confirm in your OPay app</strong></div>
+      <button type="button" class="copy-account" id="copyOpayAccount">Copy account number</button>
+      <div class="deposit-warning" style="margin-top:15px">Important: confirm the account name and that this account is authorised for Wakala deposits before sending money. Deposits are not credited automatically by this page; funds must be verified and reconciled first.</div>
+    </section>
 
     <!-- PROGRESS -->
     <div class="progress-container">
@@ -565,6 +599,14 @@
     </form>
   </div>
 
+  <button type="button" class="abd-ai-launch" id="abdAiLaunch" aria-expanded="false" aria-controls="abdAiPanel">✦ Abdulsalam AI · Deposit help</button>
+  <section class="abd-ai-panel" id="abdAiPanel" aria-label="Abdulsalam AI deposit assistant">
+    <div class="abd-ai-head"><div><strong>Abdulsalam AI</strong><small>Wakala deposit guide · automated help</small></div><button class="abd-ai-close" id="abdAiClose" type="button" aria-label="Close assistant">×</button></div>
+    <div class="abd-ai-messages" id="abdAiMessages" aria-live="polite"><div class="abd-ai-message">Hi! I can guide you through a deposit. The account details shown on this page are the ones to check. I cannot receive money, verify a transfer, or change your wallet balance.</div></div>
+    <div class="abd-ai-quick"><button type="button" data-ai="How do I deposit?">How to deposit</button><button type="button" data-ai="How do I identify my payment?">Payment reference</button><button type="button" data-ai="My deposit is missing">Missing deposit</button></div>
+    <form class="abd-ai-input" id="abdAiForm"><input id="abdAiInput" aria-label="Ask Abdulsalam AI" placeholder="Ask about depositing…" autocomplete="off"><button type="submit">Send</button></form>
+  </section>
+
   <script>
     const form = document.getElementById('depositForm');
     const nextBtn = document.getElementById('nextBtn');
@@ -686,25 +728,39 @@
     }
 
     function submitDeposit() {
-      // Simulate deposit
-      nextBtn.disabled = true;
-      backBtn.disabled = true;
-      nextBtn.textContent = 'Processing...';
-
-      setTimeout(() => {
-        document.getElementById('section3').style.display = 'none';
-        document.getElementById('successSection').style.display = 'block';
-        document.getElementById('buttonGroup').style.display = 'none';
-        document.getElementById('finalButtonGroup').style.display = 'grid';
-
-        // Final progress update
-        for (let i = 1; i <= 3; i++) {
-          document.getElementById(`step${i}`).classList.add('completed');
-          document.getElementById(`step${i}`).classList.remove('active');
-        }
-        progressBar.style.width = '100%';
-      }, 1500);
+      // This static page cannot submit or verify a real deposit. Do not fake success.
+      document.getElementById('successSection').style.display = 'block';
+      document.getElementById('section3').style.display = 'none';
+      document.getElementById('buttonGroup').style.display = 'none';
+      document.getElementById('finalButtonGroup').style.display = 'grid';
+      document.querySelector('#successSection .success-message').textContent = 'Transfer instructions reviewed';
+      document.querySelector('#successSection .success-subtitle').textContent = 'Your deposit has not been submitted or credited.';
+      document.querySelector('#successSection p[style]').textContent = 'Send funds only after confirming the OPay account details above. Keep your receipt and contact Wakala support for payment verification. This page does not notify the backend or update your balance.';
     }
+
+    document.getElementById('copyOpayAccount').addEventListener('click', async () => {
+      const btn = document.getElementById('copyOpayAccount');
+      try { await navigator.clipboard.writeText('9132244444'); btn.textContent = 'Copied'; }
+      catch { btn.textContent = 'Account: 9132244444'; }
+    });
+    const aiPanel = document.getElementById('abdAiPanel');
+    const aiLaunch = document.getElementById('abdAiLaunch');
+    const aiMessages = document.getElementById('abdAiMessages');
+    function toggleAi(open) { aiPanel.classList.toggle('open', open); aiLaunch.setAttribute('aria-expanded', String(open)); if(open) document.getElementById('abdAiInput').focus(); }
+    aiLaunch.addEventListener('click', () => toggleAi(!aiPanel.classList.contains('open')));
+    document.getElementById('abdAiClose').addEventListener('click', () => toggleAi(false));
+    function aiReply(question) {
+      const q = question.toLowerCase();
+      if (q.includes('missing') || q.includes('not show') || q.includes('pending')) return 'If you have already sent money, keep your transfer receipt and transaction reference. Contact Wakala support with the amount, time, sender name and reference. Never share your PIN, password or OTP. I cannot verify the transfer or credit your wallet.';
+      if (q.includes('reference') || q.includes('identify') || q.includes('narration')) return 'Where your banking app permits, add your Wakala account email or user ID as the transfer narration/reference. Keep the receipt so support can reconcile the payment. Do not include passwords, PINs or OTPs.';
+      if (q.includes('account name') || q.includes('safe') || q.includes('confirm')) return 'Please confirm the account name inside OPay and with official Wakala support before sending money. The account number is user-provided and has not been independently verified by this page.';
+      if (q.includes('how') || q.includes('deposit') || q.includes('send')) return '1) Confirm the OPay account details and account name with official Wakala support. 2) Transfer the amount from your banking app. 3) Save the receipt and reference. 4) Share the reference with support for verification. Your wallet balance should only change after a trusted backend verifies and reconciles the payment.';
+      return 'I can provide general deposit guidance. Confirm the account with official Wakala support, keep your receipt, and contact support for payment matching. I cannot move funds, verify transfers, or alter balances.';
+    }
+    function addAiMessage(message, type) { const el=document.createElement('div'); el.className='abd-ai-message'+(type==='user'?' user':''); el.textContent=message; aiMessages.appendChild(el); aiMessages.scrollTop=aiMessages.scrollHeight; }
+    function askAi(question) { const q=question.trim(); if(!q)return; addAiMessage(q,'user'); addAiMessage(aiReply(q),'assistant'); }
+    document.getElementById('abdAiForm').addEventListener('submit', event => { event.preventDefault(); const input=document.getElementById('abdAiInput'); askAi(input.value); input.value=''; });
+    document.querySelectorAll('[data-ai]').forEach(button => button.addEventListener('click', () => askAi(button.dataset.ai)));
 
     // Initialize
     updateProgress();
