@@ -759,7 +759,7 @@
       });
 
       $('backBtn').hidden = step === 1;
-      $('nextBtn').textContent = step === 3 ? 'Confirm transfer' : step === 2 ? 'Review transfer' : 'Continue';
+      $('nextBtn').textContent = step === 3 ? 'Send request to admin' : step === 2 ? 'Review transfer' : 'Continue';
       $('successState').classList.toggle('active', false);
       $('successState').hidden = true;
       setStatus('');
