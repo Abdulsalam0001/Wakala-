@@ -607,7 +607,10 @@
     <form class="abd-ai-input" id="abdAiForm"><input id="abdAiInput" aria-label="Ask Abdulsalam AI" placeholder="Ask about depositing…" autocomplete="off"><button type="submit">Send</button></form>
   </section>
 
-  <script>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
     const form = document.getElementById('depositForm');
     const nextBtn = document.getElementById('nextBtn');
     const backBtn = document.getElementById('backBtn');
@@ -727,15 +730,44 @@
       document.getElementById('totalAmount').textContent = formattedAmount;
     }
 
-    function submitDeposit() {
-      // This static page cannot submit or verify a real deposit. Do not fake success.
-      document.getElementById('successSection').style.display = 'block';
-      document.getElementById('section3').style.display = 'none';
-      document.getElementById('buttonGroup').style.display = 'none';
-      document.getElementById('finalButtonGroup').style.display = 'grid';
-      document.querySelector('#successSection .success-message').textContent = 'Transfer instructions reviewed';
-      document.querySelector('#successSection .success-subtitle').textContent = 'Your deposit has not been submitted or credited.';
-      document.querySelector('#successSection p[style]').textContent = 'Send funds only after confirming the OPay account details above. Keep your receipt and contact Wakala support for payment verification. This page does not notify the backend or update your balance.';
+    async function submitDeposit() {
+      if (window.__depositSubmitting) return;
+      window.__depositSubmitting = true;
+      nextBtn.disabled = true;
+      nextBtn.textContent = 'Sending request…';
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!session) { window.location.href = './login.html'; return; }
+        const currency = currencyNames[selectedCurrency];
+        const { data, error } = await supabase.rpc('submit_wallet_request', {
+          p_request_type: 'deposit',
+          p_amount: amount,
+          p_currency: currency,
+          p_details: {
+            method: methodNames[selectedMethod],
+            payment_provider: 'OPay',
+            destination_account: '9132244444',
+            destination_account_name: 'Customer must confirm in OPay before sending'
+          }
+        });
+        if (error) throw error;
+        document.getElementById('successSection').style.display = 'block';
+        document.getElementById('section3').style.display = 'none';
+        document.getElementById('buttonGroup').style.display = 'none';
+        document.getElementById('finalButtonGroup').style.display = 'grid';
+        document.querySelector('#successSection .success-message').textContent = 'Deposit request sent to Wakala admin';
+        document.querySelector('#successSection .success-subtitle').textContent = 'Your request is pending payment verification. Your balance has not been credited.';
+        document.querySelector('#successSection p[style]').textContent = 'Request reference: ' + data.reference + '. Confirm the OPay account name with official Wakala support before transferring. Save your receipt. An administrator must verify the incoming payment before funds can be credited.';
+        const subtitle = document.querySelector('#successSection .success-subtitle');
+        if (subtitle && data.status) subtitle.textContent += ' Status: ' + data.status + '.';
+      } catch (error) {
+        alert(error.message || 'Unable to submit deposit request. Please try again.');
+      } finally {
+        window.__depositSubmitting = false;
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Confirm deposit';
+      }
     }
 
     document.getElementById('copyOpayAccount').addEventListener('click', async () => {
