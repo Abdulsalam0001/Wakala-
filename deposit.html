@@ -570,8 +570,16 @@
           </div>
         </div>
 
-        <div style="background: rgba(22, 163, 74, 0.1); border: 1px solid rgba(22, 163, 74, 0.3); border-radius: 8px; padding: 12px 14px; margin-top: 16px;">
-          <p style="margin: 0; font-size: 12px; color: var(--success);">✓ No fees. Your full amount will be deposited to your account.</p>
+        <div style="background: rgba(228, 164, 69, 0.12); border: 1px solid rgba(228, 164, 69, 0.5); border-radius: 8px; padding: 12px 14px; margin-top: 16px;">
+          <p style="margin: 0; font-size: 12px; color: var(--ink);">Before submitting, make the NGN transfer to the confirmed OPay account. Then enter the sender name and bank transaction reference below. Wakala admin will match the payment before any wallet credit.</p>
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label for="depositSenderName">Name on sending bank account</label>
+          <input id="depositSenderName" type="text" maxlength="120" autocomplete="name" placeholder="Sender name as shown by your bank" required>
+        </div>
+        <div class="form-group">
+          <label for="depositTransferReference">Bank transaction reference</label>
+          <input id="depositTransferReference" type="text" maxlength="160" placeholder="Reference from your transfer receipt" required>
         </div>
       </div>
 
@@ -742,6 +750,9 @@
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
         if (!session) { window.location.href = './login.html'; return; }
+        const senderName = document.getElementById('depositSenderName').value.trim();
+        const senderReference = document.getElementById('depositTransferReference').value.trim();
+        if (!senderName || !senderReference) throw new Error('Enter the sender name and transaction reference from your transfer receipt.');
         const currency = currencyNames[selectedCurrency];
         const { data, error } = await supabase.rpc('submit_wallet_request', {
           p_request_type: 'deposit',
@@ -751,7 +762,9 @@
             method: methodNames[selectedMethod],
             payment_provider: 'OPay',
             destination_account: '9132244444',
-            destination_account_name: 'Customer must confirm in OPay before sending'
+            destination_account_name: 'Customer must confirm in OPay before sending',
+            sender_name: document.getElementById('depositSenderName').value.trim(),
+            sender_transaction_reference: document.getElementById('depositTransferReference').value.trim()
           }
         });
         if (error) throw error;
