@@ -19,6 +19,9 @@ create table if not exists public.wallet_requests (
   updated_at timestamptz not null default now()
 );
 
+alter table public.wallet_requests drop constraint if exists wallet_requests_status_check;
+alter table public.wallet_requests add constraint wallet_requests_status_check check (status in ('pending','approved','rejected','processing','completed'));
+
 create index if not exists wallet_requests_user_created_idx on public.wallet_requests(user_id, created_at desc);
 create index if not exists wallet_requests_admin_queue_idx on public.wallet_requests(status, created_at asc);
 alter table public.wallet_requests enable row level security;
@@ -139,7 +142,11 @@ begin
 
   select * into req from public.wallet_requests where id=p_request_id for update;
   if req.id is null then raise exception 'Request not found'; end if;
-  if req.status <> 'pending' then raise exception 'This request has already been reviewed'; end if;
+  if decision='complete' then
+    if req.status <> 'processing' then raise exception 'Only a transfer already in processing can be completed'; end if;
+  elsif req.status <> 'pending' then
+    raise exception 'This request has already been reviewed';
+  end if;
 
   if decision in ('processing','complete') and req.request_type <> 'transfer' then
     raise exception 'Only transfer requests can be processed or completed';
