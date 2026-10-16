@@ -485,7 +485,7 @@
         <div class="form-group">
           <label>Deposit currency</label>
           <div class="currency-grid">
-            <div class="currency-option selected" data-currency="usd">
+            <div class="currency-option" data-currency="usd">
               <span class="currency-code">USD</span>
               <span class="currency-name">US Dollar</span>
             </div>
@@ -507,7 +507,7 @@
         <div class="form-group">
           <label for="amount">Amount to deposit</label>
           <div class="amount-input-group">
-            <span class="currency-prefix" id="currencyPrefix">$</span>
+            <span class="currency-prefix" id="currencyPrefix">₦</span>
             <input id="amount" type="number" placeholder="0.00" step="0.01" min="0" required>
           </div>
         </div>
@@ -617,7 +617,7 @@
     const progressBar = document.getElementById('progressBar');
     
     let currentStep = 1;
-    let selectedCurrency = 'usd';
+    let selectedCurrency = 'ngn';
     let selectedMethod = 'bank';
     let amount = 0;
 
@@ -630,6 +630,9 @@
       option.addEventListener('click', () => {
         document.querySelectorAll('.currency-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
+        if (option.dataset.currency !== 'ngn') { alert('This OPay account only accepts NGN deposits. Other currencies will be available when their payment providers are configured.'); return; }
+        document.querySelectorAll('.currency-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
         selectedCurrency = option.dataset.currency;
         document.getElementById('currencyPrefix').textContent = currencyPrefixes[selectedCurrency];
       });
@@ -638,6 +641,9 @@
     // PAYMENT METHOD SELECTION
     document.querySelectorAll('.payment-option').forEach(option => {
       option.addEventListener('click', () => {
+        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        if (option.dataset.method !== 'bank') { alert('Card and mobile-money deposits are not connected yet. Please use the OPay bank-transfer option.'); return; }
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
         selectedMethod = option.dataset.method;
@@ -652,6 +658,7 @@
     // NAVIGATION
     nextBtn.addEventListener('click', () => {
       if (currentStep === 1) {
+        if (selectedCurrency !== 'ngn') { alert('Please select NGN for the currently configured OPay deposit account.'); return; }
         if (!amount || amount <= 0) {
           alert('Please enter a valid amount');
           return;
