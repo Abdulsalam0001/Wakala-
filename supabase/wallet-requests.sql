@@ -158,6 +158,12 @@ begin
   if decision='processing' and req.status <> 'pending' then
     raise exception 'Only pending transfer requests can be processed';
   end if;
+  if decision='approve' and req.request_type='deposit' and note='' then
+    raise exception 'Record the incoming payment reference or reconciliation evidence in the admin note before crediting';
+  end if;
+  if decision='complete' and note='' then
+    raise exception 'Record the actual settlement confirmation in the admin note before completing this transfer';
+  end if;
 
   if decision='approve' and req.request_type='deposit' then
     insert into public.wallet_balances(wallet_id,currency) values(req.wallet_id,req.currency)
