@@ -497,7 +497,7 @@
               <span class="currency-code">TZS</span>
               <span class="currency-name">Tanzanian Shilling</span>
             </div>
-            <div class="currency-option" data-currency="ngn">
+            <div class="currency-option selected" data-currency="ngn">
               <span class="currency-code">NGN</span>
               <span class="currency-name">Nigerian Naira</span>
             </div>
@@ -628,8 +628,6 @@
     // CURRENCY SELECTION
     document.querySelectorAll('.currency-option').forEach(option => {
       option.addEventListener('click', () => {
-        document.querySelectorAll('.currency-option').forEach(o => o.classList.remove('selected'));
-        option.classList.add('selected');
         if (option.dataset.currency !== 'ngn') { alert('This OPay account only accepts NGN deposits. Other currencies will be available when their payment providers are configured.'); return; }
         document.querySelectorAll('.currency-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
@@ -641,8 +639,6 @@
     // PAYMENT METHOD SELECTION
     document.querySelectorAll('.payment-option').forEach(option => {
       option.addEventListener('click', () => {
-        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-        option.classList.add('selected');
         if (option.dataset.method !== 'bank') { alert('Card and mobile-money deposits are not connected yet. Please use the OPay bank-transfer option.'); return; }
         document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
