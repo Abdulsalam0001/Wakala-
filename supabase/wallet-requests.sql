@@ -144,7 +144,8 @@ begin
   if req.id is null then raise exception 'Request not found'; end if;
   if decision='complete' then
     if req.status <> 'processing' then raise exception 'Only a transfer already in processing can be completed'; end if;
-  elsif req.status <> 'pending' then
+  elsif req.status <> 'pending'
+    and not (decision='reject' and req.request_type='transfer' and req.status='processing') then
     raise exception 'This request has already been reviewed';
   end if;
 
