@@ -1,0 +1,56 @@
+name: Wakala Neon CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+      - "api.js"
+      - "register.html"
+      - "login.html"
+      - "onboarding.html"
+      - "dashboard.html"
+      - "wallet.html"
+      - "transactions.html"
+      - "deposit.html"
+      - "transfer.html"
+      - "esim-*.html"
+      - "admin/**"
+      - "render.yaml"
+      - ".github/workflows/wakala-neon-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "server/**"
+      - "api.js"
+      - "register.html"
+      - "login.html"
+      - "onboarding.html"
+      - "dashboard.html"
+      - "wallet.html"
+      - "transactions.html"
+      - "deposit.html"
+      - "transfer.html"
+      - "esim-*.html"
+      - "admin/**"
+      - "render.yaml"
+
+jobs:
+  backend-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package.json
+      - name: Install backend dependencies
+        run: npm install
+      - name: Check backend JavaScript syntax
+        run: |
+          node --check src/server.js
+          node --check src/migrate.js
