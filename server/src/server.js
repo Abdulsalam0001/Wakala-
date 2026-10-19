@@ -235,6 +235,55 @@ app.get("/api/transactions", requireAuth, async (req, res) => {
   res.json({ transactions: rows });
 });
 
+app.get("/api/wallet-requests", requireAuth, async (req, res) => {
+  const { rows } = await pool.query(
+    `select id,reference,request_type,amount,currency,details,status,admin_note,created_at,updated_at
+     from wallet_requests where user_id=$1 order by created_at desc limit 100`,
+    [req.user.sub]
+  );
+  res.json({ requests: rows });
+});
+
+app.post("/api/wallet-requests", requireAuth, async (req, res) => {
+  const requestType = String(req.body.request_type || "").trim().toLowerCase();
+  const amount = Number(req.body.amount);
+  const currency = String(req.body.currency || "").trim().toUpperCase();
+  const details = req.body.details && typeof req.body.details === "object" && !Array.isArray(req.body.details)
+    ? req.body.details : {};
+
+  if (!["deposit", "transfer", "withdrawal"].includes(requestType)) {
+    return res.status(400).json({ error: "Unsupported wallet request type" });
+  }
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000_000_000) {
+    return res.status(400).json({ error: "Enter a valid request amount" });
+  }
+  if (!/^[A-Z0-9]{2,10}$/.test(currency)) {
+    return res.status(400).json({ error: "Enter a valid currency code" });
+  }
+  if (requestType === "deposit" &&
+      (!String(details.sender_name || "").trim() || !String(details.sender_transaction_reference || "").trim())) {
+    return res.status(400).json({ error: "Sender name and payment reference are required for deposit review" });
+  }
+  if (requestType === "transfer" &&
+      (!String(details.recipient_name || "").trim() || !String(details.send_currency || currency).trim())) {
+    return res.status(400).json({ error: "Recipient details are required for a transfer request" });
+  }
+
+  const reference = "WKREQ-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+  try {
+    const { rows } = await pool.query(
+      `insert into wallet_requests(reference,user_id,request_type,amount,currency,details)
+       values($1,$2,$3,$4,$5,$6)
+       returning id,reference,request_type,amount,currency,details,status,created_at`,
+      [reference, req.user.sub, requestType, amount, currency, JSON.stringify(details)]
+    );
+    res.status(201).json({ request: rows[0] });
+  } catch (error) {
+    console.error("Wallet request creation failed:", error);
+    res.status(500).json({ error: "Could not submit the request. Please try again." });
+  }
+});
+
 
 app.get("/api/esim/orders", requireAuth, async (req, res) => {
   const { rows } = await pool.query(
@@ -295,6 +344,96 @@ app.get("/api/admin/overview", requireAuth, requireAdmin, async (_req, res) => {
     balances: balanceRows,
     recent_transactions: txRows
   });
+});
+
+app.get("/api/admin/wallet-requests", requireAuth, requireAdmin, async (req, res) => {
+  const status = String(req.query.status || "").trim();
+  const params = status ? [status] : [];
+  const where = status ? "where wr.status=$1" : "";
+  const { rows } = await pool.query(
+    `select wr.id,wr.reference,wr.user_id,wr.request_type,wr.amount,wr.currency,wr.details,
+            wr.status,wr.admin_note,wr.created_at,wr.updated_at,p.full_name,p.email
+     from wallet_requests wr join profiles p on p.id=wr.user_id
+     ${where}
+     order by wr.created_at desc limit 200`,
+    params
+  );
+  res.json({ requests: rows });
+});
+
+app.patch("/api/admin/wallet-requests/:id", requireAuth, requireAdmin, async (req, res) => {
+  const status = String(req.body.status || "").trim().toLowerCase();
+  const adminNote = String(req.body.admin_note || "").trim().slice(0, 1000);
+  if (!["pending_admin_review", "approved", "rejected", "completed"].includes(status)) {
+    return res.status(400).json({ error: "Unsupported request status" });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query("begin");
+    const { rows } = await client.query(
+      "select * from wallet_requests where id=$1 for update",
+      [req.params.id]
+    );
+    const request = rows[0];
+    if (!request) {
+      await client.query("rollback");
+      return res.status(404).json({ error: "Wallet request not found" });
+    }
+    if (request.status === "completed") {
+      await client.query("rollback");
+      return res.status(409).json({ error: "This request has already been completed" });
+    }
+    if (status === "completed" && request.request_type !== "deposit") {
+      await client.query("rollback");
+      return res.status(400).json({ error: "Only a verified deposit can be completed automatically. Transfers require a connected provider." });
+    }
+    if (status === "completed" && request.request_type === "deposit") {
+      const { rows: wallets } = await client.query(
+        "select id from wallets where user_id=$1 order by created_at asc,id asc limit 1 for update",
+        [request.user_id]
+      );
+      if (!wallets.length) {
+        await client.query("rollback");
+        return res.status(404).json({ error: "Customer wallet not found" });
+      }
+      const walletId = wallets[0].id;
+      await client.query(
+        "insert into wallet_balances(wallet_id,currency) values($1,$2) on conflict(wallet_id,currency) do nothing",
+        [walletId, request.currency]
+      );
+      const { rows: balances } = await client.query(
+        "update wallet_balances set available=available+$1,updated_at=now() where wallet_id=$2 and currency=$3 returning available",
+        [request.amount, walletId, request.currency]
+      );
+      await client.query(
+        `insert into transactions(user_id,wallet_id,amount,currency,type,status,description,reference,metadata,completed_at)
+         values($1,$2,$3,$4,'deposit','completed','Admin-verified deposit',$5,$6,now())`,
+        [request.user_id,walletId,request.amount,request.currency,request.reference,
+         JSON.stringify({source:"admin_wallet_request",admin_user_id:req.user.sub,request_id:request.id})]
+      );
+      const { rows: updated } = await client.query(
+        `update wallet_requests set status='completed',admin_note=$1,reviewed_by=$2,reviewed_at=now(),updated_at=now()
+         where id=$3 returning id,reference,status,admin_note,updated_at`,
+        [adminNote,req.user.sub,request.id]
+      );
+      await client.query("commit");
+      return res.json({ request: updated[0], credited_amount: request.amount, currency: request.currency, available_balance: balances[0].available });
+    }
+    const { rows: updated } = await client.query(
+      `update wallet_requests set status=$1,admin_note=$2,reviewed_by=$3,reviewed_at=now(),updated_at=now()
+       where id=$4 returning id,reference,status,admin_note,updated_at`,
+      [status,adminNote,req.user.sub,request.id]
+    );
+    await client.query("commit");
+    res.json({ request: updated[0] });
+  } catch (error) {
+    await client.query("rollback").catch(() => {});
+    console.error("Wallet request review failed:", error);
+    res.status(500).json({ error: "Could not update wallet request" });
+  } finally {
+    client.release();
+  }
 });
 
 app.get("/api/admin/customers", requireAuth, requireAdmin, async (req, res) => {
