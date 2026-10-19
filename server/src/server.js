@@ -158,6 +158,29 @@ app.post("/api/auth/logout", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.post("/api/auth/change-password", requireAuth, async (req, res) => {
+  const currentPassword = String(req.body.current_password || "");
+  const newPassword = String(req.body.new_password || "");
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: "New password must be at least 8 characters" });
+  }
+  if (currentPassword === newPassword) {
+    return res.status(400).json({ error: "Choose a password different from your current password" });
+  }
+  try {
+    const { rows } = await pool.query("select password_hash from users where id=$1", [req.user.sub]);
+    if (!rows.length || !(await bcrypt.compare(currentPassword, rows[0].password_hash))) {
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+    await pool.query("update users set password_hash=$1,updated_at=now() where id=$2", [passwordHash, req.user.sub]);
+    res.json({ ok: true });
+  } catch (error) {
+    console.error("Password change failed:", error);
+    res.status(500).json({ error: "Could not update password" });
+  }
+});
+
 app.get("/api/auth/me", requireAuth, async (req, res) => {
   const user = await getUser(pool, req.user.sub);
   if (!user) return res.status(401).json({ error: "Account not found" });
