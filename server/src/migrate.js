@@ -24,6 +24,20 @@ try {
     await pool.query(sql);
     console.log(`Applied idempotent schema file: ${file}`);
   }
+  const adminEmail = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+  if (adminEmail) {
+    const result = await pool.query(
+      `insert into admin_users(user_id,role_id,status)
+       select u.id,ar.id,'active' from users u
+       join admin_roles ar on ar.name='super_admin'
+       where lower(u.email)= $1
+       on conflict(user_id) do update set role_id=excluded.role_id,status='active',updated_at=now()
+       returning user_id`,
+      [adminEmail]
+    );
+    if (result.rowCount) console.log("Configured Wakala administrator is active.");
+    else console.log("ADMIN_EMAIL is set, but that user has not registered yet.");
+  }
   console.log("Wakala Neon schema is ready.");
 } catch (error) {
   console.error("Wakala database setup failed:", error.message);
