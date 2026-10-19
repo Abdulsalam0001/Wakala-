@@ -501,9 +501,13 @@ app.post("/api/admin/customers/:userId/adjust-balance", requireAuth, requireAdmi
     );
     const delta = direction === "credit" ? amount : -amount;
     const { rows: balances } = await client.query(
-      "update wallet_balances set available=available+$1,updated_at=now() where wallet_id=$2 and currency=$3 returning available",
+      "update wallet_balances set available=available+$1,updated_at=now() where wallet_id=$2 and currency=$3 and available+$1 >= 0 returning available",
       [delta,walletId,currency]
     );
+    if (!balances.length) {
+      await client.query("rollback");
+      return res.status(400).json({ error: "Insufficient available balance for this debit" });
+    }
     const reference = "ADM-" + crypto.randomBytes(10).toString("hex").toUpperCase();
     await client.query(
       `insert into transactions(user_id,wallet_id,amount,currency,type,status,description,reference,metadata,completed_at)
