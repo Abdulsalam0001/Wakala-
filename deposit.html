@@ -615,10 +615,9 @@
     <form class="abd-ai-input" id="abdAiForm"><input id="abdAiInput" aria-label="Ask Abdulsalam AI" placeholder="Ask about depositing…" autocomplete="off"><button type="submit">Send</button></form>
   </section>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  <script src="./api.js"></script>
+<script type="module">
+    const WAKALA_API = window.WAKALA_API;
     const form = document.getElementById('depositForm');
     const nextBtn = document.getElementById('nextBtn');
     const backBtn = document.getElementById('backBtn');
@@ -747,27 +746,20 @@
       nextBtn.disabled = true;
       nextBtn.textContent = 'Sending request…';
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!session) { window.location.href = './login.html'; return; }
+        const auth = await WAKALA_API.me().catch(() => null);
+        if (!auth?.user) { window.location.href = './login.html'; return; }
         const senderName = document.getElementById('depositSenderName').value.trim();
         const senderReference = document.getElementById('depositTransferReference').value.trim();
         if (!senderName || !senderReference) throw new Error('Enter the sender name and transaction reference from your transfer receipt.');
         const currency = currencyNames[selectedCurrency];
-        const { data, error } = await supabase.rpc('submit_wallet_request', {
-          p_request_type: 'deposit',
-          p_amount: amount,
-          p_currency: currency,
-          p_details: {
-            method: methodNames[selectedMethod],
-            payment_provider: 'OPay',
-            destination_account: '9132244444',
-            destination_account_name: 'Customer must confirm in OPay before sending',
-            sender_name: document.getElementById('depositSenderName').value.trim(),
-            sender_transaction_reference: document.getElementById('depositTransferReference').value.trim()
-          }
+        const { request: data } = await WAKALA_API.createWalletRequest('deposit', amount, currency, {
+          method: methodNames[selectedMethod],
+          payment_provider: 'OPay',
+          destination_account: '9132244444',
+          destination_account_name: 'Confirm the account name in OPay before sending',
+          sender_name: senderName,
+          sender_transaction_reference: senderReference
         });
-        if (error) throw error;
         document.getElementById('successSection').style.display = 'block';
         document.getElementById('section3').style.display = 'none';
         document.getElementById('buttonGroup').style.display = 'none';
