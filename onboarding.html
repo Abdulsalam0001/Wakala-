@@ -137,11 +137,8 @@
   </main>
   <footer class="footer">© <span id="year"></span> Wakala · Built for a connected Africa</footer>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./supabase-config.js";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  <script src="./api.js"></script>
+  <script>
     const form = document.getElementById("onboardingForm");
     const fullName = document.getElementById("fullName");
     const phone = document.getElementById("phone");
@@ -162,7 +159,6 @@
       message.textContent = text;
       message.className = ("message " + type).trim();
     }
-
     function showStep(step) {
       const second = step === 2;
       screenOne.hidden = second;
@@ -174,7 +170,6 @@
       showMessage("");
       (second ? phone : fullName).focus();
     }
-
     continueButton.addEventListener("click", () => {
       const name = fullName.value.trim().replace(/\s+/g, " ");
       if (name.length < 2) {
@@ -184,45 +179,38 @@
       }
       showStep(2);
     });
-
     backButton.addEventListener("click", () => showStep(1));
 
     async function initialise() {
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session) {
-          window.location.replace("login.html");
-          return;
-        }
-
-        email.value = session.user.email || "";
-        const { data: profile, error } = await supabase
-          .from("profiles")
-          .select("full_name, phone, onboarding_completed")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        if (error) throw error;
+        const [{ user }, { profile }] = await Promise.all([
+          window.WAKALA_API.me(),
+          window.WAKALA_API.profile()
+        ]);
+        if (!user) { window.location.replace("login.html"); return; }
+        email.value = user.email || "";
         if (profile?.onboarding_completed) {
           window.location.replace("dashboard.html");
           return;
         }
-
-        fullName.value = profile?.full_name || session.user.user_metadata?.full_name || "";
-        phone.value = profile?.phone || session.user.user_metadata?.phone || "";
+        fullName.value = profile?.full_name || "";
+        phone.value = profile?.phone || "";
         if (fullName.value.trim().length >= 2) showStep(2);
       } catch (error) {
+        if (/authentication|required|session|expired/i.test(error.message || "")) {
+          window.location.replace("login.html");
+          return;
+        }
         console.error("Profile load failed:", error);
         showMessage("We couldn't load your profile. Please refresh and try again.", "error");
       }
     }
 
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async event => {
       event.preventDefault();
       showMessage("");
       const name = fullName.value.trim().replace(/\s+/g, " ");
       const phoneNumber = phone.value.trim();
-
       if (name.length < 2) {
         showStep(1);
         showMessage("Please enter your full name.", "error");
@@ -234,31 +222,11 @@
         phone.focus();
         return;
       }
-
       submitButton.disabled = true;
       submitButton.textContent = "Saving your details…";
       backButton.disabled = true;
-
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session) throw new Error("Your session has expired. Please log in again.");
-
-        const { error } = await supabase
-          .from("profiles")
-          .update({
-            full_name: name,
-            phone: phoneNumber,
-            onboarding_completed: true,
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", session.user.id);
-
-        if (error) throw error;
-        const { error: userError } = await supabase.auth.updateUser({
-          data: { full_name: name, phone: phoneNumber }
-        });
-        if (userError) throw userError;
-
+        await window.WAKALA_API.updateProfile(name, phoneNumber);
         showMessage("Your profile is ready. Taking you to Wakala…", "success");
         submitButton.textContent = "Setup complete";
         window.setTimeout(() => window.location.replace("dashboard.html"), 450);
@@ -270,7 +238,6 @@
         backButton.disabled = false;
       }
     });
-
     initialise();
   </script>
 </body>
