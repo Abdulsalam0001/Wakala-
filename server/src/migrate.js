@@ -19,7 +19,7 @@ if (!process.env.DATABASE_URL) {
 
 try {
   await pool.query("select 1");
-  for (const file of ["001_initial.sql", "002_creator_tables.sql"]) {
+  for (const file of ["001_initial.sql", "002_creator_tables.sql", "003_wallet_requests.sql"]) {
     const sql = await readFile(resolve(here, "../sql", file), "utf8");
     await pool.query(sql);
     console.log(`Applied idempotent schema file: ${file}`);
