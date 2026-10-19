@@ -17,6 +17,10 @@ const WAKALA_API = {
   wallet() { return this.request("/api/wallet"); },
   transactions(limit = 50) { return this.request("/api/transactions?limit=" + encodeURIComponent(limit)); },
   esimOrders() { return this.request("/api/esim/orders"); },
-  createEsimOrder(order) { return this.request("/api/esim/orders", { method: "POST", body: JSON.stringify(order) }); }
+  createEsimOrder(order) { return this.request("/api/esim/orders", { method: "POST", body: JSON.stringify(order) }); },
+  walletRequests() { return this.request("/api/wallet-requests"); },
+  createWalletRequest(request_type, amount, currency, details) {
+    return this.request("/api/wallet-requests", { method: "POST", body: JSON.stringify({ request_type, amount, currency, details }) });
+  }
 };
 window.WAKALA_API = WAKALA_API;
