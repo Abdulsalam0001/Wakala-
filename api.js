@@ -19,6 +19,8 @@ const WAKALA_API = {
   esimOrders() { return this.request("/api/esim/orders"); },
   createEsimOrder(order) { return this.request("/api/esim/orders", { method: "POST", body: JSON.stringify(order) }); },
   walletRequests() { return this.request("/api/wallet-requests"); },
+  adminWalletRequests(status = "all") { return this.request("/api/admin/wallet-requests" + (status && status !== "all" ? "?status=" + encodeURIComponent(status) : "")); },
+  reviewWalletRequest(id, status, admin_note = "") { return this.request("/api/admin/wallet-requests/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status, admin_note }) }); },
   createWalletRequest(request_type, amount, currency, details) {
     return this.request("/api/wallet-requests", { method: "POST", body: JSON.stringify({ request_type, amount, currency, details }) });
   }
