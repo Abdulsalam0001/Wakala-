@@ -21,6 +21,12 @@ const WAKALA_API = {
   walletRequests() { return this.request("/api/wallet-requests"); },
   adminWalletRequests(status = "all") { return this.request("/api/admin/wallet-requests" + (status && status !== "all" ? "?status=" + encodeURIComponent(status) : "")); },
   reviewWalletRequest(id, status, admin_note = "") { return this.request("/api/admin/wallet-requests/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status, admin_note }) }); },
+  adminOverview() { return this.request("/api/admin/overview"); },
+  adminCustomers(search = "") { return this.request("/api/admin/customers?search=" + encodeURIComponent(search)); },
+  adminCustomerBalances(userId) { return this.request("/api/admin/customers/" + encodeURIComponent(userId) + "/balances"); },
+  adjustBalance(userId, currency, direction, amount, reason) {
+    return this.request("/api/admin/customers/" + encodeURIComponent(userId) + "/adjust-balance", { method: "POST", body: JSON.stringify({ currency, direction, amount, reason }) });
+  },
   createWalletRequest(request_type, amount, currency, details) {
     return this.request("/api/wallet-requests", { method: "POST", body: JSON.stringify({ request_type, amount, currency, details }) });
   }
