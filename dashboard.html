@@ -1059,24 +1059,9 @@
        SUPABASE
   ======================================= -->
 
+  <script src="./api.js"></script>
   <script type="module">
-
-    import {
-      createClient
-    } from "https://esm.sh/@supabase/supabase-js@2";
-
-
-    import {
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    } from "./supabase-config.js";
-
-
-    const supabase =
-      createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
+    const WAKALA_API = window.WAKALA_API;
 
 
     /* ======================================
@@ -1511,110 +1496,44 @@
        LOAD WALLET
     ====================================== */
 
-    async function loadWalletFromTables() {
-
-      const {
-        data: { user },
-        error: userError
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        throw userError || new Error("No authenticated user");
-      }
-
-      const [profileResult, walletResult] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id, full_name, phone")
-          .eq("id", user.id)
-          .maybeSingle(),
-        supabase
-          .from("wallets")
-          .select("id, user_id, account_number")
-          .eq("user_id", user.id)
-          .maybeSingle()
-      ]);
-
-      if (profileResult.error) throw profileResult.error;
-      if (walletResult.error) throw walletResult.error;
-      if (!walletResult.data) throw new Error("Wallet not found");
-
-      const [balanceResult, transactionResult] = await Promise.all([
-        supabase
-          .from("wallet_balances")
-          .select("currency, available")
-          .eq("wallet_id", walletResult.data.id)
-          .order("currency"),
-        supabase
-          .from("transactions")
-          .select("id, amount, currency, type, status, description, created_at")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(10)
-      ]);
-
-      if (balanceResult.error) throw balanceResult.error;
-
-      return {
-        profile: {
-          id: user.id,
-          full_name:
-            profileResult.data?.full_name ??
-            user.user_metadata?.full_name ??
-            user.user_metadata?.name ??
-            "",
-          phone: profileResult.data?.phone ?? user.phone ?? null,
-          email: user.email ?? null
-        },
-        wallet: walletResult.data,
-        balances: balanceResult.data ?? [],
-        transactions: transactionResult.error ? [] : transactionResult.data ?? []
-      };
-    }
-
     async function loadWallet() {
-
-      let {
-        data,
-        error
-      } = await supabase.functions.invoke(
-        "wallet-overview"
-      );
-
-
-      if (error) {
-
-        console.error(
-          "wallet-overview:",
-          error
-        );
-
-        try {
-          data = await loadWalletFromTables();
-        } catch (fallbackError) {
-          console.error("wallet table fallback:", fallbackError);
-
-          transactions.innerHTML = `
-            <div class="transaction">
-              <div class="transaction-icon">!</div>
-              <div class="row-main">
-                <strong>Unable to load wallet</strong>
-                <span>Please refresh the page.</span>
-              </div>
-            </div>
-          `;
-
+      let data;
+      try {
+        const [{ user }, { profile }, walletResult, transactionResult] = await Promise.all([
+          WAKALA_API.me(),
+          WAKALA_API.profile(),
+          WAKALA_API.wallet(),
+          WAKALA_API.transactions(10)
+        ]);
+        data = {
+          profile: {
+            ...(profile || {}),
+            email: user?.email || profile?.email || "",
+            full_name: profile?.full_name || user?.email?.split("@")[0] || "Wakala user"
+          },
+          wallet: walletResult.wallet,
+          balances: walletResult.balances || [],
+          transactions: transactionResult.transactions || []
+        };
+      } catch (error) {
+        console.error("Neon wallet load failed:", error);
+        if (/authentication|required|session|expired/i.test(error.message || "")) {
+          window.location.replace("login.html");
           return;
         }
-
-      }
-
-
-      if (!data) {
+        transactions.innerHTML = `
+          <div class="transaction">
+            <div class="transaction-icon">!</div>
+            <div class="row-main">
+              <strong>Unable to load wallet</strong>
+              <span>We couldn't reach your wallet data. Please refresh and try again.</span>
+            </div>
+          </div>
+        `;
         return;
       }
 
-
+      if (!data) return;
       walletData = data;
 
       // Do not treat a missing profile flag as a logged-out session.
@@ -1805,17 +1724,7 @@
 
       try {
 
-        const {
-          data: { user },
-          error
-        } =
-          await supabase.auth.getUser();
-
-
-        if (error) {
-          throw error;
-        }
-
+        const { user } = await WAKALA_API.me();
 
         if (!user) {
 
@@ -1881,10 +1790,9 @@
         // Only send the user to login when we have confirmed that there is
         // no usable session. Network / Edge Function failures must not log
         // a valid user out of the dashboard.
-        const { data: authCheck } =
-          await supabase.auth.getUser();
-
-        if (!authCheck?.user) {
+        try {
+          await WAKALA_API.me();
+        } catch {
           window.location.replace("login.html");
           return;
         }
@@ -1917,66 +1825,22 @@
     // Supabase can emit auth events with a temporarily unavailable session
     // during token refresh / page startup; treating !session as SIGNED_OUT
     // can incorrectly throw a valid user back to the login page.
-    supabase.auth.onAuthStateChange(
-      (event) => {
-
-        if (event === "SIGNED_OUT") {
-
-          window.location.replace(
-            "login.html"
-          );
-
-        }
-
-      }
-    );
-
-
     /* ======================================
        LOGOUT
     ====================================== */
 
-    logoutButton.addEventListener(
-      "click",
-      async () => {
-
-        logoutButton.disabled =
-          true;
-
-        logoutButton.textContent =
-          "Signing out…";
-
-
-        const {
-          error
-        } =
-          await supabase.auth.signOut();
-
-
-        if (error) {
-
-          console.error(
-            "Logout failed:",
-            error
-          );
-
-          logoutButton.disabled =
-            false;
-
-          logoutButton.textContent =
-            "Log out";
-
-          return;
-
-        }
-
-
-        window.location.replace(
-          "login.html"
-        );
-
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Signing out…";
+      try {
+        await WAKALA_API.logout();
+        window.location.replace("login.html");
+      } catch (error) {
+        console.error("Logout failed:", error);
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Log out";
       }
-    );
+    });
 
     mobileLogoutButton.addEventListener(
       "click",
