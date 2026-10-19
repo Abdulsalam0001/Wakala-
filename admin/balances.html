@@ -797,21 +797,10 @@
 </div>
 
 
+<script src="../api.js"></script>
 <script type="module">
 
-    import {
-        createClient
-    } from 'https://esm.sh/@supabase/supabase-js@2';
-
-    import {
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    } from '../supabase-config.js';
-
-    const supabase = createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
+    const WAKALA_API = window.WAKALA_API;
 
 
     /*
@@ -926,12 +915,10 @@
 
     async function authenticate() {
 
-        const {
-            data: {
-                session
-            },
-            error: sessionError
-        } = await supabase.auth.getSession();
+        let user;
+        let sessionError = null;
+        try { ({ user } = await WAKALA_API.me()); }
+        catch (error) { sessionError = error; }
 
 
         if (sessionError) {
@@ -958,19 +945,21 @@
 
 
         adminEmail.textContent =
-            session.user.email ||
+            user.email ||
             'Administrator';
 
 
         /*
          * Secure admin role check.
          */
-        const {
-            data: role,
-            error: roleError
-        } = await supabase.rpc(
-            'get_admin_role'
-        );
+        let role = "admin";
+        let roleError = null;
+        try {
+            await WAKALA_API.adminCustomers("");
+        } catch (error) {
+            role = null;
+            roleError = error;
+        }
 
 
         if (roleError) {
@@ -1195,16 +1184,13 @@
             searchInput.value.trim();
 
 
-        const {
-            data,
-            error
-        } = await supabase.rpc(
-            'admin_list_customers',
-            {
-                search_term:
-                    searchTerm
-            }
-        );
+        let data = [];
+        let error = null;
+        try {
+            ({ customers: data } = await WAKALA_API.adminCustomers(searchTerm));
+        } catch (requestError) {
+            error = requestError;
+        }
 
 
         customerLoading.classList.add(
@@ -1521,16 +1507,13 @@
         }
 
 
-        const {
-            data,
-            error
-        } = await supabase.rpc(
-            'admin_get_customer_balances',
-            {
-                target_user_id:
-                    selectedUser.user_id
-            }
-        );
+        let data = [];
+        let error = null;
+        try {
+            ({ balances: data } = await WAKALA_API.adminCustomerBalances(selectedUser.user_id));
+        } catch (requestError) {
+            error = requestError;
+        }
 
 
         if (error) {
@@ -1852,28 +1835,10 @@
 
         try {
 
-            const {
-                data,
-                error
-            } = await supabase.rpc(
-                'admin_adjust_wallet_balance',
-                {
-                    target_user_id:
-                        selectedUser.user_id,
-
-                    target_currency:
-                        currency,
-
-                    adjustment_amount:
-                        amount,
-
-                    adjustment_direction:
-                        direction,
-
-                    adjustment_reason:
-                        reason
-                }
+            const data = await WAKALA_API.adjustBalance(
+                selectedUser.user_id, currency, direction, amount, reason
             );
+            const error = null;
 
 
             if (error) {
@@ -2021,9 +1986,8 @@
         }
 
 
-        const {
-            error
-        } = await supabase.auth.signOut();
+        let error = null;
+        try { await WAKALA_API.logout(); } catch (logoutError) { error = logoutError; }
 
 
         if (error) {
@@ -2300,23 +2264,6 @@
      * If the session expires or the user signs out elsewhere,
      * return them to login.
      */
-
-    supabase.auth.onAuthStateChange(
-        (event, session) => {
-
-            if (
-                event === 'SIGNED_OUT' ||
-                !session
-            ) {
-
-                window.location.href =
-                    '../login.html';
-
-            }
-
-        }
-    );
-
 
     /*
      * ============================================================
