@@ -121,6 +121,15 @@ app.post("/api/auth/register", async (req, res) => {
     await client.query("commit");
 
     const user = rows[0];
+    const configuredAdmin = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    if (configuredAdmin && configuredAdmin === email) {
+      await pool.query(
+        `insert into admin_users(user_id,role_id,status)
+         select $1,id,'active' from admin_roles where name='super_admin'
+         on conflict(user_id) do update set role_id=excluded.role_id,status='active',updated_at=now()`,
+        [user.id]
+      );
+    }
     setSession(res, signSession(user));
     res.status(201).json({ user });
   } catch (error) {
