@@ -340,7 +340,7 @@ app.post("/api/creator/applications", requireAuth, async (req, res) => {
        values($1,$2,$3,$4,$5,$6,$7,$8,$9,'pending')
        on conflict (user_id,campaign_id) where campaign_id is not null do nothing
        returning id,campaign_id,platform,portfolio_url,application_note,followers_count,content_format,content_idea,status,created_at`,
-      [req.user.sub,campaignId,platform,portfolioUrl || null,portfolioUrl || null,applicationNote,followersCount,contentFormat || null,contentIdea || null]
+      [req.user.sub,campaignId,platform,null,portfolioUrl || null,applicationNote,followersCount,contentFormat || null,contentIdea || null]
     );
     if (!rows.length) {
       await client.query("rollback");
