@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: wakala-neon
+    name: wakala-neon-staging
     runtime: node
     rootDir: server
     buildCommand: npm install
@@ -15,6 +15,6 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: APP_ORIGIN
-        value: https://wakala.cfd
+        value: https://wakala-neon-staging.onrender.com
       - key: ADMIN_EMAIL
         sync: false
