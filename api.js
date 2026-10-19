@@ -14,6 +14,8 @@ const WAKALA_API = {
   profile() { return this.request("/api/profile"); },
   updateProfile(full_name, phone) { return this.request("/api/profile", { method: "PATCH", body: JSON.stringify({ full_name, phone }) }); },
   wallet() { return this.request("/api/wallet"); },
-  transactions(limit = 50) { return this.request("/api/transactions?limit=" + encodeURIComponent(limit)); }
+  transactions(limit = 50) { return this.request("/api/transactions?limit=" + encodeURIComponent(limit)); },
+  esimOrders() { return this.request("/api/esim/orders"); },
+  createEsimOrder(order) { return this.request("/api/esim/orders", { method: "POST", body: JSON.stringify(order) }); }
 };
 window.WAKALA_API = WAKALA_API;
