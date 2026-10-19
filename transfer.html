@@ -688,11 +688,9 @@
     </section>
   </main>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  <script src="./api.js"></script>
+<script type="module">
+    const WAKALA_API = window.WAKALA_API;
 
     const state = {
       currentStep: 1,
@@ -954,9 +952,8 @@
       $('backBtn').disabled = true;
       setStatus('Sending transfer request to Wakala admin…', 'success');
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!session) { window.location.href = './login.html'; return; }
+        const auth = await WAKALA_API.me().catch(() => null);
+        if (!auth?.user) { window.location.href = './login.html'; return; }
         const recipientName = state.recipientType === 'external'
           ? $('fullName').value.trim()
           : state.selectedRecipient?.name || 'Selected Wakala recipient';
@@ -973,13 +970,7 @@
           note: state.note || '',
           rate_source: 'displayed estimate; final rate subject to admin/provider review'
         };
-        const { data, error } = await supabase.rpc('submit_wallet_request', {
-          p_request_type: 'transfer',
-          p_amount: state.amount,
-          p_currency: state.fromCurrency,
-          p_details: details
-        });
-        if (error) throw error;
+        const { request: data } = await WAKALA_API.createWalletRequest('transfer', state.amount, state.fromCurrency, details);
         $('successRecipient').textContent = `Request reference: ${data.reference}. Recipient: ${recipientName}. This request has been sent to Wakala admin for review; no money has been sent or deducted yet.`;
         $('successAmount').textContent = `${state.fromCurrency} ${Number(state.amount).toFixed(2)} → estimated ${state.toCurrency} ${Number(details.receive_amount_estimate).toFixed(2)}`;
         $('successState').querySelector('h4').textContent = 'Transfer request submitted';
@@ -1076,11 +1067,7 @@
       updateRateInfo();
 
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error || !session) {
-          window.location.href = 'login.html';
-          return;
-        }
+        await WAKALA_API.me();
       } catch (error) {
         console.error('Session check failed', error);
       }
