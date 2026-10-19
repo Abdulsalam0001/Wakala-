@@ -294,6 +294,70 @@ app.post("/api/wallet-requests", requireAuth, async (req, res) => {
 });
 
 
+app.get("/api/creator/campaigns", async (_req, res) => {
+  const { rows } = await pool.query(
+    `select id,title,description,platform,content_type,reward_per_1000_impressions,
+            max_reward,requirements,status,created_at
+     from creator_campaigns where status='active' order by created_at desc`
+  );
+  res.json({ campaigns: rows });
+});
+
+app.post("/api/creator/applications", requireAuth, async (req, res) => {
+  const campaignId = Number(req.body.campaign_id);
+  const platform = String(req.body.platform || "").trim().slice(0, 80);
+  const portfolioUrl = String(req.body.portfolio_url || "").trim().slice(0, 2048);
+  const applicationNote = String(req.body.application_note || "").trim().slice(0, 5000);
+  const followersRaw = req.body.followers_count;
+  const followersCount = followersRaw === "" || followersRaw == null ? null : Number(followersRaw);
+  const contentFormat = String(req.body.content_format || "").trim().slice(0, 120);
+  const contentIdea = String(req.body.content_idea || "").trim().slice(0, 2000);
+
+  if (!Number.isSafeInteger(campaignId) || campaignId <= 0 || !platform || !applicationNote) {
+    return res.status(400).json({ error: "Choose a campaign and complete your application details" });
+  }
+  if (portfolioUrl && !/^https?:\/\//i.test(portfolioUrl)) {
+    return res.status(400).json({ error: "Portfolio/profile URL must start with http:// or https://" });
+  }
+  if (followersCount !== null && (!Number.isSafeInteger(followersCount) || followersCount < 0)) {
+    return res.status(400).json({ error: "Follower count must be a non-negative whole number" });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query("begin");
+    const { rows: campaigns } = await client.query(
+      "select id from creator_campaigns where id=$1 and status='active' for update",
+      [campaignId]
+    );
+    if (!campaigns.length) {
+      await client.query("rollback");
+      return res.status(404).json({ error: "This creator campaign is no longer available" });
+    }
+    const { rows } = await client.query(
+      `insert into creator_applications
+       (user_id,campaign_id,platform,username,portfolio_url,application_note,followers_count,content_format,content_idea,status)
+       values($1,$2,$3,$4,$5,$6,$7,$8,$9,'pending')
+       on conflict (user_id,campaign_id) where campaign_id is not null do nothing
+       returning id,campaign_id,platform,portfolio_url,application_note,followers_count,content_format,content_idea,status,created_at`,
+      [req.user.sub,campaignId,platform,portfolioUrl || null,portfolioUrl || null,applicationNote,followersCount,contentFormat || null,contentIdea || null]
+    );
+    if (!rows.length) {
+      await client.query("rollback");
+      return res.status(409).json({ error: "You have already applied to this campaign" });
+    }
+    await client.query("update creator_campaigns set application_count=application_count+1,updated_at=now() where id=$1", [campaignId]);
+    await client.query("commit");
+    res.status(201).json({ application: rows[0] });
+  } catch (error) {
+    await client.query("rollback").catch(() => {});
+    console.error("Creator application failed:", error);
+    res.status(500).json({ error: "Could not submit your creator application" });
+  } finally {
+    client.release();
+  }
+});
+
 app.get("/api/esim/orders", requireAuth, async (req, res) => {
   const { rows } = await pool.query(
     `select id,country_code,country_name,currency,plan_data,validity_days,price_usd,
