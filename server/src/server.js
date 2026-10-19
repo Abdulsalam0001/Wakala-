@@ -339,6 +339,22 @@ app.post("/api/esim/orders", requireAuth, async (req, res) => {
   }
 });
 
+app.get("/api/admin/me", requireAuth, requireAdmin, async (req, res) => {
+  const { rows } = await pool.query("select id,email from users where id=$1", [req.user.sub]);
+  res.json({ user: rows[0] || null, role: req.adminRole });
+});
+
+app.get("/api/admin/esim-orders", requireAuth, requireAdmin, async (_req, res) => {
+  const { rows } = await pool.query(
+    `select eo.id,eo.user_id,eo.country_code,eo.country_name,eo.currency,eo.plan_data,
+            eo.validity_days,eo.price_usd,eo.customer_price,eo.delivery_email,eo.device,eo.notes,
+            eo.status,eo.created_at,p.full_name,p.email
+     from esim_orders eo left join profiles p on p.id=eo.user_id
+     order by eo.created_at desc limit 20`
+  );
+  res.json({ orders: rows });
+});
+
 app.get("/api/admin/overview", requireAuth, requireAdmin, async (_req, res) => {
   const [{ rows: userRows }, { rows: esimRows }, { rows: balanceRows }, { rows: txRows }] = await Promise.all([
     pool.query("select count(*)::int as total_users from profiles"),
