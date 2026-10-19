@@ -1056,7 +1056,7 @@
 
 
   <!-- ======================================
-       SUPABASE
+       NEON API
   ======================================= -->
 
   <script src="./api.js"></script>
@@ -1822,9 +1822,8 @@
     ====================================== */
 
     // Only redirect for an explicit sign-out.
-    // Supabase can emit auth events with a temporarily unavailable session
-    // during token refresh / page startup; treating !session as SIGNED_OUT
-    // can incorrectly throw a valid user back to the login page.
+    // Cookie-based Neon sessions are checked through the API when the page loads.
+    // No client-side auth-state listener is needed.
     /* ======================================
        LOGOUT
     ====================================== */
