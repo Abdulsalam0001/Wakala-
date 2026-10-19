@@ -16,3 +16,5 @@ services:
         generateValue: true
       - key: APP_ORIGIN
         value: https://wakala.cfd
+      - key: ADMIN_EMAIL
+        sync: false
