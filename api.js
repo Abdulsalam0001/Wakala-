@@ -11,6 +11,7 @@ const WAKALA_API = {
   register(email, password) { return this.request("/api/auth/register", { method: "POST", body: JSON.stringify({ email, password }) }); },
   login(email, password) { return this.request("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }); },
   logout() { return this.request("/api/auth/logout", { method: "POST" }); },
+  changePassword(current_password, new_password) { return this.request("/api/auth/change-password", { method: "POST", body: JSON.stringify({ current_password, new_password }) }); },
   profile() { return this.request("/api/profile"); },
   updateProfile(full_name, phone) { return this.request("/api/profile", { method: "PATCH", body: JSON.stringify({ full_name, phone }) }); },
   wallet() { return this.request("/api/wallet"); },
