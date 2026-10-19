@@ -21,7 +21,9 @@ const WAKALA_API = {
   walletRequests() { return this.request("/api/wallet-requests"); },
   adminWalletRequests(status = "all") { return this.request("/api/admin/wallet-requests" + (status && status !== "all" ? "?status=" + encodeURIComponent(status) : "")); },
   reviewWalletRequest(id, status, admin_note = "") { return this.request("/api/admin/wallet-requests/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status, admin_note }) }); },
+  adminMe() { return this.request("/api/admin/me"); },
   adminOverview() { return this.request("/api/admin/overview"); },
+  adminEsimOrders() { return this.request("/api/admin/esim-orders"); },
   adminCustomers(search = "") { return this.request("/api/admin/customers?search=" + encodeURIComponent(search)); },
   adminCustomerBalances(userId) { return this.request("/api/admin/customers/" + encodeURIComponent(userId) + "/balances"); },
   adjustBalance(userId, currency, direction, amount, reason) {
