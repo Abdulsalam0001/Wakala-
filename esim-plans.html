@@ -1073,7 +1073,6 @@ button,input,select{
 </div>
 
 
-<script src="./api.js"></script>
 <script>
 
 const countries = [
@@ -1129,7 +1128,7 @@ const dataPlans = [
 /*
   These are presentation exchange rates only.
 
-  Production pricing should come from the Neon-backed server/provider
+  Production pricing should come from the Supabase
   esim-packages Edge Function so customers cannot
   manipulate prices in the browser.
 */
@@ -1604,21 +1603,44 @@ document
       "Sending your eSIM request to Wakala operations...";
 
     try {
-      const auth = await window.WAKALA_API.me().catch(() => null);
-      if (!auth?.user) {
-        showAuthModal(() => {
-          setTimeout(() => document.getElementById("esimForm").dispatchEvent(new Event("submit")), 100);
-        });
-        button.disabled = false;
-        button.textContent = "Submit eSIM order";
-        status.textContent = "";
+      // Get Supabase client from global scope (initialized below)
+      const supabase = window.supabaseClient;
+      
+      if(!supabase){
+        status.textContent=
+          "Error: Database connection not initialized. Please refresh and try again.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
         return;
       }
 
-      const localPrice2 = localPrice(selectedPlan.usd, country.currency);
-      let order;
-      try {
-        const result = await window.WAKALA_API.createEsimOrder({
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if(authError || !user){
+        // Show auth modal instead of error
+        showAuthModal(() => {
+          // Automatically resubmit form after successful authentication
+          setTimeout(() => {
+            document.getElementById("esimForm").dispatchEvent(new Event("submit"));
+          }, 100);
+        });
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
+        status.textContent="";
+        return;
+      }
+
+      const localPrice2=localPrice(
+        selectedPlan.usd,
+        country.currency
+      );
+
+      // Insert order into database
+      const { data, error } = await supabase
+        .from("esim_orders")
+        .insert({
+          user_id: user.id,
           country_code: country.code,
           country_name: country.name,
           currency: country.currency,
@@ -1627,26 +1649,31 @@ document
           price_usd: selectedPlan.usd,
           customer_price: localPrice2,
           delivery_email: email,
-          device,
-          notes: notes || null
-        });
-        order = result.order;
-      } catch (error) {
+          device: device,
+          notes: notes || null,
+          status: "pending_admin_review",
+          provisioning_target: "within_1_hour"
+        })
+        .select();
+
+      if(error){
         console.error("Order insertion error:", error);
-        status.textContent = error.message || "Error submitting order. Please try again.";
-        button.disabled = false;
-        button.textContent = "Submit eSIM order";
+        status.textContent=
+          "Error submitting order. Please try again.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
         return;
       }
 
-      if (!order?.id) {
-        status.textContent = "Order submitted but confirmation failed. Please check your dashboard.";
-        button.disabled = false;
-        button.textContent = "Submit eSIM order";
+      if(!data || data.length===0){
+        status.textContent=
+          "Order submitted but confirmation failed. Please check your dashboard.";
+        button.disabled=false;
+        button.textContent="Submit eSIM order";
         return;
       }
 
-      const orderId=`WKL-ESIM-${order.id}`;
+      const orderId=`WKL-ESIM-${data[0].id}`;
 
       document.getElementById(
         "confirmationRef"
@@ -1695,7 +1722,12 @@ renderCountries();
 
 </script>
 
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+// Initialize Supabase client globally so it's available in the form handler
+window.supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 // AUTH MODAL HANDLING
 const authModal = document.getElementById('authModal');
@@ -1772,8 +1804,19 @@ loginForm.addEventListener('submit', async (e) => {
   statusEl.textContent = 'Signing in...';
   
   try {
-    await window.WAKALA_API.login(email, password);
-    {
+    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+    
+    if (error) {
+      statusEl.className = 'auth-modal-status error';
+      statusEl.textContent = error.message || 'Sign in failed. Please check your credentials.';
+      loginBtn.disabled = false;
+      return;
+    }
+    
+    if (data?.user) {
       statusEl.className = 'auth-modal-status success';
       statusEl.textContent = '✓ Signed in successfully. Submitting your order...';
       
@@ -1785,7 +1828,7 @@ loginForm.addEventListener('submit', async (e) => {
     }
   } catch (err) {
     statusEl.className = 'auth-modal-status error';
-    statusEl.textContent = err?.message || 'An error occurred. Please try again.';
+    statusEl.textContent = 'An error occurred. Please try again.';
     loginBtn.disabled = false;
   }
 });
@@ -1810,8 +1853,19 @@ signupForm.addEventListener('submit', async (e) => {
   statusEl.textContent = 'Creating account...';
   
   try {
-    await window.WAKALA_API.register(email, password);
-    {
+    const { data, error } = await window.supabaseClient.auth.signUp({
+      email,
+      password
+    });
+    
+    if (error) {
+      statusEl.className = 'auth-modal-status error';
+      statusEl.textContent = error.message || 'Account creation failed.';
+      signupBtn.disabled = false;
+      return;
+    }
+    
+    if (data?.user) {
       statusEl.className = 'auth-modal-status success';
       statusEl.textContent = '✓ Account created! Submitting your order...';
       
