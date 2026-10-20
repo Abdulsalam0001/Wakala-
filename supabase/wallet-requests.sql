@@ -10,7 +10,7 @@ create table if not exists public.wallet_requests (
   request_type text not null check (request_type in ('deposit','transfer')),
   amount numeric(20,8) not null check (amount > 0),
   currency text not null check (currency in ('NGN','USD','KES','TZS','RWF','USDC','USDT','BTC')),
-  status text not null default 'pending' check (status in ('pending','approved','rejected','processing')),
+  status text not null default 'pending' check (status in ('pending','approved','rejected','processing','completed')),
   details jsonb not null default '{}'::jsonb,
   admin_note text,
   reviewed_by uuid references auth.users(id) on delete set null,
@@ -18,6 +18,9 @@ create table if not exists public.wallet_requests (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.wallet_requests drop constraint if exists wallet_requests_status_check;
+alter table public.wallet_requests add constraint wallet_requests_status_check check (status in ('pending','approved','rejected','processing','completed'));
 
 create index if not exists wallet_requests_user_created_idx on public.wallet_requests(user_id, created_at desc);
 create index if not exists wallet_requests_admin_queue_idx on public.wallet_requests(status, created_at asc);
@@ -44,6 +47,7 @@ declare
   uid uuid := auth.uid();
   wallet_row public.wallets%rowtype;
   request_row public.wallet_requests%rowtype;
+  balance_row public.wallet_balances%rowtype;
   kind text := lower(trim(coalesce(p_request_type,'')));
   curr text := upper(trim(coalesce(p_currency,'')));
   amount_value numeric := p_amount;
@@ -63,6 +67,15 @@ begin
   if kind = 'transfer' then
     if nullif(trim(detail_value->>'recipient_name'),'') is null then raise exception 'Recipient name is required'; end if;
     if nullif(trim(detail_value->>'recipient_type'),'') is null then raise exception 'Recipient type is required'; end if;
+    select * into balance_row from public.wallet_balances
+      where wallet_id=wallet_row.id and currency=curr for update;
+    if balance_row.id is null or balance_row.available < amount_value then
+      raise exception 'Insufficient available balance in % for this transfer request', curr;
+    end if;
+    -- Reserve the requested amount. It is not paid out until an admin confirms settlement.
+    update public.wallet_balances
+      set available=available-amount_value, pending=pending+amount_value, updated_at=now()
+      where id=balance_row.id;
   end if;
 
   insert into public.wallet_requests(user_id,wallet_id,request_type,amount,currency,details)
@@ -87,7 +100,10 @@ security definer
 set search_path = public
 as $$
 begin
-  if not public.is_active_admin() then raise exception 'Administrator access required'; end if;
+  if not exists (
+    select 1 from public.admin_users au join public.admin_roles ar on ar.id=au.role_id
+    where au.user_id=auth.uid() and au.status='active' and ar.name in ('super_admin','admin')
+  ) then raise exception 'Administrator access required'; end if;
   return query
   select r.id,r.reference,r.user_id,coalesce(p.full_name,''),coalesce(p.email,''),r.request_type,
     r.amount,r.currency,r.status,r.details,r.admin_note,r.created_at,r.reviewed_at
@@ -115,17 +131,38 @@ declare
   balance_id bigint;
   new_available numeric;
   decision text := lower(trim(coalesce(p_decision,'')));
+  balance_row public.wallet_balances%rowtype;
   note text := left(trim(coalesce(p_admin_note,'')),1000);
 begin
-  if not public.is_active_admin() then raise exception 'Administrator access required'; end if;
-  if decision not in ('approve','reject','processing') then raise exception 'Decision must be approve, reject, or processing'; end if;
+  if not exists (
+    select 1 from public.admin_users au join public.admin_roles ar on ar.id=au.role_id
+    where au.user_id=auth.uid() and au.status='active' and ar.name in ('super_admin','admin')
+  ) then raise exception 'Administrator access required'; end if;
+  if decision not in ('approve','reject','processing','complete') then raise exception 'Decision must be approve, reject, processing, or complete'; end if;
 
   select * into req from public.wallet_requests where id=p_request_id for update;
   if req.id is null then raise exception 'Request not found'; end if;
-  if req.status <> 'pending' then raise exception 'This request has already been reviewed'; end if;
+  if decision='complete' then
+    if req.status <> 'processing' then raise exception 'Only a transfer already in processing can be completed'; end if;
+  elsif req.status <> 'pending'
+    and not (decision='reject' and req.request_type='transfer' and req.status='processing') then
+    raise exception 'This request has already been reviewed';
+  end if;
 
-  if decision='processing' and req.request_type <> 'transfer' then
-    raise exception 'Only transfer requests can be marked processing';
+  if decision in ('processing','complete') and req.request_type <> 'transfer' then
+    raise exception 'Only transfer requests can be processed or completed';
+  end if;
+  if decision='complete' and req.status <> 'processing' then
+    raise exception 'Only a transfer already in processing can be completed';
+  end if;
+  if decision='processing' and req.status <> 'pending' then
+    raise exception 'Only pending transfer requests can be processed';
+  end if;
+  if decision='approve' and req.request_type='deposit' and note='' then
+    raise exception 'Record the incoming payment reference or reconciliation evidence in the admin note before crediting';
+  end if;
+  if decision='complete' and note='' then
+    raise exception 'Record the actual settlement confirmation in the admin note before completing this transfer';
   end if;
 
   if decision='approve' and req.request_type='deposit' then
@@ -142,16 +179,41 @@ begin
     return jsonb_build_object('success',true,'reference',req.reference,'status','approved','credited',true,'new_available_balance',new_available);
   end if;
 
-  if decision='approve' and req.request_type='transfer' then
-    update public.wallet_requests set status='approved',admin_note=note,reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now() where id=req.id;
-    return jsonb_build_object('success',true,'reference',req.reference,'status','approved','credited',false,'message','Transfer request approved for processing; no funds were moved by this action.');
+  if req.request_type='transfer' and decision='complete' then
+    select * into balance_row from public.wallet_balances
+      where wallet_id=req.wallet_id and currency=req.currency for update;
+    if balance_row.id is null or balance_row.pending < req.amount then
+      raise exception 'Reserved transfer balance is missing; contact engineering before completing';
+    end if;
+    update public.wallet_balances set pending=pending-req.amount,updated_at=now() where id=balance_row.id;
+    insert into public.transactions(user_id,wallet_id,amount,currency,type,status,description,reference,metadata,completed_at)
+    values(req.user_id,req.wallet_id,-req.amount,req.currency,'transfer','completed',
+      'Transfer completed by administrator',req.reference,
+      jsonb_build_object('source','admin_completed_transfer','request_id',req.id,'reviewed_by',auth.uid(),'admin_note',note),now());
+    update public.wallet_requests set status='completed',admin_note=note,reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now() where id=req.id;
+    return jsonb_build_object('success',true,'reference',req.reference,'status','completed','credited',false,'debited',true);
+  end if;
+
+  if req.request_type='transfer' and decision='reject' then
+    select * into balance_row from public.wallet_balances
+      where wallet_id=req.wallet_id and currency=req.currency for update;
+    if balance_row.id is null or balance_row.pending < req.amount then
+      raise exception 'Reserved transfer balance is missing; contact engineering before rejecting';
+    end if;
+    update public.wallet_balances
+      set available=available+req.amount,pending=pending-req.amount,updated_at=now()
+      where id=balance_row.id;
   end if;
 
   update public.wallet_requests set
-    status=case when decision='reject' then 'rejected' else 'processing' end,
+    status=case
+      when decision='reject' then 'rejected'
+      when req.request_type='transfer' then 'processing'
+      else 'processing'
+    end,
     admin_note=note,reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now()
   where id=req.id;
-  return jsonb_build_object('success',true,'reference',req.reference,'status',case when decision='reject' then 'rejected' else 'processing' end,'credited',false);
+  return jsonb_build_object('success',true,'reference',req.reference,'status',case when decision='reject' then 'rejected' else 'processing' end,'credited',false,'reserved',req.request_type='transfer');
 end;
 $$;
 revoke all on function public.review_wallet_request(bigint,text,text) from public, anon;
