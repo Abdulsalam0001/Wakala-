@@ -28,6 +28,7 @@
         }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         * {
@@ -271,11 +272,6 @@
         <a href="./balances.html" class="nav-link active">
             <span>₦</span>
             <span>Wallet Balances</span>
-        </a>
-
-        <a href="./requests.html" class="nav-link">
-            <span>↔</span>
-            <span>Deposit & Transfer Requests</span>
         </a>
 
         <a href="./creators.html" class="nav-link">
@@ -796,10 +792,21 @@
 </div>
 
 
-<script src="../api.js"></script>
 <script type="module">
 
-    const WAKALA_API = window.WAKALA_API;
+    import {
+        createClient
+    } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    import {
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    } from '../supabase-config.js';
+
+    const supabase = createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
     /*
@@ -914,10 +921,12 @@
 
     async function authenticate() {
 
-        let user;
-        let sessionError = null;
-        try { ({ user } = await WAKALA_API.me()); }
-        catch (error) { sessionError = error; }
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabase.auth.getSession();
 
 
         if (sessionError) {
@@ -944,21 +953,19 @@
 
 
         adminEmail.textContent =
-            user.email ||
+            session.user.email ||
             'Administrator';
 
 
         /*
          * Secure admin role check.
          */
-        let role = "admin";
-        let roleError = null;
-        try {
-            await WAKALA_API.adminCustomers("");
-        } catch (error) {
-            role = null;
-            roleError = error;
-        }
+        const {
+            data: role,
+            error: roleError
+        } = await supabase.rpc(
+            'get_admin_role'
+        );
 
 
         if (roleError) {
@@ -1183,13 +1190,16 @@
             searchInput.value.trim();
 
 
-        let data = [];
-        let error = null;
-        try {
-            ({ customers: data } = await WAKALA_API.adminCustomers(searchTerm));
-        } catch (requestError) {
-            error = requestError;
-        }
+        const {
+            data,
+            error
+        } = await supabase.rpc(
+            'admin_list_customers',
+            {
+                search_term:
+                    searchTerm
+            }
+        );
 
 
         customerLoading.classList.add(
@@ -1506,13 +1516,16 @@
         }
 
 
-        let data = [];
-        let error = null;
-        try {
-            ({ balances: data } = await WAKALA_API.adminCustomerBalances(selectedUser.user_id));
-        } catch (requestError) {
-            error = requestError;
-        }
+        const {
+            data,
+            error
+        } = await supabase.rpc(
+            'admin_get_customer_balances',
+            {
+                target_user_id:
+                    selectedUser.user_id
+            }
+        );
 
 
         if (error) {
@@ -1834,10 +1847,28 @@
 
         try {
 
-            const data = await WAKALA_API.adjustBalance(
-                selectedUser.user_id, currency, direction, amount, reason
+            const {
+                data,
+                error
+            } = await supabase.rpc(
+                'admin_adjust_wallet_balance',
+                {
+                    target_user_id:
+                        selectedUser.user_id,
+
+                    target_currency:
+                        currency,
+
+                    adjustment_amount:
+                        amount,
+
+                    adjustment_direction:
+                        direction,
+
+                    adjustment_reason:
+                        reason
+                }
             );
-            const error = null;
 
 
             if (error) {
@@ -1985,8 +2016,9 @@
         }
 
 
-        let error = null;
-        try { await WAKALA_API.logout(); } catch (logoutError) { error = logoutError; }
+        const {
+            error
+        } = await supabase.auth.signOut();
 
 
         if (error) {
@@ -2263,6 +2295,23 @@
      * If the session expires or the user signs out elsewhere,
      * return them to login.
      */
+
+    supabase.auth.onAuthStateChange(
+        (event, session) => {
+
+            if (
+                event === 'SIGNED_OUT' ||
+                !session
+            ) {
+
+                window.location.href =
+                    '../login.html';
+
+            }
+
+        }
+    );
+
 
     /*
      * ============================================================
