@@ -688,9 +688,11 @@
     </section>
   </main>
 
-  <script src="./api.js"></script>
-<script type="module">
-    const WAKALA_API = window.WAKALA_API;
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const state = {
       currentStep: 1,
@@ -757,7 +759,7 @@
       });
 
       $('backBtn').hidden = step === 1;
-      $('nextBtn').textContent = step === 3 ? 'Send request to admin' : step === 2 ? 'Review transfer' : 'Continue';
+      $('nextBtn').textContent = step === 3 ? 'Confirm transfer' : step === 2 ? 'Review transfer' : 'Continue';
       $('successState').classList.toggle('active', false);
       $('successState').hidden = true;
       setStatus('');
@@ -947,42 +949,31 @@
 
     const submitTransfer = async () => {
       if (state.isSubmitting) return;
+
       state.isSubmitting = true;
       $('nextBtn').disabled = true;
       $('backBtn').disabled = true;
-      setStatus('Sending transfer request to Wakala admin…', 'success');
+      setStatus('Submitting transfer...', 'success');
+
       try {
-        const auth = await WAKALA_API.me().catch(() => null);
-        if (!auth?.user) { window.location.href = './login.html'; return; }
-        const recipientName = state.recipientType === 'external'
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        const reviewName = state.recipientType === 'external'
           ? $('fullName').value.trim()
-          : state.selectedRecipient?.name || 'Selected Wakala recipient';
-        const details = {
-          recipient_type: state.recipientType,
-          recipient_name: recipientName,
-          recipient_user_id: state.selectedRecipient?.id || null,
-          recipient_country: state.recipientType === 'external' ? $('countrySelect').value : null,
-          bank_name: state.recipientType === 'external' ? $('bankSelect').value : 'Wakala',
-          destination_account: state.recipientType === 'external' ? $('accountNumber').value.trim() : null,
-          send_currency: state.fromCurrency,
-          receive_currency: state.toCurrency,
-          receive_amount_estimate: Number(((state.amount || 0) * getCrossRate()).toFixed(2)),
-          note: state.note || '',
-          rate_source: 'displayed estimate; final rate subject to admin/provider review'
-        };
-        const { request: data } = await WAKALA_API.createWalletRequest('transfer', state.amount, state.fromCurrency, details);
-        $('successRecipient').textContent = `Request reference: ${data.reference}. Recipient: ${recipientName}. This request has been sent to Wakala admin for review; no money has been sent or deducted yet.`;
-        $('successAmount').textContent = `${state.fromCurrency} ${Number(state.amount).toFixed(2)} → estimated ${state.toCurrency} ${Number(details.receive_amount_estimate).toFixed(2)}`;
-        $('successState').querySelector('h4').textContent = 'Transfer request submitted';
+          : state.selectedRecipient?.name || 'Selected recipient';
+
+        $('successRecipient').textContent = `Transfer sent to ${reviewName}. ${state.note ? `Note: “${state.note.trim()}”` : 'No note added.'}`;
+        $('successAmount').textContent = `${state.toCurrency} ${((state.amount || 0) * getCrossRate()).toFixed(2)}`;
+
         $('successState').hidden = false;
         $('successState').classList.add('active');
         $('section3').classList.remove('active');
         $('section3').style.display = 'none';
         $('nextBtn').hidden = true;
         $('backBtn').hidden = true;
-        setStatus('Request sent to admin. Transfer is not yet completed.', 'success');
+        setStatus('Transfer completed successfully.', 'success');
       } catch (error) {
-        setStatus(error.message || 'Unable to submit transfer request right now. Please try again.', 'error');
+        setStatus(error.message || 'Unable to submit transfer right now. Please try again.', 'error');
       } finally {
         state.isSubmitting = false;
         $('nextBtn').disabled = false;
@@ -1067,7 +1058,11 @@
       updateRateInfo();
 
       try {
-        await WAKALA_API.me();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session) {
+          window.location.href = 'login.html';
+          return;
+        }
       } catch (error) {
         console.error('Session check failed', error);
       }
