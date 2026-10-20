@@ -689,9 +689,8 @@
   </main>
 
   <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./supabase-config.js";
     const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const state = {
@@ -759,7 +758,7 @@
       });
 
       $('backBtn').hidden = step === 1;
-      $('nextBtn').textContent = step === 3 ? 'Confirm transfer' : step === 2 ? 'Review transfer' : 'Continue';
+      $('nextBtn').textContent = step === 3 ? 'Send request to admin' : step === 2 ? 'Review transfer' : 'Continue';
       $('successState').classList.toggle('active', false);
       $('successState').hidden = true;
       setStatus('');
@@ -949,31 +948,44 @@
 
     const submitTransfer = async () => {
       if (state.isSubmitting) return;
-
       state.isSubmitting = true;
       $('nextBtn').disabled = true;
       $('backBtn').disabled = true;
-      setStatus('Submitting transfer...', 'success');
-
+      setStatus('Sending transfer request to Wakala admin…', 'success');
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-
-        const reviewName = state.recipientType === 'external'
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!session) { window.location.href = './login.html'; return; }
+        const recipientName = state.recipientType === 'external'
           ? $('fullName').value.trim()
-          : state.selectedRecipient?.name || 'Selected recipient';
-
-        $('successRecipient').textContent = `Transfer sent to ${reviewName}. ${state.note ? `Note: “${state.note.trim()}”` : 'No note added.'}`;
-        $('successAmount').textContent = `${state.toCurrency} ${((state.amount || 0) * getCrossRate()).toFixed(2)}`;
-
+          : state.selectedRecipient?.name || 'Selected Wakala recipient';
+        const details = {
+          recipient_type: state.recipientType,
+          recipient_name: recipientName,
+          recipient_user_id: state.selectedRecipient?.id || null,
+          recipient_country: state.recipientType === 'external' ? $('countrySelect').value : null,
+          bank_name: state.recipientType === 'external' ? $('bankSelect').value : 'Wakala',
+          destination_account: state.recipientType === 'external' ? $('accountNumber').value.trim() : null,
+          send_currency: state.fromCurrency,
+          receive_currency: state.toCurrency,
+          receive_amount_estimate: Number(((state.amount || 0) * getCrossRate()).toFixed(2)),
+          note: state.note || '',
+          rate_source: 'displayed estimate; final rate subject to admin/provider review'
+        };
+        const { data, error } = await supabase.rpc('submit_wallet_request', { p_request_type: 'transfer', p_amount: state.amount, p_currency: state.fromCurrency, p_details: details });
+        if (error) throw error;
+        $('successRecipient').textContent = `Request reference: ${data.reference}. Recipient: ${recipientName}. This request has been sent to Wakala admin for review. The amount is reserved while it is reviewed; no payment has been sent yet.`;
+        $('successAmount').textContent = `${state.fromCurrency} ${Number(state.amount).toFixed(2)} → estimated ${state.toCurrency} ${Number(details.receive_amount_estimate).toFixed(2)}`;
+        $('successState').querySelector('h4').textContent = 'Transfer request submitted';
         $('successState').hidden = false;
         $('successState').classList.add('active');
         $('section3').classList.remove('active');
         $('section3').style.display = 'none';
         $('nextBtn').hidden = true;
         $('backBtn').hidden = true;
-        setStatus('Transfer completed successfully.', 'success');
+        setStatus('Request sent to admin. The amount is reserved; transfer is not yet completed.', 'success');
       } catch (error) {
-        setStatus(error.message || 'Unable to submit transfer right now. Please try again.', 'error');
+        setStatus(error.message || 'Unable to submit transfer request right now. Please try again.', 'error');
       } finally {
         state.isSubmitting = false;
         $('nextBtn').disabled = false;
@@ -1059,10 +1071,7 @@
 
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (error || !session) {
-          window.location.href = 'login.html';
-          return;
-        }
+        if (error || !session) { window.location.href = './login.html'; return; }
       } catch (error) {
         console.error('Session check failed', error);
       }
