@@ -1285,10 +1285,21 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<script src="./api.js"></script>
 <script type="module">
 
-const WAKALA_API = window.WAKALA_API;
+import { createClient } from
+  'https://esm.sh/@supabase/supabase-js@2';
+
+import {
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+} from './supabase-config.js';
+
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 const form =
@@ -1339,11 +1350,19 @@ document.getElementById('year').textContent =
 
 async function initialise() {
 
-  try {
-    ({ user: currentUser } = await WAKALA_API.me());
-  } catch {
-    currentUser = null;
+  const {
+    data,
+    error
+  } = await supabase.auth.getSession();
+
+
+  if (error) {
+    console.warn('Session lookup failed:', error);
   }
+
+
+  currentUser =
+    data?.session?.user || null;
 
 
   if (currentUser) {
@@ -1352,7 +1371,13 @@ async function initialise() {
       currentUser.email || '';
 
 
-    const { profile } = await WAKALA_API.profile();
+    const {
+      data: profile
+    } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', currentUser.id)
+      .maybeSingle();
 
 
     if (profile?.full_name) {
@@ -1380,13 +1405,27 @@ async function loadCampaigns() {
     'Loading active campaigns...';
 
 
-  let data = [];
-  let error = null;
-  try {
-    ({ campaigns: data } = await WAKALA_API.creatorCampaigns());
-  } catch (requestError) {
-    error = requestError;
-  }
+  const {
+    data,
+    error
+  } = await supabase
+    .from('creator_campaigns')
+    .select(`
+      id,
+      title,
+      description,
+      platform,
+      content_type,
+      reward_per_1000_impressions,
+      max_reward,
+      requirements,
+      status,
+      created_at
+    `)
+    .eq('status','active')
+    .order('created_at',{
+      ascending:false
+    });
 
 
   if (error) {
@@ -1677,26 +1716,34 @@ form.addEventListener(
      * Every click creates a new application.
      */
 
-    if (!currentUser) {
-      window.location.href = 'login.html?next=creator-jobs.html';
-      return;
-    }
+    const {
+      data,
+      error
+    } = await supabase
+      .from('creator_applications')
+      .insert({
 
-    let data = null;
-    let error = null;
-    try {
-      ({ application: data } = await WAKALA_API.applyToCampaign({
-        campaign_id: Number(campaign.id),
-        platform: platformInput.value,
-        portfolio_url: profileInput.value.trim(),
-        application_note: applicationNote,
-        followers_count: followersInput.value.trim() ? Number(followersInput.value) : null,
-        content_format: formatInput.value,
-        content_idea: ideaInput.value.trim()
-      }));
-    } catch (requestError) {
-      error = requestError;
-    }
+        campaign_id:
+          campaign.id,
+
+        user_id:
+          currentUser.id,
+
+        platform:
+          platformInput.value,
+
+        portfolio_url:
+          profileInput.value.trim(),
+
+        application_note:
+          applicationNote,
+
+        status:
+          'pending'
+
+      })
+      .select()
+      .single();
 
 
     if (error) {
