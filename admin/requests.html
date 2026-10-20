@@ -1,97 +1,23 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Deposit & Transfer Requests | Wakala Admin</title><script src="https://cdn.tailwindcss.com"></script>
-<style>*{box-sizing:border-box}body{margin:0;background:#f8fafc;color:#0f172a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#0f172a;color:#fff;padding:24px 14px;overflow:auto}.main{margin-left:245px;min-height:100vh}.nav{display:block;color:#cbd5e1;text-decoration:none;padding:12px 14px;border-radius:10px;margin:4px 0}.nav:hover,.nav.active{background:#1e293b;color:#fff}.top{background:#fff;border-bottom:1px solid #e2e8f0;padding:20px 28px;display:flex;justify-content:space-between;gap:14px;align-items:center}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 2px 8px #0f172a08}button,select{font:inherit}button{cursor:pointer}.status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;text-transform:capitalize}.pending{background:#fef3c7;color:#92400e}.approved{background:#dcfce7;color:#166534}.rejected{background:#fee2e2;color:#991b1b}.processing{background:#dbeafe;color:#1d4ed8}@media(max-width:760px){.sidebar{position:static;width:auto;padding:12px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.sidebar .brand{width:100%;padding:5px 8px 10px}.nav{padding:8px 10px;margin:0;font-size:13px}.main{margin-left:0}.top{padding:18px;align-items:flex-start;flex-direction:column}.content{padding:16px!important}}</style></head>
+<style>*{box-sizing:border-box}body{margin:0;background:#f8fafc;color:#0f172a;font-family:Inter,system-ui,sans-serif}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#0f172a;color:#fff;padding:24px 14px;overflow:auto}.main{margin-left:245px;min-height:100vh}.nav{display:block;color:#cbd5e1;text-decoration:none;padding:12px 14px;border-radius:10px;margin:4px 0}.nav:hover,.nav.active{background:#1e293b;color:#fff}.top{background:#fff;border-bottom:1px solid #e2e8f0;padding:20px 28px;display:flex;justify-content:space-between;gap:14px;align-items:center}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 2px 8px #0f172a08}.status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;text-transform:capitalize}.pending{background:#fef3c7;color:#92400e}.approved,.completed{background:#dcfce7;color:#166534}.rejected,.cancelled{background:#fee2e2;color:#991b1b}.processing{background:#dbeafe;color:#1d4ed8}button,select{font:inherit}button{cursor:pointer}@media(max-width:760px){.sidebar{position:static;width:auto;padding:12px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.sidebar .brand{width:100%;padding:5px 8px 10px}.nav{padding:8px 10px;margin:0;font-size:13px}.main{margin-left:0}.top{padding:18px;align-items:flex-start;flex-direction:column}.content{padding:16px!important}}</style></head>
 <body><aside class="sidebar"><div class="brand text-xl font-bold mb-5">Wakala <span class="text-xs font-normal text-slate-400">ADMIN</span></div><a class="nav" href="./adminindex.html">▦ Dashboard</a><a class="nav" href="./balances.html">₦ Wallet balances</a><a class="nav active" href="./requests.html">↔ Deposit & transfer requests</a><a class="nav" href="../dashboard.html">↗ User dashboard</a><button id="signOut" class="nav w-full text-left">⇥ Sign out</button></aside>
-<main class="main"><header class="top"><div><h1 class="text-2xl font-bold">Deposit & transfer requests</h1><p class="text-sm text-slate-500 mt-1">Review customer requests and reconcile incoming deposits.</p></div><div class="text-sm text-slate-500" id="adminIdentity">Checking administrator access…</div></header>
-<section class="content p-7"><div class="grid sm:grid-cols-3 gap-4 mb-5"><div class="card p-5"><p class="text-sm text-slate-500">Pending requests</p><p id="pendingCount" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Deposit requests</p><p id="depositCount" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Transfer requests</p><p id="transferCount" class="text-3xl font-bold mt-2">—</p></div></div>
-<div class="card p-4 mb-5 flex flex-col sm:flex-row gap-3"><select id="statusFilter" class="border border-slate-200 rounded-lg px-3 py-3"><option value="pending_admin_review">Pending</option><option value="all">All statuses</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="completed">Completed</option></select><select id="typeFilter" class="border border-slate-200 rounded-lg px-3 py-3"><option value="all">Deposits & transfers</option><option value="deposit">Deposits only</option><option value="transfer">Transfers only</option></select><button id="refresh" class="rounded-lg bg-slate-900 text-white font-semibold px-5 py-3">Refresh queue</button></div>
+<main class="main"><header class="top"><div><h1 class="text-2xl font-bold">Deposit & transfer requests</h1><p class="text-sm text-slate-500 mt-1">Review requests using Supabase. Deposits require evidence; transfers complete only after settlement.</p></div><div class="text-sm text-slate-500" id="adminIdentity">Checking administrator access…</div></header>
+<section class="content p-7"><div class="grid sm:grid-cols-3 gap-4 mb-5"><div class="card p-5"><p class="text-sm text-slate-500">Pending requests</p><p id="pendingCount" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Pending deposits</p><p id="depositCount" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Pending transfers</p><p id="transferCount" class="text-3xl font-bold mt-2">—</p></div></div>
+<div class="card p-4 mb-5 flex flex-col sm:flex-row gap-3"><select id="statusFilter" class="border border-slate-200 rounded-lg px-3 py-3"><option value="pending">Pending</option><option value="all">All statuses</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="processing">Processing</option><option value="completed">Completed</option></select><select id="typeFilter" class="border border-slate-200 rounded-lg px-3 py-3"><option value="all">Deposits & transfers</option><option value="deposit">Deposits only</option><option value="transfer">Transfers only</option></select><button id="refresh" class="rounded-lg bg-slate-900 text-white font-semibold px-5 py-3">Refresh queue</button></div>
 <p id="notice" class="text-sm mb-4" role="status"></p><div id="requestList" class="space-y-4"><div class="card p-6 text-slate-500">Loading requests…</div></div></section></main>
-<script src="../api.js"></script>
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../supabase-config.js';
+const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let queue=[];
 function notice(message,error=false){$('notice').textContent=message;$('notice').className='text-sm mb-4 '+(error?'text-red-700':'text-slate-600')}
-function detailsText(r){
- const d=r.details||{};
- if(r.request_type==='deposit')return [
-  'Method: '+(d.method||'Bank transfer'),
-  'Destination: '+(d.payment_provider||'OPay')+' · '+(d.destination_account||'Account not supplied'),
-  'Sender: '+(d.sender_name||'Not supplied'),
-  'Bank reference: '+(d.sender_transaction_reference||'Not supplied'),
-  'Account name: customer must confirm with official support before sending'
- ].join('\n');
- return [
-  'Recipient: '+(d.recipient_name||'Not supplied'),
-  'Recipient type: '+(d.recipient_type||'Not supplied'),
-  'Destination bank: '+(d.bank_name||'Not supplied'),
-  'Destination account: '+(d.destination_account||'Wakala user'),
-  'Receive estimate: '+(d.receive_currency||'')+' '+(d.receive_amount_estimate??'—'),
-  'Note: '+(d.note||'None')
- ].join('\n');
-}
-function card(r){
- const pending=r.status==='pending_admin_review';
- const title=r.request_type==='deposit'?'Deposit request':'Transfer request';
- let actions='';
- if(pending){
-  const primaryStatus=r.request_type==='deposit'?'completed':'approved';
-  const primaryText=r.request_type==='deposit'?'Verify payment & credit wallet':'Approve for processing';
-  actions='<div class="flex flex-wrap gap-2 mt-4"><button data-status="'+primaryStatus+'" data-id="'+r.id+'" class="rounded-lg bg-emerald-600 text-white font-semibold px-4 py-2">'+primaryText+'</button><button data-status="rejected" data-id="'+r.id+'" class="rounded-lg bg-white border border-red-200 text-red-700 font-semibold px-4 py-2">Reject request</button></div>';
- }
- const statusClass=r.status==='pending_admin_review'?'pending':esc(r.status);
- return '<article class="card p-5"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><h2 class="font-bold text-lg">'+title+'</h2><span class="status '+statusClass+'">'+esc(r.status.replaceAll('_',' '))+'</span></div><p class="text-sm text-slate-500 mt-1">'+esc(r.reference)+' · '+esc(new Date(r.created_at).toLocaleString())+'</p><p class="text-sm mt-2">'+esc(r.full_name||'Customer')+' · '+esc(r.email||r.user_id)+'</p></div><div class="md:text-right"><p class="text-2xl font-bold">'+esc(r.currency)+' '+esc(Number(r.amount).toLocaleString(undefined,{maximumFractionDigits:8}))+'</p><p class="text-xs text-slate-500 mt-1">'+(r.request_type==='deposit'?'Verify the incoming payment before crediting':'Review only; approval does not send money or debit the wallet')+'</p></div></div><pre class="whitespace-pre-wrap break-words text-sm bg-slate-50 rounded-xl p-4 mt-4 font-sans">'+esc(detailsText(r))+'</pre>'+(r.admin_note?'<p class="text-sm mt-3"><strong>Admin note:</strong> '+esc(r.admin_note)+'</p>':'')+actions+'</article>';
-}
-async function authenticate(){
- const {user}=await WAKALA_API.me();
- try{await WAKALA_API.adminWalletRequests('all');}
- catch(error){
-  if(error.message.includes('403')||/administrator/i.test(error.message)){
-   document.body.innerHTML='<main class="p-8 font-sans"><h1 class="text-2xl font-bold">Administrator access required</h1><p class="mt-2">Configure ADMIN_EMAIL in the Render service and register that email before reviewing requests.</p><a class="underline" href="../dashboard.html">Return to Wakala</a></main>';
-   return false;
-  }
-  throw error;
- }
- $('adminIdentity').textContent=(user?.email||'Administrator')+' · Neon admin';
- return true;
-}
-async function load(){
- $('requestList').innerHTML='<div class="card p-6 text-slate-500">Loading requests…</div>';
- try{
-  const result=await WAKALA_API.adminWalletRequests('all');
-  const all=result.requests||[];
-  $('pendingCount').textContent=all.filter(r=>r.status==='pending_admin_review').length;
-  $('depositCount').textContent=all.filter(r=>r.request_type==='deposit'&&r.status==='pending_admin_review').length;
-  $('transferCount').textContent=all.filter(r=>r.request_type==='transfer'&&r.status==='pending_admin_review').length;
-  const status=$('statusFilter').value,type=$('typeFilter').value;
-  queue=all.filter(r=>(status==='all'||r.status===status)&&(type==='all'||r.request_type===type));
-  $('requestList').innerHTML=queue.length?queue.map(card).join(''):'<div class="card p-8 text-center"><h2 class="font-bold">No requests found</h2><p class="text-sm text-slate-500 mt-2">New customer deposit and transfer requests will appear here.</p></div>';
-  notice('Showing '+queue.length+' request(s).');
- }catch(error){$('requestList').innerHTML='';notice(error.message||'Could not load request queue.',true);}
-}
-$('requestList').addEventListener('click',async event=>{
- const button=event.target.closest('button[data-status]');if(!button)return;
- const row=queue.find(item=>String(item.id)===button.dataset.id);if(!row)return;
- const status=button.dataset.status;
- const depositCredit=row.request_type==='deposit'&&status==='completed';
- const confirmText=depositCredit
-  ?'Only continue after independently matching the incoming payment reference, sender, amount and currency. This action credits the customer wallet.'
-  :status==='approved'
-   ?'Approve this transfer request for operational review? This does not send money or debit the wallet.'
-   :'Reject this request? No funds will be credited or sent.';
- if(!confirm(confirmText))return;
- const note=prompt(depositCredit?'Required: record the verified incoming payment reference or reconciliation evidence.':'Add an audit note or reason (optional).','')||'';
- if(depositCredit&&!note.trim()){notice('A reconciliation note is required before crediting a deposit.',true);return;}
- button.disabled=true;
- try{
-  const result=await WAKALA_API.reviewWalletRequest(row.id,status,note);
-  notice(depositCredit?'Deposit verified and credited. Reference: '+row.reference+' · '+row.currency+' '+Number(row.amount).toLocaleString():status==='approved'?'Transfer request approved for processing. No money has moved.':'Request rejected: '+row.reference);
-  await load();
- }catch(error){notice(error.message||'Could not update request.',true);button.disabled=false;}
-});
-$('refresh').addEventListener('click',load);
-$('statusFilter').addEventListener('change',load);
-$('typeFilter').addEventListener('change',load);
-$('signOut').addEventListener('click',async()=>{try{await WAKALA_API.logout()}finally{location.href='../login.html'}});
-(async()=>{try{if(await authenticate())await load()}catch(error){notice(error.message||'Unable to verify administrator access.',true)}})();
+function detailsText(r){const d=r.details||{};if(r.request_type==='deposit')return ['Method: '+(d.method||'Bank transfer'),'Provider: '+(d.payment_provider||'Not supplied'),'Destination account: '+(d.destination_account||'Not supplied'),'Sender: '+(d.sender_name||'Not supplied'),'Bank reference: '+(d.sender_transaction_reference||'Not supplied')].join('\n');return ['Recipient: '+(d.recipient_name||'Not supplied'),'Recipient type: '+(d.recipient_type||'Not supplied'),'Destination bank: '+(d.bank_name||'Not supplied'),'Destination account: '+(d.destination_account||'Wakala user'),'Receive estimate: '+(d.receive_currency||'')+' '+(d.receive_amount_estimate??'—'),'Note: '+(d.note||'None')].join('\n')}
+function card(r){let actions='';if(r.request_type==='deposit'&&r.status==='pending')actions='<button data-decision="approve" data-id="'+r.id+'" class="rounded-lg bg-emerald-600 text-white font-semibold px-4 py-2">Verify & credit deposit</button><button data-decision="reject" data-id="'+r.id+'" class="rounded-lg bg-white border border-red-200 text-red-700 font-semibold px-4 py-2">Reject</button>';if(r.request_type==='transfer'&&r.status==='pending')actions='<button data-decision="processing" data-id="'+r.id+'" class="rounded-lg bg-blue-600 text-white font-semibold px-4 py-2">Approve for processing</button><button data-decision="reject" data-id="'+r.id+'" class="rounded-lg bg-white border border-red-200 text-red-700 font-semibold px-4 py-2">Reject & release hold</button>';if(r.request_type==='transfer'&&r.status==='processing')actions='<button data-decision="complete" data-id="'+r.id+'" class="rounded-lg bg-emerald-600 text-white font-semibold px-4 py-2">Mark settled & complete</button><button data-decision="reject" data-id="'+r.id+'" class="rounded-lg bg-white border border-red-200 text-red-700 font-semibold px-4 py-2">Cancel & release hold</button>';return '<article class="card p-5"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><h2 class="font-bold text-lg">'+(r.request_type==='deposit'?'Deposit request':'Transfer request')+'</h2><span class="status '+esc(r.status)+'">'+esc(r.status)+'</span></div><p class="text-sm text-slate-500 mt-1">'+esc(r.reference)+' · '+esc(new Date(r.created_at).toLocaleString())+'</p><p class="text-sm mt-2">'+esc(r.user_name||'Customer')+' · '+esc(r.user_email||r.user_id)+'</p></div><div class="md:text-right"><p class="text-2xl font-bold">'+esc(r.currency)+' '+esc(Number(r.amount).toLocaleString(undefined,{maximumFractionDigits:8}))+'</p><p class="text-xs text-slate-500 mt-1">'+(r.request_type==='deposit'?'Only credit after independently verifying payment':'Approval does not send money; completion requires actual settlement')+'</p></div></div><pre class="whitespace-pre-wrap break-words text-sm bg-slate-50 rounded-xl p-4 mt-4 font-sans">'+esc(detailsText(r))+'</pre>'+(r.admin_note?'<p class="text-sm mt-3"><strong>Admin note:</strong> '+esc(r.admin_note)+'</p>':'')+(actions?'<div class="flex flex-wrap gap-2 mt-4">'+actions+'</div>':'')+'</article>'}
+async function authenticate(){const {data:{session},error:sessionError}=await supabase.auth.getSession();if(sessionError||!session){location.href='../login.html';return false}const {data:role,error}=await supabase.rpc('get_admin_role');if(error||!role){document.body.innerHTML='<main class="p-8 font-sans"><h1 class="text-2xl font-bold">Administrator access required</h1><p class="mt-2">Your signed-in account does not have an active Wakala admin role.</p><a class="underline" href="../dashboard.html">Return to Wakala</a></main>';return false}$('adminIdentity').textContent=(session.user.email||'Administrator')+' · Supabase admin';return true}
+async function load(){ $('requestList').innerHTML='<div class="card p-6 text-slate-500">Loading requests…</div>';try{const status=$('statusFilter').value,type=$('typeFilter').value;const {data,error}=await supabase.rpc('list_admin_wallet_requests',{p_status:status,p_type:type});if(error)throw error;queue=data||[];const {data:allData,error:allError}=await supabase.rpc('list_admin_wallet_requests',{p_status:'all',p_type:'all'});if(allError)throw allError;const all=allData||[];$('pendingCount').textContent=all.filter(r=>r.status==='pending').length;$('depositCount').textContent=all.filter(r=>r.status==='pending'&&r.request_type==='deposit').length;$('transferCount').textContent=all.filter(r=>r.status==='pending'&&r.request_type==='transfer').length;$('requestList').innerHTML=queue.length?queue.map(card).join(''):'<div class="card p-8 text-center"><h2 class="font-bold">No requests found</h2><p class="text-sm text-slate-500 mt-2">Requests will appear after the Supabase wallet-request migration is applied.</p></div>';notice('Showing '+queue.length+' request(s).')}catch(error){$('requestList').innerHTML='';notice((error.message||'Could not load request queue.')+' Check that supabase/wallet-requests.sql has been applied in Supabase SQL Editor.',true)}}
+$('requestList').addEventListener('click',async event=>{const button=event.target.closest('button[data-decision]');if(!button)return;const row=queue.find(item=>String(item.id)===button.dataset.id);if(!row)return;const decision=button.dataset.decision;const requiresNote=(row.request_type==='deposit'&&decision==='approve')||(row.request_type==='transfer'&&decision==='complete');const promptText=decision==='approve'?'Required: enter the verified incoming payment reference or reconciliation evidence.':decision==='complete'?'Required: enter the actual transfer settlement confirmation.':decision==='processing'?'Optional: add an audit note for approving this transfer for processing.':'Enter the reason for rejection/cancellation (optional).';const note=prompt(promptText,'')||'';if(requiresNote&&!note.trim()){notice('A reconciliation/settlement note is required for this action.',true);return}const confirmText=decision==='approve'?'Credit the deposit only after independently verifying the incoming payment?':decision==='processing'?'Approve this transfer for processing? No money is sent by this action.':decision==='complete'?'Confirm the transfer has actually settled and complete it?':'Reject/cancel this request? A transfer hold will be released.';if(!confirm(confirmText))return;button.disabled=true;try{const {data,error}=await supabase.rpc('review_wallet_request',{p_request_id:row.id,p_decision:decision,p_admin_note:note});if(error)throw error;notice('Request '+row.reference+' updated to '+(data?.status||decision)+'.');await load()}catch(error){notice(error.message||'Could not update request.',true);button.disabled=false}});
+$('refresh').addEventListener('click',load);$('statusFilter').addEventListener('change',load);$('typeFilter').addEventListener('change',load);$('signOut').addEventListener('click',async()=>{await supabase.auth.signOut({scope:'local'});location.href='../login.html'});if(await authenticate())await load();
 </script></body></html>
