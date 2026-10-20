@@ -880,15 +880,6 @@
 
 <a
   class="nav-link"
-  href="./requests.html"
->
-  <span class="nav-icon">↔</span>
-  Deposit & Transfer Requests
-</a>
-
-
-<a
-  class="nav-link"
   href="./creators.html"
 >
   <span class="nav-icon">
@@ -1426,10 +1417,22 @@
 
 </div>
 
-<script src="../api.js"></script>
 <script type="module">
 
-  const WAKALA_API = window.WAKALA_API;
+  import {
+    createClient
+  } from
+    "https://esm.sh/@supabase/supabase-js@2";
+
+  import {
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  } from '../supabase-config.js';
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
 
@@ -1540,12 +1543,15 @@
 
   async function authenticate() {
 
-    let user;
-    try { ({ user } = await WAKALA_API.me()); }
-    catch { window.location.href = "../login.html"; return false; }
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabase.auth.getSession();
 
 
-    if (!user) {
+    if (!session) {
 
       window.location.href =
         "../login.html";
@@ -1559,13 +1565,13 @@
      * Never query admin_users directly.
      */
 
-    let role = null;
-    let error = null;
-    try {
-      ({ role } = await WAKALA_API.adminMe());
-    } catch (roleError) {
-      error = roleError;
-    }
+    const {
+      data: role,
+      error
+    } =
+      await supabase.rpc(
+        "get_admin_role"
+      );
 
 
     if (error) {
@@ -1679,22 +1685,13 @@
 
   async function loadDashboard() {
 
-    let data;
-    let error = null;
-    try {
-      const [overview, customers, esimResult] = await Promise.all([
-        WAKALA_API.adminOverview(),
-        WAKALA_API.adminCustomers(""),
-        WAKALA_API.adminEsimOrders()
-      ]);
-      data = {
-        ...overview,
-        recent_users: (customers.customers || []).slice(0, 8),
-        recent_esim_orders: esimResult.orders || []
-      };
-    } catch (requestError) {
-      error = requestError;
-    }
+    const {
+      data,
+      error
+    } =
+      await supabase.rpc(
+        "admin_dashboard_overview"
+      );
 
 
     if (error) {
@@ -2200,7 +2197,7 @@
 
         event.preventDefault();
 
-        await WAKALA_API.logout();
+        await supabase.auth.signOut();
 
         window.location.href =
           "../login.html";
