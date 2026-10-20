@@ -94,76 +94,161 @@
 			<a href="forgot-password.html">Help with access</a>
 		</nav>
 	</footer>
-	<script src="./api.js"></script>
-  <script>
-    const form = document.getElementById('loginForm');
-    const button = document.getElementById('submitButton');
-    const message = document.getElementById('message');
-    function renderMessage(type, text) {
-      message.className = ('message ' + type).trim();
-      message.textContent = text;
+	<script type="module">
+		import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+		import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
+
+		const form = document.getElementById('loginForm');
+		const button = document.getElementById('submitButton');
+		const message = document.getElementById('message');
+		const supabase = createClient(
+			SUPABASE_URL,
+			SUPABASE_PUBLISHABLE_KEY,
+			{
+				auth: {
+					persistSession: true,
+					autoRefreshToken: true,
+					detectSessionInUrl: true
+				}
+			}
+		);
+
+		function renderMessage(type, text) {
+			message.className = `message ${type}`.trim();
+			message.textContent = text;
+		}
+
+		async function checkExistingSession() {
+			const continueLink = document.getElementById('continueSession');
+			const switchAccountButton = document.getElementById('switchAccountButton');
+			try {
+				const { data: { user }, error } = await supabase.auth.getUser();
+				if (error) {
+					console.warn('Existing session could not be verified:', error);
+					return;
+				}
+				if (user) {
+					renderMessage(
+						'success',
+						`A session is already active for ${user.email || 'this account'}. Continue below, or enter credentials to switch accounts.`
+					);
+					if (continueLink) continueLink.hidden = false;
+					if (switchAccountButton) switchAccountButton.hidden = false;
+				}
+			} catch (error) {
+				console.warn('Existing session check failed:', error);
+			}
+		}
+
+		if (new URLSearchParams(window.location.search).get('confirmed') === '1') {
+			renderMessage('success', 'Your email is confirmed. You can now log in to Wakala.');
+		}
+
+		await checkExistingSession();
+
+		document.getElementById('switchAccountButton')?.addEventListener('click', async () => {
+			const switchButton = document.getElementById('switchAccountButton');
+			const continueLink = document.getElementById('continueSession');
+			switchButton.disabled = true;
+			switchButton.textContent = 'Signing out...';
+			try {
+				const { error } = await supabase.auth.signOut({ scope: 'local' });
+				if (error) throw error;
+				if (continueLink) continueLink.hidden = true;
+				switchButton.hidden = true;
+				renderMessage('', 'You are signed out. Enter your credentials to continue.');
+				switchButton.textContent = 'Sign out and use another account';
+			} catch (error) {
+				renderMessage('error', error?.message || 'Could not sign out this session. Please try again.');
+				switchButton.disabled = false;
+				switchButton.textContent = 'Sign out and use another account';
+			}
+		});
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			renderMessage('', '');
+			button.disabled = true;
+			button.textContent = 'Logging in...';
+
+			try {
+				const { error } = await supabase.auth.signInWithPassword({
+					email: form.email.value.trim().toLowerCase(),
+					password: form.password.value
+				});
+
+				if (error) {
+					const isEmailConfirmationIssue = /confirm|email not confirmed/i.test(error.message);
+					renderMessage(
+						'error',
+						isEmailConfirmationIssue
+							? 'Please confirm your email address before logging in.'
+							: error.message || 'Login failed. Please try again.'
+					);
+					button.disabled = false;
+					button.textContent = 'Log in to Wakala';
+					return;
+				}
+
+				const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+				if (sessionError) {
+					throw sessionError;
+				}
+
+				if (!session) {
+					throw new Error('Login succeeded but no session was returned. Please refresh and try again.');
+				}
+
+				const { data: profile, error: profileError } = await supabase
+					.from('profiles')
+					.select('onboarding_completed')
+					.eq('id', session.user.id)
+					.maybeSingle();
+
+				if (profileError) {
+					throw profileError;
+				}
+
+				renderMessage('success', 'Login successful. Redirecting...');
+				window.location.replace(
+					profile?.onboarding_completed === true
+						? 'dashboard.html'
+						: 'onboarding.html'
+				);
+			} catch (error) {
+				console.error('Login failed:', error);
+				renderMessage(
+					'error',
+					error?.message || 'Login failed. Please check your connection and try again.'
+				);
+				button.disabled = false;
+				button.textContent = 'Log in to Wakala';
+			}
+		});
+	</script>
+	<script>async function resetPassword() {
+    const email = document.getElementById("email").value.trim();
+
+    if (!email) {
+        alert("Enter your email address first.");
+        return;
     }
-    async function checkExistingSession() {
-      const continueLink = document.getElementById('continueSession');
-      const switchAccountButton = document.getElementById('switchAccountButton');
-      try {
-        const { user } = await window.WAKALA_API.me();
-        if (!user) return;
-        renderMessage('success', 'A session is already active for ' + (user.email || 'this account') + '. Continue below, or switch accounts.');
-        if (continueLink) continueLink.hidden = false;
-        if (switchAccountButton) switchAccountButton.hidden = false;
-      } catch {}
-    }
-    if (new URLSearchParams(window.location.search).get('confirmed') === '1') {
-      renderMessage('success', 'Your email is confirmed. You can now log in to Wakala.');
-    }
-    document.getElementById('continueSession')?.addEventListener('click', async event => {
-      event.preventDefault();
-      try {
-        const { profile } = await window.WAKALA_API.profile();
-        window.location.replace(profile?.onboarding_completed ? 'dashboard.html' : 'onboarding.html');
-      } catch { window.location.replace('login.html'); }
+
+	const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+	const { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } = await import('./supabase-config.js');
+	const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+	const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://wakala.cfd/reset-password.html"
     });
-    document.getElementById('switchAccountButton')?.addEventListener('click', async () => {
-      const switchButton = document.getElementById('switchAccountButton');
-      switchButton.disabled = true;
-      switchButton.textContent = 'Signing out...';
-      try {
-        await window.WAKALA_API.logout();
-        const continueLink = document.getElementById('continueSession');
-        if (continueLink) continueLink.hidden = true;
-        switchButton.hidden = true;
-        renderMessage('', 'You are signed out. Enter your credentials to continue.');
-      } catch (error) {
-        renderMessage('error', error.message || 'Could not sign out this session.');
-        switchButton.disabled = false;
-      } finally {
-        switchButton.textContent = 'Sign out and use another account';
-      }
-    });
-    form.addEventListener('submit', async event => {
-      event.preventDefault();
-      renderMessage('', '');
-      button.disabled = true;
-      button.textContent = 'Logging in...';
-      try {
-        await window.WAKALA_API.login(form.email.value.trim().toLowerCase(), form.password.value);
-        const { profile } = await window.WAKALA_API.profile();
-        renderMessage('success', 'Login successful. Redirecting...');
-        window.location.replace(profile?.onboarding_completed ? 'dashboard.html' : 'onboarding.html');
-      } catch (error) {
-        renderMessage('error', error.message || 'Login failed. Please check your connection and try again.');
-        button.disabled = false;
-        button.textContent = 'Log in to Wakala';
-      }
-    });
-    checkExistingSession();
-    async function resetPassword() {
-      const email = document.getElementById('email').value.trim();
-      if (!email) { alert('Enter your email address first.'); return; }
-      alert('Password recovery for Neon accounts is not enabled yet. Please contact Wakala support for account recovery.');
+
+    if (error) {
+        alert(error.message);
+        return;
     }
-  </script>
-	
+
+    alert("Password reset email sent. Check your inbox.");
+}</script>
 </body>
 </html>
