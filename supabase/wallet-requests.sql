@@ -56,7 +56,7 @@ begin
   select p.id,
          coalesce(nullif(trim(p.full_name),''),'Wakala user'),
          case when nullif(p.phone,'') is null then null
-              else '•••• ' || right(regexp_replace(p.phone,'\\D','','g'),4) end
+              else '•••• ' || right(regexp_replace(p.phone,'\D','','g'),4) end
   from public.profiles p
   join public.wallets w on w.user_id=p.id and coalesce(w.status,'active')='active'
   where p.id <> uid
