@@ -799,48 +799,82 @@
       }
     };
 
-    const updateRecipients = () => {
-      const searchTerm = $('search').value.trim().toLowerCase();
+    let recipientSearchSequence = 0;
+    const updateRecipients = async () => {
+      const searchTerm = $('search').value.trim();
       const list = $('recipientList');
-      const recipients = [
-        { id: 'u1', name: 'Mary Johnson', handle: '@mary.wakala', phone: '+254 712 345 678' },
-        { id: 'u2', name: 'James Kipchoge', handle: '@james.kipchoge', phone: '+254 722 345 678' },
-        { id: 'u3', name: 'Sarah Kimani', handle: '+254 712 345 678', phone: '+254 712 345 678' },
-        { id: 'u4', name: 'Peter Okafor', handle: '@peter.okafor.ng', phone: '+234 805 345 6789' }
-      ];
+      const sequence = ++recipientSearchSequence;
+      state.selectedRecipient = state.selectedRecipient || null;
+      list.replaceChildren();
 
-      const filtered = recipients.filter((recipient) => {
-        const haystack = `${recipient.name} ${recipient.handle} ${recipient.phone}`.toLowerCase();
-        return haystack.includes(searchTerm);
-      });
-
-      list.innerHTML = '';
-
-      if (!filtered.length) {
-        list.innerHTML = '<div class="recipient-item"><div class="recipient-info"><div class="recipient-name">No matching contacts found.</div></div></div>';
+      if (searchTerm.length < 3) {
+        const hint = document.createElement('div');
+        hint.className = 'recipient-item';
+        hint.textContent = 'Enter at least 3 characters to search registered Wakala users.';
+        list.appendChild(hint);
         return;
       }
 
-      filtered.forEach((recipient) => {
-        const item = document.createElement('div');
-        item.className = `recipient-item${state.selectedRecipient?.id === recipient.id ? ' selected' : ''}`;
-        item.innerHTML = `
-          <div class="recipient-avatar">${recipient.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</div>
-          <div class="recipient-info">
-            <div class="recipient-name">${recipient.name}</div>
-            <div class="recipient-handle">${recipient.handle}</div>
-          </div>
-          <div class="radio-check"></div>
-        `;
+      const loading = document.createElement('div');
+      loading.className = 'recipient-item';
+      loading.textContent = 'Searching Wakala users…';
+      list.appendChild(loading);
 
-        item.addEventListener('click', () => {
-          state.selectedRecipient = recipient;
-          updateRecipients();
-          setStatus('');
+      try {
+        const { data, error } = await supabase.rpc('search_wakala_recipients', { p_query: searchTerm });
+        if (sequence !== recipientSearchSequence) return;
+        if (error) throw error;
+        const recipients = (data || []).map((row) => ({
+          id: row.recipient_user_id,
+          name: row.recipient_name || 'Wakala user',
+          handle: 'Wakala account',
+          phone: row.masked_phone || ''
+        }));
+
+        list.replaceChildren();
+        if (!recipients.length) {
+          const empty = document.createElement('div');
+          empty.className = 'recipient-item';
+          empty.textContent = 'No registered Wakala users matched. You can choose Bank account to submit an external transfer request.';
+          list.appendChild(empty);
+          return;
+        }
+
+        recipients.forEach((recipient) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'recipient-item' + (state.selectedRecipient?.id === recipient.id ? ' selected' : '');
+          item.setAttribute('aria-pressed', String(state.selectedRecipient?.id === recipient.id));
+          const avatar = document.createElement('div');
+          avatar.className = 'recipient-avatar';
+          avatar.textContent = recipient.name.split(/\\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+          const info = document.createElement('div');
+          info.className = 'recipient-info';
+          const name = document.createElement('div');
+          name.className = 'recipient-name';
+          name.textContent = recipient.name;
+          const handle = document.createElement('div');
+          handle.className = 'recipient-handle';
+          handle.textContent = recipient.phone ? recipient.handle + ' · ' + recipient.phone : recipient.handle;
+          const check = document.createElement('div');
+          check.className = 'radio-check';
+          info.append(name, handle);
+          item.append(avatar, info, check);
+          item.addEventListener('click', () => {
+            state.selectedRecipient = recipient;
+            updateRecipients();
+            setStatus('');
+          });
+          list.appendChild(item);
         });
-
-        list.appendChild(item);
-      });
+      } catch (error) {
+        if (sequence !== recipientSearchSequence) return;
+        list.replaceChildren();
+        const message = document.createElement('div');
+        message.className = 'recipient-item';
+        message.textContent = error.message || 'Recipient search is temporarily unavailable. Apply supabase/wallet-requests.sql and try again.';
+        list.appendChild(message);
+      }
     };
 
     const populateCountries = () => {
