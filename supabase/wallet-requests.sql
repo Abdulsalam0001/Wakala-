@@ -22,6 +22,11 @@ create table if not exists public.wallet_requests (
 alter table public.wallet_requests drop constraint if exists wallet_requests_status_check;
 alter table public.wallet_requests add constraint wallet_requests_status_check check (status in ('pending','approved','rejected','processing','completed'));
 
+-- Keep the currency constraint in sync when this migration is re-run on an existing table.
+alter table public.wallet_requests drop constraint if exists wallet_requests_currency_check;
+alter table public.wallet_requests add constraint wallet_requests_currency_check
+  check (currency in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC'));
+
 create index if not exists wallet_requests_user_created_idx on public.wallet_requests(user_id, created_at desc);
 create index if not exists wallet_requests_admin_queue_idx on public.wallet_requests(status, created_at asc);
 alter table public.wallet_requests enable row level security;
