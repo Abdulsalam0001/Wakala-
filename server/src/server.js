@@ -623,9 +623,33 @@ app.post("/api/waitlist", async (req, res) => {
   }
 });
 
+app.use("/api", (_req, res) => {
+  res.status(404).json({ error: "API endpoint not found" });
+});
+
+app.use((error, _req, res, next) => {
+  console.error("Unhandled request error:", error);
+  if (res.headersSent) return next(error);
+  res.status(500).json({ error: "Internal server error" });
+});
+
 app.use(express.static(new URL("../../", import.meta.url).pathname));
 
-app.listen(PORT, () => {
-  console.log(`Wakala backend listening on port ${PORT}`);
-  console.log(`Origin: ${APP_ORIGIN}`);
+pool.on("error", (error) => {
+  console.error("Unexpected Neon/Postgres pool error:", error);
 });
+
+const serverInstance = app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Wakala backend listening on 0.0.0.0:${PORT}`);
+  console.log(`Configured public origin: ${APP_ORIGIN}`);
+});
+
+function shutdown(signal) {
+  console.log(`${signal} received; shutting down Wakala backend`);
+  serverInstance.close(() => {
+    pool.end().finally(() => process.exit(0));
+  });
+  setTimeout(() => process.exit(1), 10000).unref();
+}
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

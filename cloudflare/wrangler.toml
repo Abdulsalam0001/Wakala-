@@ -1,0 +1,7 @@
+name = "wakala-neon-edge"
+main = "worker.js"
+compatibility_date = "2026-10-28"
+workers_dev = true
+
+[vars]
+BACKEND_ORIGIN = "https://wakala-neon-staging.onrender.com"

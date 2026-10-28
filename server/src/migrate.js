@@ -7,7 +7,7 @@ const { Pool } = pg;
 const here = dirname(fileURLToPath(import.meta.url));
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
+  ssl: process.env.PGSSLMODE === "disable" ? false : { rejectUnauthorized: false },
   max: 2,
   connectionTimeoutMillis: 10000
 });
