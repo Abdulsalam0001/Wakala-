@@ -38,6 +38,37 @@ for select to authenticated using (auth.uid() = user_id);
 revoke all on public.wallet_requests from anon, authenticated;
 grant select on public.wallet_requests to authenticated;
 
+-- Search registered Wakala recipients instead of displaying demo contacts.
+create or replace function public.search_wakala_recipients(p_query text)
+returns table (recipient_user_id uuid, recipient_name text, masked_phone text)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $
+declare
+  uid uuid := auth.uid();
+  q text := lower(trim(coalesce(p_query,'')));
+begin
+  if uid is null then raise exception 'Please sign in to search Wakala recipients'; end if;
+  if length(q) < 3 then return; end if;
+  return query
+  select p.id,
+         coalesce(nullif(trim(p.full_name),''),'Wakala user'),
+         case when nullif(p.phone,'') is null then null
+              else '•••• ' || right(regexp_replace(p.phone,'\\D','','g'),4) end
+  from public.profiles p
+  join public.wallets w on w.user_id=p.id and coalesce(w.status,'active')='active'
+  where p.id <> uid
+    and (lower(coalesce(p.full_name,'')) like '%' || q || '%'
+      or lower(coalesce(p.email,'')) like '%' || q || '%')
+  order by p.full_name asc
+  limit 15;
+end;
+$;
+revoke all on function public.search_wakala_recipients(text) from public, anon;
+grant execute on function public.search_wakala_recipients(text) to authenticated;
+
 create or replace function public.submit_wallet_request(
   p_request_type text,
   p_amount numeric,
