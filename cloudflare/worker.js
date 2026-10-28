@@ -16,7 +16,9 @@ export default {
       return new Response("BACKEND_ORIGIN must use HTTP or HTTPS.", { status: 500 });
     }
 
-    const upstreamUrl = new URL(incomingUrl.pathname + incomingUrl.search, backendOrigin);
+    const upstreamUrl = new URL(backendOrigin.origin);
+    upstreamUrl.pathname = incomingUrl.pathname;
+    upstreamUrl.search = incomingUrl.search;
     const headers = new Headers(request.headers);
     for (const name of HOP_BY_HOP_HEADERS) headers.delete(name);
     headers.delete("host");
