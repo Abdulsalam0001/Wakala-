@@ -22,7 +22,7 @@ The start script applies the checked-in SQL migrations before starting the HTTP 
 Install Wrangler and authenticate with the intended Cloudflare account. From the repository root:
 
 ```sh
-npx wrangler deploy --config cloudflare/wrangler.toml
+cd cloudflare && npx wrangler deploy
 ```
 
 The initial deployment uses a `workers.dev` URL and forwards to
