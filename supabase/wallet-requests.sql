@@ -9,7 +9,7 @@ create table if not exists public.wallet_requests (
   wallet_id bigint references public.wallets(id) on delete set null,
   request_type text not null check (request_type in ('deposit','transfer')),
   amount numeric(20,8) not null check (amount > 0),
-  currency text not null check (currency in ('NGN','USD','KES','TZS','RWF','USDC','USDT','BTC')),
+  currency text not null check (currency in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC')),
   status text not null default 'pending' check (status in ('pending','approved','rejected','processing','completed')),
   details jsonb not null default '{}'::jsonb,
   admin_note text,
@@ -56,7 +56,7 @@ begin
   if uid is null then raise exception 'Please sign in before submitting a request'; end if;
   if kind not in ('deposit','transfer') then raise exception 'Unsupported request type'; end if;
   if amount_value is null or amount_value <= 0 or amount_value > 100000000000 then raise exception 'Enter a valid amount'; end if;
-  if curr not in ('NGN','USD','KES','TZS','RWF','USDC','USDT','BTC') then raise exception 'Unsupported currency'; end if;
+  if curr not in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC') then raise exception 'Unsupported currency'; end if;
   if jsonb_typeof(detail_value) <> 'object' then raise exception 'Request details must be an object'; end if;
   if octet_length(detail_value::text) > 8000 then raise exception 'Request details are too large'; end if;
 
