@@ -9,7 +9,7 @@ create table if not exists public.wallet_requests (
   wallet_id bigint references public.wallets(id) on delete set null,
   request_type text not null check (request_type in ('deposit','transfer')),
   amount numeric(20,8) not null check (amount > 0),
-  currency text not null check (currency in ('NGN','USD','KES','TZS','RWF','USDC','USDT','BTC')),
+  currency text not null check (currency in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC')),
   status text not null default 'pending' check (status in ('pending','approved','rejected','processing','completed')),
   details jsonb not null default '{}'::jsonb,
   admin_note text,
@@ -22,6 +22,11 @@ create table if not exists public.wallet_requests (
 alter table public.wallet_requests drop constraint if exists wallet_requests_status_check;
 alter table public.wallet_requests add constraint wallet_requests_status_check check (status in ('pending','approved','rejected','processing','completed'));
 
+-- Keep the currency constraint in sync when this migration is re-run on an existing table.
+alter table public.wallet_requests drop constraint if exists wallet_requests_currency_check;
+alter table public.wallet_requests add constraint wallet_requests_currency_check
+  check (currency in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC'));
+
 create index if not exists wallet_requests_user_created_idx on public.wallet_requests(user_id, created_at desc);
 create index if not exists wallet_requests_admin_queue_idx on public.wallet_requests(status, created_at asc);
 alter table public.wallet_requests enable row level security;
@@ -32,6 +37,37 @@ for select to authenticated using (auth.uid() = user_id);
 
 revoke all on public.wallet_requests from anon, authenticated;
 grant select on public.wallet_requests to authenticated;
+
+-- Search registered Wakala recipients instead of displaying demo contacts.
+create or replace function public.search_wakala_recipients(p_query text)
+returns table (recipient_user_id uuid, recipient_name text, masked_phone text)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $
+declare
+  uid uuid := auth.uid();
+  q text := lower(trim(coalesce(p_query,'')));
+begin
+  if uid is null then raise exception 'Please sign in to search Wakala recipients'; end if;
+  if length(q) < 3 then return; end if;
+  return query
+  select p.id,
+         coalesce(nullif(trim(p.full_name),''),'Wakala user'),
+         case when nullif(p.phone,'') is null then null
+              else '•••• ' || right(regexp_replace(p.phone,'\D','','g'),4) end
+  from public.profiles p
+  join public.wallets w on w.user_id=p.id and coalesce(w.status,'active')='active'
+  where p.id <> uid
+    and (lower(coalesce(p.full_name,'')) like '%' || q || '%'
+      or lower(coalesce(p.email,'')) like '%' || q || '%')
+  order by p.full_name asc
+  limit 15;
+end;
+$;
+revoke all on function public.search_wakala_recipients(text) from public, anon;
+grant execute on function public.search_wakala_recipients(text) to authenticated;
 
 create or replace function public.submit_wallet_request(
   p_request_type text,
@@ -56,7 +92,7 @@ begin
   if uid is null then raise exception 'Please sign in before submitting a request'; end if;
   if kind not in ('deposit','transfer') then raise exception 'Unsupported request type'; end if;
   if amount_value is null or amount_value <= 0 or amount_value > 100000000000 then raise exception 'Enter a valid amount'; end if;
-  if curr not in ('NGN','USD','KES','TZS','RWF','USDC','USDT','BTC') then raise exception 'Unsupported currency'; end if;
+  if curr not in ('NGN','USD','KES','TZS','RWF','UGX','USDC','USDT','BTC') then raise exception 'Unsupported currency'; end if;
   if jsonb_typeof(detail_value) <> 'object' then raise exception 'Request details must be an object'; end if;
   if octet_length(detail_value::text) > 8000 then raise exception 'Request details are too large'; end if;
 
