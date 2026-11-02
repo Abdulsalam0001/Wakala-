@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>External Payment Tracker | Wakala Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f8fafc;color:#0f172a;font-family:Inter,system-ui,sans-serif}
+.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#0f172a;color:#fff;padding:24px 14px;overflow:auto}
+.main{margin-left:245px;min-height:100vh}.nav{display:block;color:#cbd5e1;text-decoration:none;padding:12px 14px;border-radius:10px;margin:4px 0}
+.nav:hover,.nav.active{background:#1e293b;color:#fff}.top{background:#fff;border-bottom:1px solid #e2e8f0;padding:20px 28px;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e}
+.paid{background:#dcfce7;color:#166534}.failed,.cancelled{background:#fee2e2;color:#991b1b}.reported{background:#dbeafe;color:#1d4ed8}
+table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:13px 14px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:13px}th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#64748b;background:#f8fafc}
+@media(max-width:760px){.sidebar{position:static;width:auto;padding:12px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.brand{width:100%;padding:5px 8px 10px}.nav{padding:8px 10px;margin:0;font-size:13px}.main{margin-left:0}.top{padding:18px;align-items:flex-start;flex-direction:column}.content{padding:16px!important}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="brand text-xl font-bold mb-5">Wakala <span class="text-xs font-normal text-slate-400">ADMIN</span></div>
+<a class="nav" href="./adminindex.html">▦ Dashboard</a><a class="nav" href="./balances.html">₦ Wallet balances</a><a class="nav" href="./requests.html">↔ Deposit & transfer requests</a><a class="nav active" href="./external-payments.html">⇄ External payments</a><a class="nav" href="./creators.html">★ Creators</a><button id="signOut" class="nav w-full text-left">⇥ Sign out</button></aside>
+<main class="main"><header class="top"><div><h1 class="text-2xl font-bold">External payment tracker</h1><p class="text-sm text-slate-500 mt-1">Checkout handshakes received from connected services.</p></div><div id="identity" class="text-sm text-slate-500">Checking administrator access…</div></header>
+<section class="content p-7"><div class="grid sm:grid-cols-3 gap-4 mb-5"><div class="card p-5"><p class="text-sm text-slate-500">Total tracked</p><p id="total" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Awaiting payment</p><p id="pending" class="text-3xl font-bold mt-2">—</p></div><div class="card p-5"><p class="text-sm text-slate-500">Paid</p><p id="paid" class="text-3xl font-bold mt-2">—</p></div></div>
+<div class="card p-4 mb-4 flex flex-wrap gap-3"><select id="filter" class="border rounded-lg px-3 py-2"><option value="all">All statuses</option><option value="awaiting_payment">Awaiting payment</option><option value="payment_reported">Payment reported</option><option value="paid">Paid</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option></select><button id="refresh" class="rounded-lg bg-slate-900 text-white px-5 py-2 font-semibold">Refresh</button><span id="notice" class="text-sm self-center text-slate-500" role="status"></span></div>
+<div class="card overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>Received</th><th>Tracker ref</th><th>Order</th><th>Customer</th><th>Payment ref</th><th>Amount</th><th>Status</th></tr></thead><tbody id="rows"><tr><td colspan="7" class="text-center text-slate-500">Loading…</td></tr></tbody></table></div></div>
+<p class="text-xs text-slate-500 mt-4">These entries confirm that Wakala received an order notification. They do not confirm that funds have been received.</p></section></main>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "../supabase-config.js";
+const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let records=[];
+async function init(){
+ const {data:{session},error:sessionError}=await supabase.auth.getSession();
+ if(sessionError||!session){location.href="../login.html";return}
+ const {data:isAdmin,error}=await supabase.rpc("is_active_admin");
+ if(error||!isAdmin){document.body.innerHTML='<main class="p-8"><h1 class="text-2xl font-bold">Administrator access required</h1><a class="underline" href="../dashboard.html">Return to Wakala</a></main>';return}
+ $("identity").textContent=session.user.email||"Wakala administrator";
+ await load();
+}
+async function load(){
+ $("rows").innerHTML='<tr><td colspan="7" class="text-center text-slate-500">Loading transactions…</td></tr>';
+ const {data,error}=await supabase.from("external_payment_trackers").select("id,tracker_reference,order_number,customer_name,customer_email,payment_reference,amount,currency,status,created_at").order("created_at",{ascending:false}).limit(250);
+ if(error){$("rows").innerHTML='<tr><td colspan="7" class="text-center text-red-600">Could not load tracker. Apply the Wakala tracker SQL migration first.</td></tr>';$("notice").textContent=error.message;return}
+ records=data||[];const status=$("filter").value;const shown=status==="all"?records:records.filter(r=>r.status===status);
+ $("total").textContent=records.length;$("pending").textContent=records.filter(r=>r.status==="awaiting_payment").length;$("paid").textContent=records.filter(r=>r.status==="paid").length;
+ $("rows").innerHTML=shown.length?shown.map(r=>'<tr><td>'+esc(new Date(r.created_at).toLocaleString())+'</td><td class="font-mono">'+esc(r.tracker_reference)+'</td><td><strong>'+esc(r.order_number)+'</strong></td><td>'+esc(r.customer_name)+'<div class="text-xs text-slate-500">'+esc(r.customer_email)+'</div></td><td class="font-mono">'+esc(r.payment_reference)+'</td><td>'+esc(r.currency)+' '+Number(r.amount).toLocaleString()+'</td><td><span class="pill '+(r.status==="paid"?"paid":r.status==="failed"||r.status==="cancelled"?"failed":r.status==="payment_reported"?"reported":"")+'">'+esc(r.status.replaceAll("_"," "))+'</span></td></tr>').join(""):'<tr><td colspan="7" class="text-center text-slate-500">No external payments recorded yet.</td></tr>';
+ $("notice").textContent="Showing "+shown.length+" record(s).";
+}
+$("refresh").addEventListener("click",load);$("filter").addEventListener("change",load);
+$("signOut").addEventListener("click",async()=>{await supabase.auth.signOut();location.href="../login.html"});
+init();
+</script>
+</body></html>
