@@ -18,6 +18,7 @@ create table if not exists public.external_payment_trackers (
   status text not null default 'awaiting_payment'
     check (status in ('awaiting_payment','payment_reported','paid','failed','cancelled')),
   event_type text not null default 'order_created',
+  request_text text not null default '',
   metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -41,3 +42,6 @@ create policy "Wakala admins can view external payment trackers"
 
 grant select on public.external_payment_trackers to authenticated;
 grant all on public.external_payment_trackers to service_role;
+
+-- Safe for installations that created the table before the text-log field was added.
+alter table public.external_payment_trackers add column if not exists request_text text not null default '';
