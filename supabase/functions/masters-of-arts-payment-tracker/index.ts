@@ -76,6 +76,18 @@ Deno.serve(async (req) => {
       currency,
       status: "awaiting_payment",
       event_type: "order_created",
+      request_text: [
+        "MASTERS OF ARTS PAYMENT REQUEST",
+        "Order: " + orderNumber,
+        "Order ID: " + externalOrderId,
+        "Payment reference: " + paymentReference,
+        "Customer: " + customerName,
+        "Email: " + customerEmail,
+        "Phone: " + (customerPhone || "Not supplied"),
+        "Amount: " + currency + " " + amount.toFixed(2),
+        "Status: AWAITING PAYMENT",
+        "Received at: " + new Date().toISOString(),
+      ].join("\n"),
       metadata: { integration: "masters-of-arts-checkout" },
     };
 
